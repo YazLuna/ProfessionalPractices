@@ -3,7 +3,7 @@ package domain;
 public class User{
     protected String name;
     protected String lastName;
-    protected String gender;
+    protected int gender;
     protected String email;
     protected String alternateEmail;
     protected String phone;
@@ -29,11 +29,11 @@ public class User{
         this.lastName = lastName;
     }
     
-    public String getGender () {
+    public int getGender () {
         return gender;
     }
     
-    public void setGender (String gender) {
+    public void setGender (int gender) {
         this.gender = gender;
     }
     

@@ -13,9 +13,9 @@ public class GetTest {
     @Test
     public void testGetCoordinator() {
         Coordinator result = new Coordinator();
-        result.setStaffNumber(01);
+        result.setStaffNumber(1);
         result = result.getCoordinator();
-        Assert.assertEquals(01, result.getStaffNumber());
+        Assert.assertEquals(1, result.getStaffNumber());
     }
 
     @Test
@@ -53,9 +53,9 @@ public class GetTest {
     @Test
     public void testGetTeacher() {
         Teacher result = new Teacher();
-        result.setStaffNumber(04);
+        result.setStaffNumber(4);
         result = result.getTeacher();
-        Assert.assertEquals(04, result.getStaffNumber());
+        Assert.assertEquals(4, result.getStaffNumber());
     }
 
     @Test

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
-
 import domain.Teacher;
 
 public class TeacherDAOImpl implements ITeacherDAO {
@@ -27,19 +26,18 @@ public class TeacherDAOImpl implements ITeacherDAO {
         Teacher Teacher = new Teacher ();
         try {
             connection = connexion.getConnection () ;
-            String queryFoundTeacher = "Select * from Teacher INNER JOIN user ON Teacher.idUser = user.idUser where Teacher.staffNumber = ?";
+            String queryFoundTeacher = "Select * from Teacher INNER JOIN User ON Teacher.idUser = User.idUser where Teacher.staffNumber = ?";
             PreparedStatement sentence = connection.prepareStatement (queryFoundTeacher);
             sentence.setInt (1,staffNumber);
             result = sentence.executeQuery();
             while (result.next()){
                 Teacher.setName(result.getString("name"));
                 Teacher.setLastName(result.getString("lastName"));
-                Teacher.setGender(result.getString("gender"));
+                Teacher.setGender(result.getInt("gender"));
                 Teacher.setEmail(result.getString("email"));
                 Teacher.setAlternateEmail(result.getString("alternateEmail"));
                 Teacher.setPhone(result.getString("phone"));
                 Teacher.setStaffNumber(result.getInt("staffNumber"));
-                Teacher.setTurn(result.getString("turn"));
                 Teacher.setRegistrationDate(result.getString("registrationDate"));
             }
         }catch(SQLException ex){
@@ -53,18 +51,17 @@ public class TeacherDAOImpl implements ITeacherDAO {
         int result = 0;
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceUpdateTeacher = connection.prepareStatement ("UPDATE Teacher INNER JOIN user ON Teacher.idUser = user.idUser SET user.name = ?, user.lastName = ?, user.gender = ?, user.email = ?,"
-                    + " user.alternateEmail = ?, user.phone = ?, Teacher.staffNumber = ?, Teacher.turn = ?, Teacher.registrationDate = ?  WHERE Teacher.staffNumber = ?");
+            PreparedStatement sentenceUpdateTeacher = connection.prepareStatement ("UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?,"
+                    + " User.alternateEmail = ?, User.phone = ?, Teacher.staffNumber = ?, Teacher.registrationDate = ?  WHERE Teacher.staffNumber = ?");
             sentenceUpdateTeacher.setString(1, TeacherEdit.getName());
             sentenceUpdateTeacher.setString(2, TeacherEdit.getLastName());
-            sentenceUpdateTeacher.setString(3, TeacherEdit.getGender());
+            sentenceUpdateTeacher.setInt(3, TeacherEdit.getGender());
             sentenceUpdateTeacher.setString(4, TeacherEdit.getEmail());
             sentenceUpdateTeacher.setString(5, TeacherEdit.getAlternateEmail());
             sentenceUpdateTeacher.setString(6, TeacherEdit.getPhone());
             sentenceUpdateTeacher.setInt(7, TeacherEdit.getStaffNumber());
-            sentenceUpdateTeacher.setString(8, TeacherEdit.getTurn());
-            sentenceUpdateTeacher.setString(9, TeacherEdit.getRegistrationDate());
-            sentenceUpdateTeacher.setInt(10, staffNumber);
+            sentenceUpdateTeacher.setString(8, TeacherEdit.getRegistrationDate());
+            sentenceUpdateTeacher.setInt(9, staffNumber);
             sentenceUpdateTeacher.executeUpdate();
             result = 1;
         }catch(SQLException ex){
@@ -78,7 +75,7 @@ public class TeacherDAOImpl implements ITeacherDAO {
         int result = 0;
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceRecoverTeacher = connection.prepareStatement ("UPDATE Teacher INNER JOIN user ON Teacher.idUser = user.idUser SET user.status = 'Active' WHERE Teacher.staffNumber = ?");
+            PreparedStatement sentenceRecoverTeacher = connection.prepareStatement ("UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET User.status = 'Active' WHERE Teacher.staffNumber = ?");
             sentenceRecoverTeacher.setInt(1, TeacherEdit.getStaffNumber());
             sentenceRecoverTeacher.executeUpdate();
             result = 1;
@@ -93,7 +90,7 @@ public class TeacherDAOImpl implements ITeacherDAO {
         int result = 0;
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceDeleteTeacher=connection.prepareStatement("UPDATE Teacher INNER JOIN User ON Teacher.idUser = user.idUser SET status = 'Inactive' WHERE Teacher.staffNumber=?");
+            PreparedStatement sentenceDeleteTeacher=connection.prepareStatement("UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET status = 'Inactive' WHERE Teacher.staffNumber=?");
             sentenceDeleteTeacher.setInt(1,Teacher.getStaffNumber());
             sentenceDeleteTeacher.executeUpdate();
             result = 1;
@@ -113,20 +110,15 @@ public class TeacherDAOImpl implements ITeacherDAO {
                 int idUser = searchIdUser(teacher);
                 try{
                     connection = connexion.getConnection();
-                    String queryAddTeacher = "INSERT INTO Teacher  (staffNumber, turn, registrationDate, idUser) VALUES (?, ?, ?, ?)";
+                    String queryAddTeacher = "INSERT INTO Teacher  (staffNumber, registrationDate, idUser) VALUES ( ?, ?, ?)";
                     PreparedStatement sentenceAdd = connection.prepareStatement(queryAddTeacher);
                     sentenceAdd.setInt(1, teacher.getStaffNumber());
-                    sentenceAdd.setString(2, teacher.getTurn());
-                    sentenceAdd.setString(3, teacher.getRegistrationDate());
-                    sentenceAdd.setInt(4, idUser);
+                    sentenceAdd.setString(2, teacher.getRegistrationDate());
+                    sentenceAdd.setInt(3, idUser);
                     sentenceAdd.executeUpdate();
                     resultAdd = 1;
                 }catch(SQLException ex){
                     Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } finally{
-                    if(connexion!=null){
-                        connexion.closeConnection();
-                    }
                 }
             }
         }
@@ -139,7 +131,7 @@ public class TeacherDAOImpl implements ITeacherDAO {
         try{
             connection = connexion.getConnection();
             String queryStaffNumber= "Select staffNumber from Teacher where staffNumber=?";
-            PreparedStatement sentence =connection.prepareStatement(queryStaffNumber);
+            PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
             sentence.setInt(1, staffNumberSearch);
             result= sentence.executeQuery();
             while(result.next()){
@@ -150,10 +142,6 @@ public class TeacherDAOImpl implements ITeacherDAO {
             }
         }catch(SQLException ex){
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
         }
         return resultAdd;
     }
@@ -162,11 +150,11 @@ public class TeacherDAOImpl implements ITeacherDAO {
         int result = 0;
         try{
             connection = connexion.getConnection();
-            String queryAddTeacherUser = "INSERT INTO user  (name, lastName, gender, status, email,  alternateEmail, phone)  VALUES (?,?, ?, ?, ?, ?, ?)";
+            String queryAddTeacherUser = "INSERT INTO User  (name, lastName, gender, status, email,  alternateEmail, phone)  VALUES (?,?, ?, ?, ?, ?, ?)";
             PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddTeacherUser);
             sentenceAddUser.setString(1, teacher.getName());
             sentenceAddUser.setString(2, teacher.getLastName());
-            sentenceAddUser.setString(3, teacher.getGender());
+            sentenceAddUser.setInt(3, teacher.getGender());
             sentenceAddUser.setString(4, teacher.getStatus());
             sentenceAddUser.setString(5, teacher.getEmail());
             sentenceAddUser.setString(6, teacher.getAlternateEmail());
@@ -175,10 +163,6 @@ public class TeacherDAOImpl implements ITeacherDAO {
             result = 1;
         } catch (SQLException ex) {
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
         }
         return result;
     }
@@ -187,7 +171,7 @@ public class TeacherDAOImpl implements ITeacherDAO {
         int idUser = 0;
         try{
             connection = connexion.getConnection();
-            String queryUser= "Select idUser from user where name=? AND lastName=? AND email=? AND alternateEmail=? AND phone=?";
+            String queryUser= "Select idUser from User where name=? AND lastName=? AND email=? AND alternateEmail=? AND phone=?";
             PreparedStatement sentence =connection.prepareStatement(queryUser);
             sentence.setString(1, teacher.getName());
             sentence.setString(2, teacher.getLastName());
@@ -200,10 +184,6 @@ public class TeacherDAOImpl implements ITeacherDAO {
             }
         }catch(SQLException ex){
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
         }
         return idUser;
     }
@@ -214,17 +194,16 @@ public class TeacherDAOImpl implements ITeacherDAO {
         try {
             connection = connexion.getConnection();
             consult = connection.createStatement();
-            result = consult.executeQuery("Select * from Teacher INNER JOIN user ON Teacher.idUser = user.idUser");
+            result = consult.executeQuery("Select * from Teacher INNER JOIN User ON Teacher.idUser = User.idUser");
             while(result.next()){
                 Teacher teacher = new Teacher();
                 teacher.setName(result.getString("name"));
                 teacher.setLastName(result.getString("lastName"));
-                teacher.setGender(result.getString("gender"));
+                teacher.setGender(result.getInt("gender"));
                 teacher.setEmail(result.getString("email"));
                 teacher.setAlternateEmail (result.getString("alternateEmail"));
                 teacher.setPhone(result.getString("phone"));
                 teacher.setStaffNumber(result.getInt("staffNumber"));
-                teacher.setTurn(result.getString("turn"));
                 teacher.setRegistrationDate(result.getString("registrationDate"));
                 teachers.add(teacher);
             }
@@ -240,17 +219,16 @@ public class TeacherDAOImpl implements ITeacherDAO {
         try {
             connection = connexion.getConnection();
             consult = connection.createStatement();
-            result = consult.executeQuery("Select * from Teacher INNER JOIN user ON Teacher.idUser = user.idUser WHERE user.status = 'Active'");
+            result = consult.executeQuery("Select * from Teacher INNER JOIN User ON Teacher.idUser = User.idUser WHERE User.status = 'Active'");
             while(result.next()){
                 Teacher teacher = new Teacher();
                 teacher.setName(result.getString("name"));
                 teacher.setLastName(result.getString("lastName"));
-                teacher.setGender(result.getString("gender"));
+                teacher.setGender(result.getInt("gender"));
                 teacher.setEmail(result.getString("email"));
                 teacher.setAlternateEmail (result.getString("alternateEmail"));
                 teacher.setPhone(result.getString("phone"));
                 teacher.setStaffNumber(result.getInt("staffNumber"));
-                teacher.setTurn(result.getString("turn"));
                 teacher.setRegistrationDate(result.getString("registrationDate"));
                 teachers.add(teacher);
             }

@@ -10,7 +10,7 @@ public class RecoverTest {
     @Test
     public void testRecoverCoordinator() {
         int result = 0;
-        int staffNumber = 01;
+        int staffNumber = 1;
         Coordinator Coordinator = new Coordinator();
         Coordinator.setStaffNumber(staffNumber);
         result = Coordinator.recoverCoordinator();
@@ -30,7 +30,7 @@ public class RecoverTest {
     @Test
     public void testRecoverTeacher() {
         int result = 0;
-        int staffNumber = 04;
+        int staffNumber = 4;
         Teacher Teacher = new Teacher();
         Teacher.setStaffNumber(staffNumber);
         result = Teacher.recoverTeacher();

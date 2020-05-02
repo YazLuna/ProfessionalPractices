@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class Teacher extends User{
     private int staffNumber;
-    private String turn;
     private String registrationDate;
     private String dischargeDate;
     
@@ -24,14 +23,6 @@ public class Teacher extends User{
     
     public void setStaffNumber (int staffNumber) {
         this.staffNumber = staffNumber;
-    }
-    
-    public String getTurn () {
-        return turn;
-    }
-    
-    public void setTurn (String turn) {
-        this.turn = turn;
     }
     
     public String getRegistrationDate () {
