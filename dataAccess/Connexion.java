@@ -11,7 +11,7 @@ import java.util.Properties;
 public class Connexion {
     private Connection connexion;
     private String dataBase;
-    private String usser;
+    private String user;
     private String password;
     
     public Connection getConnection() throws SQLException{
@@ -24,15 +24,15 @@ public class Connexion {
         try {
             prop.load( Connexion.class.getClassLoader().getResourceAsStream("dataAccess/propertiesDataAccess") );
             dataBase = prop.getProperty("dataBase");
-            usser = prop.getProperty("usser");
+            user = prop.getProperty("user");
             password = prop.getProperty("password");
         }catch(IOException ex)
         {
-            System.err.println("Error al acceder al archivo de propiedades");
+            System.err.println("Error accessing properties file");
             ex.printStackTrace();
 
         }
-        connexion=DriverManager.getConnection (dataBase,usser,password);
+        connexion=DriverManager.getConnection (dataBase,user,password);
     }
     
     public void closeConnection(){

@@ -11,7 +11,7 @@ public class DeleteTest {
     public void testDeleteCoordinator() {
         int result;
         Coordinator coordinator = new Coordinator();
-        coordinator.setStaffNumber(01);
+        coordinator.setStaffNumber(1);
         result = coordinator.deleteCoordinator();
         Assert.assertEquals(1,result);
     }
@@ -30,7 +30,7 @@ public class DeleteTest {
     public void testDeleteTeacher() {
         int result;
         Teacher Teacher = new Teacher();
-        Teacher.setStaffNumber(04);
+        Teacher.setStaffNumber(4);
         result = Teacher.deleteTeacher();
         Assert.assertEquals(1,result);
     }

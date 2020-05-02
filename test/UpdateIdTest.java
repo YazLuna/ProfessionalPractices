@@ -14,11 +14,11 @@ public class UpdateIdTest {
         Coordinator coordinator = new Coordinator();
         coordinator.setName("Juana");
         coordinator.setLastName("Luna");
-        coordinator.setGender("Female");
+        coordinator.setGender(0);
         coordinator.setEmail("juana@gmail.com");
         coordinator.setAlternateEmail("juanaL@gmail.com");
         coordinator.setPhone("2281001879");
-        coordinator.setStaffNumber(02);
+        coordinator.setStaffNumber(2);
         coordinator.setRegistrationDate("2020-04-29");
         result = coordinator.updateCoordinator(staffNumber);
         Assert.assertEquals(1,result);
@@ -31,13 +31,12 @@ public class UpdateIdTest {
         Practitioner practitioner = new Practitioner();
         practitioner.setName("Ale");
         practitioner.setLastName("Luna");
-        practitioner.setGender("Female");
+        practitioner.setGender(0);
         practitioner.setEmail("ale@gmail.com");
         practitioner.setAlternateEmail("aleLuna@gmail.com");
         practitioner.setPhone("2281564676");
         practitioner.setEnrollment("s19012124");
         practitioner.setPeriod("2020-2021");
-        practitioner.setTurn("Vespertino");
         result = practitioner.updatePractitioner(enrollment);
         Assert.assertEquals(1,result);
     }
@@ -45,16 +44,15 @@ public class UpdateIdTest {
     @Test
     public void testUpdateTeacherStaffNumber() {
         int result;
-        int staffNumber = 04;
+        int staffNumber = 4;
         Teacher teacher = new Teacher();
         teacher.setName("Pablo");
         teacher.setLastName("Hernandez");
-        teacher.setGender("Masculino");
+        teacher.setGender(1);
         teacher.setEmail("pablo@gmail.com");
         teacher.setAlternateEmail("pabloHer@gmail.com");
         teacher.setPhone("2281334676");
-        teacher.setStaffNumber(05);
-        teacher.setTurn("Vespertino");
+        teacher.setStaffNumber(5);
         teacher.setRegistrationDate("2020-04-29");
         result = teacher.updateTeacher(staffNumber);
         Assert.assertEquals(1,result);

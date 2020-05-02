@@ -26,20 +26,19 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         Practitioner practitioner = new Practitioner ();
         try {
             connection = connexion.getConnection () ;
-            String queryFoundpractitioner = "Select * from practitioner INNER JOIN User ON practitioner.idUser = User.idUser where practitioner.enrollment = ?";
-            PreparedStatement sentence = connection.prepareStatement (queryFoundpractitioner);
+            String queryFoundPractitioner ="Select * from Practitioner, User, Lapse WHERE Practitioner.idUser = User.idUser AND Practitioner.idLapse = Lapse.idLapse AND Practitioner.enrollment = ?";
+            PreparedStatement sentence = connection.prepareStatement (queryFoundPractitioner);
             sentence.setString (1,enrollment);
             result = sentence.executeQuery();
             while (result.next()){
                 practitioner.setName(result.getString("name"));
                 practitioner.setLastName(result.getString("lastName"));
-                practitioner.setGender(result.getString("gender"));
+                practitioner.setGender(result.getInt("gender"));
                 practitioner.setEmail(result.getString("email"));
                 practitioner.setAlternateEmail(result.getString("alternateEmail"));
                 practitioner.setPhone(result.getString("phone"));
                 practitioner.setEnrollment(result.getString("enrollment"));
-                practitioner.setTurn(result.getString("turn"));
-                practitioner.setPeriod(result.getString("period"));
+                practitioner.setPeriod(result.getString("lapse"));
             }
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,19 +51,18 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int result = 0;
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceUpdatepractitioner = connection.prepareStatement ("UPDATE practitioner INNER JOIN User ON practitioner.idUser = User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?,"
-                    + " User.alternateEmail = ?, User.phone = ?, practitioner.enrollment = ?, practitioner.turn = ?, practitioner.period = ?  WHERE practitioner.enrollment = ?");
-            sentenceUpdatepractitioner.setString(1, practitionerEdit.getName());
-            sentenceUpdatepractitioner.setString(2, practitionerEdit.getLastName());
-            sentenceUpdatepractitioner.setString(3, practitionerEdit.getGender());
-            sentenceUpdatepractitioner.setString(4, practitionerEdit.getEmail());
-            sentenceUpdatepractitioner.setString(5, practitionerEdit.getAlternateEmail());
-            sentenceUpdatepractitioner.setString(6, practitionerEdit.getPhone());
-            sentenceUpdatepractitioner.setString(7, practitionerEdit.getEnrollment());
-            sentenceUpdatepractitioner.setString(8, practitionerEdit.getTurn());
-            sentenceUpdatepractitioner.setString(9, practitionerEdit.getPeriod());
-            sentenceUpdatepractitioner.setString(10, enrollment);
-            sentenceUpdatepractitioner.executeUpdate();
+            PreparedStatement sentenceUpdatePractitioner = connection.prepareStatement ("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?,"
+                    + " User.alternateEmail = ?, User.phone = ?, Practitioner.enrollment = ?   WHERE  Practitioner.enrollment = ?");
+            sentenceUpdatePractitioner.setString(1, practitionerEdit.getName());
+            sentenceUpdatePractitioner.setString(2, practitionerEdit.getLastName());
+            sentenceUpdatePractitioner.setInt(3, practitionerEdit.getGender());
+            sentenceUpdatePractitioner.setString(4, practitionerEdit.getEmail());
+            sentenceUpdatePractitioner.setString(5, practitionerEdit.getAlternateEmail());
+            sentenceUpdatePractitioner.setString(6, practitionerEdit.getPhone());
+            sentenceUpdatePractitioner.setString(7, practitionerEdit.getEnrollment());
+            sentenceUpdatePractitioner.setString(8, enrollment);
+            //lapse
+            sentenceUpdatePractitioner.executeUpdate();
             result = 1;
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,9 +75,9 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int result = 0;
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceRecoverpractitioner = connection.prepareStatement ("UPDATE practitioner INNER JOIN User ON practitioner.idUser = User.idUser SET User.status = 'Active' WHERE practitioner.enrollment = ?");
-            sentenceRecoverpractitioner.setString(1, practitionerEdit.getEnrollment());
-            sentenceRecoverpractitioner.executeUpdate();
+            PreparedStatement sentenceRecoverPractitioner = connection.prepareStatement ("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET User.status = 'Active' WHERE Practitioner.enrollment = ?");
+            sentenceRecoverPractitioner.setString(1, practitionerEdit.getEnrollment());
+            sentenceRecoverPractitioner.executeUpdate();
             result = 1;
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,9 +90,9 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int result = 0;
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceDeletepractitioner=connection.prepareStatement("UPDATE practitioner INNER JOIN User ON practitioner.idUser = User.idUser SET status = 'Inactive' WHERE practitioner.enrollment=?");
-            sentenceDeletepractitioner.setString(1,practitioner.getEnrollment());
-            sentenceDeletepractitioner.executeUpdate();
+            PreparedStatement sentenceDeletePractitioner=connection.prepareStatement("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET status = 'Inactive' WHERE Practitioner.enrollment=?");
+            sentenceDeletePractitioner.setString(1,practitioner.getEnrollment());
+            sentenceDeletePractitioner.executeUpdate();
             result = 1;
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,27 +105,59 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int resultAdd = 0;
         int enrollment = searchEnrollment(practitioner.getEnrollment());
         if (enrollment == 0){
+            int idLapse = searchIdLapse(practitioner.getPeriod());
+            if(idLapse == 0){
+                addLapse(practitioner.getPeriod());
+                idLapse = searchIdLapse(practitioner.getPeriod());
+            }
             int UserAdd= addUser(practitioner);
             if (UserAdd == 1) {
                 int idUser = searchIdUser(practitioner);
                 try{
                     connection = connexion.getConnection();
-                    String queryAddPractitioner = "INSERT INTO Practitioner  (enrollment, turn, period, idUser) VALUES (?, ?, ?, ?)";
+                    String queryAddPractitioner = "INSERT INTO Practitioner  (enrollment, idUser, idLapse ) VALUES ( ?, ?,?)";
                     PreparedStatement sentenceAdd = connection.prepareStatement(queryAddPractitioner);
                     sentenceAdd.setString(1, practitioner.getEnrollment());
-                    sentenceAdd.setString(2, practitioner.getTurn());
-                    sentenceAdd.setString(3, practitioner.getPeriod());
-                    sentenceAdd.setInt(4, idUser);
+                    sentenceAdd.setInt(2, idUser);
+                    sentenceAdd.setInt(3, idLapse);
                     sentenceAdd.executeUpdate();
                     resultAdd = 1;
                 }catch(SQLException ex){
                     Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } finally{
-                    if(connexion!=null){
-                        connexion.closeConnection();
-                    }
                 }
             }
+        }
+        return resultAdd;
+    }
+
+    private int searchIdLapse(String period) {
+        int idLapse = 0;
+        try{
+            connection = connexion.getConnection();
+            String queryLapse= "Select idLapse from Lapse where lapse=?";
+            PreparedStatement sentence =connection.prepareStatement(queryLapse);
+            sentence.setString(1, period);
+            result= sentence.executeQuery();
+            while(result.next()){
+                idLapse =result.getInt("idLapse");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return idLapse;
+    }
+
+    private int addLapse(String period) {
+        int resultAdd =  0;
+        try{
+            connection = connexion.getConnection();
+            String queryAddPeriod = "INSERT INTO Lapse (lapse)  VALUES (?)";
+            PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddPeriod);
+            sentenceAddUser.setString(1, period);
+            sentenceAddUser.executeUpdate();
+            resultAdd = 1;
+        } catch (SQLException ex) {
+            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultAdd;
     }
@@ -149,10 +179,6 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
             }
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
         }
         return resultAdd;
     }
@@ -165,7 +191,7 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
             PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddPractitionerUser);
             sentenceAddUser.setString(1, practitioner.getName());
             sentenceAddUser.setString(2, practitioner.getLastName());
-            sentenceAddUser.setString(3, practitioner.getGender());
+            sentenceAddUser.setInt(3, practitioner.getGender());
             sentenceAddUser.setString(4,practitioner.getStatus());
             sentenceAddUser.setString(5, practitioner.getEmail());
             sentenceAddUser.setString(6, practitioner.getAlternateEmail());
@@ -174,10 +200,6 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
             result = 1;
         } catch (SQLException ex) {
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
         }
         return result;
     }
@@ -199,10 +221,6 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
             }
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
         }
         return idUser;
     }
@@ -213,18 +231,17 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         try {
             connection = connexion.getConnection();
             consult = connection.createStatement();
-            result = consult.executeQuery("Select * from practitioner INNER JOIN User ON practitioner.idUser = User.idUser");
+            result = consult.executeQuery("Select * from Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser");
             while(result.next()){
                 Practitioner practitioner = new Practitioner();
                 practitioner.setName(result.getString("name"));
                 practitioner.setLastName(result.getString("lastName"));
-                practitioner.setGender(result.getString("gender"));
+                practitioner.setGender(result.getInt("gender"));
                 practitioner.setEmail(result.getString("email"));
                 practitioner.setAlternateEmail (result.getString("alternateEmail"));
                 practitioner.setPhone(result.getString("phone"));
                 practitioner.setEnrollment(result.getString("enrollment"));
-                practitioner.setTurn(result.getString("turn"));
-                practitioner.setPeriod(result.getString("period"));
+                practitioner.setPeriod((result.getString("lapse")));
                 practitioners.add(practitioner);
             }
         } catch (SQLException ex) {
@@ -239,18 +256,17 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         try {
             connection = connexion.getConnection();
             consult = connection.createStatement();
-            result = consult.executeQuery("Select * from practitioner INNER JOIN User ON practitioner.idUser = User.idUser WHERE User.status = 'Active'");
+            result = consult.executeQuery("Select * from Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser WHERE User.status = 'Active'");
             while(result.next()){
                 Practitioner practitioner = new Practitioner();
                 practitioner.setName(result.getString("name"));
                 practitioner.setLastName(result.getString("lastName"));
-                practitioner.setGender(result.getString("gender"));
+                practitioner.setGender(result.getInt("gender"));
                 practitioner.setEmail(result.getString("email"));
                 practitioner.setAlternateEmail (result.getString("alternateEmail"));
                 practitioner.setPhone(result.getString("phone"));
                 practitioner.setEnrollment(result.getString("enrollment"));
-                practitioner.setTurn(result.getString("turn"));
-                practitioner.setPeriod(result.getString("period"));
+                practitioner.setPeriod((result.getString("lapse")));
                 practitioners.add(practitioner);
             }
         } catch (SQLException ex) {

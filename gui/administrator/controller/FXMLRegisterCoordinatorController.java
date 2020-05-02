@@ -85,10 +85,10 @@ public class FXMLRegisterCoordinatorController implements Initializable {
                     rbFemale.setToggleGroup(radioGroup);
                     rbFemale.setToggleGroup(radioGroup);
                     if(rbMale.isSelected()){
-                        coordinator.setGender("Male");
+                        coordinator.setGender(1);
                     }
                     if(rbFemale.isSelected()){
-                        coordinator.setGender("Female");
+                        coordinator.setGender(0);
                     }
 
                     Date myDate = new Date();

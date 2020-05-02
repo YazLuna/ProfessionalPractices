@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class Practitioner extends User{
     private String enrollment;
-    private String turn;
     private String period;
     
     public Practitioner() {
@@ -23,14 +22,6 @@ public class Practitioner extends User{
     
     public void setEnrollment (String enrollment) {
         this.enrollment = enrollment;
-    }
-    
-    public String getTurn () {
-        return turn;
-    }
-    
-    public void setTurn (String turn) {
-        this.turn = turn;
     }
     
     public String getPeriod () {
