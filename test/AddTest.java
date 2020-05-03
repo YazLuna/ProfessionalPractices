@@ -41,7 +41,6 @@ public class AddTest {
 
     }
 
-
     @Test
     public void testAddTeacher() {
         int result = 0;

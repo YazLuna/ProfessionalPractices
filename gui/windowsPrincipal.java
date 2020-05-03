@@ -15,7 +15,7 @@ public class windowsPrincipal extends Application {
         Parent rootLogin = FXMLLoader.load(getClass().getResource("/gui/login/FXMLLogin.fxml"));
         Scene sceneLogin = new Scene(rootLogin);
         stageLogin.setScene(sceneLogin);
-        stageLogin.setResizable(false);
+        //stageLogin.setResizable(false);
         stageLogin.show();
         // Hola estoy haciendo una prueba
     }
