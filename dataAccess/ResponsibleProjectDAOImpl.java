@@ -4,14 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import domain.ResponsibleProject;
 
 public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     private final Connexion connexion;
     private Connection connection;
+    private Statement consultation;
     private ResultSet results;
     
     public ResponsibleProjectDAOImpl (){
@@ -66,40 +69,6 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     @Override
-    public void updateCharge (String name) {
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceCharge = connection.prepareStatement("insert into Charge (nameCharge) values (?)");
-            sentenceCharge.setString(1,name);
-            sentenceCharge.executeUpdate();
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-    }
-
-    @Override
-    public int searchCharge (String name) {
-        int idCharge=0;
-        try{
-            connection = connexion.getConnection();
-            String queryCharge= "Select idCharge from Charge where nameCharge=?";
-            PreparedStatement sentence =connection.prepareStatement(queryCharge);
-            sentence.setString(1,name);
-            results= sentence.executeQuery();
-            while(results.next()){
-                idCharge =results.getInt("idCharge");
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return idCharge;
-    }
-
-    @Override
     public void actualizationResponsibleProject (ResponsibleProject responsible) {
         int idCharge;
         idCharge = searchCharge(responsible.getCharge());
@@ -138,10 +107,59 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 idResponsibleProject =results.getInt("idResponsibleProject");
             }
         }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
         return idResponsibleProject;
+    }
+
+    public void updateCharge (String name) {
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceCharge = connection.prepareStatement("insert into Charge (nameCharge) values (?)");
+            sentenceCharge.setString(1,name);
+            sentenceCharge.executeUpdate();
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+    }
+
+    public int searchCharge (String name) {
+        int idCharge=0;
+        try{
+            connection = connexion.getConnection();
+            String queryCharge= "Select idCharge from Charge where nameCharge=?";
+            PreparedStatement sentence =connection.prepareStatement(queryCharge);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idCharge =results.getInt("idCharge");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idCharge;
+    }
+
+    public List<String> getAllCharge() {
+        List<String> charges = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("select nameCharge from Charge");
+            while(results.next()){
+                charges.add(results.getString("nameCharge"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return charges;
     }
 }

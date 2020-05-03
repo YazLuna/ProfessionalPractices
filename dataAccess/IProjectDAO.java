@@ -1,7 +1,6 @@
 package dataAccess;
 
 import java.util.List;
-
 import domain.Project;
 
 public interface IProjectDAO {
@@ -13,6 +12,5 @@ public interface IProjectDAO {
     public int deleteProject (Project project);
     public String requestProject (String enrollment, int idProject);
     public String assignProject (String enrollment, int idProject);
-    
     
 }
