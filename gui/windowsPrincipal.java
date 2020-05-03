@@ -17,14 +17,9 @@ public class windowsPrincipal extends Application {
         stageLogin.setScene(sceneLogin);
         stageLogin.setResizable(false);
         stageLogin.show();
-        //System.out.println("Hola");
     }
     public static void main(String[] args) {
         launch(args);
-
     }
 
 }
-
-
-
