@@ -17,8 +17,7 @@ public class windowsPrincipal extends Application {
         stageLogin.setScene(sceneLogin);
         //stageLogin.setResizable(false);
         stageLogin.show();
-        //ola
-        System.out.println("Ola");
+        // Hola estoy haciendo una prueba
     }
     public static void main(String[] args) {
         launch(args);
