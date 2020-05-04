@@ -1,6 +1,5 @@
 package dataAccess;
 
-import domain.Practitioner;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +9,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
+import domain.Practitioner;
 
 public class PractitionerDAOImpl implements IPractitionerDAO {
     private final Connexion connexion;
@@ -26,7 +26,8 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         Practitioner practitioner = new Practitioner ();
         try {
             connection = connexion.getConnection () ;
-            String queryFoundPractitioner ="Select * from Practitioner, User, Lapse WHERE Practitioner.idUser = User.idUser AND Practitioner.idLapse = Lapse.idLapse AND Practitioner.enrollment = ?";
+            String queryFoundPractitioner ="Select * from Practitioner, User," +
+                    " Lapse WHERE Practitioner.idUser = User.idUser AND Practitioner.idLapse = Lapse.idLapse AND Practitioner.enrollment = ?";
             PreparedStatement sentence = connection.prepareStatement (queryFoundPractitioner);
             sentence.setString (1,enrollment);
             result = sentence.executeQuery();
@@ -34,6 +35,7 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
                 practitioner.setName(result.getString("name"));
                 practitioner.setLastName(result.getString("lastName"));
                 practitioner.setGender(result.getInt("gender"));
+                practitioner.setStatus(result.getString("status"));
                 practitioner.setEmail(result.getString("email"));
                 practitioner.setAlternateEmail(result.getString("alternateEmail"));
                 practitioner.setPhone(result.getString("phone"));
@@ -61,7 +63,6 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
             sentenceUpdatePractitioner.setString(6, practitionerEdit.getPhone());
             sentenceUpdatePractitioner.setString(7, practitionerEdit.getEnrollment());
             sentenceUpdatePractitioner.setString(8, enrollment);
-            //lapse
             sentenceUpdatePractitioner.executeUpdate();
             result = 1;
         }catch(SQLException ex){
