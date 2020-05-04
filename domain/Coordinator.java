@@ -1,7 +1,7 @@
 package domain;
 
-import dataAccess.CoordinatorDAOImpl;
-import dataAccess.ProjectDAOImpl;
+import dataaccess.CoordinatorDAOImpl;
+import dataaccess.ProjectDAOImpl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

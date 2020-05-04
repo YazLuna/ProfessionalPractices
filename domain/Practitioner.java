@@ -1,6 +1,6 @@
 package domain;
 
-import dataAccess.PractitionerDAOImpl;
+import dataaccess.PractitionerDAOImpl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
