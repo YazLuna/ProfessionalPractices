@@ -1,10 +1,9 @@
-package dataAccess;
+package dataaccess;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import domain.Coordinator;
-import domain.Practitioner;
 
 public interface ICoordinatorDAO {
    public Coordinator getCoordinator () throws SQLException;

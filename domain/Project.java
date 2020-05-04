@@ -1,6 +1,6 @@
 package domain;
 
-import dataAccess.ProjectDAOImpl;
+import dataaccess.ProjectDAOImpl;
 import java.util.List;
 
 public class Project {
@@ -190,5 +190,10 @@ public class Project {
     public String assingProject (String enrollment) {
         ProjectDAOImpl assing = new ProjectDAOImpl();
         return assing.assignProject(enrollment, this.idProject);
+    }
+
+    public Project getProject (String name) {
+        ProjectDAOImpl getProject = new ProjectDAOImpl();
+        return getProject.getProject(name);
     }
 }

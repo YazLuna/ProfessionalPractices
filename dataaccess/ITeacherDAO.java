@@ -1,9 +1,8 @@
-package dataAccess;
+package dataaccess;
 
 import java.util.List;
 import java.sql.SQLException;
 
-import domain.Teacher;
 import domain.Teacher;
 
 public interface ITeacherDAO {
