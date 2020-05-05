@@ -1,39 +1,33 @@
 package logic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class validateProject {
     public boolean validateNameProject (String name) {
         boolean result;
-        name = name.toUpperCase();
-        int sizeName = name.length();
-        if(sizeName>5 && sizeName<26) {
-            result = validateWord(name);
-        }else{
-            result = false;
-        }
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{5,25}");
+        Matcher mather = pattern.matcher(name);
+        result = mather.find();
         return result;
     }
 
     public boolean validateText (String text) {
         boolean result;
-        text = text.toUpperCase();
-        int sizeName = text.length();
-        if(sizeName>20 && sizeName<101) {
-            result = validateWord(text);
-        }else{
-            result = false;
-        }
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{30,100}");
+        Matcher mather = pattern.matcher(text);
+        result = mather.find();
         return result;
     }
 
     public boolean validateMethology (String methodology) {
         boolean result;
-        methodology = methodology.toUpperCase();
-        int sizeName = methodology.length();
-        if(sizeName>10 && sizeName<15) {
-            result = validateWord(methodology);
-        }else{
-            result = false;
-        }
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{10,15}");
+        Matcher mather = pattern.matcher(methodology);
+        result = mather.find();
         return result;
     }
 
@@ -42,16 +36,13 @@ public class validateProject {
     }
 
 
-    public boolean validateDuration (int duration) {
-        return false;
-    }
-
-    public boolean validateQuiantityPractitioner (int quiantityPractitioner) {
-        return false;
-    }
-
-    public boolean validateLapse (String Lapse) {
-        return false;
+    public boolean validateLapse (String lapse) {
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z0-9]{10,30}");
+        Matcher mather = pattern.matcher(lapse);
+        result = mather.find();
+        return result;
     }
 
     public boolean validateWord(String word) {
