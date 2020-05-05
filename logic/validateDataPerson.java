@@ -7,24 +7,18 @@ public class validateDataPerson {
 
     public boolean validateName (String name) {
         boolean result;
-        name = name.toUpperCase();
-        int sizeName = name.length();
-        if(sizeName>3 && sizeName<51) {
-            result = validateWord(name);
-        }else{
-            result = false;
-        }
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{3,50}");
+        Matcher mather = pattern.matcher(name);
+        result = mather.find();
         return result;
     }
     public boolean validateLastName (String lastName) {
         boolean result;
-        lastName = lastName.toUpperCase();
-        int sizeLastName = lastName.length();
-        if(sizeLastName>3 && sizeLastName<51) {
-            result = validateWord(lastName);
-        }else{
-            result = false;
-        }
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{3,50}");
+        Matcher mather = pattern.matcher(lastName);
+        result = mather.find();
         return result;
     }
     public boolean validateEmail (String email) {
@@ -39,15 +33,13 @@ public class validateDataPerson {
 
     public boolean validateCharge (String charge) {
         boolean result;
-        charge = charge.toUpperCase();
-        int sizeCharge = charge.length();
-        if(sizeCharge>0 && sizeCharge<26) {
-            result = validateWord(charge);
-        } else {
-          result = false;
-        }
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{6,25}");
+        Matcher mather = pattern.matcher(charge);
+        result = mather.find();
         return result;
     }
+
     public boolean validateWord(String word) {
         boolean result = true;
         int index = 0;

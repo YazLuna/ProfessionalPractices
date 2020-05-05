@@ -1,35 +1,60 @@
 package logic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class validateLinkedOrganizarion {
 
     public boolean validateNameLinked (String name) {
-        return false;
-    }
-
-    public boolean validateDirectUsers (int directUsers) {
-        return false;
-    }
-
-    public boolean validateIndirectUsers (int indirectUsers) {
-        return false;
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{3,50}");
+        Matcher mather = pattern.matcher(name);
+        result = mather.find();
+        return result;
     }
 
     public boolean validatePhoneNumber (String phoneNumber) {
-        return false;
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[0-9]{10}");
+        Matcher mather = pattern.matcher(phoneNumber);
+        result = mather.find();
+        return result;
     }
 
     public boolean validateAddress (String address) {
-        return false;
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{20,50}");
+        Matcher mather = pattern.matcher(address);
+        result = mather.find();
+        return result;
     }
     public boolean validateCity (String city) {
-        return false;
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{6,25}");
+        Matcher mather = pattern.matcher(city);
+        result = mather.find();
+        return result;
     }
 
     public boolean validateState (String state) {
-        return false;
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{6,25}");
+        Matcher mather = pattern.matcher(state);
+        result = mather.find();
+        return result;
     }
 
     public boolean validateSector (String sector) {
-        return false;
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{6,25}");
+        Matcher mather = pattern.matcher(sector);
+        result = mather.find();
+        return result;
     }
 }
