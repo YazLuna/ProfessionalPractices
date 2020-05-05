@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import domain.LinkedOrganization;
 
 public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
@@ -163,112 +162,10 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setInt(10, organization.getIdLinkedOrganization());
             sentence.executeUpdate();
         }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-    }
-
-    @Override
-    public void updateCity (String name) {
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceCity = connection.prepareStatement("insert into City (nameCity) values (?)");
-            sentenceCity.setString(1,name);
-            sentenceCity.executeUpdate();
-        }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
-    }
-
-    @Override
-    public int searchCity (String name) {
-        int idCity=0;
-        try{
-            connection = connexion.getConnection();
-            String queryCity= "Select idCity from City where nameCity=?";
-            PreparedStatement sentence =connection.prepareStatement(queryCity);
-            sentence.setString(1,name);
-            results= sentence.executeQuery();
-            while(results.next()){
-                idCity =results.getInt("idCity");
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return idCity;
-    }
-
-    @Override
-    public void updateState (String name) {
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceState = connection.prepareStatement("insert into State (nameState) values (?)");
-            sentenceState.setString(1,name);
-            sentenceState.executeUpdate();
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-    }
-
-    @Override
-    public int searchState (String name) {
-        int idState=0;
-        try{
-            connection = connexion.getConnection();
-            String queryState= "Select idState from State where nameState=?";
-            PreparedStatement sentence =connection.prepareStatement(queryState);
-            sentence.setString(1,name);
-            results= sentence.executeQuery();
-            while(results.next()){
-                idState =results.getInt("idState");
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return idState;
-    }
-
-    @Override
-    public void updateSector (String name) {
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceSector = connection.prepareStatement("insert into Sector (nameSector) values (?)");
-            sentenceSector.setString(1,name);
-            sentenceSector.executeUpdate();
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-    }
-
-    @Override
-    public int searchSector (String name) {
-        int idSector=0;
-        try{
-            connection = connexion.getConnection();
-            String querySector= "Select idSector from Sector where nameSector=?";
-            PreparedStatement sentence =connection.prepareStatement(querySector);
-            sentence.setString(1,name);
-            results= sentence.executeQuery();
-            while(results.next()){
-                idSector =results.getInt("idSector");
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return idSector;
     }
 
     @Override
@@ -290,5 +187,150 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         }
         return idLinkedOrganization;
     }
-    
+
+    public void updateCity (String name) {
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceCity = connection.prepareStatement("insert into City (nameCity) values (?)");
+            sentenceCity.setString(1,name);
+            sentenceCity.executeUpdate();
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+    }
+
+    public int searchCity (String name) {
+        int idCity=0;
+        try{
+            connection = connexion.getConnection();
+            String queryCity= "Select idCity from City where nameCity=?";
+            PreparedStatement sentence =connection.prepareStatement(queryCity);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idCity =results.getInt("idCity");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idCity;
+    }
+    public List<String> getAllCity() {
+        List<String> cities = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("select nameCity from City");
+            while(results.next()){
+                cities.add(results.getString("nameCity"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return cities;
+    }
+
+    public void updateState (String name) {
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceState = connection.prepareStatement("insert into State (nameState) values (?)");
+            sentenceState.setString(1,name);
+            sentenceState.executeUpdate();
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+    }
+
+    public int searchState (String name) {
+        int idState=0;
+        try{
+            connection = connexion.getConnection();
+            String queryState= "Select idState from State where nameState=?";
+            PreparedStatement sentence =connection.prepareStatement(queryState);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idState =results.getInt("idState");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idState;
+    }
+
+    public List<String> getAllState() {
+        List<String> states = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("select nameState from State");
+            while(results.next()){
+                states.add(results.getString("nameState"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return states;
+    }
+
+    public void updateSector (String name) {
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceSector = connection.prepareStatement("insert into Sector (nameSector) values (?)");
+            sentenceSector.setString(1,name);
+            sentenceSector.executeUpdate();
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+    }
+
+    public int searchSector (String name) {
+        int idSector=0;
+        try{
+            connection = connexion.getConnection();
+            String querySector= "Select idSector from Sector where nameSector=?";
+            PreparedStatement sentence =connection.prepareStatement(querySector);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idSector =results.getInt("idSector");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idSector;
+    }
+
+    public List<String> getAllSector() {
+        List<String> sectors = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("select nameSector from Sector");
+            while(results.next()){
+                sectors.add(results.getString("nameSector"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return sectors;
+    }
 }

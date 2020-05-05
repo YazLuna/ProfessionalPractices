@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import domain.Project;
-import domain.ResponsibleProject;
 
 public class ProjectDAOImpl implements IProjectDAO {
     private final Connexion connexion;
@@ -30,7 +28,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
-            results = consultation.executeQuery("select * from Project");
+            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
             LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
             ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
 
@@ -49,6 +47,8 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setResponsabilities(results.getString("responsabilities"));
                 project.setDuration(results.getInt("duration"));
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setLapse(results.getString("lapse"));
+                project.setStaffNumberCoordinator(results.getString("staffNumberCoordinator"));
                 project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
@@ -66,7 +66,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         Project project = null;
         try{
             connection = connexion.getConnection();
-            String queryProject = "select * from Project where nameProject=?";
+            String queryProject = "select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse where nameProject=?";
             PreparedStatement sentence = connection.prepareStatement(queryProject);
             sentence.setString(1,nameProject);
             results = sentence.executeQuery();
@@ -86,6 +86,8 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setActivities(results.getString("activities"));
                 project.setResponsabilities(results.getString("responsabilities"));
                 project.setDuration(results.getInt("duration"));
+                project.setLapse(results.getString("lapse"));
+                project.setStaffNumberCoordinator(results.getString("staffNumberCoordinator"));
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
@@ -104,6 +106,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int result=0;
         int idResponsibleProject;
         int idOrganization;
+        int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName());
         if(idOrganization == 0) {
@@ -116,9 +119,19 @@ public class ProjectDAOImpl implements IProjectDAO {
             responsibleImpl.updateResponsibleProject(project.getResponsible());
             idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
         }
+        LapseDAOImpl lapse = new LapseDAOImpl();
+        idLapse = lapse.searchLapse(project.getLapse());
+        if(idLapse == 0) {
+            lapse.updateLapse(project.getLapse());
+            idLapse=lapse.searchLapse(project.getLapse());
+        }
+
         try{  
             connection = connexion.getConnection();
-            PreparedStatement sentenceProject = connection.prepareStatement("insert into Project(nameProject,description,objectiveGeneral,objectiveInmediate,objectiveMediate,Methodology,resources,status,activities,responsabilities,duration,quiantityPractitioner,idLinkedOrganization,idResponsibleProject) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement sentenceProject = connection.prepareStatement("insert into Project(nameProject,description,objectiveGeneral,"+
+                    "objectiveInmediate,objectiveMediate,Methodology,resources,status,activities,"+
+                    "responsabilities,duration,quiantityPractitioner,idLinkedOrganization,idResponsibleProject,"+
+                    "staffNumberCoordinator,idLapse) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             sentenceProject.setString(1, project.getNameProject());
             sentenceProject.setString(2, project.getDescription());
             sentenceProject.setString(3, project.getObjectiveGeneral());
@@ -133,6 +146,8 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(12, project.getQuantityPractitioner());
             sentenceProject.setInt(13, idOrganization);
             sentenceProject.setInt(14,idResponsibleProject);
+            sentenceProject.setString(15,project.getStaffNumberCoordinator());
+            sentenceProject.setInt(16,idLapse);
             sentenceProject.executeUpdate();
             result=1;
         }catch(SQLException ex){
@@ -150,7 +165,9 @@ public class ProjectDAOImpl implements IProjectDAO {
         int result=0;
         try{
             connection = connexion.getConnection();
-            PreparedStatement  sentence = connection.prepareStatement("delete from Project where idProject=?");
+            //PreparedStatement  sentence = connection.prepareStatement("delete from Project where idProject=?");
+            String queryDelete = "update Project set status='not available' where idProject =?";
+            PreparedStatement sentence = connection.prepareStatement(queryDelete);
             sentence.setInt(1, project.getIdProject());
             sentence.executeUpdate();
             result=1;
@@ -169,6 +186,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int result=0;
         int idResponsibleProject;
         int idOrganization;
+        int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName());
         if(idOrganization == 0 || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
@@ -184,10 +202,18 @@ public class ProjectDAOImpl implements IProjectDAO {
         }else{
             project.getResponsible().setIdResponsible(idResponsibleProject);
         }
+        LapseDAOImpl lapse = new LapseDAOImpl();
+        idLapse = lapse.searchLapse(project.getLapse());
+        if(idLapse==0){
+            lapse.updateLapse(project.getLapse());
+            idLapse=lapse.searchLapse(project.getLapse());
+        }
         try{
             connection = connexion.getConnection();
-            String queryProject = "update Project set nameProject=?, description=?, objectiveGeneral=?, objectiveInmediate=?, objectiveMediate=?, methodology=?, resources=?,"
-                    + " status=?, activities=?, responsabilities=?, duration=?, quiantityPractitioner=?, idLinkedOrganization=?, idResponsibleProject=?  where idProject=?";
+            String queryProject = "update Project set nameProject=?, description=?, objectiveGeneral=?,"+
+                    " objectiveInmediate=?, objectiveMediate=?, methodology=?, resources=?,"
+                    + " status=?, activities=?, responsabilities=?, duration=?, quiantityPractitioner=?,"+
+                    " idLinkedOrganization=?, idResponsibleProject=?, staffNumberCoordinator=?, idLapse=?  where idProject=?";
             PreparedStatement sentenceProject = connection.prepareStatement(queryProject);
             sentenceProject.setString(1, project.getNameProject());
             sentenceProject.setString(2, project.getDescription());
@@ -204,6 +230,8 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(13, project.getOrganization().getIdLinkedOrganization());
             sentenceProject.setInt(14, project.getResponsible().getIdResponsible());
             sentenceProject.setInt(15, project.getIdProject());
+            sentenceProject.setString(16, project.getStaffNumberCoordinator());
+            sentenceProject.setInt(17,idLapse);
             sentenceProject.executeUpdate();
             result=1;
         }catch(SQLException ex){
@@ -275,5 +303,5 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
         return message;
     }
-    
+
 }

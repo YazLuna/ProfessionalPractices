@@ -1,6 +1,6 @@
 package domain;
 
-import dataAccess.ProjectDAOImpl;
+import dataaccess.ProjectDAOImpl;
 import java.util.List;
 
 public class Project {
@@ -15,6 +15,7 @@ public class Project {
     private String activities;
     private String responsabilities;
     private String staffNumberCoordinator;
+    private String lapse;
     private int duration;
     private int quantityPractitioner;
     private int idProject;
@@ -96,7 +97,23 @@ public class Project {
     public void setResponsabilities (String responsabilities) {
         this.responsabilities = responsabilities;
     }
-   
+
+    public String getStaffNumberCoordinator () {
+        return staffNumberCoordinator;
+    }
+
+    public void setStaffNumberCoordinator (String staffNumberCoordinator) {
+        this.staffNumberCoordinator = staffNumberCoordinator;
+    }
+
+    public String getLapse () {
+        return lapse;
+    }
+
+    public void setLapse (String lapse) {
+        this.lapse = lapse;
+    }
+
     public String getStatus () {
         return status;
     }
@@ -173,5 +190,10 @@ public class Project {
     public String assingProject (String enrollment) {
         ProjectDAOImpl assing = new ProjectDAOImpl();
         return assing.assignProject(enrollment, this.idProject);
+    }
+
+    public Project getProject (String name) {
+        ProjectDAOImpl getProject = new ProjectDAOImpl();
+        return getProject.getProject(name);
     }
 }

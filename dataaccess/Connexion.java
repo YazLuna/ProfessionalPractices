@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,7 +22,7 @@ public class Connexion {
     private void connect() throws SQLException{
         Properties prop = new Properties();
         try {
-            prop.load( Connexion.class.getClassLoader().getResourceAsStream("dataAccess/propertiesDataAccess") );
+            prop.load( Connexion.class.getClassLoader().getResourceAsStream("dataaccess/propertiesDataAccess") );
             dataBase = prop.getProperty("dataBase");
             user = prop.getProperty("user");
             password = prop.getProperty("password");

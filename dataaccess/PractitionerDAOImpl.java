@@ -1,4 +1,4 @@
-package dataAccess;
+package dataaccess;
 
 import domain.Practitioner;
 import java.sql.Connection;
