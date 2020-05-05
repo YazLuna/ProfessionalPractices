@@ -1,5 +1,6 @@
 package test;
 
+import dataaccess.PractitionerDAOImpl;
 import domain.Coordinator;
 import domain.Practitioner;
 import domain.Teacher;
@@ -33,6 +34,7 @@ public class GetTest {
         result = result.getPractitioner();
         Assert.assertEquals("s18098984", result.getEnrollment());
     }
+
 
     @Test
     public void testGetAllPractitioner() {
