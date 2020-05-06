@@ -167,7 +167,7 @@ public class Project {
         return registerProject.updateProject(this);
     }
 
-    public List<Project> ListProjects () {
+    public List<Project> listProjects () {
         ProjectDAOImpl registerProject = new ProjectDAOImpl();
         return registerProject.getAllProjects();
     }
