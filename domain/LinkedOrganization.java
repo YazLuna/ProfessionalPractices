@@ -1,5 +1,8 @@
 package domain;
- 
+
+import java.util.List;
+import dataaccess.LinkedOrganizationDAOImpl;
+
 public class LinkedOrganization{
     private String name;
     private String email;
@@ -94,6 +97,21 @@ public class LinkedOrganization{
     
     public void setIdLinkedOrganization (int idLinkedOrganization) {
         this.idLinkedOrganization = idLinkedOrganization;
+    }
+
+    public List<String> listState () {
+        LinkedOrganizationDAOImpl getAllState = new LinkedOrganizationDAOImpl();
+        return getAllState.getAllState();
+    }
+
+    public List<String> listCity () {
+        LinkedOrganizationDAOImpl getAllCity = new LinkedOrganizationDAOImpl();
+        return getAllCity.getAllCity();
+    }
+
+    public List<String> listSector () {
+        LinkedOrganizationDAOImpl getAllSector = new LinkedOrganizationDAOImpl();
+        return getAllSector.getAllSector();
     }
     
 }
