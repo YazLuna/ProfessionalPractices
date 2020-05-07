@@ -54,7 +54,7 @@ public class LapseDAOImpl implements ILapseDAO {
     }
 
     @Override
-    public List<String> getAllPeriod() {
+    public List<String> getAllLapse() {
         List<String> lapses = new ArrayList<>();
         try {
             connection = connexion.getConnection();

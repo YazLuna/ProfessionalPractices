@@ -21,6 +21,8 @@ public class AddTestProject {
         project.setObjectiveMediate("Refinar requerimientos");
         project.setMethodology("Casos de Uso");
         project.setResources("Modelo Conceptual de la Base de Datos");
+        project.setLapse("FEBRERO-JULIO 2020");
+        project.setStaffNumberCoordinator(2);
         project.setActivities("Documentación de las decisiones de disenio que se han tomado");
         project.setResponsabilities("Diagrama Entidad-Relación para describir el modelo logico de la Base de Datos");
         project.setDuration(3);
@@ -28,7 +30,7 @@ public class AddTestProject {
         organization.setName("BANX");
         organization.setEmail("banx@gmail.com");
         organization.setPhoneNumber("2281848962");
-        organization.setAdress("Calle Norte Quince, LT. 251 MZ.");
+        organization.setAddress("Calle Norte Quince, LT. 251 MZ.");
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");
@@ -63,7 +65,7 @@ public class AddTestProject {
         organization.setName("BANX");
         organization.setEmail("banx@gmail.com");
         organization.setPhoneNumber("2281848962");
-        organization.setAdress("Calle Norte Quince, LT. 251 MZ.");
+        organization.setAddress("Calle Norte Quince, LT. 251 MZ.");
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");
