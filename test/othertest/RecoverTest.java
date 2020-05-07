@@ -1,4 +1,4 @@
-package test;
+package test.othertest;
 
 import domain.Coordinator;
 import domain.Practitioner;
@@ -7,15 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RecoverTest {
-    @Test
-    public void testRecoverCoordinator() {
-        int result = 0;
-        int staffNumber = 1;
-        Coordinator Coordinator = new Coordinator();
-        Coordinator.setStaffNumber(staffNumber);
-        result = Coordinator.recoverCoordinator();
-        Assert.assertEquals(1,result);
-    }
 
     @Test
     public void testRecoverPractitioner() {

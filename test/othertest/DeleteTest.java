@@ -1,4 +1,4 @@
-package test;
+package test.othertest;
 
 import domain.Coordinator;
 import domain.Practitioner;
@@ -7,14 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class DeleteTest {
-    @Test
-    public void testDeleteCoordinator() {
-        int result;
-        Coordinator coordinator = new Coordinator();
-        coordinator.setStaffNumber(1);
-        result = coordinator.deleteCoordinator();
-        Assert.assertEquals(1,result);
-    }
 
     @Test
     public void testDeletePractitioner() {

@@ -1,7 +1,5 @@
-package test;
+package test.othertest;
 
-import dataaccess.PractitionerDAOImpl;
-import domain.Coordinator;
 import domain.Practitioner;
 import domain.Teacher;
 import org.junit.Assert;
@@ -11,21 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetTest {
-    @Test
-    public void testGetCoordinator() {
-        Coordinator result = new Coordinator();
-        result.setStaffNumber(1);
-        result = result.getCoordinator();
-        Assert.assertEquals(1, result.getStaffNumber());
-    }
 
-    @Test
-    public void testGetAllCoordinator() {
-        List<Coordinator> result = new ArrayList<>();;
-        Coordinator coordinator = new Coordinator();
-        result = coordinator.getAllCoordinator();
-        Assert.assertNotNull(result);
-    }
 
     @Test
     public void testGetPractitioner() {

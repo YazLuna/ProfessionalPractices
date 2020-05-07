@@ -1,9 +1,9 @@
-package test;
+package test.othertest;
 
 import org.junit.Test;
 import telegram.TelegramBot;
 
-public class OtherTest {
+public class TelegramBotTest {
     @Test
     public void testTelegram() {
         TelegramBot telegramBot = new TelegramBot("ErroresPP");

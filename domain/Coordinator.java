@@ -1,13 +1,12 @@
 package domain;
 
-import dataaccess.CoordinatorDAOImpl;
-import dataaccess.ProjectDAOImpl;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import dataaccess.CoordinatorDAOImpl;
+import dataaccess.ProjectDAOImpl;
 
 public class Coordinator extends User{
     private int staffNumber;
@@ -15,7 +14,7 @@ public class Coordinator extends User{
     private String dischargeDate;
     
     public Coordinator () {
-        
+        setUserType("Coordinator");
     }
     
     public int getStaffNumber () {
@@ -52,17 +51,6 @@ public class Coordinator extends User{
         }
         return result;
     }
-
-     public int updateCoordinator(){
-         int result = 0;
-         CoordinatorDAOImpl updateCoordinator = new CoordinatorDAOImpl();
-         try{
-             result = updateCoordinator.updateCoordinator(this.staffNumber, this);
-         }catch (SQLException ex){
-             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         return result;
-     }
 
     public int updateCoordinator(int staffNumberCoordinator){
         int result = 0;
@@ -118,7 +106,6 @@ public class Coordinator extends User{
         }
         return result;
     }
-
 
     public Project getProject (String name) {
         ProjectDAOImpl getProject = new ProjectDAOImpl();

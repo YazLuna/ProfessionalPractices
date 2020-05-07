@@ -1,28 +1,11 @@
-package test;
+package test.othertest;
 
-import domain.Coordinator;
 import domain.Practitioner;
 import domain.Teacher;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class AddTest {
-    @Test
-    public void testAddCoordinator() {
-        int result;
-        Coordinator coordinator = new Coordinator();
-        coordinator.setName("Juan");
-        coordinator.setLastName("Lopez");
-        coordinator.setGender(1);
-        coordinator.setEmail("juan@gmail.com");
-        coordinator.setAlternateEmail("juanLopez@gmail.com");
-        coordinator.setPhone("2281901879");
-        coordinator.setStaffNumber(1);
-        coordinator.setRegistrationDate("2020-04-29");
-        result = coordinator.addCoordinator();
-        Assert.assertEquals(1,result);
-
-    }
 
     @Test
     public void testAddPractitioner() {
