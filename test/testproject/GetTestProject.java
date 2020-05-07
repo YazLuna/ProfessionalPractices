@@ -12,7 +12,7 @@ public class GetTestProject {
     public void testGetAllProject () {
         List<Project> result = new ArrayList<>();;
         Project project = new Project();
-        result = project.ListProjects();
+        result = project.listProjects();
         Assert.assertNotNull(result);
     }
 
@@ -22,4 +22,13 @@ public class GetTestProject {
         result = result.getProject("System management TTB");
         Assert.assertNotNull(result);
     }
+
+    @Test
+    public void testGetAllState () {
+        List<String> result = new ArrayList<>();;
+        Project project = new Project();
+        result = project.getOrganization().listState();
+        Assert.assertNotNull(result);
+    }
+
 }
