@@ -1,6 +1,8 @@
 package domain;
 
+import dataaccess.LinkedOrganizationDAOImpl;
 import dataaccess.ProjectDAOImpl;
+import dataaccess.LapseDAOImpl;
 import java.util.List;
 
 public class Project {
@@ -14,8 +16,8 @@ public class Project {
     private String status;
     private String activities;
     private String responsabilities;
-    private String staffNumberCoordinator;
     private String lapse;
+    private int staffNumberCoordinator;
     private int duration;
     private int quantityPractitioner;
     private int idProject;
@@ -98,11 +100,11 @@ public class Project {
         this.responsabilities = responsabilities;
     }
 
-    public String getStaffNumberCoordinator () {
+    public int getStaffNumberCoordinator () {
         return staffNumberCoordinator;
     }
 
-    public void setStaffNumberCoordinator (String staffNumberCoordinator) {
+    public void setStaffNumberCoordinator (int staffNumberCoordinator) {
         this.staffNumberCoordinator = staffNumberCoordinator;
     }
 
@@ -167,7 +169,7 @@ public class Project {
         return registerProject.updateProject(this);
     }
 
-    public List<Project> ListProjects () {
+    public List<Project> listProjects () {
         ProjectDAOImpl registerProject = new ProjectDAOImpl();
         return registerProject.getAllProjects();
     }
@@ -195,5 +197,10 @@ public class Project {
     public Project getProject (String name) {
         ProjectDAOImpl getProject = new ProjectDAOImpl();
         return getProject.getProject(name);
+    }
+
+    public List<String> listLapse () {
+        LapseDAOImpl listLapse= new LapseDAOImpl();
+        return listLapse.getAllLapse();
     }
 }

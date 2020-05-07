@@ -1,10 +1,13 @@
 package domain;
- 
+
+import java.util.List;
+import dataaccess.LinkedOrganizationDAOImpl;
+
 public class LinkedOrganization{
     private String name;
     private String email;
     private String phoneNumber;
-    private String adress;
+    private String address;
     private String city;
     private String state;
     private String sector;
@@ -40,12 +43,12 @@ public class LinkedOrganization{
         this.phoneNumber = phoneNumber;
     }
     
-    public String getAdress () {
-        return adress;
+    public String getAddress () {
+        return address;
     }
     
-    public void setAdress (String adress) {
-        this.adress = adress;
+    public void setAddress (String adress) {
+        this.address = adress;
     }
     
     public String getCity () {
@@ -94,6 +97,21 @@ public class LinkedOrganization{
     
     public void setIdLinkedOrganization (int idLinkedOrganization) {
         this.idLinkedOrganization = idLinkedOrganization;
+    }
+
+    public List<String> listState () {
+        LinkedOrganizationDAOImpl getAllState = new LinkedOrganizationDAOImpl();
+        return getAllState.getAllState();
+    }
+
+    public List<String> listCity () {
+        LinkedOrganizationDAOImpl listCity = new LinkedOrganizationDAOImpl();
+        return listCity.getAllCity();
+    }
+
+    public List<String> listSector () {
+        LinkedOrganizationDAOImpl getAllSector = new LinkedOrganizationDAOImpl();
+        return getAllSector.getAllSector();
     }
     
 }

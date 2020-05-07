@@ -1,6 +1,9 @@
 package domain;
 
 
+import dataaccess.ResponsibleProjectDAOImpl;
+import java.util.List;
+
 public class ResponsibleProject{
     private String name;
     private String lastName;
@@ -50,6 +53,11 @@ public class ResponsibleProject{
     
     public void setIdResponsible (int idResponsible) {
         this.idResponsible = idResponsible;
+    }
+
+    public List<String> listCharge () {
+        ResponsibleProjectDAOImpl listCharge = new ResponsibleProjectDAOImpl();
+        return listCharge.getAllCharge();
     }
     
 }

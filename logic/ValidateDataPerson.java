@@ -1,46 +1,43 @@
 package logic;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-public class validateProject {
-    public boolean validateNameProject (String name) {
+public class ValidateDataPerson {
+
+    public boolean validateName (String name) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{5,25}");
+                .compile("[A-Za-z]{3,50}");
         Matcher mather = pattern.matcher(name);
         result = mather.find();
         return result;
     }
 
-    public boolean validateText (String text) {
+    public boolean validateLastName (String lastName) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{30,100}");
-        Matcher mather = pattern.matcher(text);
+                .compile("[A-Za-z]{3,50}");
+        Matcher mather = pattern.matcher(lastName);
         result = mather.find();
         return result;
     }
 
-    public boolean validateMethology (String methodology) {
+    public boolean validateEmail (String email) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{10,15}");
-        Matcher mather = pattern.matcher(methodology);
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        Matcher mather = pattern.matcher(email);
         result = mather.find();
         return result;
     }
 
-    public boolean validateActivities (String activities) {
-        return false;
-    }
-
-
-    public boolean validateLapse (String lapse) {
+    public boolean validateCharge (String charge) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z0-9]{10,30}");
-        Matcher mather = pattern.matcher(lapse);
+                .compile("[A-Za-z]{6,25}");
+        Matcher mather = pattern.matcher(charge);
         result = mather.find();
         return result;
     }

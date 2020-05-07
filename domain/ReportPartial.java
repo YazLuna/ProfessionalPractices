@@ -5,16 +5,18 @@ public class ReportPartial extends Report {
     private String resultsObtained;
     private int hoursCovered;
     private String observations;
+    private String objective;
+    private String methodology;
 
-    public ReportPartial (String activities) {
-        super (activities);
+    public ReportPartial() {
+
     }
 
     public int getNumberReport () {
         return numberReport;
     }
 
-    public void setNumberReport (int numberReport) {
+    public void setNumberReport(int numberReport) {
         this.numberReport = numberReport;
     }
 
@@ -22,7 +24,7 @@ public class ReportPartial extends Report {
         return resultsObtained;
     }
 
-    public void setResultsObtained (String resultsObtained) {
+    public void setResultsObtained(String resultsObtained) {
         this.resultsObtained = resultsObtained;
     }
 
@@ -30,7 +32,7 @@ public class ReportPartial extends Report {
         return hoursCovered;
     }
 
-    public void setHoursCovered (int hoursCovered) {
+    public void setHoursCovered(int hoursCovered) {
         this.hoursCovered = hoursCovered;
     }
 
@@ -38,8 +40,16 @@ public class ReportPartial extends Report {
         return observations;
     }
 
-    public void setObservations (String observations) {
+    public void setObservations(String observations) {
         this.observations = observations;
     }
+
+    public String getObjective() { return objective; }
+
+    public void setObjective(String objective) { this.objective = objective; }
+
+    public String getMethodology() { return methodology; }
+
+    public void setMethodology(String methodology) { this.methodology = methodology; }
 
 }
