@@ -28,7 +28,7 @@ public class UpdateTestProject {
         organization.setName("BANX");
         organization.setEmail("banx@gmail.com");
         organization.setPhoneNumber("2281848962");
-        organization.setAdress("Calle Norte Quince, LT. 251 MZ.");
+        organization.setAddress("Calle Norte Quince, LT. 251 MZ.");
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");
@@ -64,7 +64,7 @@ public class UpdateTestProject {
         organization.setName("BANX");
         organization.setEmail("banx@gmail.com");
         organization.setPhoneNumber("2281848962");
-        organization.setAdress("Calle Norte Quince, LT. 251 MZ.");
+        organization.setAddress("Calle Norte Quince, LT. 251 MZ.");
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");

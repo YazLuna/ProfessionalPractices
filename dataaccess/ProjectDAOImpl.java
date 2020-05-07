@@ -48,7 +48,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setDuration(results.getInt("duration"));
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setLapse(results.getString("lapse"));
-                project.setStaffNumberCoordinator(results.getString("staffNumberCoordinator"));
+                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
                 project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
@@ -87,7 +87,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setResponsabilities(results.getString("responsabilities"));
                 project.setDuration(results.getInt("duration"));
                 project.setLapse(results.getString("lapse"));
-                project.setStaffNumberCoordinator(results.getString("staffNumberCoordinator"));
+                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
@@ -146,7 +146,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(12, project.getQuantityPractitioner());
             sentenceProject.setInt(13, idOrganization);
             sentenceProject.setInt(14,idResponsibleProject);
-            sentenceProject.setString(15,project.getStaffNumberCoordinator());
+            sentenceProject.setInt(15,project.getStaffNumberCoordinator());
             sentenceProject.setInt(16,idLapse);
             sentenceProject.executeUpdate();
             result=1;
@@ -230,7 +230,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(13, project.getOrganization().getIdLinkedOrganization());
             sentenceProject.setInt(14, project.getResponsible().getIdResponsible());
             sentenceProject.setInt(15, project.getIdProject());
-            sentenceProject.setString(16, project.getStaffNumberCoordinator());
+            sentenceProject.setInt(16, project.getStaffNumberCoordinator());
             sentenceProject.setInt(17,idLapse);
             sentenceProject.executeUpdate();
             result=1;
