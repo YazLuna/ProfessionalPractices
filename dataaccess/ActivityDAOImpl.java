@@ -11,6 +11,12 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Activity;
 
+/**
+ * Implementation of the interface IActivityDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
+
 public class ActivityDAOImpl implements IActivityDAO{
     private final Connexion connexion;
     private Connection connection;
@@ -77,17 +83,17 @@ public class ActivityDAOImpl implements IActivityDAO{
     }
 
     @Override
-    public int updateActivity(String name, int value, String description, String deliverDate) {
+    public int updateActivity(String name, Activity activity) {
         int finalScore = 0;
-        Activity activity = null;
         try{
             connection =connexion.getConnection();
-            String queryActivity = "UPDATE Activity INNER JOIN user ON teacher.idUser = user.idUser SET activity.value = ?, activity.description = ?, activity.deliverDate = ? WHERE activity.name = ?";
+            String queryActivity = "UPDATE Activity INNER JOIN user ON teacher.idUser = user.idUser SET activity.value = ?, activity.description = ?, activity.name = ?, activity.deliverDate = ? WHERE activity.name = ?";
             PreparedStatement sentence=connection.prepareStatement(queryActivity);
             sentence.setInt(1, activity.getValue());
             sentence.setString(2, activity.getDescription());
             sentence.setString(3, activity.getDeliverDate());
-            sentence.setString(4, name);
+            sentence.setString(4, activity.getName());
+            sentence.setString(5, name);
             sentence.executeQuery();
             finalScore = 1;
         }catch(SQLException ex){
@@ -99,7 +105,7 @@ public class ActivityDAOImpl implements IActivityDAO{
     }
 
     @Override
-    public List <Activity> allReport() {
+    public List <Activity> allActivity() {
         List<Activity> activities = new ArrayList<>();
         try{
             connection = connexion.getConnection();

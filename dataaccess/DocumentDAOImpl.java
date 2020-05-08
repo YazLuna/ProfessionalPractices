@@ -1,10 +1,15 @@
 package dataaccess;
 
 import domain.Document;
-
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+/**
+ * Implementation of the interface IDocumentDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
 
 public class DocumentDAOImpl implements IDocumentDAO{
     private final dataaccess.Connexion connexion;

@@ -1,5 +1,9 @@
 package domain;
 
+import dataaccess.ReportPartialDAOImpl;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReportPartial extends Report {
     private int numberReport;
     private String resultsObtained;
@@ -51,5 +55,33 @@ public class ReportPartial extends Report {
     public String getMethodology() { return methodology; }
 
     public void setMethodology(String methodology) { this.methodology = methodology; }
+
+    public int addReportPartial() {
+        int result;
+        ReportPartialDAOImpl reportPartialDAO = new ReportPartialDAOImpl();
+        result = reportPartialDAO.addReportPartial(this);
+        return result;
+    }
+
+    public int deleteActivity(int numberReport) {
+        int result;
+        ReportPartialDAOImpl reportPartialDAO = new ReportPartialDAOImpl();
+        result = reportPartialDAO.deleteReportPartial(numberReport);
+        return result;
+    }
+
+    public int visualizeReportPartial(int numberReport) {
+        int result;
+        ReportPartialDAOImpl reportPartialDAO = new ReportPartialDAOImpl();
+        result = reportPartialDAO.visualizeReportPartial(numberReport);
+        return result;
+    }
+
+    public List<ReportPartial> allReportPartial() {
+        ReportPartialDAOImpl reportPartialDAO = new ReportPartialDAOImpl();
+        List<ReportPartial> reportPartials = new ArrayList<>();
+        reportPartials = reportPartialDAO.allReportPartial();
+        return reportPartials;
+    }
 
 }
