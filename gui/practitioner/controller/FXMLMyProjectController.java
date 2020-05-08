@@ -18,6 +18,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * class FXMLMyProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLMyProjectController implements Initializable {
     @FXML private Button btnBehind;
     @FXML private TextField tfNameOrganization;

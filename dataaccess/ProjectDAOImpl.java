@@ -10,23 +10,31 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Project;
-/**
- *
- * @author: Martha M. Ortiz
- * @version: 08/05/2020
- */
 
+
+/**
+ * Implementation of the IProjectDAO
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class ProjectDAOImpl implements IProjectDAO {
     private final Connexion connexion;
     private Connection connection;
     private Statement consultation;
     private ResultSet results;
-    
+
+    /**
+     * Constructor for the ProjectDAOImpl class
+     */
     public ProjectDAOImpl (){
         connexion= new Connexion();
     }
-    
 
+
+    /**
+     * Method to get the Project list
+     * @return The Project list
+     */
     @Override
     public List<Project> getAllProjects (){
         List<Project> projects = new ArrayList<>();
@@ -67,6 +75,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         return projects;
     }
 
+    /**
+     * Method to get the Project
+     * @param nameProject The nameProject parameter defines the name of the Project
+     * @return The Project of the searched nameProject
+     */
     @Override
     public Project getProject (String nameProject) {
         Project project = null;
@@ -107,6 +120,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         
     }
 
+    /**
+     * Method to add a Project
+     * @param project The data of the Project
+     * @return The message if the Project was added
+     */
     @Override
     public String updateProject (Project project) {
         String result = "The project could not be registered";
@@ -166,6 +184,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
     }
 
+    /**
+     * Method to delete a Project
+     * @param project The data of the Project
+     * @return The message if the Project was deleted
+     */
     @Override
     public String deleteProject (Project project) {
         String result= "The project could not be removed";
@@ -186,6 +209,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
     }
 
+    /**
+     * Update method of the Project
+     * @param project The data of the Project
+     * @return The message if the Project was updated
+     */
     @Override
     public String actualizationProject (Project project) {
         String result = "The project could not be updated";
@@ -247,6 +275,12 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
     }
 
+    /**
+     * Method to make a request for a project
+     * @param enrollment The enrollment parameter defines the enrollment of the Practitioner
+     * @param idProject The idProject parameter defines the id of the Project
+     * @return The message if the project request was made
+     */
     @Override
     public String requestProject (String enrollment, int idProject) {
         String message=null;
@@ -267,6 +301,12 @@ public class ProjectDAOImpl implements IProjectDAO {
         return message;
     }
 
+    /**
+     * Method for assigning a project
+     * @param enrollment The enrollment parameter defines the enrollment of the Practitioner
+     * @param idProject The idProject parameter defines the id of the Project
+     * @return The message if the project assignment was made
+     */
     @Override
     public String assignProject (String enrollment, int idProject) {
         String status=null;

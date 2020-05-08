@@ -2,12 +2,13 @@ package dataaccess;
 
 import java.util.List;
 import domain.Project;
-/**
- *
- * @author: Martha M. Ortiz
- * @version: 08/05/2020
- */
 
+
+/**
+ * Interface of Project
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public interface IProjectDAO {
     public List<Project> getAllProjects ();
     public Project getProject (String nameProject);

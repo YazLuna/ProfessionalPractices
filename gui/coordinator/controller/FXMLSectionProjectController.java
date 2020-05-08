@@ -16,6 +16,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+/**
+ * class FXMLSectionProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLSectionProjectController implements Initializable {
     @FXML private Button btnHome;
     @FXML private Button btnRegisterProject;

@@ -15,6 +15,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * class FXMLSectionPractitionerController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLSectionPractitionerController implements Initializable {
     @FXML private Button btnHome;
     @FXML private Button btnRegisterPractitioner;

@@ -1,12 +1,12 @@
 package dataaccess;
 
 import domain.ResponsibleProject;
-/**
- *
- * @author: Martha M. Ortiz
- * @version: 08/05/2020
- */
 
+/**
+ * Interface of Responsible Project
+ * @author MARTHA
+ * @version 008/05/2020
+ */
 public interface IResponsibleProjectDAO {
     public ResponsibleProject getResponsibleProject (int idResponsible);
     public String updateResponsibleProject (ResponsibleProject responsible);
