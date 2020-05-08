@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"dataaccess"},{"l":"demo"},{"l":"domain"},{"l":"gui"},{"l":"gui.administrator.controller"},{"l":"gui.coordinator.controller"},{"l":"gui.login"},{"l":"gui.practitioner.controller"},{"l":"gui.teacher"},{"l":"logic"},{"l":"telegram"},{"l":"test"},{"l":"test.testproject"}]

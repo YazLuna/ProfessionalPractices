@@ -15,6 +15,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * class FXMLChooseSectionController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLChooseSectionController implements Initializable {
     @FXML private Button btnBehind;
     @FXML private Button btnSectionOrganization;

@@ -15,6 +15,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * class FXMLChooseRequestProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLChooseRequestProjectController implements Initializable {
     @FXML private Button btnLogout;
     @FXML private Button btnBehind;
