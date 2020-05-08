@@ -17,7 +17,8 @@ public class ReportPartialDAOImpl implements IReportPartialDAO{
     public ReportPartialDAOImpl() { connexion= new Connexion(); }
 
     @Override
-    public void addReportPartial(ReportPartial reportPartial) {
+    public int addReportPartial(ReportPartial reportPartial) {
+        int finalScore = 0;
         try {
             connection = connexion.getConnection();
             String queryFoundReportPartial= "INSERT INTO reportPartial (numberReport, resultsObtained, hoursCovered, observations, objective, methodology) VALUES (?,?,?,?,?,?)";
@@ -31,39 +32,47 @@ public class ReportPartialDAOImpl implements IReportPartialDAO{
                 sentence.setString(5, reportPartial.getObjective());
                 sentence.setString(6, reportPartial.getMethodology());
             }
+            finalScore = 1;
         }catch(SQLException ex){
             Logger.getLogger(ReportPartialDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
+        return finalScore;
     }
 
     @Override
-    public void deleteReportPartial(int numberReport) {
+    public int deleteReportPartial(int numberReport) {
+        int finalScore = 0;
         try{
             connection = connexion.getConnection();
             PreparedStatement sentence = connection.prepareStatement("DELETE ReportPartial INNER JOIN user ON practitioner.idUser = user.idUser WHERE numberReport = ?");
             sentence.setInt(1, numberReport);
             sentence.executeQuery();
+            finalScore = 1;
         }catch(SQLException ex){
             Logger.getLogger(ReportPartialDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
+        return finalScore;
     }
 
     @Override
-    public void visualizeReportPartial(int numberReport) {
+    public int visualizeReportPartial(int numberReport) {
+        int finalScore = 0;
         try{
             connection = connexion.getConnection();
             PreparedStatement sentence = connection.prepareStatement("SELECT * FROM ReportPartial WHERE numberReport = ?");
             sentence.setInt(1, numberReport);
             sentence.executeQuery();
+            finalScore = 1;
         }catch(SQLException ex){
             Logger.getLogger(ReportPartialDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
+        return finalScore;
     }
 
     @Override
