@@ -17,10 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * class FXMLSectionProjectPractitionerController
- * @author MARTHA
+ * DAO User
+ * @author Yazmin
  * @version 08/05/2020
  */
+
 public class FXMLSectionProjectPractitionerController implements Initializable {
     @FXML private Button btnMyProject;
     @FXML private Button btnRequestProject;

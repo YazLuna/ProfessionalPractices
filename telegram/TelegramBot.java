@@ -3,6 +3,12 @@ package telegram;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class TelegramBot {
     private String url = "https://api.telegram.org/bot1098401798:AAEycvrpsUUIUb0oOcUO-" +
             "_tGsvlfJEK8dVg/sendMessage?chat_id=@";
