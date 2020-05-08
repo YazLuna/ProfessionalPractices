@@ -1,14 +1,19 @@
 package dataaccess;
 
 import domain.ReportPartial;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ReportPartialDAOImpl implements IReportPartialDAO{
+/**
+ * Implementation of the interface IReportPartialDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
+
+public class ReportPartialDAOImpl implements IReportPartialDAO {
     private final Connexion connexion;
     private Connection connection;
     private Statement consult;

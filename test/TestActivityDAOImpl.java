@@ -6,6 +6,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creation of the class TestActivityDAOImpl
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
+
 public class TestActivityDAOImpl {
 
     public void setUp() {

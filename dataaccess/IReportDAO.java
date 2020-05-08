@@ -3,6 +3,12 @@ package dataaccess;
 import domain.Report;
 import java.util.List;
 
+/**
+ * Creation of the interface IReportDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
+
 public interface IReportDAO {
     public int addReport(Report report);
     public int deleteReport(String name);

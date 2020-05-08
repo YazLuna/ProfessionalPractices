@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implementation of the interface IReportDAO
+ * @author Ivana Correa
+ * @version  08/05/2020
+ */
+
 public class ReportDAOImpl implements IReportDAO{
     private final Connexion connexion;
     private Connection connection;

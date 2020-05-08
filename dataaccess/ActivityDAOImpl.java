@@ -11,6 +11,12 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Activity;
 
+/**
+ * Implementation of the interface IActivityDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
+
 public class ActivityDAOImpl implements IActivityDAO{
     private final Connexion connexion;
     private Connection connection;
