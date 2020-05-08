@@ -38,7 +38,7 @@ public class AddCoordinatorTest {
         coordinatorTest.setEmail("juan@gmail.com");
         coordinatorTest.setAlternateEmail("juanLopez@gmail.com");
         coordinatorTest.setPhone("2281901879");
-        coordinatorTest.setStaffNumber(1);
+        coordinatorTest.setStaffNumber(4);
         coordinatorTest.setRegistrationDate("2020-04-29");
         coordinatorTest.setPassword("Wigettaz4BTS");
         result = coordinatorTest.addCoordinator();
@@ -55,7 +55,7 @@ public class AddCoordinatorTest {
         coordinator.setEmail("esteban@gmail.com");
         coordinator.setAlternateEmail("esteGa@gmail.com");
         coordinator.setPhone("2281675432");
-        coordinator.setStaffNumber(2);
+        coordinator.setStaffNumber(1);
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setPassword("esteban4j1");
         result = coordinator.addCoordinator();
@@ -121,4 +121,54 @@ public class AddCoordinatorTest {
         Assert.assertEquals(0,result);
     }
 
+    @Test
+    public void testACoordinatorEmailExist() {
+        int result;
+        Coordinator coordinatorTest = new Coordinator();
+        coordinatorTest.setName("Juan");
+        coordinatorTest.setLastName("Lopez");
+        coordinatorTest.setGender(1);
+        coordinatorTest.setEmail("esteban@gmail.com");
+        coordinatorTest.setAlternateEmail("juanLopez@gmail.com");
+        coordinatorTest.setPhone("2281901879");
+        coordinatorTest.setStaffNumber(1);
+        coordinatorTest.setRegistrationDate("2020-04-29");
+        coordinatorTest.setPassword("Wigettaz4BTS");
+        result = coordinatorTest.addCoordinator();
+        Assert.assertEquals(0,result);
+    }
+
+    @Test
+    public void testCoordinatorAlternateEmailExist()  {
+        int result;
+        Coordinator coordinatorTest = new Coordinator();
+        coordinatorTest.setName("Juan");
+        coordinatorTest.setLastName("Lopez");
+        coordinatorTest.setGender(1);
+        coordinatorTest.setEmail("juan@gmail.com");
+        coordinatorTest.setAlternateEmail("esteGa@gmail.com");
+        coordinatorTest.setPhone("2281901879");
+        coordinatorTest.setStaffNumber(1);
+        coordinatorTest.setRegistrationDate("2020-04-29");
+        coordinatorTest.setPassword("Wigettaz4BTS");
+        result = coordinatorTest.addCoordinator();
+        Assert.assertEquals(0,result);
+    }
+
+    @Test
+    public void testCoordinatorPhoneExist()  {
+        int result;
+        Coordinator coordinatorTest = new Coordinator();
+        coordinatorTest.setName("Juan");
+        coordinatorTest.setLastName("Lopez");
+        coordinatorTest.setGender(1);
+        coordinatorTest.setEmail("juan@gmail.com");
+        coordinatorTest.setAlternateEmail("juanLopez@gmail.com");
+        coordinatorTest.setPhone("2281675432");
+        coordinatorTest.setStaffNumber(1);
+        coordinatorTest.setRegistrationDate("2020-04-29");
+        coordinatorTest.setPassword("Wigettaz4BTS");
+        result = coordinatorTest.addCoordinator();
+        Assert.assertEquals(0,result);
+    }
 }

@@ -4,7 +4,10 @@ package logic;
 public class principalPrueba {
 
     public static void main(String[] args) {
-        ValidateProject project = new ValidateProject();
-        System.out.println(project.validatePhoneNumber("555"));
+        String sn = " Ana          maria ";
+
+        ValidateAddUser addUser = new ValidateAddUser();
+
+        System.out.println(addUser.validatePhone("2343333330"));
     }
 }

@@ -76,9 +76,9 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int result = 0;
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceRecoverPractitioner = connection.prepareStatement ("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET User.status = 'Active' WHERE Practitioner.enrollment = ?");
-            sentenceRecoverPractitioner.setString(1, practitionerEdit.getEnrollment());
-            sentenceRecoverPractitioner.executeUpdate();
+          //  PreparedStatement sentenceRecoverPractitioner = connection.prepareStatement ("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET User.status = 'Active' WHERE Practitioner.enrollment = ?");
+           // sentenceRecoverPractitioner.setString(1, practitionerEdit.getEnrollment());
+            //sentenceRecoverPractitioner.executeUpdate();
             result = 1;
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,9 +91,9 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int result = 0;
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceDeletePractitioner=connection.prepareStatement("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET status = 'Inactive' WHERE Practitioner.enrollment=?");
-            sentenceDeletePractitioner.setString(1,practitioner.getEnrollment());
-            sentenceDeletePractitioner.executeUpdate();
+           // PreparedStatement sentenceDeletePractitioner=connection.prepareStatement("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET status = 'Inactive' WHERE Practitioner.enrollment=?");
+           // sentenceDeletePractitioner.setString(1,practitioner.getEnrollment());
+            //sentenceDeletePractitioner.executeUpdate();
             result = 1;
         }catch(SQLException ex){
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -188,15 +188,15 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         int result = 0;
         try{
             connection = connexion.getConnection();
-            String queryAddPractitionerUser = "INSERT INTO User  (name, lastName, gender, status, email,  alternateEmail, phone)  VALUES (?,?, ?, ?, ?, ?, ?)";
+            String queryAddPractitionerUser = "INSERT INTO User  (name, lastName, gender, email,  alternateEmail, phone,password)  VALUES (?,?,  ?, ?, ?, ?,?)";
             PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddPractitionerUser);
             sentenceAddUser.setString(1, practitioner.getName());
             sentenceAddUser.setString(2, practitioner.getLastName());
             sentenceAddUser.setInt(3, practitioner.getGender());
-            sentenceAddUser.setString(4,practitioner.getStatus());
-            sentenceAddUser.setString(5, practitioner.getEmail());
-            sentenceAddUser.setString(6, practitioner.getAlternateEmail());
-            sentenceAddUser.setString(7, practitioner.getPhone());
+            sentenceAddUser.setString(4, practitioner.getEmail());
+            sentenceAddUser.setString(5, practitioner.getAlternateEmail());
+            sentenceAddUser.setString(6, practitioner.getPhone());
+            sentenceAddUser.setString(7,practitioner.getPassword());
             sentenceAddUser.executeUpdate();
             result = 1;
         } catch (SQLException ex) {
@@ -257,7 +257,7 @@ public class PractitionerDAOImpl implements IPractitionerDAO {
         try {
             connection = connexion.getConnection();
             consult = connection.createStatement();
-            result = consult.executeQuery("Select * from Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser WHERE User.status = 'Active'");
+            //result = consult.executeQuery("Select * from Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser WHERE User.status = 'Active'");
             while(result.next()){
                 Practitioner practitioner = new Practitioner();
                 practitioner.setName(result.getString("name"));

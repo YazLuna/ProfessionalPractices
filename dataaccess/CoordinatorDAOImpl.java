@@ -22,12 +22,16 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
 
     @Override
     public Coordinator getCoordinator() throws SQLException {
+        int idUserType;
         Coordinator coordinator = new Coordinator();
+        idUserType = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
         try {
             connection = connexion.getConnection();
-            String queryGetCoordinator = "SELECT * from Coordinator, User, UserTypeStatus WHERE Coordinator.idUser = " +
-                    "User.idUser AND UserTypeStatus.status = 'Active'";
+            String queryGetCoordinator = "SELECT * from Coordinator, User, UserTypeStatus, User_UserTypeStatus WHERE Coordinator.idUser="+
+                    "User.idUser AND User_UserTypeStatus.idUser = User.idUser AND User_UserTypeStatus.idUserTypeStatus=?" +
+                    " AND UserTypeStatus.status='Active'";
             PreparedStatement sentence = connection.prepareStatement(queryGetCoordinator);
+            sentence.setInt(1,idUserType);
             result = sentence.executeQuery();
             while (result.next()) {
                 coordinator.setName(result.getString("name"));
@@ -48,26 +52,38 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
     @Override
     public int updateCoordinator(int staffNumber, Coordinator coordinatorEdit) throws SQLException {
         int result = 0;
-        try {
-            connection = connexion.getConnection();
-            String queryCoordinatorModify = "UPDATE Coordinator INNER JOIN User ON Coordinator.idUser =" +
-                    " User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?" +
-                    ", User.alternateEmail = ?, User.phone = ?, User.password = ?" +
-                    ", Coordinator.staffNumber = ?  WHERE Coordinator.staffNumber = ?";
-            PreparedStatement sentence = connection.prepareStatement(queryCoordinatorModify);
-            sentence.setString(1, coordinatorEdit.getName());
-            sentence.setString(2, coordinatorEdit.getLastName());
-            sentence.setInt(3, coordinatorEdit.getGender());
-            sentence.setString(4, coordinatorEdit.getEmail());
-            sentence.setString(5, coordinatorEdit.getAlternateEmail());
-            sentence.setString(6, coordinatorEdit.getPhone());
-            sentence.setString(7, coordinatorEdit.getPassword());
-            sentence.setInt(8, coordinatorEdit.getStaffNumber());
-            sentence.setInt(9, staffNumber);
-            sentence.executeUpdate();
-            result = 1;
-        } catch (SQLException ex) {
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        int emailExist;
+        int phoneExist;
+        int alternateEmailExist;
+        emailExist = searchEmail(coordinatorEdit.getEmail());
+        if(emailExist == 0){
+            phoneExist = searchPhone(coordinatorEdit.getPhone());
+            if(phoneExist == 0){
+                alternateEmailExist = searchAlternateEmail(coordinatorEdit.getAlternateEmail());
+                if(alternateEmailExist == 0){
+                    try {
+                        connection = connexion.getConnection();
+                        String queryCoordinatorModify = "UPDATE Coordinator INNER JOIN User ON Coordinator.idUser =" +
+                                " User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?" +
+                                ", User.alternateEmail = ?, User.phone = ?, User.password = ?" +
+                                ", Coordinator.staffNumber = ?  WHERE Coordinator.staffNumber = ?";
+                        PreparedStatement sentence = connection.prepareStatement(queryCoordinatorModify);
+                        sentence.setString(1, coordinatorEdit.getName());
+                        sentence.setString(2, coordinatorEdit.getLastName());
+                        sentence.setInt(3, coordinatorEdit.getGender());
+                        sentence.setString(4, coordinatorEdit.getEmail());
+                        sentence.setString(5, coordinatorEdit.getAlternateEmail());
+                        sentence.setString(6, coordinatorEdit.getPhone());
+                        sentence.setString(7, coordinatorEdit.getPassword());
+                        sentence.setInt(8, coordinatorEdit.getStaffNumber());
+                        sentence.setInt(9, staffNumber);
+                        sentence.executeUpdate();
+                        result = 1;
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
         }
         return result;
     }
@@ -103,21 +119,21 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
         int idUser;
         int userAdd = 0;
         int staffNumber;
-        boolean emailExist;
-        boolean phoneExist;
-        boolean alternateEmailExist;
+        int emailExist;
+        int phoneExist;
+        int alternateEmailExist;
         Coordinator coordinatorSearch = new Coordinator();
         coordinatorSearch = coordinatorSearch.getCoordinator();
-        if(coordinatorSearch==null){
+        if(coordinatorSearch.getEmail()== null){
             idUser = searchIdUser(coordinator);
             staffNumber = searchStaffNumber(coordinator.getStaffNumber());
             if ((idUser == 0) && (staffNumber == 0)) {
                 emailExist = searchEmail(coordinator.getEmail());
-                if(!emailExist){
+                if(emailExist == 0){
                     phoneExist = searchPhone(coordinator.getPhone());
-                    if(!phoneExist){
+                    if(phoneExist == 0){
                         alternateEmailExist = searchAlternateEmail(coordinator.getAlternateEmail());
-                        if(!alternateEmailExist){
+                        if(alternateEmailExist == 0){
                             userAdd = addUser(coordinator);
                             idUser = searchIdUser(coordinator);
                         }
@@ -143,9 +159,9 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
         return resultAdd;
     }
 
-    private boolean searchAlternateEmail(String alternateEmail) throws SQLException {
+    private int searchAlternateEmail(String alternateEmail) throws SQLException {
         String alternateEmailFound= null;
-        boolean search = false;
+        int search = 0;
         try {
             connection = connexion.getConnection();
             String querySearch = "Select alternateEmail from User where alternateEmail =?";
@@ -156,17 +172,19 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
                 alternateEmailFound = result.getString("alternateEmail");
             }
             if (alternateEmailFound != null){
-                search = true;
+                search = 1;
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
         }
         return search;
     }
 
-    private boolean searchPhone(String phone) throws SQLException {
+    private int searchPhone(String phone) throws SQLException {
         String phoneFound= null;
-        boolean search = false;
+        int search = 0;
         try {
             connection = connexion.getConnection();
             String querySearch = "Select phone from User where phone =?";
@@ -177,17 +195,19 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
                 phoneFound = result.getString("phone");
             }
             if (phoneFound != null){
-                search = true;
+                search = 1;
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
         }
         return search;
     }
 
-    private boolean searchEmail(String email) throws SQLException {
+    private int searchEmail(String email) throws SQLException {
         String emailFound= null;
-        boolean search = false;
+        int search = 0;
         try {
             connection = connexion.getConnection();
             String querySearch = "Select email from User where email =?";
@@ -198,10 +218,12 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
                 emailFound = result.getString("email");
             }
             if (emailFound != null){
-                search = true;
+                search = 1;
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
         }
         return search;
     }
@@ -216,6 +238,8 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
             sentenceAddUserTypeStatus.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
         }
     }
 
@@ -233,6 +257,8 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
         }
         return idUserType;
     }
@@ -285,6 +311,8 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
                 result = 1;
             } catch (SQLException ex) {
                 Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }finally {
+                connection.close();
             }
         }
         return result;
@@ -300,6 +328,8 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
             sentenceAddUserType.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connection.close();
         }
     }
 
@@ -317,6 +347,8 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connection.close();
         }
         return staffNumber;
     }
@@ -353,19 +385,21 @@ public class CoordinatorDAOImpl implements ICoordinatorDAO {
     public int recoverCoordinator(Coordinator coordinator) throws SQLException {
         int result = 0;
         int idUserTypeStatus;
-        coordinator.setStatus("Active");
-        idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
-        try {
-            connection = connexion.getConnection();
-            PreparedStatement sentenceRecoverCoordinator =
-                    connection.prepareStatement("UPDATE Coordinator, User, User_UserTypeStatus SET User_UserTypeStatus.idUserTypeStatus=?" +
-                            ", Coordinator.dischargeDate=? WHERE Coordinator.idUser = User.idUser AND User_UserTypeStatus.idUser = User.idUser");
-            sentenceRecoverCoordinator.setInt(1, idUserTypeStatus);
-            sentenceRecoverCoordinator.setString(2, null);
-            sentenceRecoverCoordinator.executeUpdate();
-            result = 1;
-        } catch (SQLException ex) {
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        if(coordinator.getCoordinator().getStaffNumber() == 0){
+            coordinator.setStatus("Active");
+            idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
+            try {
+                connection = connexion.getConnection();
+                PreparedStatement sentenceRecoverCoordinator =
+                        connection.prepareStatement("UPDATE Coordinator, User, User_UserTypeStatus SET User_UserTypeStatus.idUserTypeStatus=?" +
+                                ", Coordinator.dischargeDate=? WHERE Coordinator.idUser = User.idUser AND User_UserTypeStatus.idUser = User.idUser");
+                sentenceRecoverCoordinator.setInt(1, idUserTypeStatus);
+                sentenceRecoverCoordinator.setString(2, null);
+                sentenceRecoverCoordinator.executeUpdate();
+                result = 1;
+            } catch (SQLException ex) {
+                Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return result;
     }

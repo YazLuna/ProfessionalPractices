@@ -8,7 +8,7 @@ public class RecoverCoordinatorTest {
     @Test
     public void testRecoverCoordinator() {
         int result = 0;
-        int staffNumber = 2;
+        int staffNumber = 1;
         Coordinator Coordinator = new Coordinator();
         Coordinator.setStaffNumber(staffNumber);
         result = Coordinator.recoverCoordinator();
@@ -31,5 +31,15 @@ public class RecoverCoordinatorTest {
         Coordinator.setStaffNumber(staffNumber);
         result = Coordinator.recoverCoordinator();
         Assert.assertEquals(1,result);
+    }
+
+    @Test
+    public void testRecoverCoordinatorWhenOtherIsActive() {
+        int result = 0;
+        int staffNumber = 1;
+        Coordinator Coordinator = new Coordinator();
+        Coordinator.setStaffNumber(staffNumber);
+        result = Coordinator.recoverCoordinator();
+        Assert.assertEquals(0,result);
     }
 }
