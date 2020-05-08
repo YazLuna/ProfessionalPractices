@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import domain.Coordinator;
 
 /**
  * DAO User
  * @author Yazmin
  * @version 08/05/2020
  */
+
 public class UserMethodDAOImpl implements IUserMethodDAO{
     private final Connexion connexion;
     private Connection connection;
@@ -126,17 +126,17 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return idUserType;
     }
 
-    public int searchIdUser(Coordinator coordinator) throws SQLException {
+    public int searchIdUser(String name, String lastName, String email, String alternateEmail, String phone) throws SQLException {
         int idUser = 0;
         try {
             connection = connexion.getConnection();
             String queryUser = "Select idUser from User where name=? AND lastName=? AND email=? AND alternateEmail=? AND phone=?";
             PreparedStatement sentence = connection.prepareStatement(queryUser);
-            sentence.setString(1, coordinator.getName());
-            sentence.setString(2, coordinator.getLastName());
-            sentence.setString(3, coordinator.getEmail());
-            sentence.setString(4, coordinator.getAlternateEmail());
-            sentence.setString(5, coordinator.getPhone());
+            sentence.setString(1, name);
+            sentence.setString(2, lastName);
+            sentence.setString(3, email);
+            sentence.setString(4, alternateEmail);
+            sentence.setString(5, phone);
             result = sentence.executeQuery();
             while (result.next()) {
                 idUser = result.getInt("idUser");
@@ -149,13 +149,14 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return idUser;
     }
 
-    public int addUser(Coordinator coordinator) throws SQLException {
+    public int addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
+            , String userType, String status, int gender) throws SQLException {
         int result = 0;
         int idUserTypeSearch;
-        idUserTypeSearch= searchIdUserType(coordinator.getUserType(), coordinator.getStatus());
+        idUserTypeSearch= searchIdUserType(userType, status);
         if(idUserTypeSearch == 0){
-            addUserType(coordinator.getUserType(),coordinator.getStatus());
-            idUserTypeSearch = searchIdUserType(coordinator.getUserType(), coordinator.getStatus());
+            addUserType(userType, status);
+            idUserTypeSearch = searchIdUserType(userType, status);
         }
         if(idUserTypeSearch > 0){
             try {
@@ -163,13 +164,13 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
                 String queryAddUser = "INSERT INTO User  (name, lastName, gender, email,  alternateEmail" +
                         ", phone,password)  VALUES (?,?, ?, ?, ?, ?,?)";
                 PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddUser);
-                sentenceAddUser.setString(1, coordinator.getName());
-                sentenceAddUser.setString(2, coordinator.getLastName());
-                sentenceAddUser.setInt(3, coordinator.getGender());
-                sentenceAddUser.setString(4, coordinator.getEmail());
-                sentenceAddUser.setString(5, coordinator.getAlternateEmail());
-                sentenceAddUser.setString(6, coordinator.getPhone());
-                sentenceAddUser.setString(7,coordinator.getPassword());
+                sentenceAddUser.setString(1, name);
+                sentenceAddUser.setString(2, lastName);
+                sentenceAddUser.setInt(3, gender);
+                sentenceAddUser.setString(4, email);
+                sentenceAddUser.setString(5, alternateEmail);
+                sentenceAddUser.setString(6, phone);
+                sentenceAddUser.setString(7, password);
                 sentenceAddUser.executeUpdate();
                 result = 1;
             } catch (SQLException ex) {
@@ -202,6 +203,26 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             connection = connexion.getConnection();
             String queryStaffNumber =
                     "Select staffNumber from Coordinator where staffNumber=?";
+            PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
+            sentence.setInt(1, staffNumberSearch);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                staffNumber = result.getInt("staffNumber");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connection.close();
+        }
+        return staffNumber;
+    }
+
+    public int searchStaffNumberTeacher(int staffNumberSearch) throws SQLException {
+        int staffNumber = 0;
+        try {
+            connection = connexion.getConnection();
+            String queryStaffNumber =
+                    "Select staffNumber from Teacher where staffNumber=?";
             PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
             sentence.setInt(1, staffNumberSearch);
             result = sentence.executeQuery();

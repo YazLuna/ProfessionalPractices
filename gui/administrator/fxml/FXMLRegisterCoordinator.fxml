@@ -8,8 +8,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.RadioButton?>
+<?import java.net.URL?>
 
 <AnchorPane id="AnchorPane" prefHeight="409.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.administrator.controller.FXMLRegisterCoordinatorController">
+   <stylesheets>
+      <URL value="@../css/fxmlregistercoordinator.css" />
+   </stylesheets>
    <children>
       <ImageView fx:id="imgBackground" fitHeight="440.0" fitWidth="601.0" layoutY="-5.0" pickOnBounds="true">
          <image>

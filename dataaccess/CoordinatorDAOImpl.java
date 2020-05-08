@@ -131,7 +131,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         Coordinator coordinatorSearch = new Coordinator();
         coordinatorSearch = coordinatorSearch.getCoordinator();
         if(coordinatorSearch.getEmail()== null){
-            idUser = searchIdUser(coordinator);
+            idUser = searchIdUser(coordinator.getName(),coordinator.getLastName(),coordinator.getEmail()
+                    ,coordinator.getAlternateEmail(),coordinator.getPhone());
             staffNumber = searchStaffNumber(coordinator.getStaffNumber());
             if ((idUser == 0) && (staffNumber == 0)) {
                 emailExist = searchEmail(coordinator.getEmail());
@@ -140,13 +141,16 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                     if(phoneExist == 0){
                         alternateEmailExist = searchAlternateEmail(coordinator.getAlternateEmail());
                         if(alternateEmailExist == 0){
-                            userAdd = addUser(coordinator);
-                            idUser = searchIdUser(coordinator);
+                            userAdd = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(),coordinator.getAlternateEmail(), coordinator.getPhone()
+                                    ,coordinator.getPassword(), coordinator.getUserType(), coordinator.getStatus(),coordinator.getGender());
+                            idUser = searchIdUser(coordinator.getName(),coordinator.getLastName(),coordinator.getEmail()
+                                    ,coordinator.getAlternateEmail(),coordinator.getPhone());
                         }
                     }
                 }
             }
             if ((userAdd == 1) || (idUser > 0)) {
+                //search enrollment is 1 no add if is 0 add
                 addUserUserTypeStatus(idUser,searchIdUserType(coordinator.getUserType(),coordinator.getStatus()));
                 try {
                     connection = connexion.getConnection();

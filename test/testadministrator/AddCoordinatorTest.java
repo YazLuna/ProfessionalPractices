@@ -6,6 +6,12 @@ import org.junit.After;
 import org.junit.Test;
 import domain.Coordinator;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class AddCoordinatorTest {
     /*@Before
     public void Add()  {

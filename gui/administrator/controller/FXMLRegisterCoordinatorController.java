@@ -3,14 +3,20 @@ package gui.administrator.controller;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import logic.ValidateAddUser;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
@@ -18,6 +24,7 @@ import gui.FXMLGeneralController;
 
 public class FXMLRegisterCoordinatorController extends FXMLGeneralController implements Initializable  {
     @FXML private Button btnRegister;
+    @FXML private Button btnCancel;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
     @FXML private TextField tfLastName;
@@ -35,7 +42,14 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     }
 
     public void cancel(ActionEvent actionEvent) {
-        returnGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
+        Alert cancel = new Alert(Alert.AlertType.NONE);
+        cancel.setAlertType(Alert.AlertType.CONFIRMATION);
+        cancel.setHeaderText("Do you want to cancel?");
+        cancel.setTitle("Cancel");
+        Optional<ButtonType> action = cancel.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            returnGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
+        }
     }
 
     public void loadProfilePicture(ActionEvent actionEvent) {
@@ -51,9 +65,17 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         int band =0;
         int registerComplete = 0;
         Coordinator coordinator = new Coordinator();
+        tfStaffNumber.getStyleClass().remove("ok");
+        tfName.getStyleClass().remove("ok");
+        tfLastName.getStyleClass().remove("ok");
+        tfEmail.getStyleClass().remove("ok");
+        tfAlternateEmail.getStyleClass().remove("ok");
+        tfPassword.getStyleClass().remove("ok");
+        tfPhone.getStyleClass().remove("ok");
         if(!validateAddUser.validateEmpty(tfStaffNumber.getText())){
             staffNumberValidate = validateAddUser.validateStaffNumber(tfStaffNumber.getText());
             if(staffNumberValidate){
+                tfStaffNumber.getStyleClass().add("ok");
                 coordinator.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
                 coordinator.setName(tfName.getText());
                 coordinator.setLastName(tfLastName.getText());
@@ -65,18 +87,23 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
                 if(!validateAddUser.validateEmpty(coordinator.getName())){
                     nameValidate = validateAddUser.validateName(tfName.getText());
                     if(nameValidate){
+                        tfName.getStyleClass().add("ok");
                         if(!validateAddUser.validateEmpty(coordinator.getLastName())){
                             lastNameValidate = validateAddUser.validateLastName(coordinator.getLastName());
                             if(lastNameValidate){
+                                tfLastName.getStyleClass().add("ok");
                                 if(!validateAddUser.validateEmpty(coordinator.getEmail())){
                                     emailValidate = validateAddUser.validateEmail(coordinator.getEmail());
                                     if(emailValidate){
+                                        tfEmail.getStyleClass().add("ok");
                                         if(!validateAddUser.validateEmpty(coordinator.getAlternateEmail())){
                                             alternateEmailValidate = validateAddUser.validateEmail(coordinator.getAlternateEmail());
                                             if(alternateEmailValidate){
+                                                tfAlternateEmail.getStyleClass().add("ok");
                                                 if(!validateAddUser.validateEmpty(coordinator.getPhone())){
                                                     phoneValidate = validateAddUser.validatePhone(coordinator.getPhone());
                                                     if(phoneValidate){
+                                                        tfPhone.getStyleClass().add("ok");
                                                         if(!validateAddUser.validateEmpty(coordinator.getPassword())){
                                                             coordinator.setName(validateAddUser.deleteSpace(tfName.getText()));
                                                             coordinator.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
@@ -86,43 +113,43 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
                                                             coordinator.setPassword(validateAddUser.deleteSpace(tfPassword.getText()));
                                                             band =1;
                                                         }else{
-                                                            generateAlert("The password is empty");
+                                                            tfPassword.getStyleClass().add("error");
                                                         }
                                                     }else{
-                                                        generateAlert("The phone is wrong");
+                                                        tfPassword.getStyleClass().add("error");
                                                     }
                                                 }else{
-                                                    generateAlert("The phone is empty");
+                                                    tfPhone.getStyleClass().add("error");
                                                 }
                                             }else{
-                                                generateAlert("The alternate email is wrong");
+                                                tfAlternateEmail.getStyleClass().add("error");
                                             }
                                         }else{
-                                            generateAlert("The alternate email is empty");
+                                            tfAlternateEmail.getStyleClass().add("error");
                                         }
                                     }else{
-                                        generateAlert("The email is wrong");
+                                       tfEmail.getStyleClass().add("error");
                                     }
                                 }else{
-                                    generateAlert("The email is empty");
+                                    tfEmail.getStyleClass().add("error");
                                 }
                             }else{
-                                generateAlert("The lastName is wrong");
+                                tfLastName.getStyleClass().add("error");
                             }
                         }else {
-                            generateAlert("The lastName is empty");
+                            tfLastName.getStyleClass().add("error");
                         }
                     }else{
-                       generateAlert("The name is wrong");
+                       tfName.getStyleClass().add("error");
                     }
                 }else{
-                    generateAlert("The name is empty");
+                    tfName.getStyleClass().add("error");
                 }
             }else{
-                generateAlert("The staffNumber is wrong");
+                tfStaffNumber.getStyleClass().add("error");
             }
         }else{
-            generateAlert("The staffNumber is empty");
+            tfStaffNumber.getStyleClass().add("error");
         }
         if(band == 1){
             ToggleGroup radioGroup = new ToggleGroup();

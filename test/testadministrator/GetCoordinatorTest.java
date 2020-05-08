@@ -5,6 +5,12 @@ import org.junit.Test;
 import java.util.List;
 import domain.Coordinator;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class GetCoordinatorTest {
     @Test
     public void testGetCoordinator() {

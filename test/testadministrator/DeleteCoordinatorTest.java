@@ -4,6 +4,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import domain.Coordinator;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class DeleteCoordinatorTest {
     @Test
     public void testDeleteCoordinator() {
