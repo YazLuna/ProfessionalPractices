@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.ResponsibleProject;
+/**
+ *
+ * @author: Martha M. Ortiz
+ * @version: 08/05/2020
+ */
 
 public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     private final Connexion connexion;
@@ -47,8 +52,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     @Override
-    public void updateResponsibleProject (ResponsibleProject responsible) {
+    public String updateResponsibleProject (ResponsibleProject responsible) {
         int idCharge = searchCharge(responsible.getCharge());
+        String result = "The responsible for the project could not register";
         if(idCharge==0){
             updateCharge(responsible.getCharge());
             idCharge=searchCharge(responsible.getCharge());
@@ -61,16 +67,19 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             sentenceOrganization.setString(3,responsible.getEmail());
             sentenceOrganization.setInt(4,idCharge);   
             sentenceOrganization.executeUpdate();
+            result = "The responsible of the project registered correctly";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
+            return result;
         }
     }
 
     @Override
-    public void actualizationResponsibleProject (ResponsibleProject responsible) {
+    public String actualizationResponsibleProject (ResponsibleProject responsible) {
         int idCharge;
+        String result = "The responsible project could not be updated";
         idCharge = searchCharge(responsible.getCharge());
         if(idCharge == 0){
             updateCharge(responsible.getCharge());
@@ -86,11 +95,12 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             sentenceResponsible.setInt(4, idCharge);
             sentenceResponsible.setInt(5, responsible.getIdResponsible());
             sentenceResponsible.executeUpdate();
-            
+            result = "The responsible the project was updated correctly";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
+            return  result;
         }
     }
 
