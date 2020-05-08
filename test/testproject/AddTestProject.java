@@ -14,10 +14,10 @@ public class AddTestProject {
         Project project = new Project();
         LinkedOrganization organization = new LinkedOrganization();
         ResponsibleProject responsible = new ResponsibleProject();
-        project.setNameProject("Requerimientos de practicas profesionales");
-        project.setDescription("Disenia el diagrama de Casos de Uso con el fin de identificar las funcionalidades");
-        project.setObjectiveGeneral("Instalación del SGBD Oracle para poder empezar el desarrollo y pruebas");
-        project.setObjectiveInmediate("Creación de una tabla y algunos procedimientos con el fin de probar que la instalacion");
+        project.setNameProject("Requerimientos UID");
+        project.setDescription("Diseña el diagrama de Casos de Uso con el fin de identificar las funcionalidades");
+        project.setObjectiveGeneral("Instalacion del SGBD Oracle para poder empezar el desarrollo y pruebas");
+        project.setObjectiveInmediate("Creacion de una tabla y algunos procedimientos con el fin de probar que la instalacion");
         project.setObjectiveMediate("Refinar requerimientos");
         project.setMethodology("Casos de Uso");
         project.setResources("Modelo Conceptual de la Base de Datos");

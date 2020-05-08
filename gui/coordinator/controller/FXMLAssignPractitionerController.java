@@ -11,12 +11,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * class FXMLAssignPractitionerController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLAssignPractitionerController implements Initializable {
     @FXML private TextField tfNamePractitioner;
     @FXML private TextField tfEnrollment;

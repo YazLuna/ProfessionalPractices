@@ -169,7 +169,7 @@ public class Project {
         Project projectExit = new Project();
         ProjectDAOImpl registerProject = new ProjectDAOImpl();
         projectExit = registerProject.getProject(this.getNameProject());
-        if(projectExit.getNameProject() != null){
+        if(projectExit !=null){
             result = "There is a project with the same registered name";
         }else{
             result = registerProject.updateProject(this);

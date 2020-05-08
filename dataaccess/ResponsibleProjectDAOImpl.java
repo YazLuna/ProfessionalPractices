@@ -10,22 +10,31 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.ResponsibleProject;
-/**
- *
- * @author: Martha M. Ortiz
- * @version: 08/05/2020
- */
 
+
+/**
+ * Implementation of the IResponsibleProjectDAO
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     private final Connexion connexion;
     private Connection connection;
     private Statement consultation;
     private ResultSet results;
-    
+
+    /**
+     * Constructor for the ResponsbleProjectDAOImpl class
+     */
     public ResponsibleProjectDAOImpl (){
         connexion = new Connexion();
     }
-    
+
+    /**
+     * Method to get the Responsible of the Project
+     * @param idResponsible The idResponsible parameter defines the id of the Responsible Project
+     * @return The Responsible of the searched idResponsible
+     */
     @Override
     public ResponsibleProject getResponsibleProject (int idResponsible) {
         ResponsibleProject responsible = null;     
@@ -51,6 +60,11 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return responsible;
     }
 
+    /**
+     * Method to add a Responsible of the project
+     * @param responsible The data of the responsible of the project
+     * @return The message if the responsible the of project was added
+     */
     @Override
     public String updateResponsibleProject (ResponsibleProject responsible) {
         int idCharge = searchCharge(responsible.getCharge());
@@ -76,6 +90,11 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         }
     }
 
+    /**
+     * Update method of the responsible of the project
+     * @param responsible The data of the responsible of the project
+     * @return The message if the responsible for the project was updated
+     */
     @Override
     public String actualizationResponsibleProject (ResponsibleProject responsible) {
         int idCharge;
@@ -104,6 +123,11 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         }
     }
 
+    /**
+     * Method for finding a responsible the of project
+     * @param email The email parameter defines the email of the Responsible Project
+     * @return The idResponsibleProject of the searched email
+     */
     @Override
     public int searchResponsibleProject (String email) {
         int idResponsibleProject=0;
@@ -124,6 +148,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return idResponsibleProject;
     }
 
+    /**
+     * Method to add a Charge
+     * @param name The name parameter defines the charge of responsible of the project
+     */
     public void updateCharge (String name) {
         try{
             connection = connexion.getConnection();
@@ -137,6 +165,11 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         }
     }
 
+    /**
+     * Method to search for a charge
+     * @param name The name parameter defines the charge of responsible of the project
+     * @return The idCharge of the searched charge
+     */
     public int searchCharge (String name) {
         int idCharge=0;
         try{
@@ -156,6 +189,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return idCharge;
     }
 
+    /**
+     * Method to get the charge list
+     * @return The charge list
+     */
     public List<String> getAllCharge() {
         List<String> charges = new ArrayList<>();
         try {

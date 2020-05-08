@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.practitioner.controller.FXMLMenuPractitionerController">
+   <children>
+      <ImageView fx:id="imgBackgroud" fitHeight="400.0" fitWidth="607.0" layoutX="-1.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/background.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgLogoPractitioner" fitHeight="83.0" fitWidth="86.0" layoutX="6.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/logoPractitioner.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgLogOut" fitHeight="31.0" fitWidth="31.0" layoutX="487.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/logOut.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnLogOut" layoutX="518.0" layoutY="23.0" mnemonicParsing="false" onAction="#logOut" text="Log Out">
+         <font>
+            <Font name="Arial Bold" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="lbPractitioner" layoutX="14.0" layoutY="115.0" text="Practitioner">
+         <font>
+            <Font name="Arial Bold" size="12.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnProject" layoutX="172.0" layoutY="93.0" mnemonicParsing="false" onAction="#sectionProject" prefHeight="45.0" prefWidth="210.0" text="Project">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font></Button>
+      <Button fx:id="btnGenerateDocumentation" layoutX="172.0" layoutY="149.0" mnemonicParsing="false" onAction="#sectionGenerateDocumentation" prefHeight="45.0" prefWidth="210.0" text="Generate documentation">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font></Button>
+      <Button fx:id="btnUploadDocumentation" layoutX="172.0" layoutY="203.0" mnemonicParsing="false" onAction="#sectionUploadDocumentation" prefHeight="45.0" prefWidth="210.0" text="Upload documentation">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font></Button>
+      <Button fx:id="btnActivities" layoutX="172.0" layoutY="258.0" mnemonicParsing="false" onAction="#sectionActivities" prefHeight="45.0" prefWidth="210.0" text="Activities">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font></Button>
+      <ImageView fx:id="imgProject" fitHeight="45.0" fitWidth="52.0" layoutX="389.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/project.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgGenerate" fitHeight="45.0" fitWidth="50.0" layoutX="389.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/register.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgUpload" fitHeight="45.0" fitWidth="45.0" layoutX="391.0" layoutY="203.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/update.png" />
+         </image></ImageView>
+      <ImageView fx:id="imgActivities" fitHeight="45.0" fitWidth="45.0" layoutX="392.0" layoutY="257.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/list.png" />
+         </image></ImageView>
+   </children>
+</AnchorPane>

@@ -19,6 +19,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * class FXMLUpdateProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLUpdateProjectController implements Initializable {
     @FXML private Button btnUpdate;
     @FXML private Button btnCancel;

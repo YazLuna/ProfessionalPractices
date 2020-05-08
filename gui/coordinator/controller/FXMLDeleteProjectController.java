@@ -17,6 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+/**
+ * class FXMLDeleteProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLDeleteProjectController implements Initializable {
     @FXML private Button btnDeleteProject;
     @FXML private Button btnCancelProject;
