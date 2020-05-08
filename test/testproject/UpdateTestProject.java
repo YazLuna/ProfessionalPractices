@@ -9,11 +9,11 @@ import org.junit.Test;
 public class UpdateTestProject {
     @Test
     public void testActualizationProject(){
-        int result;
+        String result;
         Project project = new Project();
         LinkedOrganization organization = new LinkedOrganization();
         ResponsibleProject responsible = new ResponsibleProject();
-        project.setIdProject(3);
+        project.setIdProject(8);
         project.setNameProject("Gestion del sistema YGT");
         project.setDescription("Disenia el diagrama de Casos de Uso con el fin de identificar las funcionalidades");
         project.setObjectiveGeneral("Instalación del SGBD Oracle para poder empezar el desarrollo y pruebas");
@@ -21,6 +21,8 @@ public class UpdateTestProject {
         project.setObjectiveMediate("Refinar requerimientos");
         project.setMethodology("Casos de Uso");
         project.setResources("Modelo Conceptual de la Base de Datos");
+        project.setLapse("FEBRERO-JULIO 2020");
+        project.setStaffNumberCoordinator(2);
         project.setActivities("Documentación de las decisiones de disenio que se han tomado");
         project.setResponsabilities("Diagrama Entidad-Relación para describir el modelo logico de la Base de Datos");
         project.setDuration(3);
@@ -41,12 +43,12 @@ public class UpdateTestProject {
         responsible.setCharge("Gerente");
         project.setResponsible(responsible);
         result = project.actualizationProject();
-        Assert.assertEquals(1,result);
+        Assert.assertEquals("The project was successfully updated",result);
     }
 
     @Test
     public void testActualizationProjectError(){
-        int result;
+        String result;
         Project project = new Project();
         LinkedOrganization organization = new LinkedOrganization();
         ResponsibleProject responsible = new ResponsibleProject();
@@ -57,6 +59,8 @@ public class UpdateTestProject {
         project.setObjectiveMediate("Refinar requerimientos");
         project.setMethodology("Casos de Uso");
         project.setResources("Modelo Conceptual de la Base de Datos");
+        project.setLapse("FEBRERO-JULIO 2020");
+        project.setStaffNumberCoordinator(2);
         project.setActivities("Documentación de las decisiones de disenio que se han tomado");
         project.setResponsabilities("Diagrama Entidad-Relación para describir el modelo logico de la Base de Datos");
         project.setDuration(3);
@@ -77,6 +81,6 @@ public class UpdateTestProject {
         responsible.setCharge("Gerente");
         project.setResponsible(responsible);
         result = project.actualizationProject();
-        Assert.assertEquals(1,result);
+        Assert.assertEquals("The project was successfully updated",result);
     }
 }

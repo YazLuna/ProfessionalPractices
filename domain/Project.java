@@ -164,34 +164,58 @@ public class Project {
         this.responsible = responsible;
     }
 
-    public int registerProject () {
+    public String registerProject () {
+        String result;
+        Project projectExit = new Project();
         ProjectDAOImpl registerProject = new ProjectDAOImpl();
-        return registerProject.updateProject(this);
+        projectExit = registerProject.getProject(this.getNameProject());
+        if(projectExit.getNameProject() != null){
+            result = "There is a project with the same registered name";
+        }else{
+            result = registerProject.updateProject(this);
+        }
+        return result;
     }
 
     public List<Project> listProjects () {
+        String result;
         ProjectDAOImpl registerProject = new ProjectDAOImpl();
         return registerProject.getAllProjects();
     }
 
-    public int actualizationProject () {
+    public String actualizationProject () {
+        String result;
+        Project projectExit = new Project();
         ProjectDAOImpl actualizationProject = new ProjectDAOImpl();
-        return actualizationProject.actualizationProject(this);
+        projectExit = actualizationProject.getProject(this.getNameProject());
+        result = actualizationProject.actualizationProject(this);
+        if(projectExit.getNameProject() != null && this.idProject!= projectExit.getIdProject()){
+            result = "There is a project with the same registered name";
+        }else{
+            result = actualizationProject.actualizationProject(this);
+        }
+        return result;
     }
 
     public String requestProject (String enrollment) {
+        String result;
         ProjectDAOImpl request = new ProjectDAOImpl();
-        return request.requestProject(enrollment,this.idProject);
+        result = request.requestProject(enrollment,this.idProject);
+        return result;
     }
 
-    public int deleteProject () {
+    public String deleteProject () {
+        String result;
         ProjectDAOImpl delete = new ProjectDAOImpl();
-        return delete.deleteProject(this);
+        result = delete.deleteProject(this);
+        return result;
     }
 
     public String assingProject (String enrollment) {
+        String result;
         ProjectDAOImpl assing = new ProjectDAOImpl();
-        return assing.assignProject(enrollment, this.idProject);
+        result = assing.assignProject(enrollment, this.idProject);
+        return result;
     }
 
     public Project getProject (String name) {

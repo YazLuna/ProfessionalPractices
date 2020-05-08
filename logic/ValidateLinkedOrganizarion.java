@@ -17,7 +17,7 @@ public class ValidateLinkedOrganizarion {
     public boolean validatePhoneNumber (String phoneNumber) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[0-9]{10}");
+                .compile("[0-9]{10,10}");
         Matcher mather = pattern.matcher(phoneNumber);
         result = mather.find();
         return result;
@@ -41,9 +41,9 @@ public class ValidateLinkedOrganizarion {
         return result;
     }
 
-    public boolean validateNumber (int number) {
+    public boolean validateNumberUsers (int numberUsers) {
         boolean result;
-        if(number != 0){
+        if(numberUsers != 0 && numberUsers > 3){
             result = true;
         }else {
             result = false;
