@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollBar?>
+
+<AnchorPane id="AnchorPane" prefHeight="1417.0" prefWidth="603.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.practitioner.controller.FXMLMyProjectController">
+   <children>
+      <GridPane layoutX="75.0" layoutY="120.0" prefHeight="587.0" prefWidth="454.0">
+         <children>
+            <TextField fx:id="tfNameProject" editable="false" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+            <Label prefHeight="17.0" prefWidth="56.0" text="Name:  " textAlignment="RIGHT" GridPane.halignment="RIGHT">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="89.0" text="Description: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="133.0" text="Objective General: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="146.0" text="Objective Inmediate: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="126.0" text="Objetive Mediate: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="100.0" text="Methodology: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="77.0" text="Resource: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="165.0" text="Activities and functions: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="122.0" text="Responsabilities: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="68.0" text="Duration: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="9">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="149.0" text="Quiantity Practitioner: " textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="10">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="taDescription" editable="false" maxHeight="-Infinity" prefHeight="34.0" prefWidth="253.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextArea fx:id="taObjectiveGeneral" editable="false" maxHeight="-Infinity" prefHeight="42.0" prefWidth="253.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextArea fx:id="taObjectiveInmediate" editable="false" maxHeight="-Infinity" prefHeight="41.0" prefWidth="252.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextArea fx:id="taObjectiveMediate" editable="false" maxHeight="-Infinity" prefHeight="41.0" prefWidth="251.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextField fx:id="tfMethodology" editable="false" prefHeight="25.0" prefWidth="249.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+            <TextArea fx:id="taResource" editable="false" maxHeight="-Infinity" prefHeight="41.0" prefWidth="252.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextArea fx:id="taActivities" editable="false" maxHeight="-Infinity" prefHeight="40.0" prefWidth="252.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextArea fx:id="taResponsabilities" editable="false" maxHeight="-Infinity" prefHeight="41.0" prefWidth="252.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextArea>
+            <TextField fx:id="tfDuration" editable="false" prefHeight="25.0" prefWidth="42.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="9">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+            <TextField fx:id="tfQuiantityPractitioners" editable="false" prefHeight="25.0" prefWidth="44.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="123.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="289.0" minWidth="10.0" prefWidth="235.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="59.0" minHeight="0.0" prefHeight="59.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="88.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="76.0" minHeight="0.0" prefHeight="59.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="65.0" minHeight="0.0" prefHeight="41.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="83.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="112.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="157.0" minHeight="4.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="159.0" minHeight="0.0" prefHeight="43.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="135.0" minHeight="0.0" prefHeight="34.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <Label layoutX="243.0" layoutY="34.0" text="Project Data" textFill="#0e005e">
+         <font>
+            <Font name="Arial" size="22.0" />
+         </font>
+      </Label>
+      <ScrollBar fx:id="sbSpacer" layoutX="589.0" layoutY="4.0" orientation="VERTICAL" prefHeight="1411.0" prefWidth="14.0" />
+      <Label layoutX="170.0" layoutY="751.0" text="Data of the linked organization" textFill="#0e005e">
+         <font>
+            <Font name="Arial" size="22.0" />
+         </font>
+      </Label>
+      <GridPane layoutX="134.0" layoutY="805.0" prefHeight="346.0" prefWidth="365.0">
+         <children>
+            <Label prefHeight="28.0" prefWidth="52.0" text="Name:" textAlignment="RIGHT">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="95.0" text="Direct Users: " textAlignment="RIGHT" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="105.0" text="Indirect Users: " textAlignment="RIGHT" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="48.0" text="Email: " textAlignment="RIGHT" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="109.0" text="Phone number: " textAlignment="RIGHT" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="58.0" text="Adress:" textAlignment="RIGHT" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="44.0" text="State:" textAlignment="RIGHT" GridPane.rowIndex="6">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="36.0" text="City: " textAlignment="RIGHT" GridPane.rowIndex="7">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="28.0" prefWidth="52.0" text="Sector: " textAlignment="RIGHT" GridPane.rowIndex="8">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfNameOrganization" editable="false" prefHeight="25.0" prefWidth="218.0" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfEmailOrganization" editable="false" prefHeight="23.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfPhoneOrganization" alignment="BASELINE_LEFT" editable="false" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfAdressOrganization" editable="false" prefHeight="25.0" prefWidth="218.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+            <TextField fx:id="tfDirectUsers" editable="false" prefHeight="25.0" prefWidth="63.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+            <TextField fx:id="tfIndirectUsers" editable="false" prefHeight="25.0" prefWidth="63.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font></TextField>
+            <TextField fx:id="tfState" alignment="BASELINE_LEFT" editable="false" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfCity" alignment="BASELINE_LEFT" editable="false" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfSector" alignment="BASELINE_LEFT" editable="false" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" maxWidth="194.0" minWidth="10.0" prefWidth="111.0" />
+            <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" maxWidth="253.0" minWidth="10.0" prefWidth="248.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <Label layoutX="141.0" layoutY="1177.0" prefHeight="26.0" prefWidth="371.0" text="Data of the responsible of the project" textFill="#0e005e">
+         <font>
+            <Font name="Arial" size="22.0" />
+         </font>
+      </Label>
+      <GridPane layoutX="152.0" layoutY="1222.0" prefHeight="153.0" prefWidth="346.0">
+         <children>
+            <Label prefHeight="21.0" prefWidth="52.0" text="Name:" textAlignment="RIGHT">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="21.0" prefWidth="81.0" text="Last Name: " textAlignment="RIGHT" GridPane.rowIndex="1">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="21.0" prefWidth="45.0" text="Email:" textAlignment="RIGHT" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="21.0" prefWidth="57.0" text="Charge:" textAlignment="RIGHT" GridPane.rowIndex="3">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfLastNameResponsible" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfEmailResponsible" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="232.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfNameResponsible" alignment="BASELINE_RIGHT" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="159.0" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="tfCharge" alignment="BASELINE_RIGHT" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="136.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </TextField>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="166.0" minWidth="0.0" prefWidth="95.0" />
+            <ColumnConstraints fillWidth="false" maxWidth="254.0" minWidth="10.0" prefWidth="251.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <ImageView fitHeight="72.0" fitWidth="81.0" layoutX="448.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/project.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="33.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="55.0" prefWidth="45.0" text="Button" style="-fx-background-color:TRANSPARENT;" textFill="TRANSPARENT">
+         <graphic>
+            <ImageView fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/behind.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+   </children>
+</AnchorPane>

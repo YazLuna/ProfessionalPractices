@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="@ProfessionalPractices" uuid="d7b50828-fc3f-4d0e-858b-83cbcf6f60ee">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://remotemysql.com:3306/inKcRiLrWw</jdbc-url>
+    </data-source>
+  </component>
+</project>

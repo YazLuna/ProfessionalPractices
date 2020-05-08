@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="gui.coordinator.controller.FXMLListOfPractitionersController">
+   <children>
+      <Label layoutX="208.0" layoutY="47.0" text="List of practitioners" textFill="#000175">
+         <font>
+            <Font name="Arial" size="22.0" />
+         </font>
+      </Label>
+       <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="35.0" layoutY="25.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="56.0" prefWidth="57.0" text="Button" textFill="TRANSPARENT" style="-fx-background-color:TRANSPARENT;">
+           <graphic>
+               <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../../images/behind.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+       </Button>
+       <Button fx:id="btnLogout" layoutX="504.0" layoutY="38.0" mnemonicParsing="false" text="Logout" textFill="#2400b5">
+           <font>
+               <Font name="Arial" size="15.0" />
+           </font>
+       </Button>
+       <ImageView fitHeight="38.0" fitWidth="39.0" layoutX="457.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+           <image>
+               <Image url="@../../images/logout.png" />
+           </image>
+       </ImageView>
+   </children>
+</AnchorPane>
