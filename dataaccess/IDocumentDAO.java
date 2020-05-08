@@ -1,7 +1,12 @@
 package dataaccess;
 
 import domain.Document;
-import java.sql.SQLException;
+
+/**
+ * Creation of the interface IDocumentDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
 
 public interface IDocumentDAO {
     public void addDocument(Document document);

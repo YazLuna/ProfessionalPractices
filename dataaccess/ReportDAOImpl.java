@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implementation of the interface IReportDAO
+ * @author Ivana Correa
+ * @version  08/05/2020
+ */
+
 public class ReportDAOImpl implements IReportDAO{
     private final Connexion connexion;
     private Connection connection;
@@ -41,48 +47,60 @@ public class ReportDAOImpl implements IReportDAO{
     }
 
     @Override
-    public void deleteReport(String name) {
+    public int deleteReport(String name) {
+        int finalScore = 0;
         try{
             connection = connexion.getConnection();
             PreparedStatement sentence = connection.prepareStatement("DELETE ReportPartial INNER JOIN user ON practitioner.idUser = user.idUser WHERE name = ?");
             sentence.setString(1, name);
             sentence.executeQuery();
+            finalScore = 1;
         }catch(SQLException ex){
             Logger.getLogger(ReportDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
+        return finalScore;
     }
 
     @Override
-    public void visualizeReport(String name) {
+    public int visualizeReport(String name) {
+        int finalScore = 0;
         try{
             connection = connexion.getConnection();
             PreparedStatement sentence = connection.prepareStatement("SELECT * FROM ReportPartial WHERE name = ?");
             sentence.setString(1, name);
             sentence.executeQuery();
+            finalScore = 1;
         }catch(SQLException ex){
             Logger.getLogger(ReportDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
+        return finalScore;
     }
 
     @Override
-    public void updateReport(String name, int score) {
-        Report report = null;
+    public int updateReport(String name, Report report) {
+        int finalScore = 0;
         try{
             connection =connexion.getConnection();
-            String queryReport = "UPDATE Report INNER JOIN user ON teacher.idUser = user.idUser SET report.score = ? WHERE name = ?";
+            String queryReport = "UPDATE Report INNER JOIN user ON teacher.idUser = user.idUser SET report.score = ?, report.name = ?, report.activities = ?, report.completionDate = ?, report.deliverDate = ? WHERE name = ?";
             PreparedStatement sentence=connection.prepareStatement(queryReport);
             sentence.setInt(1, report.getScore());
-            sentence.setString(2, name);
+            sentence.setString(2, report.getName());
+            sentence.setString(3, report.getActivities());
+            sentence.setString(4, report.getCompletionDate());
+            sentence.setString(5, report.getDeliverDate());
+            sentence.setString(6, name);
             sentence.executeQuery();
+            finalScore = 1;
         }catch(SQLException ex){
             Logger.getLogger(ReportDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
+        return finalScore;
     }
 
     @Override
