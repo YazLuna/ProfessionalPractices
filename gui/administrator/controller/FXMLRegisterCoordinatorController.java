@@ -111,6 +111,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
                                                             coordinator.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
                                                             coordinator.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
                                                             coordinator.setPassword(validateAddUser.deleteSpace(tfPassword.getText()));
+                                                            tfPassword.getStyleClass().add("ok");
                                                             band =1;
                                                         }else{
                                                             tfPassword.getStyleClass().add("error");
@@ -175,7 +176,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
                 returnGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
             }else{
                 if(registerComplete==0){
-                    generateError("Registration could not be completed dataAccessError");
+                    generateError("This coordinator is already registered ");
                 }
             }
         }
