@@ -1,13 +1,18 @@
 package dataaccess;
 
 import domain.Report;
-import java.sql.SQLException;
 import java.util.List;
+
+/**
+ * Creation of the interface IReportDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
 
 public interface IReportDAO {
     public int addReport(Report report);
-    public void deleteReport(String name);
-    public void visualizeReport(String name);
-    public void updateReport(String name, int score);
+    public int deleteReport(String name);
+    public int visualizeReport(String name);
+    public int updateReport(String name, Report report);
     public List<Report> allReport();
 }

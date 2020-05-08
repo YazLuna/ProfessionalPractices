@@ -1,12 +1,17 @@
 package dataaccess;
 
 import domain.ReportPartial;
-import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Creation of the interface IReportPartialDAO
+ * @author Ivana Correa
+ * @version 08/05/2020
+ */
+
 public interface IReportPartialDAO {
-    public void addReportPartial(ReportPartial reportPartial);
-    public void deleteReportPartial(int numberReport);
-    public void visualizeReportPartial(int numberReport);
+    public int addReportPartial(ReportPartial reportPartial);
+    public int deleteReportPartial(int numberReport);
+    public int visualizeReportPartial(int numberReport);
     public List<ReportPartial> allReportPartial();
 }
