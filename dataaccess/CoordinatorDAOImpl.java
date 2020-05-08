@@ -11,6 +11,12 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Coordinator;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinatorDAO {
     private final Connexion connexion;
     private Connection connection;

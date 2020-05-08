@@ -11,6 +11,12 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Practitioner;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class PractitionerDAOImpl implements IPractitionerDAO {
     private final Connexion connexion;
     private Connection connection;

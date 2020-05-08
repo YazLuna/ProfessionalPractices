@@ -8,6 +8,12 @@ import java.util.logging.Logger;
 import dataaccess.CoordinatorDAOImpl;
 import dataaccess.ProjectDAOImpl;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class Coordinator extends User{
     private int staffNumber;
     private String registrationDate;

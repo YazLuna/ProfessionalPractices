@@ -16,6 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Button;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class FXMLLoginController implements Initializable {
     @FXML private Button btnLogin;
     @FXML private TextField tfUsser;

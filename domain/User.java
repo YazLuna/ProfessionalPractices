@@ -1,5 +1,11 @@
 package domain;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class User{
     protected String name;
     protected String lastName;
@@ -10,7 +16,7 @@ public class User{
     private String status;
     private String password;
     private String userType;
-    
+
     public User () {
         this.status= "Active";
     }

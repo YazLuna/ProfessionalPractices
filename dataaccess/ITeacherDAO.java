@@ -5,6 +5,12 @@ import java.sql.SQLException;
 
 import domain.Teacher;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public interface ITeacherDAO {
     public Teacher getTeacher (int staffNumber) throws SQLException;
     public int updateTeacher (int staffNumber, Teacher teacher) throws SQLException;

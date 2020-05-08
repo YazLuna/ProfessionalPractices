@@ -3,6 +3,12 @@ package dataaccess;
 import java.sql.SQLException;
 import domain.Coordinator;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public interface IUserMethodDAO {
     public int searchAlternateEmail(String alternateEmail) throws SQLException ;
     public int searchPhone(String phone) throws SQLException;

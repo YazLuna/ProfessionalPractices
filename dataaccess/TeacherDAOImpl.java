@@ -11,6 +11,12 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Teacher;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class TeacherDAOImpl implements ITeacherDAO {
     private final Connexion connexion;
     private Connection connection;

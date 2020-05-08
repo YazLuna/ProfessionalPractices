@@ -3,6 +3,12 @@ package logic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class ValidateAddUser {
     public boolean validateName (String name) {
         name = deleteSpace(name);

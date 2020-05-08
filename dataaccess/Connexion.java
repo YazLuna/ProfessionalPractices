@@ -8,6 +8,12 @@ import java.util.logging.Logger;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class Connexion {
     private Connection connexion;
     private String dataBase;

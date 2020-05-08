@@ -8,6 +8,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Coordinator;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
 public class UserMethodDAOImpl implements IUserMethodDAO{
     private final Connexion connexion;
     private Connection connection;

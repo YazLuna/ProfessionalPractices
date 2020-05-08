@@ -13,6 +13,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public class FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
     @FXML private Button btnCancel;
