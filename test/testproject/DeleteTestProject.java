@@ -7,10 +7,10 @@ import org.junit.Test;
 public class DeleteTestProject {
     @Test
     public void testDeleteProjects(){
-        int result;
+        String result;
         Project project = new Project();
-        project.setIdProject(4);
+        project.setIdProject(9);
         result = project.deleteProject();
-        Assert.assertEquals(1,result);
+        Assert.assertEquals("The project was successfully removed",result);
     }
 }

@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.LinkedOrganization;
+/**
+ *
+ * @author: Martha M. Ortiz
+ * @version: 08/05/2020
+ */
 
 public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
     private final Connexion connexion;
@@ -80,11 +85,11 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
     }
 
     @Override
-    public void updateLinkedOrganization(LinkedOrganization organization) {
+    public String updateLinkedOrganization(LinkedOrganization organization) {
         int idCity;
         int idState;
         int idSector;
-        
+        String result = "Could not register the linked organization";
         idState = searchState(organization.getState());
         if(idState == 0){
             updateState(organization.getState());
@@ -117,19 +122,21 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceOrganization.setInt(8,idState);
             sentenceOrganization.setInt(9,idSector);
             sentenceOrganization.executeUpdate();
-
+            result = "The linked organization was successfully registered";
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
+            return result;
         }
     }
 
     @Override
-    public void actualizationOrganization (LinkedOrganization organization) {
+    public String actualizationOrganization (LinkedOrganization organization) {
         int idState;
         int idCity;
         int idSector;
+        String result = "Could not update linked organization";
         idState = searchState(organization.getState());
         if(idState == 0){
             updateState(organization.getState());
@@ -163,21 +170,24 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setInt(9, idSector);
             sentence.setInt(10, organization.getIdLinkedOrganization());
             sentence.executeUpdate();
+            result = "The linked organization was successfully updated";
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
+            return result;
         }
     }
 
     @Override
-    public int searchLinkedOrganization (String name) {
+    public int searchLinkedOrganization (String name, String email) {
         int idLinkedOrganization=0;
         try{
             connection = connexion.getConnection();
-            String queryOrganization= "Select idLinkedOrganization from LinkedOrganization where name=?";
+            String queryOrganization= "Select idLinkedOrganization from LinkedOrganization where name=? or email=?";
             PreparedStatement sentence =connection.prepareStatement(queryOrganization);
             sentence.setString(1,name);
+            sentence.setString(1,email);
             results= sentence.executeQuery();
             while(results.next()){
                 idLinkedOrganization =results.getInt("idLinkedOrganization");

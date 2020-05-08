@@ -13,11 +13,21 @@ public class ValidateProject {
         }
         return result;
     }
+    public boolean validateNameProject (String name) {
+        boolean result;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z]{10,25}");
+        Matcher mather = pattern.matcher(name);
+        result = mather.find();
+        return result;
+    }
 
     public String deleteSpace (String works) {
-        works = works.replaceAll("\\s+", " ");
-        if (works.charAt(works.length() - 1) == ' ') {
-            works = works.substring(0, works.length() - 1);
+        if(works.length()>0) {
+            works = works.replaceAll("\\s+", " ");
+            if (works.charAt(works.length() - 1) == ' ') {
+                works = works.substring(0, works.length() - 1);
+            }
         }
         return works;
     }
@@ -26,7 +36,7 @@ public class ValidateProject {
     public boolean validateMethology (String methodology) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z_0-9]{10,15}");
+                .compile("[A-Za-z]{10,15}");
         Matcher mather = pattern.matcher(methodology);
         result = mather.find();
         return result;
@@ -56,6 +66,25 @@ public class ValidateProject {
                 .compile("[A-Za-z_0-9]{6,30}");
         Matcher mather = pattern.matcher(lapse);
         result = mather.find();
+        return result;
+    }
+
+    public boolean validateDuration (int duration) {
+        boolean result;
+        if(duration != 0 && duration >=5){
+            result = true;
+        }else {
+            result = false;
+        }
+        return result;
+    }
+    public boolean validateQuiantityPractitioner (int quiantityPractitioner) {
+        boolean result;
+        if(quiantityPractitioner != 0 && quiantityPractitioner >=2){
+            result = true;
+        }else {
+            result = false;
+        }
         return result;
     }
 }

@@ -1,7 +1,5 @@
 package gui.coordinator.controller;
 
-import domain.LinkedOrganization;
-import domain.ResponsibleProject;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,7 +18,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -28,7 +28,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import domain.LinkedOrganization;
+import domain.ResponsibleProject;
 import domain.Project;
 import logic.ValidateDataPerson;
 import logic.ValidateLinkedOrganizarion;
@@ -69,8 +70,8 @@ public class FXMLRegisterProjectController implements Initializable {
     private List<String> allSector = new ArrayList<>();
     private List<String> allCharge = new ArrayList<>();
     private List<String> allLapse = new ArrayList<>();
-    private Project project = new Project();
     private LinkedOrganization organization = new LinkedOrganization();
+    private Project project = new Project();
     private ResponsibleProject responsible = new ResponsibleProject();
     private ValidateProject validateProject = new ValidateProject();
     private ValidateLinkedOrganizarion validateOrganizarion = new ValidateLinkedOrganizarion();
@@ -82,22 +83,48 @@ public class FXMLRegisterProjectController implements Initializable {
         startScrollBar();
         startTextField();
         startComboBox();
-        buttonRegister();
+        btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                String message;
+                getDataProject();
+                if(!validateDataProject()) {
+                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
+                    alertDataProject.setAlertType(Alert.AlertType.WARNING);
+                    alertDataProject.setHeaderText("Enter correct data in the red fields");
+                    alertDataProject.setTitle("Warning");
+                    alertDataProject.show();
+                }else{
+                    message = project.registerProject();
+                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
+                    alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
+                    alertDataProject.setHeaderText(message);
+                    alertDataProject.setTitle("Information");
+                    alertDataProject.show();
+                }
+            }
+        });
         btnCancelProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                Stage stagePrincipal = (Stage) btnCancelProject.getScene().getWindow();
-                stagePrincipal.close();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLSectionProject.fxml"));
-                Stage stage = new Stage();
-                try {
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    stage.setScene(new Scene(root1));
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
+                Alert cancel = new Alert(Alert.AlertType.NONE);
+                cancel.setAlertType(Alert.AlertType.CONFIRMATION);
+                cancel.setHeaderText("Do you want to cancel?");
+                cancel.setTitle("Cancel");
+                Optional<ButtonType> action = cancel.showAndWait();
+                if (action.get() == ButtonType.OK) {
+                    Stage stagePrincipal = (Stage) btnCancelProject.getScene().getWindow();
+                    stagePrincipal.close();
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLSectionProject.fxml"));
+                    Stage stage = new Stage();
+                    try {
+                        Parent root1 = (Parent) fxmlLoader.load();
+                        stage.setScene(new Scene(root1));
+                    } catch(Exception e) {
+                        Logger logger = Logger.getLogger(getClass().getName());
+                        logger.log(Level.SEVERE, "Failed to create new Window.", e);
+                    }
+                    stage.setResizable(false);
+                    stage.show();
                 }
-                stage.setResizable(false);
-                stage.show();
             }
         });
     }
@@ -276,35 +303,169 @@ public class FXMLRegisterProjectController implements Initializable {
         cbCharge.getItems().addAll(allCharge);
     }
 
-    public void buttonRegister() {
-        btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                project.setNameProject(tfNameProject.getText());
-                project.setDescription(taDescription.getText());
-                project.setObjectiveGeneral(taObjectiveGeneral.getText());
-                project.setObjectiveInmediate(taObjectiveInmediate.getText());
-                project.setObjectiveMediate(taObjectiveMediate.getText());
-                project.setMethodology(tfMethodology.getText());
-                project.setResources(taResource.getText());
-                project.setActivities(taActivities.getText());
-                project.setResponsabilities(taResponsabilities.getText());
+    public void getDataProject () {
+        project.setNameProject(validateProject.deleteSpace(tfNameProject.getText()));
+        project.setDescription(validateProject.deleteSpace(taDescription.getText()));
+        project.setObjectiveGeneral(validateProject.deleteSpace(taObjectiveGeneral.getText()));
+        project.setObjectiveInmediate(validateProject.deleteSpace(taObjectiveInmediate.getText()));
+        project.setObjectiveMediate(validateProject.deleteSpace(taObjectiveMediate.getText()));
+        project.setMethodology(validateProject.deleteSpace(tfMethodology.getText()));
+        project.setResources(validateProject.deleteSpace(taResource.getText()));
+        project.setActivities(validateProject.deleteSpace(taActivities.getText()));
+        project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
+        project.setLapse(validateProject.deleteSpace((String) cbLapse.getValue()));
+        project.setStaffNumberCoordinator(4);
+        int duration = Integer.parseInt(tfDuration.getText());
+        project.setDuration(duration);
+        int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
+        project.setQuantityPractitioner(quiantityPractitioner);
+        organization.setName(validateProject.deleteSpace(tfNameOrganization.getText()));
+        int directUsers = Integer.parseInt(tfDirectUsers.getText());
+        organization.setDirectUsers(directUsers);
+        int indirectUsers = Integer.parseInt(tfIndirectUsers.getText());
+        organization.setIndirectUsers(indirectUsers);
+        organization.setEmail(tfEmailOrganization.getText());
+        organization.setPhoneNumber(tfPhoneNumber.getText());
+        organization.setAddress(validateProject.deleteSpace(tfAdress.getText()));
+        organization.setCity(validateProject.deleteSpace((String) cbCity.getValue()));
+        organization.setSector(validateProject.deleteSpace((String) cbSector.getValue()));
+        organization.setState(validateProject.deleteSpace((String) cbState.getValue()));
+        project.setOrganization(organization);
+        responsible.setName(validateProject.deleteSpace(tfNameResponsible.getText()));
+        responsible.setLastName(validateProject.deleteSpace(tfLastNameResponsible.getText()));
+        responsible.setEmail(tfEmailResponsible.getText());
+        responsible.setCharge(validateProject.deleteSpace((String) cbCharge.getValue()));
+        project.setResponsible(responsible);
+    }
 
-
-                Stage stagePrincipal = (Stage) btnRegisterProject.getScene().getWindow();
-                stagePrincipal.close();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLSectionProject.fxml"));
-                Stage stage = new Stage();
-                try {
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    stage.setScene(new Scene(root1));
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-                stage.setResizable(false);
-                stage.show();
-            }
-        });
+    public boolean validateDataProject (){
+        boolean result = true;
+        if(!validateProject.validateNotEmpty(tfNameProject.getText()) ||
+                !validateProject.validateNameProject(project.getNameProject()))  {
+            tfNameProject.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taDescription.getText()) ||
+                !validateProject.validateTextArea(project.getDescription())){
+            taDescription.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taObjectiveGeneral.getText()) ||
+                !validateProject.validateTextArea(project.getObjectiveGeneral())){
+            taObjectiveGeneral.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taObjectiveInmediate.getText()) ||
+                !validateProject.validateTextArea(project.getObjectiveInmediate())){
+            taObjectiveInmediate.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taObjectiveMediate.getText()) ||
+                !validateProject.validateTextArea(project.getObjectiveMediate())){
+            taObjectiveMediate.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfMethodology.getText()) ||
+                !validateProject.validateMethology(project.getMethodology())){
+            tfMethodology.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taResource.getText()) ||
+                !validateProject.validateTextArea(project.getResources())){
+            taResource.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taActivities.getText()) ||
+                !validateProject.validateText(project.getActivities())){
+            taActivities.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(taResponsabilities.getText()) ||
+                !validateProject.validateText(project.getResponsabilities())){
+            taResponsabilities.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(project.getLapse()) ||
+                !validateProject.validateLapse(project.getLapse())){
+            cbLapse.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfDuration.getText()) ||
+                !validateProject.validateDuration(project.getDuration())){
+            tfDuration.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfQuiantityPractitioners.getText()) ||
+                !validateProject.validateQuiantityPractitioner(project.getQuantityPractitioner())){
+            tfQuiantityPractitioners.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfNameOrganization.getText()) ||
+                !validateOrganizarion.validateNameLinked(project.getOrganization().getName())){
+            tfNameOrganization.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfDirectUsers.getText()) ||
+                !validateOrganizarion.validateNumberUsers(project.getOrganization().getDirectUsers())){
+            tfDirectUsers.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfIndirectUsers.getText()) ||
+                !validateOrganizarion.validateNumberUsers(project.getOrganization().getIndirectUsers())){
+            tfIndirectUsers.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfPhoneNumber.getText()) ||
+                !validateOrganizarion.validatePhoneNumber(project.getOrganization().getPhoneNumber())){
+            tfPhoneNumber.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfAdress.getText()) ||
+                !validateOrganizarion.validateAddress(project.getOrganization().getAddress())){
+            tfAdress.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(project.getOrganization().getCity()) ||
+                !validateOrganizarion.validateComboBox(project.getOrganization().getCity())){
+            cbCity.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(project.getOrganization().getSector()) ||
+                !validateOrganizarion.validateComboBox(project.getOrganization().getSector())){
+            cbSector.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(project.getOrganization().getState()) ||
+                !validateOrganizarion.validateComboBox(project.getOrganization().getState())){
+            cbState.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfEmailOrganization.getText()) ||
+                !validateDataPerson.validateEmail(project.getOrganization().getEmail())){
+            tfEmailOrganization.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfNameResponsible.getText()) ||
+                !validateDataPerson.validateName(project.getResponsible().getName())){
+            tfNameResponsible.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfLastNameResponsible.getText()) ||
+                !validateDataPerson.validateLastName(project.getResponsible().getLastName())){
+            tfLastNameResponsible.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(tfEmailResponsible.getText()) ||
+                !validateDataPerson.validateEmail(project.getResponsible().getEmail())){
+            tfEmailResponsible.getStyleClass().add("error");
+            result= false;
+        }
+        if(!validateProject.validateNotEmpty(project.getResponsible().getCharge()) ||
+                !validateDataPerson.validateCharge(project.getResponsible().getCharge())){
+            cbCharge.getStyleClass().add("error");
+            result= false;
+        }
+        return result;
     }
 }
 

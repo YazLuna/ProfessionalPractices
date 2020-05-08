@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Project;
+/**
+ *
+ * @author: Martha M. Ortiz
+ * @version: 08/05/2020
+ */
 
 public class ProjectDAOImpl implements IProjectDAO {
     private final Connexion connexion;
@@ -28,7 +33,8 @@ public class ProjectDAOImpl implements IProjectDAO {
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
-            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
+            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse"+
+                    " where status='available'");
             LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
             ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
 
@@ -102,21 +108,21 @@ public class ProjectDAOImpl implements IProjectDAO {
     }
 
     @Override
-    public int updateProject (Project project) {
-        int result=0;
+    public String updateProject (Project project) {
+        String result = "The project could not be registered";
         int idResponsibleProject;
         int idOrganization;
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
-        idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName());
+        idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         if(idOrganization == 0) {
-            organizationImpl.updateLinkedOrganization(project.getOrganization());
-            idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName());
+            result = organizationImpl.updateLinkedOrganization(project.getOrganization());
+            idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         }
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
         idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == 0) {
-            responsibleImpl.updateResponsibleProject(project.getResponsible());
+            result = responsibleImpl.updateResponsibleProject(project.getResponsible());
             idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
         }
         LapseDAOImpl lapse = new LapseDAOImpl();
@@ -126,7 +132,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             idLapse=lapse.searchLapse(project.getLapse());
         }
 
-        try{  
+        try{
             connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("insert into Project(nameProject,description,objectiveGeneral,"+
                     "objectiveInmediate,objectiveMediate,Methodology,resources,status,activities,"+
@@ -149,48 +155,47 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(15,project.getStaffNumberCoordinator());
             sentenceProject.setInt(16,idLapse);
             sentenceProject.executeUpdate();
-            result=1;
+            result="The project was successfully registered";
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
             }
+            return result;
         }
-        return result;
     }
 
     @Override
-    public int deleteProject (Project project) {
-        int result=0;
+    public String deleteProject (Project project) {
+        String result= "The project could not be removed";
         try{
             connection = connexion.getConnection();
-            //PreparedStatement  sentence = connection.prepareStatement("delete from Project where idProject=?");
             String queryDelete = "update Project set status='not available' where idProject =?";
             PreparedStatement sentence = connection.prepareStatement(queryDelete);
             sentence.setInt(1, project.getIdProject());
             sentence.executeUpdate();
-            result=1;
+            result= "The project was successfully removed";
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
             }
+            return result;
         }
-        return result;
     }
 
     @Override
-    public int actualizationProject (Project project) {
-        int result=0;
+    public String actualizationProject (Project project) {
+        String result = "The project could not be updated";
         int idResponsibleProject;
         int idOrganization;
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
-        idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName());
+        idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         if(idOrganization == 0 || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
-            organizationImpl.actualizationOrganization(project.getOrganization());
+            result = organizationImpl.actualizationOrganization(project.getOrganization());
         }else{
             project.getOrganization().setIdLinkedOrganization(idOrganization);
         }
@@ -198,7 +203,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
         idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
-            responsibleImpl.actualizationResponsibleProject(project.getResponsible());
+            result = responsibleImpl.actualizationResponsibleProject(project.getResponsible());
         }else{
             project.getResponsible().setIdResponsible(idResponsibleProject);
         }
@@ -233,13 +238,13 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(16, project.getStaffNumberCoordinator());
             sentenceProject.setInt(17,idLapse);
             sentenceProject.executeUpdate();
-            result=1;
+            result = "The project was successfully updated";
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
+            return result;
         }
-        return result;
     }
 
     @Override
