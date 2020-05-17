@@ -16,6 +16,7 @@ public class User{
     private String status;
     private String password;
     private String userType;
+    private String userName;
 
     public User () {
         this.status= "Active";
@@ -92,5 +93,14 @@ public class User{
     public void setUserType (String userType){
         this.userType = userType;
     }
-    
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName){
+        this.userName = userName;
+    }
+
+
 }

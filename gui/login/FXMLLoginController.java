@@ -2,7 +2,10 @@ package gui.login;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import dataaccess.UserMethodDAOImpl;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.util.logging.Level;
@@ -25,13 +29,32 @@ import javafx.scene.control.Button;
 public class FXMLLoginController implements Initializable {
     @FXML private Button btnLogin;
     @FXML private TextField tfUsser;
+    @FXML private PasswordField pfPassword;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
     }
 
-    public void login(ActionEvent actionEvent) throws IOException {
-        String usserLogin = tfUsser.getText();
+    public void login(ActionEvent actionEvent) throws IOException, SQLException {
+        UserMethodDAOImpl user =new UserMethodDAOImpl();
+        boolean login= false;
+        login = user.searchLoginAccount(tfUsser.getText(),pfPassword.getText());
+        if(login){
+            try {
+                Stage stagePrincipal = (Stage) btnLogin.getScene().getWindow();
+                stagePrincipal.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml"));
+                Parent root1 = (Parent) fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setResizable(false);
+                stage.setScene(new Scene(root1));
+                stage.show();
+            } catch(Exception e) {
+                Logger logger = Logger.getLogger(getClass().getName());
+                logger.log(Level.SEVERE, "Failed to create new Window.", e);
+            }
+        }
+        /*String usserLogin = tfUsser.getText();
         if(usserLogin.equalsIgnoreCase("Administrator")){
             btnLogin.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
@@ -112,7 +135,7 @@ public class FXMLLoginController implements Initializable {
                     }
                 }
             }
-        }
+        }*/
 
 
     }

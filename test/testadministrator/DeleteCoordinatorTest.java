@@ -15,7 +15,7 @@ public class DeleteCoordinatorTest {
     public void testDeleteCoordinator() {
         int result;
         Coordinator coordinator = new Coordinator();
-        coordinator.setStaffNumber(1);
+        coordinator.setStaffNumber(4);
         coordinator.setDischargeDate("2020-05-06");
         result = coordinator.deleteCoordinator();
         Assert.assertEquals(1,result);
