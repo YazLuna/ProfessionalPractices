@@ -30,14 +30,14 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     public Coordinator getCoordinator() throws SQLException {
         int idUserType;
         Coordinator coordinator = new Coordinator();
-        idUserType = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
+       // idUserType = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
         try {
             connection = connexion.getConnection();
             String queryGetCoordinator = "SELECT * from Coordinator, User, UserTypeStatus, User_UserTypeStatus WHERE Coordinator.idUser="+
                     "User.idUser AND User_UserTypeStatus.idUser = User.idUser AND User_UserTypeStatus.idUserTypeStatus=?" +
                     " AND UserTypeStatus.status='Active'";
             PreparedStatement sentence = connection.prepareStatement(queryGetCoordinator);
-            sentence.setInt(1,idUserType);
+           // sentence.setInt(1,idUserType);
             result = sentence.executeQuery();
             while (result.next()) {
                 coordinator.setName(result.getString("name"));
@@ -61,8 +61,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         int emailExist;
         int phoneExist;
         int alternateEmailExist;
-        emailExist = searchEmail(coordinatorEdit.getEmail());
-        if(emailExist == 0){
+        //emailExist = searchEmail(coordinatorEdit.getEmail());
+       /* if(emailExist == 0){
             phoneExist = searchPhone(coordinatorEdit.getPhone());
             if(phoneExist == 0){
                 alternateEmailExist = searchAlternateEmail(coordinatorEdit.getAlternateEmail());
@@ -90,7 +90,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                     }
                 }
             }
-        }
+        }*/
         return result;
     }
 
@@ -99,17 +99,17 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         int result = 0;
         int idUserTypeStatus;
         coordinator.setStatus("Inactive");
-        idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
-        if(idUserTypeStatus == 0){
-            addUserType(coordinator.getUserType(),coordinator.getStatus());
-            idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
-        }
+      //  idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
+       // if(idUserTypeStatus == 0){
+        //    addUserType(coordinator.getUserType(),coordinator.getStatus());
+          //  idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
+        //}
         try {
             connection = connexion.getConnection();
             PreparedStatement sentenceDeleteCoordinator =
                     connection.prepareStatement("UPDATE Coordinator, User, User_UserTypeStatus SET User_UserTypeStatus.idUserTypeStatus=?" +
                             ", Coordinator.dischargeDate=? WHERE Coordinator.idUser = User.idUser AND User_UserTypeStatus.idUser = User.idUser");
-            sentenceDeleteCoordinator.setInt(1, idUserTypeStatus);
+           // sentenceDeleteCoordinator.setInt(1, idUserTypeStatus);
             sentenceDeleteCoordinator.setString(2, coordinator.getDischargeDate());
             sentenceDeleteCoordinator.executeUpdate();
             result = 1;
@@ -128,41 +128,26 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         int emailExist;
         int phoneExist;
         int alternateEmailExist;
+        boolean loginAccount = false;
         Coordinator coordinatorSearch = new Coordinator();
         coordinatorSearch = coordinatorSearch.getCoordinator();
         if(coordinatorSearch.getEmail()== null){
-            idUser = searchIdUser(coordinator.getName(),coordinator.getLastName(),coordinator.getEmail()
-                    ,coordinator.getAlternateEmail(),coordinator.getPhone());
-            staffNumber = searchStaffNumber(coordinator.getStaffNumber());
-            if ((idUser == 0) && (staffNumber == 0)) {
-                emailExist = searchEmail(coordinator.getEmail());
-                if(emailExist == 0){
-                    phoneExist = searchPhone(coordinator.getPhone());
-                    if(phoneExist == 0){
-                        alternateEmailExist = searchAlternateEmail(coordinator.getAlternateEmail());
-                        if(alternateEmailExist == 0){
-                            userAdd = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(),coordinator.getAlternateEmail(), coordinator.getPhone()
-                                    ,coordinator.getPassword(), coordinator.getUserType(), coordinator.getStatus(),coordinator.getGender());
-                            idUser = searchIdUser(coordinator.getName(),coordinator.getLastName(),coordinator.getEmail()
-                                    ,coordinator.getAlternateEmail(),coordinator.getPhone());
-                        }
+            if ((userAdd == 1) /*|| (idUser > 0)*/) {
+                if(loginAccount){
+                    //search enrollment is 1 no add if is 0 add
+                    //addUserUserTypeStatus(idUser,searchIdUserType(coordinator.getUserType(),coordinator.getStatus()));
+                    try {
+                        connection = connexion.getConnection();
+                        String queryAddCoordinator = "INSERT INTO Coordinator (staffNumber, registrationDate, idUser) VALUES (?, ?, ?)";
+                        PreparedStatement sentenceAddCoordinator = connection.prepareStatement(queryAddCoordinator);
+                        sentenceAddCoordinator.setInt(1, coordinator.getStaffNumber());
+                        sentenceAddCoordinator.setString(2, coordinator.getRegistrationDate());
+                        //sentenceAddCoordinator.setInt(3, idUser);
+                        sentenceAddCoordinator.executeUpdate();
+                        resultAdd = 1;
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
-            }
-            if ((userAdd == 1) || (idUser > 0)) {
-                //search enrollment is 1 no add if is 0 add
-                addUserUserTypeStatus(idUser,searchIdUserType(coordinator.getUserType(),coordinator.getStatus()));
-                try {
-                    connection = connexion.getConnection();
-                    String queryAddCoordinator = "INSERT INTO Coordinator (staffNumber, registrationDate, idUser) VALUES (?, ?, ?)";
-                    PreparedStatement sentenceAddCoordinator = connection.prepareStatement(queryAddCoordinator);
-                    sentenceAddCoordinator.setInt(1, coordinator.getStaffNumber());
-                    sentenceAddCoordinator.setString(2, coordinator.getRegistrationDate());
-                    sentenceAddCoordinator.setInt(3, idUser);
-                    sentenceAddCoordinator.executeUpdate();
-                    resultAdd = 1;
-                } catch (SQLException ex) {
-                    Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -201,7 +186,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     public int recoverCoordinator(Coordinator coordinator) throws SQLException {
         int result = 0;
         int idUserTypeStatus;
-        if(coordinator.getCoordinator().getStaffNumber() == 0){
+       /* if(coordinator.getCoordinator().getStaffNumber() == 0){
             coordinator.setStatus("Active");
             idUserTypeStatus = searchIdUserType(coordinator.getUserType(),coordinator.getStatus());
             try {
@@ -218,7 +203,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             } catch (SQLException ex) {
                 Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
         return result;
     }
 }

@@ -12,10 +12,10 @@ import domain.Coordinator;
  */
 
 public interface ICoordinatorDAO {
-   public Coordinator getCoordinator () throws SQLException;
-   public int updateCoordinator (int staffNumber, Coordinator coordinator) throws SQLException;
-   public int deleteCoordinator (Coordinator coordinator) throws SQLException;
-   public int addCoordinator (Coordinator coordinator) throws SQLException;
-   public List <Coordinator> getAllCoordinator () throws SQLException;
-   public int recoverCoordinator(Coordinator coordinator) throws  SQLException;
+   Coordinator getCoordinator () throws SQLException;
+   int updateCoordinator (int staffNumber, Coordinator coordinator) throws SQLException;
+   int deleteCoordinator (Coordinator coordinator) throws SQLException;
+   int addCoordinator (Coordinator coordinator) throws SQLException;
+   List <Coordinator> getAllCoordinator () throws SQLException;
+   int recoverCoordinator(Coordinator coordinator) throws  SQLException;
 }

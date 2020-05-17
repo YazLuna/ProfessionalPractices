@@ -1,10 +1,13 @@
 package test.testadministrator;
 
+import dataaccess.UserMethodDAOImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 import domain.Coordinator;
+
+import java.sql.SQLException;
 
 /**
  * DAO User
@@ -47,6 +50,7 @@ public class AddCoordinatorTest {
         coordinatorTest.setStaffNumber(4);
         coordinatorTest.setRegistrationDate("2020-04-29");
         coordinatorTest.setPassword("Wigettaz4BTS");
+        coordinatorTest.setUserName("Juan25");
         result = coordinatorTest.addCoordinator();
         Assert.assertEquals(1,result);
     }
@@ -177,4 +181,5 @@ public class AddCoordinatorTest {
         result = coordinatorTest.addCoordinator();
         Assert.assertEquals(0,result);
     }
+
 }
