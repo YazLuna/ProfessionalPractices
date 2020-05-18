@@ -182,6 +182,11 @@ public class Project {
         ProjectDAOImpl registerProject = new ProjectDAOImpl();
         return registerProject.getAllProjects();
     }
+    public List<Project> listProjectsAvailable () {
+        String result;
+        ProjectDAOImpl registerProject = new ProjectDAOImpl();
+        return registerProject.getAllProjectsAvailable();
+    }
 
     public String actualizationProject () {
         String result;

@@ -12,7 +12,7 @@ import domain.Project;
 public interface IProjectDAO {
     public List<Project> getAllProjects ();
     public Project getProject (String nameProject);
-
+    public List<Project> getAllProjectsAvailable ();
     public String actualizationProject (Project project);
     public String updateProject (Project project);
     public String deleteProject (Project project);

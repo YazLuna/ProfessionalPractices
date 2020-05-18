@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
+
 <AnchorPane id="AnchorPane" prefHeight="411.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateResponsibleProjectController">
     <stylesheets>
         <URL value="@../css/fxmlupdateresponsibleproject.css" />
@@ -31,17 +35,17 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="tfLastName" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="tfLastName" minWidth="-Infinity" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-            <TextField fx:id="tfEmail" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="232.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="tfEmail" minWidth="-Infinity" prefHeight="27.0" prefWidth="232.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-            <TextField fx:id="tfName" alignment="BASELINE_RIGHT" editable="false" minWidth="-Infinity" prefHeight="27.0" prefWidth="159.0" GridPane.columnIndex="1">
+            <TextField fx:id="tfName" minWidth="-Infinity" prefHeight="27.0" prefWidth="159.0" GridPane.columnIndex="1">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
@@ -64,15 +68,24 @@
             <Font name="Arial" size="22.0" />
          </font>
       </Label>
-      <Button fx:id="btnCancel" layoutX="450.0" layoutY="325.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="77.0" text="Cancel" textFill="#000175">
+      <Button fx:id="btnCancel" layoutX="281.0" layoutY="322.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="77.0" text="Cancel" textFill="#000175">
          <font>
             <Font name="Arial" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnUpdate" layoutX="319.0" layoutY="325.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="Register" textFill="#000275">
+      <Button fx:id="btnUpdate" layoutX="420.0" layoutY="322.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="Update" textFill="#000275">
          <font>
             <Font name="Arial" size="17.0" />
          </font>
+      </Button>
+      <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="33.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="55.0" prefWidth="45.0" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+         <graphic>
+            <ImageView fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/behind.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
    </children>
 </AnchorPane>
