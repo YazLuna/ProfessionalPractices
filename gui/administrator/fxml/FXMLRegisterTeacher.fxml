@@ -10,7 +10,6 @@
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
 
 <AnchorPane id="AnchorPane" prefHeight="409.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.administrator.controller.FXMLRegisterTeacherController">
     <stylesheets>
@@ -62,7 +61,7 @@
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnLoadProfilePicture" layoutX="428.0" layoutY="257.0" mnemonicParsing="false"  text="Load Profile Picture">
+      <Button fx:id="btnLoadProfilePicture" layoutX="428.0" layoutY="257.0" mnemonicParsing="false" onAction="#loadProfilePicture" text="Load Profile Picture">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
@@ -76,17 +75,17 @@
       <TextField fx:id="tfPhone" layoutX="166.0" layoutY="269.0" prefHeight="25.0" prefWidth="208.0" />
       <CheckBox fx:id="cbMale" layoutX="166.0" layoutY="173.0" mnemonicParsing="false" text="Male" />
       <CheckBox fx:id="cbFemale" layoutX="264.0" layoutY="173.0" mnemonicParsing="false" text="Female" />
-      <Button fx:id="btnRegister" layoutX="195.0" layoutY="345.0" mnemonicParsing="false"  text="Register">
+      <Button fx:id="btnRegister" layoutX="195.0" layoutY="345.0" mnemonicParsing="false" onAction="#registerTeacher" text="Register">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnCancel" layoutX="329.0" layoutY="345.0" mnemonicParsing="false"  prefHeight="27.0" prefWidth="73.0" text="Cancel">
+      <Button fx:id="btnCancel" layoutX="329.0" layoutY="345.0" mnemonicParsing="false" onAction="#cancel" prefHeight="27.0" prefWidth="73.0" text="Cancel">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnLogOut" layoutX="499.0" layoutY="26.0" mnemonicParsing="false"  text="Log Out">
+      <Button fx:id="btnLogOut" layoutX="499.0" layoutY="26.0" mnemonicParsing="false" onAction="#logOut" text="Log Out">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
@@ -96,11 +95,5 @@
             <Image url="@../../images/logout.png" />
          </image>
       </ImageView>
-      <ChoiceBox fx:id="cbTurn" layoutX="166.0" layoutY="304.0" prefWidth="150.0" />
-      <Label fx:id="lbTurn" layoutX="40.0" layoutY="309.0" text="Turn">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
    </children>
 </AnchorPane>

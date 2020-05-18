@@ -47,73 +47,49 @@ public class Coordinator extends User{
         this.dischargeDate = dischargeDate;
     }
 
-    public int addCoordinator(){
+    public boolean addCoordinator() throws SQLException{
         CoordinatorDAOImpl addCoordinator = new CoordinatorDAOImpl();
-        int result = 0;
-        try{
-            result = addCoordinator.addCoordinator(this);
-        }catch (SQLException ex){
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result;
+        result = addCoordinator.addCoordinator(this);
         return result;
     }
 
-    public int updateCoordinator(int staffNumberCoordinator){
-        int result = 0;
+    public boolean updateCoordinator(int staffNumberCoordinator) throws SQLException{
+        boolean result;
         CoordinatorDAOImpl updateCoordinator = new CoordinatorDAOImpl();
-        try{
-            result = updateCoordinator.updateCoordinator(staffNumberCoordinator, this);
-        }catch (SQLException ex){
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        result = updateCoordinator.updateCoordinator(staffNumberCoordinator, this);
         return result;
     }
 
-     public int deleteCoordinator(){
+     public boolean deleteCoordinator(String status, String dischargeDate) throws SQLException {
          CoordinatorDAOImpl deleteCoordinator = new CoordinatorDAOImpl();
-         int result = 0;
-         try{
-             result = deleteCoordinator.deleteCoordinator(this);
-         }catch (SQLException ex){
-             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-         }
+         boolean result;
+         result = deleteCoordinator.deleteCoordinator(status, dischargeDate);
          return result;
      }
 
-     public Coordinator getCoordinator(){
+     public Coordinator getCoordinator() throws SQLException {
          CoordinatorDAOImpl getCoordinator = new CoordinatorDAOImpl();
-         Coordinator coordinator = new Coordinator() ;
-         try{
-             coordinator = getCoordinator.getCoordinator();
-         }catch (SQLException ex){
-             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-         }
+         Coordinator coordinator ;
+         coordinator = getCoordinator.getCoordinator();
          return coordinator;
      }
 
-    public List<Coordinator> getAllCoordinator(){
+    public List<Coordinator> getAllCoordinator() throws SQLException {
         CoordinatorDAOImpl getAllCoordinator = new CoordinatorDAOImpl();
-        List<Coordinator> coordinators = new ArrayList<>();
-        try{
-            coordinators = getAllCoordinator.getAllCoordinator();
-        }catch (SQLException ex){
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        List<Coordinator> coordinators;
+        coordinators = getAllCoordinator.getAllCoordinator();
         return coordinators;
     }
 
-    public int recoverCoordinator(){
+    public boolean recoverCoordinator() throws SQLException {
         CoordinatorDAOImpl recoverCoordinator = new CoordinatorDAOImpl();
-        int result = 0;
-        try{
-            result = recoverCoordinator.recoverCoordinator(this);
-        }catch (SQLException ex){
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result;
+        result = recoverCoordinator.recoverCoordinator(this);
         return result;
     }
 
-    public Project getProject (String name) {
+    public Project getProject (String name)  throws SQLException{
         ProjectDAOImpl getProject = new ProjectDAOImpl();
         return getProject.getProject(name);
     }

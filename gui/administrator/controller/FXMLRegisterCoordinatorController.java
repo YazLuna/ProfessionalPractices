@@ -1,30 +1,21 @@
 package gui.administrator.controller;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import logic.ValidateAddUser;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 
 
 public class FXMLRegisterCoordinatorController extends FXMLGeneralController implements Initializable  {
-    @FXML private Button btnRegister;
-    @FXML private Button btnCancel;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
     @FXML private TextField tfLastName;
@@ -48,14 +39,14 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         cancel.setTitle("Cancel");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.get() == ButtonType.OK) {
-            returnGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
+            cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
         }
     }
 
     public void loadProfilePicture(ActionEvent actionEvent) {
     }
 
-    public void register(ActionEvent actionEvent) {
+    public void register(ActionEvent actionEvent) throws SQLException {
         boolean nameValidate;
         boolean lastNameValidate;
         boolean emailValidate;
@@ -63,7 +54,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         boolean staffNumberValidate;
         boolean phoneValidate;
         int band =0;
-        int registerComplete = 0;
+        boolean registerComplete;
         Coordinator coordinator = new Coordinator();
         tfStaffNumber.getStyleClass().remove("ok");
         tfName.getStyleClass().remove("ok");
@@ -171,11 +162,11 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             Date myDate = new Date();
             coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
             registerComplete = coordinator.addCoordinator();
-            if(registerComplete==1){
+            if(registerComplete==true){
                 generateConfirmation("The register was complete");
-                returnGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
+                openWindowGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
             }else{
-                if(registerComplete==0){
+                if(registerComplete==false){
                     generateError("This coordinator is already registered ");
                 }
             }
