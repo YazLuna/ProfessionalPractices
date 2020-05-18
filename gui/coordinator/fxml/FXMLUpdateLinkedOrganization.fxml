@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
+
 <AnchorPane id="AnchorPane" prefHeight="575.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateLinkedOrganizationController">
     <stylesheets>
         <URL value="@../css/fxmlupdatelinkedorganization.css" />
@@ -66,7 +70,7 @@
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-            <TextField fx:id="tfPhoneNumber" alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <TextField fx:id="tfPhoneNumber" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
@@ -108,15 +112,24 @@
             <Font name="Arial" size="22.0" />
          </font>
       </Label>
-      <Button fx:id="btnCancel" layoutX="456.0" layoutY="494.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="77.0" text="Cancel" textFill="#000175">
+      <Button fx:id="btnCancel" layoutX="309.0" layoutY="488.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="77.0" text="Cancel" textFill="#000175">
          <font>
             <Font name="Arial" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnUpdate" layoutX="325.0" layoutY="494.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="Update" textFill="#000275">
+      <Button fx:id="btnUpdate" layoutX="436.0" layoutY="488.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="Update" textFill="#000275">
          <font>
             <Font name="Arial" size="17.0" />
          </font>
+      </Button>
+      <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="33.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="55.0" prefWidth="45.0" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+         <graphic>
+            <ImageView fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/behind.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
    </children>
 </AnchorPane>

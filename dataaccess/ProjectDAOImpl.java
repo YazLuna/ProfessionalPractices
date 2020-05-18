@@ -41,6 +41,45 @@ public class ProjectDAOImpl implements IProjectDAO {
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
+            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
+            LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
+            ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
+
+            while(results.next()){
+                Project project = new Project();
+                project.setIdProject(results.getInt("idProject"));
+                project.setNameProject(results.getString("nameProject"));
+                project.setDescription(results.getString("description"));
+                project.setObjectiveGeneral(results.getString("objectiveGeneral"));
+                project.setObjectiveInmediate(results.getString("objectiveInmediate"));
+                project.setObjectiveMediate(results.getString("objectiveMediate"));
+                project.setMethodology(results.getString("methodology"));
+                project.setResources(results.getString("resources"));
+                project.setStatus(results.getString("status"));
+                project.setActivities(results.getString("activities"));
+                project.setResponsabilities(results.getString("responsabilities"));
+                project.setDuration(results.getInt("duration"));
+                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setLapse(results.getString("lapse"));
+                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
+                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
+                project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
+                projects.add(project);
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return projects;
+    }
+
+    @Override
+    public List<Project> getAllProjectsAvailable (){
+        List<Project> projects = new ArrayList<>();
+        try{
+            connection = connexion.getConnection();
+            consultation  = connection.createStatement();
             results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse"+
                     " where status='available'");
             LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
@@ -63,7 +102,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setLapse(results.getString("lapse"));
                 project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
-                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
+                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
             }
