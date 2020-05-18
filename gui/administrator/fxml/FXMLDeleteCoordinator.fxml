@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,22 +18,22 @@
                 <Image url="@../../images/logoAdministrator.jpg" />
             </image>
         </ImageView>
-        <Label fx:id="lbCoordinators" layoutX="232.0" layoutY="30.0" text="Coordinator" textFill="#1b4325">
+        <Label fx:id="lbCoordinators" layoutX="232.0" layoutY="24.0" text="Coordinator" textFill="#1b4325">
             <font>
                 <Font name="System Bold" size="24.0" />
             </font>
         </Label>
-        <Button fx:id="btnCancel" layoutX="323.0" layoutY="328.0" mnemonicParsing="false" text="Cancel">
+        <Button fx:id="btnCancel" layoutX="325.0" layoutY="340.0" mnemonicParsing="false" onAction="#cancel" text="Cancel">
             <font>
                 <Font name="Arial" size="12.0" />
             </font>
         </Button>
-        <Button fx:id="btnLogOut" layoutX="510.0" layoutY="30.0" mnemonicParsing="false" text="Log Out">
+        <Button fx:id="btnLogOut" layoutX="510.0" layoutY="30.0" mnemonicParsing="false" onAction="#logOut" text="Log Out">
             <font>
                 <Font name="Arial" size="12.0" />
             </font>
         </Button>
-      <Button fx:id="btnDelete" layoutX="232.0" layoutY="328.0" mnemonicParsing="false" text="Delete">
+      <Button fx:id="btnDelete" layoutX="232.0" layoutY="340.0" mnemonicParsing="false" onAction="#delete" text="Delete">
          <font>
             <Font name="Arial" size="12.0" />
          </font>
@@ -44,5 +43,49 @@
             <Image url="@../../images/logout.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="imgCoordinator" fitHeight="130.0" fitWidth="130.0" layoutX="235.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="lbName" layoutX="191.0" layoutY="192.0" />
+      <Label fx:id="lbLastName" layoutX="343.0" layoutY="192.0" />
+      <Label fx:id="lbStaffNumber" layoutX="191.0" layoutY="215.0" />
+      <Label fx:id="lbGender" layoutX="191.0" layoutY="236.0" />
+      <Label fx:id="lbEmail" layoutX="191.0" layoutY="255.0" />
+      <Label fx:id="lbAlternateEmail" layoutX="191.0" layoutY="274.0" />
+      <Label fx:id="lbPhone" layoutX="191.0" layoutY="294.0" />
+      <Label fx:id="lbRegistrationDate" layoutX="191.0" layoutY="314.0" />
+      <Label fx:id="lbNameHead" layoutX="77.0" layoutY="193.0" text="Name">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbStaffNumberHead" layoutX="77.0" layoutY="215.0" text="StaffNumber">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbGenderHead" layoutX="77.0" layoutY="236.0" text="Gender">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbEmailHead" layoutX="77.0" layoutY="255.0" text="Email">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbAlternateEmailHead" layoutX="77.0" layoutY="274.0" text="Alternate Email">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbPhoneHead" layoutX="77.0" layoutY="294.0" text="Phone">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbRegistrationDateHead" layoutX="77.0" layoutY="314.0" text="Registration Date">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /**
  * DAO User
  * @author Yazmin
- * @version 08/05/2020
+ * @version 17/05/2020
  */
 
 public class UserMethodDAOImpl implements IUserMethodDAO{
@@ -22,6 +22,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         connexion = new Connexion();
     }
 
+    @Override
     public boolean searchLoginAccount(String userName, String password) throws SQLException{
         boolean search = false;
         String userNameFound ;
@@ -47,6 +48,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return search;
     }
 
+    @Override
     public int searchIdUser(String email, String alternateEmail, String phone) throws SQLException {
         int idUser = 0;
         try {
@@ -68,11 +70,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return idUser;
     }
 
+    @Override
     public boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
             , String userType, String status, int gender, String userName) throws SQLException {
         boolean validate;
         boolean result = false;
-        validate = validateUser(email, alternateEmail, phone,password,userName);
+        validate = validateUser(email, alternateEmail, phone,userName);
         if(validate){
             try {
                 connection = connexion.getConnection();
@@ -95,6 +98,136 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             }
         }
         return result;
+    }
+
+    @Override
+    public String searchUserType(int idUser) throws SQLException{
+        String userType= null;
+        try {
+            connection = connexion.getConnection();
+            String queryUserType = "Select type from UserType INNER JOIN User_UserType where User_UserType.idUser =?";
+            PreparedStatement sentence = connection.prepareStatement(queryUserType);
+            sentence.setInt(1, idUser);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                userType = result.getString("type");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
+        }
+        return userType;
+    }
+
+    @Override
+    public void addUserStatus(String status)  throws SQLException {
+        try {
+            connection = connexion.getConnection();
+            String queryAddUserStatus = "INSERT INTO UserStatus (status)  VALUES (?)";
+            PreparedStatement sentenceAddUserStatus = connection.prepareStatement(queryAddUserStatus);
+            sentenceAddUserStatus.setString(1, status);
+            sentenceAddUserStatus.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connection.close();
+        }
+    }
+
+    @Override
+    public int searchIdUserStatus(String status)  throws SQLException{
+        int idUserStatus = 0;
+        try {
+            connection = connexion.getConnection();
+            String queryUserStatus = "Select idUserStatus from UserStatus where status =?";
+            PreparedStatement sentence = connection.prepareStatement(queryUserStatus);
+            sentence.setString(1, status);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                idUserStatus = result.getInt("idUserStatus");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connection.close();
+        }
+        return idUserStatus;
+    }
+
+    @Override
+    public int searchStaffNumberCoordinator(int staffNumberSearch)  throws SQLException {
+        int staffNumber = 0;
+        try {
+            connection = connexion.getConnection();
+            String queryStaffNumber =
+                    "Select staffNumber from Coordinator where staffNumber=?";
+            PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
+            sentence.setInt(1, staffNumberSearch);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                staffNumber = result.getInt("staffNumber");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connection.close();
+        }
+        return staffNumber;
+    }
+
+    @Override
+    public int searchStaffNumberTeacher(int staffNumberSearch)  throws SQLException {
+        int staffNumber = 0;
+        try {
+            connection = connexion.getConnection();
+            String queryStaffNumber =
+                    "Select staffNumber from Teacher where staffNumber=?";
+            PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
+            sentence.setInt(1, staffNumberSearch);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                staffNumber = result.getInt("staffNumber");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connection.close();
+        }
+        return staffNumber;
+    }
+
+    @Override
+    public boolean validateUser(String email, String alternateEmail, String phone, String userName) throws SQLException{
+        boolean emailSearch;
+        boolean alternateEmailSearch;
+        boolean phoneSearch;
+        boolean userNameSearch;
+        boolean result = false;
+        emailSearch = searchEmail(email);
+        if(!emailSearch){
+            alternateEmailSearch = searchAlternateEmail(alternateEmail);
+            if(!alternateEmailSearch){
+                phoneSearch = searchPhone(phone);
+                if(!phoneSearch){
+                    userNameSearch = searchUserName(userName);
+                    if(!userNameSearch){
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int searchStaffNumber(int staffNumberSearch)  throws SQLException {
+       int staffNumber;
+       staffNumber = searchStaffNumberTeacher(staffNumberSearch);
+       if(staffNumber == 0 ){
+           staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
+       }
+       return staffNumber;
     }
 
     private boolean searchAlternateEmail(String alternateEmail) throws SQLException {
@@ -195,56 +328,19 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         }
     }
 
-    private void addUserUserStatus(int idUserAdd, int idUserStatusSearch) throws SQLException{
+    private void addUserUserStatus(int idUserAdd, int idUserStatus) throws SQLException{
         try {
             connection = connexion.getConnection();
             String queryAddUserUserStatus = "INSERT INTO User_UserStatus (idUser, idUserStatus)  VALUES (?,?)";
             PreparedStatement sentenceAddUserUserStatus = connection.prepareStatement(queryAddUserUserStatus);
             sentenceAddUserUserStatus.setInt(1, idUserAdd);
-            sentenceAddUserUserStatus.setInt(2, idUserStatusSearch);
+            sentenceAddUserUserStatus.setInt(2, idUserStatus);
             sentenceAddUserUserStatus.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connection.close();
         }
-    }
-
-    public void addUserUserTypeStatus(int idUser, int idUserType) throws SQLException {
-        try {
-            connection = connexion.getConnection();
-            String queryAddUserTypeStatus = "INSERT INTO User_UserType (idUser, idUserType) VALUES (?,?)";
-            PreparedStatement sentenceAddUserTypeStatus = connection.prepareStatement(queryAddUserTypeStatus);
-            sentenceAddUserTypeStatus.setInt(1,idUser);
-            sentenceAddUserTypeStatus.setInt(2,idUserType);
-            sentenceAddUserTypeStatus.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            connection.close();
-        }
-    }
-
-    private boolean validateUser(String email, String alternateEmail, String phone, String password, String userName) throws SQLException{
-        boolean emailSearch;
-        boolean alternateEmailSearch;
-        boolean phoneSearch;
-        boolean userNameSearch;
-        boolean result = false;
-        emailSearch = searchEmail(email);
-        if(!emailSearch){
-            alternateEmailSearch = searchAlternateEmail(alternateEmail);
-            if(!alternateEmailSearch){
-                phoneSearch = searchPhone(phone);
-                if(!phoneSearch){
-                    userNameSearch = searchUserName(userName);
-                    if(!userNameSearch){
-                        result = true;
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     private void createLoginAccount(String userName, String password, int idUser) throws SQLException {
@@ -277,40 +373,6 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         }
     }
 
-    private void addUserStatus(String status)  throws SQLException {
-        try {
-            connection = connexion.getConnection();
-            String queryAddUserStatus = "INSERT INTO UserStatus (status)  VALUES (?)";
-            PreparedStatement sentenceAddUserStatus = connection.prepareStatement(queryAddUserStatus);
-            sentenceAddUserStatus.setString(1, status);
-            sentenceAddUserStatus.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
-            connection.close();
-        }
-    }
-
-    public int searchStaffNumber(int staffNumberSearch)  throws SQLException {
-        int staffNumber = 0;
-        try {
-            connection = connexion.getConnection();
-            String queryStaffNumber =
-                    "Select staffNumber from Coordinator where staffNumber=?";
-            PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
-            sentence.setInt(1, staffNumberSearch);
-            result = sentence.executeQuery();
-            while (result.next()) {
-                staffNumber = result.getInt("staffNumber");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
-            connection.close();
-        }
-        return staffNumber;
-    }
-
     private int searchIdUserType(String userType)  throws SQLException{
         int idUserType = 0;
         try {
@@ -328,25 +390,6 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             connection.close();
         }
         return idUserType;
-    }
-
-    private int searchIdUserStatus(String status)  throws SQLException{
-        int idUserStatus = 0;
-        try {
-            connection = connexion.getConnection();
-            String queryUserStatus = "Select idUserStatus from UserStatus where status =?";
-            PreparedStatement sentence = connection.prepareStatement(queryUserStatus);
-            sentence.setString(1, status);
-            result = sentence.executeQuery();
-            while (result.next()) {
-                idUserStatus = result.getInt("idUserStatus");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            connection.close();
-        }
-        return idUserStatus;
     }
 
     private boolean searchUserName (String userNameSearch) throws SQLException{
