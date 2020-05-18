@@ -31,6 +31,15 @@ public class FXMLSectionProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        registreProject();
+        updateProject();
+        deleteProject();
+        listProject();
+        home();
+        logout();
+    }
+
+    public void registreProject () {
         btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 Stage stagePrincipal = (Stage) btnRegisterProject.getScene().getWindow();
@@ -50,7 +59,9 @@ public class FXMLSectionProjectController implements Initializable {
                 stage.show();
             }
         });
+    }
 
+    public void updateProject () {
         btnUpdateProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 FXMLChooseProjectController chooseProject = new FXMLChooseProjectController();
@@ -70,7 +81,8 @@ public class FXMLSectionProjectController implements Initializable {
                 stage.show();
             }
         });
-
+    }
+    public void deleteProject () {
         btnDeleteProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 FXMLChooseProjectController chooseProject = new FXMLChooseProjectController();
@@ -90,6 +102,8 @@ public class FXMLSectionProjectController implements Initializable {
                 stage.show();
             }
         });
+    }
+    public void home () {
         btnHome.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 Stage stagePrincipal = (Stage) btnHome.getScene().getWindow();
@@ -107,6 +121,8 @@ public class FXMLSectionProjectController implements Initializable {
                 stage.show();
             }
         });
+    }
+    public void logout () {
         btnLogout.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 Stage stagePrincipal = (Stage) btnLogout.getScene().getWindow();
@@ -124,5 +140,26 @@ public class FXMLSectionProjectController implements Initializable {
                 stage.show();
             }
         });
-    }  
+    }
+    public void listProject () {
+        btnListProject.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                FXMLChooseProjectController chooseProject = new FXMLChooseProjectController();
+                chooseProject.controllerSection("listProject");
+                Stage stagePrincipal = (Stage) btnListProject.getScene().getWindow();
+                stagePrincipal.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
+                Stage stage = new Stage();
+                try {
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    stage.setScene(new Scene(root1));
+                } catch(Exception e) {
+                    Logger logger = Logger.getLogger(getClass().getName());
+                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
+                }
+                stage.setResizable(false);
+                stage.show();
+            }
+        });
+    }
 }

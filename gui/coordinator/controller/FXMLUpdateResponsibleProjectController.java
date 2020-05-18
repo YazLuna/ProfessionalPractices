@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Project;
 import logic.ValidateDataPerson;
+import logic.ValidateProject;
 
 /**
  * class FXMLUpdateResponsibleProjectController
@@ -34,6 +35,7 @@ public class FXMLUpdateResponsibleProjectController implements Initializable {
     @FXML private ComboBox cbCharge;
     private List<String> allCharge = new ArrayList<>();
     private ValidateDataPerson validateDataPerson = new ValidateDataPerson();
+    private ValidateProject validateProject = new ValidateProject();
     private static Project project;
 
     @Override
@@ -87,7 +89,7 @@ public class FXMLUpdateResponsibleProjectController implements Initializable {
                     alertDataProject.setTitle("Warning");
                     alertDataProject.showAndWait();
                 }else{
-                    validateResponsible();
+                    getDataResponsible();
                     message = project.actualizationProject();
                     Alert alertDataProject = new Alert(Alert.AlertType.NONE);
                     alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
@@ -97,6 +99,13 @@ public class FXMLUpdateResponsibleProjectController implements Initializable {
                 }
             }
         });
+    }
+
+    public void getDataResponsible () {
+        project.getResponsible().setName(validateProject.deleteSpace(tfName.getText()));
+        project.getResponsible().setLastName(validateProject.deleteSpace(tfLastName.getText()));
+        project.getResponsible().setEmail(tfEmail.getText());
+        project.getResponsible().setCharge(validateProject.deleteSpace(cbCharge.getEditor().getText()));
     }
 
     public void behind (){
