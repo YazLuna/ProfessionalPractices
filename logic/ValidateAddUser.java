@@ -55,9 +55,9 @@ public class ValidateAddUser {
     }
 
     public boolean validateEmpty (String works) {
-        boolean result=true;
-        if(works.length()!=0){
-            result=false;
+        boolean result=false;
+        if(works.length() > 0){
+            result=true;
         }
         return result;
     }

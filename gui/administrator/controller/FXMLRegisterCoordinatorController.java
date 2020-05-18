@@ -14,6 +14,11 @@ import logic.ValidateAddUser;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 18/05/2020
+ */
 
 public class FXMLRegisterCoordinatorController extends FXMLGeneralController implements Initializable  {
     @FXML private TextField tfStaffNumber;
@@ -22,6 +27,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     @FXML private TextField tfEmail;
     @FXML private TextField tfAlternateEmail;
     @FXML private TextField tfPhone;
+    @FXML private TextField tfUserName;
     @FXML private TextField tfPassword;
     @FXML private RadioButton rbMale;
     @FXML private RadioButton rbFemale;
@@ -46,104 +52,105 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     public void loadProfilePicture(ActionEvent actionEvent) {
     }
 
-    public void register(ActionEvent actionEvent) throws SQLException {
-        boolean nameValidate;
-        boolean lastNameValidate;
-        boolean emailValidate;
-        boolean alternateEmailValidate;
-        boolean staffNumberValidate;
-        boolean phoneValidate;
-        int band =0;
-        boolean registerComplete;
-        Coordinator coordinator = new Coordinator();
+    public boolean validate(){
+        boolean validation= true;
+        if((validateAddUser.validateEmpty(tfStaffNumber.getText())) && (validateAddUser.validateStaffNumber(tfStaffNumber.getText()))){
+            tfStaffNumber.getStyleClass().add("ok");
+        }else{
+            tfStaffNumber.getStyleClass().add("error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateName(tfName.getText()))) {
+            tfName.getStyleClass().add("ok");
+        }else{
+            tfName.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateLastName(tfLastName.getText()))) {
+            tfLastName.getStyleClass().add("ok");
+        }else{
+            tfLastName.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfEmail.getText())) && (validateAddUser.validateEmail(tfEmail.getText()))) {
+            tfEmail.getStyleClass().add("ok");
+        }else{
+            tfEmail.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfAlternateEmail.getText())) && (validateAddUser.validateEmail(tfAlternateEmail.getText()))) {
+            tfAlternateEmail.getStyleClass().add("ok");
+        }else{
+            tfAlternateEmail.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhone(tfPhone.getText()))) {
+            tfPhone.getStyleClass().add("ok");
+        }else{
+            tfPhone.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if(validateAddUser.validateEmpty(tfPassword.getText())) {
+            tfPassword.getStyleClass().add("ok");
+        }else{
+            tfPassword.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if(validateAddUser.validateEmpty(tfUserName.getText())) {
+            tfUserName.getStyleClass().add("ok");
+        }else{
+            tfUserName.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        ToggleGroup radioGroup = new ToggleGroup();
+        rbFemale.setToggleGroup(radioGroup);
+        rbFemale.setToggleGroup(radioGroup);
+        if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
+            validation = false;
+            //generateAlert("Select the gender");
+        }
+
+        return validation;
+    }
+
+    public void removeStyle(){
         tfStaffNumber.getStyleClass().remove("ok");
         tfName.getStyleClass().remove("ok");
         tfLastName.getStyleClass().remove("ok");
         tfEmail.getStyleClass().remove("ok");
         tfAlternateEmail.getStyleClass().remove("ok");
+        tfUserName.getStyleClass().remove("ok");
         tfPassword.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
-        if(!validateAddUser.validateEmpty(tfStaffNumber.getText())){
-            staffNumberValidate = validateAddUser.validateStaffNumber(tfStaffNumber.getText());
-            if(staffNumberValidate){
-                tfStaffNumber.getStyleClass().add("ok");
-                coordinator.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
-                coordinator.setName(tfName.getText());
-                coordinator.setLastName(tfLastName.getText());
-                coordinator.setEmail(tfEmail.getText());
-                coordinator.setAlternateEmail(tfAlternateEmail.getText());
-                coordinator.setPhone(tfPhone.getText());
-                coordinator.setPassword(tfPassword.getText());
+    }
 
-                if(!validateAddUser.validateEmpty(coordinator.getName())){
-                    nameValidate = validateAddUser.validateName(tfName.getText());
-                    if(nameValidate){
-                        tfName.getStyleClass().add("ok");
-                        if(!validateAddUser.validateEmpty(coordinator.getLastName())){
-                            lastNameValidate = validateAddUser.validateLastName(coordinator.getLastName());
-                            if(lastNameValidate){
-                                tfLastName.getStyleClass().add("ok");
-                                if(!validateAddUser.validateEmpty(coordinator.getEmail())){
-                                    emailValidate = validateAddUser.validateEmail(coordinator.getEmail());
-                                    if(emailValidate){
-                                        tfEmail.getStyleClass().add("ok");
-                                        if(!validateAddUser.validateEmpty(coordinator.getAlternateEmail())){
-                                            alternateEmailValidate = validateAddUser.validateEmail(coordinator.getAlternateEmail());
-                                            if(alternateEmailValidate){
-                                                tfAlternateEmail.getStyleClass().add("ok");
-                                                if(!validateAddUser.validateEmpty(coordinator.getPhone())){
-                                                    phoneValidate = validateAddUser.validatePhone(coordinator.getPhone());
-                                                    if(phoneValidate){
-                                                        tfPhone.getStyleClass().add("ok");
-                                                        if(!validateAddUser.validateEmpty(coordinator.getPassword())){
-                                                            coordinator.setName(validateAddUser.deleteSpace(tfName.getText()));
-                                                            coordinator.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
-                                                            coordinator.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
-                                                            coordinator.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
-                                                            coordinator.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
-                                                            coordinator.setPassword(validateAddUser.deleteSpace(tfPassword.getText()));
-                                                            tfPassword.getStyleClass().add("ok");
-                                                            band =1;
-                                                        }else{
-                                                            tfPassword.getStyleClass().add("error");
-                                                        }
-                                                    }else{
-                                                        tfPassword.getStyleClass().add("error");
-                                                    }
-                                                }else{
-                                                    tfPhone.getStyleClass().add("error");
-                                                }
-                                            }else{
-                                                tfAlternateEmail.getStyleClass().add("error");
-                                            }
-                                        }else{
-                                            tfAlternateEmail.getStyleClass().add("error");
-                                        }
-                                    }else{
-                                       tfEmail.getStyleClass().add("error");
-                                    }
-                                }else{
-                                    tfEmail.getStyleClass().add("error");
-                                }
-                            }else{
-                                tfLastName.getStyleClass().add("error");
-                            }
-                        }else {
-                            tfLastName.getStyleClass().add("error");
-                        }
-                    }else{
-                       tfName.getStyleClass().add("error");
-                    }
-                }else{
-                    tfName.getStyleClass().add("error");
-                }
-            }else{
-                tfStaffNumber.getStyleClass().add("error");
-            }
-        }else{
-            tfStaffNumber.getStyleClass().add("error");
-        }
-        if(band == 1){
+
+    public void register(ActionEvent actionEvent) throws SQLException {
+        boolean validate;
+        int band =0;
+        boolean registerComplete;
+        Date myDate = new Date();
+        removeStyle();
+        validate = validate();
+        if(validate){
+            Coordinator coordinator = new Coordinator();
+            coordinator.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
+            coordinator.setName(validateAddUser.deleteSpace(tfName.getText()));
+            coordinator.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
+            coordinator.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
+            coordinator.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
+            coordinator.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
+            coordinator.setUserName(tfPassword.getText());
+            coordinator.setPassword(tfPassword.getText());
+
             ToggleGroup radioGroup = new ToggleGroup();
             rbFemale.setToggleGroup(radioGroup);
             rbFemale.setToggleGroup(radioGroup);
@@ -152,23 +159,16 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             }else{
                 if(rbFemale.isSelected()){
                     coordinator.setGender(0);
-                }else{
-                    band = 0;
-                    generateAlert("Select the gender");
                 }
             }
-        }
-        if(band == 1){
-            Date myDate = new Date();
+
             coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
             registerComplete = coordinator.addCoordinator();
-            if(registerComplete==true){
+            if(registerComplete){
                 generateConfirmation("The register was complete");
                 openWindowGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
             }else{
-                if(registerComplete==false){
-                    generateError("This coordinator is already registered ");
-                }
+                generateError("This coordinator is already registered ");
             }
         }
     }
