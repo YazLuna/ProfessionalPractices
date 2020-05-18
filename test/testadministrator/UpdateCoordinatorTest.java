@@ -11,6 +11,7 @@ import domain.Coordinator;
  */
 
 public class UpdateCoordinatorTest {
+    /*
     @Test
     public void testUpdateCoordinator() {
         int result=0;
@@ -82,6 +83,6 @@ public class UpdateCoordinatorTest {
         result = coordinator.updateCoordinator(1);
         Assert.assertEquals(0,result);
     }
-
+*/
 
 }

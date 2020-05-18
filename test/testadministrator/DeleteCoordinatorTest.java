@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import domain.Coordinator;
 
+import java.sql.SQLException;
+
 /**
  * DAO User
  * @author Yazmin
@@ -12,29 +14,14 @@ import domain.Coordinator;
 
 public class DeleteCoordinatorTest {
     @Test
-    public void testDeleteCoordinator() {
-        int result;
+    public void testDeleteCoordinator() throws SQLException {
+        boolean result;
         Coordinator coordinator = new Coordinator();
         coordinator.setStaffNumber(4);
+        coordinator.setStatus("Inactive");
         coordinator.setDischargeDate("2020-05-06");
-        result = coordinator.deleteCoordinator();
-        Assert.assertEquals(1,result);
+        result = coordinator.deleteCoordinator(coordinator.getStatus(),coordinator.getDischargeDate());
+        Assert.assertTrue(result);
     }
 
-    @Test
-    public void testDeleteCoordinatorNull() {
-        int result;
-        Coordinator coordinator = new Coordinator();
-        result = coordinator.deleteCoordinator();
-        Assert.assertEquals(0,result);
-    }
-
-    @Test
-    public void testDeleteCoordinatorNotExist() {
-        int result;
-        Coordinator coordinator = new Coordinator();
-        coordinator.setStaffNumber(200);
-        result = coordinator.deleteCoordinator();
-        Assert.assertEquals(0,result);
-    }
 }

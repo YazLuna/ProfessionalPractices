@@ -39,7 +39,7 @@ public class FXMLLoginController implements Initializable {
         UserMethodDAOImpl user =new UserMethodDAOImpl();
         boolean login= false;
         login = user.searchLoginAccount(tfUsser.getText(),pfPassword.getText());
-        if(login){
+        /*if(login){
             try {
                 Stage stagePrincipal = (Stage) btnLogin.getScene().getWindow();
                 stagePrincipal.close();
@@ -53,8 +53,8 @@ public class FXMLLoginController implements Initializable {
                 Logger logger = Logger.getLogger(getClass().getName());
                 logger.log(Level.SEVERE, "Failed to create new Window.", e);
             }
-        }
-        /*String usserLogin = tfUsser.getText();
+        }*/
+        String usserLogin = tfUsser.getText();
         if(usserLogin.equalsIgnoreCase("Administrator")){
             btnLogin.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
@@ -135,7 +135,7 @@ public class FXMLLoginController implements Initializable {
                     }
                 }
             }
-        }*/
+        }
 
 
     }

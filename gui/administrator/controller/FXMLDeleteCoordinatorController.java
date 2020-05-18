@@ -1,59 +1,68 @@
 package gui.administrator.controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import java.net.URL;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Label;
+import gui.FXMLGeneralController;
+import domain.Coordinator;
 
-public class FXMLDeleteCoordinatorController implements Initializable {
-    @FXML private Button btnLogOut;
-    @FXML private Button btnCancel;
-
+public class FXMLDeleteCoordinatorController extends FXMLGeneralController implements Initializable {
+    @FXML private Label lbName;
+    @FXML private Label lbLastName;
+    @FXML private Label lbGender;
+    @FXML private Label lbEmail;
+    @FXML private Label lbAlternateEmail;
+    @FXML private Label lbPhone;
+    @FXML private Label lbRegistrationDate;
+    @FXML private Label lbStaffNumber;
+    Coordinator coordinator = new Coordinator();
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnCancel.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/administrator/fxml/FXMLSectionCoordinator.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
+        try {
+            coordinator = coordinator.getCoordinator();
+        } catch (SQLException exception) {
+            Logger.getLogger(FXMLDeleteCoordinatorController.class.getName()).log(Level.SEVERE, null, exception);
+        }
+        lbName.setText(coordinator.getName());
+        lbLastName.setText(coordinator.getLastName());
+        lbEmail.setText(coordinator.getEmail());
+        lbAlternateEmail.setText(coordinator.getAlternateEmail());
+        if(coordinator.getGender()==1){
+            lbGender.setText("Male");
+        }else{
+            lbGender.setText("Female");
+        }
+        lbPhone.setText(coordinator.getPhone());
+        lbRegistrationDate.setText(coordinator.getRegistrationDate());
+        lbStaffNumber.setText(String.valueOf(coordinator.getStaffNumber()));
+    }
 
-        btnLogOut.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnLogOut.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/FXMLLogin.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
+    public void logOut(ActionEvent actionEvent) {
+        logOutGeneral();
+    }
+
+    public void cancel(ActionEvent actionEvent) {
+        cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+    }
+
+    public void delete(ActionEvent actionEvent) throws SQLException {
+        boolean delete;
+        Date myDate = new Date();
+        coordinator.setDischargeDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
+        delete = coordinator.deleteCoordinator("Inactive",coordinator.getDischargeDate());
+        if(delete){
+            cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+            generateInformation("The coordinator was successfully deleted");
+        }else{
+            generateError("Could not delete coordinator");
+        }
     }
 }
