@@ -98,8 +98,6 @@ public class FXMLChooseSectionController implements Initializable {
                     logger.log(Level.SEVERE, "Failed to create new Window.", e);
                 }
                 stage.setResizable(false);
-                stage.setHeight(500);
-                stage.setWidth(610);
                 stage.show();
             }
         });

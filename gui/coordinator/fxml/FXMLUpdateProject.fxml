@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
@@ -7,23 +9,39 @@
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
 
-<AnchorPane id="AnchorPane" prefHeight="480.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateProjectController">
+<AnchorPane id="AnchorPane" prefHeight="444.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateProjectController">
     <stylesheets>
         <URL value="@../css/fxmlupdateproject.css" />
     </stylesheets>
    <children>
-      <ScrollPane prefHeight="477.0" prefWidth="594.0">
+      <ScrollPane prefHeight="451.0" prefWidth="594.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="802.0" prefWidth="575.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="850.0" prefWidth="575.0">
                <children>
                   <VBox alignment="CENTER" layoutY="30.0" prefHeight="816.0" prefWidth="590.0" spacing="25.0">
                      <children>
-                        <Label text="Project data" textFill="#0e005e">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </Label>
-                        <GridPane prefHeight="587.0" prefWidth="454.0">
+                        <FlowPane hgap="160.0" prefHeight="55.0" prefWidth="410.0">
+                           <children>
+                              <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="55.0" prefWidth="45.0" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+                                 <graphic>
+                                    <ImageView fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/behind.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Label lineSpacing="60.0" text="Project data" textFill="#0e005e">
+                                 <font>
+                                    <Font name="Arial" size="22.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="40.0" />
+                           </VBox.margin>
+                        </FlowPane>
+                        <GridPane prefHeight="543.0" prefWidth="590.0" vgap="10.0">
                            <children>
                               <TextField fx:id="tfName" GridPane.columnIndex="1">
                                  <font>
@@ -135,10 +153,16 @@
                                     <Font name="Arial" size="15.0" />
                                  </font>
                               </TextField>
+                              <Label prefHeight="17.0" prefWidth="51.0" text="Lapse:" GridPane.halignment="RIGHT" GridPane.rowIndex="11">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cbLapse" editable="true" prefHeight="25.0" prefWidth="236.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                            </children>
                            <columnConstraints>
-                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="261.0" />
-                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="289.0" minWidth="10.0" prefWidth="274.0" />
+                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="315.0" minWidth="10.0" prefWidth="210.0" />
+                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="366.0" minWidth="10.0" prefWidth="340.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
@@ -152,11 +176,12 @@
                               <RowConstraints maxHeight="157.0" minHeight="4.0" prefHeight="55.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="159.0" minHeight="0.0" prefHeight="43.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="135.0" minHeight="0.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="135.0" minHeight="0.0" prefHeight="34.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                         </GridPane>
-                        <FlowPane alignment="CENTER" hgap="70.0" prefHeight="200.0" prefWidth="200.0">
+                        <FlowPane alignment="CENTER" hgap="50.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="btnUpdate" mnemonicParsing="false" text="Update" textFill="#000175">
+                              <Button fx:id="btnUpdate" lineSpacing="70.0" mnemonicParsing="false" text="Update" textFill="#000175">
                                  <font>
                                     <Font name="Arial" size="17.0" />
                                  </font>

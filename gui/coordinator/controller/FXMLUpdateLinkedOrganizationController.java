@@ -11,7 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import logic.ValidateDataPerson;
 import logic.ValidateLinkedOrganizarion;
+import logic.ValidateProject;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,7 +44,9 @@ public class FXMLUpdateLinkedOrganizationController implements Initializable {
     private List<String> allCity = new ArrayList<>();
     private List<String> allState = new ArrayList<>();
     private List<String> allSector = new ArrayList<>();
+    private ValidateProject validateProject = new ValidateProject();
     private ValidateLinkedOrganizarion validateOrganizarion = new ValidateLinkedOrganizarion();
+    private ValidateDataPerson validateDataPerson = new ValidateDataPerson();
     private static Project project;
 
     @Override
@@ -85,8 +89,37 @@ public class FXMLUpdateLinkedOrganizationController implements Initializable {
         btnUpdate.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 String message;
+                if(!validateDataOrganization()) {
+                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
+                    alertDataProject.setAlertType(Alert.AlertType.WARNING);
+                    alertDataProject.setHeaderText("Enter correct data in the red fields");
+                    alertDataProject.setTitle("Warning");
+                    alertDataProject.showAndWait();
+                }else{
+                    getDataOrganization();
+                    message = project.actualizationProject();
+                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
+                    alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
+                    alertDataProject.setHeaderText(message);
+                    alertDataProject.setTitle("Information");
+                    alertDataProject.showAndWait();
+                }
             }
         });
+    }
+
+    public void getDataOrganization () {
+        project.getOrganization().setName(validateProject.deleteSpace(tfNameOrganization.getText()));
+        int directUsers = Integer.parseInt(tfDirectUsers.getText());
+        project.getOrganization().setDirectUsers(directUsers);
+        int indirectUsers = Integer.parseInt(tfIndirectUsers.getText());
+        project.getOrganization().setIndirectUsers(indirectUsers);
+        project.getOrganization().setEmail(tfEmail.getText());
+        project.getOrganization().setPhoneNumber(tfPhoneNumber.getText());
+        project.getOrganization().setAddress(validateProject.deleteSpace(tfAdress.getText()));
+        project.getOrganization().setCity(validateProject.deleteSpace(cbCity.getEditor().getText()));
+        project.getOrganization().setSector(validateProject.deleteSpace(cbSector.getEditor().getText()));
+        project.getOrganization().setState(validateProject.deleteSpace(cbState.getEditor().getText()));
     }
 
     public void behind (){
@@ -132,5 +165,64 @@ public class FXMLUpdateLinkedOrganizationController implements Initializable {
 
     public void setProject (Project project){
         this.project = project;
+    }
+
+    public boolean validateDataOrganization (){
+        boolean result = true;
+        if(!validateOrganizarion.validateNameLinked(tfNameOrganization.getText())){
+            tfNameOrganization.getStyleClass().add("error");
+            result= false;
+        }else {
+            tfNameOrganization.getStyleClass().remove("error");
+        }
+        if(!validateProject.validateNotEmpty(tfDirectUsers.getText())){
+            tfDirectUsers.getStyleClass().add("error");
+            result= false;
+        }else {
+            tfDirectUsers.getStyleClass().remove("error");
+        }
+        if(!validateProject.validateNotEmpty(tfIndirectUsers.getText())){
+            tfIndirectUsers.getStyleClass().add("error");
+            result= false;
+        }else {
+            tfIndirectUsers.getStyleClass().remove("error");
+        }
+        if(!validateOrganizarion.validatePhoneNumber(tfPhoneNumber.getText())){
+            tfPhoneNumber.getStyleClass().add("error");
+            result= false;
+        }else {
+            tfPhoneNumber.getStyleClass().remove("error");
+        }
+        if(!validateOrganizarion.validateAddress(tfAdress.getText())){
+            tfAdress.getStyleClass().add("error");
+            result= false;
+        }else {
+            tfAdress.getStyleClass().remove("error");
+        }
+        if(!validateOrganizarion.validateComboBox(cbCity.getEditor().getText())){
+            cbCity.getStyleClass().add("error");
+            result= false;
+        }else {
+            cbCity.getStyleClass().remove("error");
+        }
+        if(!validateOrganizarion.validateComboBox(cbSector.getEditor().getText())){
+            cbSector.getStyleClass().add("error");
+            result= false;
+        }else {
+            cbSector.getStyleClass().remove("error");
+        }
+        if(!validateOrganizarion.validateComboBox(cbState.getEditor().getText())){
+            cbState.getStyleClass().add("error");
+            result= false;
+        }else {
+            cbState.getStyleClass().remove("error");
+        }
+        if(!validateDataPerson.validateEmail(tfEmail.getText())){
+            tfEmail.getStyleClass().add("error");
+            result= false;
+        }else {
+            tfEmail.getStyleClass().remove("error");
+        }
+        return  result;
     }
 }
