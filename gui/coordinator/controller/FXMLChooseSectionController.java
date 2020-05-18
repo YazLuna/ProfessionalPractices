@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import domain.Project;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,79 +27,103 @@ public class FXMLChooseSectionController implements Initializable {
     @FXML private Button btnSectionResponsible;
     @FXML private Button btnSectionProject;
     @FXML private Button btnLogout;
+    private static Project project;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        behind();
+        updateProject();
+        updateOrganization();
+        updateResponsible();
+    }
+    public void setProject (Project project){
+        this.project = project;
+    }
+
+    public void behind (){
         btnBehind.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                Stage stagePrincipal = (Stage) btnBehind.getScene().getWindow();
+                stagePrincipal.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
+                Stage stage = new Stage();
                 try {
-                    Stage stagePrincipal = (Stage) btnBehind.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
                     stage.setScene(new Scene(root1));
-                    stage.show();
                 } catch(Exception e) {
                     Logger logger = Logger.getLogger(getClass().getName());
                     logger.log(Level.SEVERE, "Failed to create new Window.", e);
                 }
+                stage.setResizable(false);
+                stage.show();
             }
         });
+    }
+    public void updateOrganization (){
         btnSectionOrganization.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                FXMLUpdateLinkedOrganizationController updateOrganization = new FXMLUpdateLinkedOrganizationController();
+                updateOrganization.setProject(project);
+                Stage stagePrincipal = (Stage) btnSectionOrganization.getScene().getWindow();
+                stagePrincipal.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLUpdateLinkedOrganization.fxml"));
+                Stage stage = new Stage();
                 try {
-                    Stage stagePrincipal = (Stage) btnSectionOrganization.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLUpdateLinkedOrganization.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
                     stage.setScene(new Scene(root1));
-                    stage.show();
                 } catch(Exception e) {
                     Logger logger = Logger.getLogger(getClass().getName());
                     logger.log(Level.SEVERE, "Failed to create new Window.", e);
                 }
+                stage.setResizable(false);
+                stage.show();
             }
         });
-        btnSectionResponsible.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnSectionResponsible.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLUpdateResponsibleProject.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
+    }
+
+    public void updateProject () {
         btnSectionProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                FXMLUpdateProjectController updateProject = new FXMLUpdateProjectController();
+                updateProject.setProject(project);
+                Stage stagePrincipal = (Stage) btnSectionProject.getScene().getWindow();
+                stagePrincipal.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLUpdateProject.fxml"));
+                Stage stage = new Stage();
                 try {
-                    Stage stagePrincipal = (Stage) btnSectionProject.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLUpdateProject.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
                     stage.setScene(new Scene(root1));
-                    stage.setHeight(500);
-                    stage.setWidth(610);
-                    stage.show();
                 } catch(Exception e) {
                     Logger logger = Logger.getLogger(getClass().getName());
                     logger.log(Level.SEVERE, "Failed to create new Window.", e);
                 }
+                stage.setResizable(false);
+                stage.setHeight(500);
+                stage.setWidth(610);
+                stage.show();
             }
         });
-    }    
-    
+    }
+
+    public void updateResponsible () {
+        btnSectionResponsible.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                FXMLUpdateResponsibleProjectController updateResponsible = new FXMLUpdateResponsibleProjectController();
+                updateResponsible.setProject(project);
+                Stage stagePrincipal = (Stage) btnSectionResponsible.getScene().getWindow();
+                stagePrincipal.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLUpdateResponsibleProject.fxml"));
+                Stage stage = new Stage();
+                try {
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    stage.setScene(new Scene(root1));
+                } catch(Exception e) {
+                    Logger logger = Logger.getLogger(getClass().getName());
+                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
+                }
+                stage.setResizable(false);
+                stage.show();
+            }
+        });
+    }
 }

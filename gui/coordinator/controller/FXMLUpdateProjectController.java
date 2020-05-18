@@ -1,6 +1,7 @@
 
 package gui.coordinator.controller;
 
+import domain.Project;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -39,6 +40,8 @@ public class FXMLUpdateProjectController implements Initializable {
     @FXML private TextArea taActivities;
     @FXML private TextArea taResponsabilities;
     @FXML private ScrollBar sbSpacer;
+    private static Project project;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -76,6 +79,9 @@ public class FXMLUpdateProjectController implements Initializable {
                 }
             }
         });
-    }    
-    
+    }
+
+    public void setProject (Project project){
+        this.project = project;
+    }
 }

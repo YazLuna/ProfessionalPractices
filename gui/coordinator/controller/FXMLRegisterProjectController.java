@@ -68,8 +68,6 @@ public class FXMLRegisterProjectController implements Initializable {
     @FXML private TextArea taResource;
     @FXML private TextArea taActivities;
     @FXML private TextArea taResponsabilities;
-    @FXML private ScrollBar sbSpacer;
-    @FXML private VBox vData;
     private List<String> allCity = new ArrayList<>();
     private List<String> allState = new ArrayList<>();
     private List<String> allSector = new ArrayList<>();
@@ -85,7 +83,6 @@ public class FXMLRegisterProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        startScrollBar();
         startTextField();
         startComboBox();
         btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
@@ -132,18 +129,6 @@ public class FXMLRegisterProjectController implements Initializable {
                 }
             }
         });
-    }
-    public void startScrollBar(){
-        sbSpacer.setMin(0);
-        sbSpacer.setPrefHeight(455);
-        sbSpacer.setMax(1050);
-        sbSpacer.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                vData.setLayoutY((-new_val.doubleValue()));
-            }
-        });
-
     }
 
     public void startTextField (){
