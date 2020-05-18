@@ -9,15 +9,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FXMLMenuPractitionerController extends Application {
-    @FXML private Button btnProject;
-    @FXML private Button btnGenerateDocumentation;
-    @FXML private Button btnUploadDocumentation;
-    @FXML private Button btnActivities;
+/**
+ * Creation of the controller FXMLMenuReports
+ * @author Ivana Correa
+ * @version 16/05/2020
+ */
+
+public class FXMLMenuReportsController extends Application {
+    @FXML private Button btnGenerateReportPartial;
+    @FXML private Button btnGenerateReport;
     @FXML private Button btnLogOut;
 
     public static void main(String[] args) {
@@ -49,13 +52,13 @@ public class FXMLMenuPractitionerController extends Application {
         });
     }
 
-    public void sectionProject(ActionEvent actionEvent) {
-        btnProject.setOnAction(new EventHandler<ActionEvent>() {
+    public void sectionGenerateReportPartial(ActionEvent actionEvent) {
+        btnGenerateReportPartial.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 try {
-                    Stage stagePrincipal = (Stage) btnProject.getScene().getWindow();
+                    Stage stagePrincipal = (Stage) btnGenerateReportPartial.getScene().getWindow();
                     stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/practitioner/fxml/FXMLSectionProjectPractitioner.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/practitioner/fxml/FXMLGenerateReportPartial.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
                     Stage stage = new Stage();
                     stage.setResizable(false);
@@ -69,13 +72,13 @@ public class FXMLMenuPractitionerController extends Application {
         });
     }
 
-    public void sectionGenerateDocumentation(ActionEvent actionEvent) {
-        btnGenerateDocumentation.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {
+    public void sectionGenerateReport(ActionEvent actionEvent) {
+        btnGenerateReport.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
                 try {
-                    Stage stagePrincipal = (Stage) btnGenerateDocumentation.getScene().getWindow();
+                    Stage stagePrincipal = (Stage) btnGenerateReport.getScene().getWindow();
                     stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/practitioner/fxml/FXMLMenuReports.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/practitioner/fxml/FXMLGenerateReport.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
                     Stage stage = new Stage();
                     stage.setResizable(false);
@@ -89,9 +92,4 @@ public class FXMLMenuPractitionerController extends Application {
         });
     }
 
-    public void sectionUploadDocumentation(ActionEvent actionEvent) {
-    }
-
-    public void sectionActivities(ActionEvent actionEvent) {
-    }
 }
