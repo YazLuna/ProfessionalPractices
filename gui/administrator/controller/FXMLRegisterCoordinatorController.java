@@ -1,111 +1,179 @@
 package gui.administrator.controller;
 
-import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import domain.Coordinator;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+import logic.ValidateAddUser;
+import domain.Coordinator;
+import gui.FXMLGeneralController;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 18/05/2020
+ */
 
-public class FXMLRegisterCoordinatorController implements Initializable {
-    @FXML private Button btnLogOut;
-    @FXML private Button btnCancel;
-    @FXML private Button btnRegister;
+public class FXMLRegisterCoordinatorController extends FXMLGeneralController implements Initializable  {
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
     @FXML private TextField tfLastName;
     @FXML private TextField tfEmail;
     @FXML private TextField tfAlternateEmail;
     @FXML private TextField tfPhone;
+    @FXML private TextField tfUserName;
+    @FXML private TextField tfPassword;
     @FXML private RadioButton rbMale;
     @FXML private RadioButton rbFemale;
-
+    private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnCancel.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/administrator/fxml/FXMLSectionCoordinator.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
-        btnLogOut.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnLogOut.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/FXMLLogin.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
-        btnRegister.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                if((tfStaffNumber.getLength() != 0) || (tfName.getLength() != 0) ||  (tfLastName.getLength() != 0) || (tfEmail.getLength() != 0) || (tfAlternateEmail.getLength() != 0) || (tfPhone.getLength() != 0)){
-                    Coordinator coordinator = new Coordinator();
-                    coordinator.setStaffNumber(Integer.parseInt(tfStaffNumber.getText()));
-                    coordinator.setName(tfName.getText());
-                    coordinator.setLastName(tfLastName.getText());
-                    coordinator.setEmail(tfEmail.getText());
-                    coordinator.setAlternateEmail(tfAlternateEmail.getText());
-                    coordinator.setPhone(tfPhone.getText());
 
-                    ToggleGroup radioGroup = new ToggleGroup();
-                    rbFemale.setToggleGroup(radioGroup);
-                    rbFemale.setToggleGroup(radioGroup);
-                    if(rbMale.isSelected()){
-                        coordinator.setGender(1);
-                    }
-                    if(rbFemale.isSelected()){
-                        coordinator.setGender(0);
-                    }
-
-                    Date myDate = new Date();
-                    coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
-
-                }else{
-                    Alert alertStaffNumber = new Alert(Alert.AlertType.NONE);
-                    alertStaffNumber.setAlertType(Alert.AlertType.WARNING);
-                    alertStaffNumber.setHeaderText("Enter all the fields ");
-                    alertStaffNumber.setTitle("Warning");
-                    alertStaffNumber.show();
-                }
-
-
-
-            }
-        });
     }
 
+    public void cancel(ActionEvent actionEvent) {
+        Alert cancel = new Alert(Alert.AlertType.NONE);
+        cancel.setAlertType(Alert.AlertType.CONFIRMATION);
+        cancel.setHeaderText("Do you want to cancel?");
+        cancel.setTitle("Cancel");
+        Optional<ButtonType> action = cancel.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        }
+    }
+
+    public void loadProfilePicture(ActionEvent actionEvent) {
+    }
+
+    public boolean validate(){
+        boolean validation= true;
+        if((validateAddUser.validateEmpty(tfStaffNumber.getText())) && (validateAddUser.validateStaffNumber(tfStaffNumber.getText()))){
+            tfStaffNumber.getStyleClass().add("ok");
+        }else{
+            tfStaffNumber.getStyleClass().add("error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateName(tfName.getText()))) {
+            tfName.getStyleClass().add("ok");
+        }else{
+            tfName.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateLastName(tfLastName.getText()))) {
+            tfLastName.getStyleClass().add("ok");
+        }else{
+            tfLastName.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfEmail.getText())) && (validateAddUser.validateEmail(tfEmail.getText()))) {
+            tfEmail.getStyleClass().add("ok");
+        }else{
+            tfEmail.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfAlternateEmail.getText())) && (validateAddUser.validateEmail(tfAlternateEmail.getText()))) {
+            tfAlternateEmail.getStyleClass().add("ok");
+        }else{
+            tfAlternateEmail.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhone(tfPhone.getText()))) {
+            tfPhone.getStyleClass().add("ok");
+        }else{
+            tfPhone.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if(validateAddUser.validateEmpty(tfPassword.getText())) {
+            tfPassword.getStyleClass().add("ok");
+        }else{
+            tfPassword.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        if(validateAddUser.validateEmpty(tfUserName.getText())) {
+            tfUserName.getStyleClass().add("ok");
+        }else{
+            tfUserName.getStyleClass().add("Error");
+            validation = false;
+        }
+
+        ToggleGroup radioGroup = new ToggleGroup();
+        rbFemale.setToggleGroup(radioGroup);
+        rbFemale.setToggleGroup(radioGroup);
+        if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
+            validation = false;
+            //generateAlert("Select the gender");
+        }
+
+        return validation;
+    }
+
+    public void removeStyle(){
+        tfStaffNumber.getStyleClass().remove("ok");
+        tfName.getStyleClass().remove("ok");
+        tfLastName.getStyleClass().remove("ok");
+        tfEmail.getStyleClass().remove("ok");
+        tfAlternateEmail.getStyleClass().remove("ok");
+        tfUserName.getStyleClass().remove("ok");
+        tfPassword.getStyleClass().remove("ok");
+        tfPhone.getStyleClass().remove("ok");
+    }
+
+
+    public void register(ActionEvent actionEvent) throws SQLException {
+        boolean validate;
+        int band =0;
+        boolean registerComplete;
+        Date myDate = new Date();
+        removeStyle();
+        validate = validate();
+        if(validate){
+            Coordinator coordinator = new Coordinator();
+            coordinator.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
+            coordinator.setName(validateAddUser.deleteSpace(tfName.getText()));
+            coordinator.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
+            coordinator.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
+            coordinator.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
+            coordinator.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
+            coordinator.setUserName(tfPassword.getText());
+            coordinator.setPassword(tfPassword.getText());
+
+            ToggleGroup radioGroup = new ToggleGroup();
+            rbFemale.setToggleGroup(radioGroup);
+            rbFemale.setToggleGroup(radioGroup);
+            if(rbMale.isSelected()){
+                coordinator.setGender(1);
+            }else{
+                if(rbFemale.isSelected()){
+                    coordinator.setGender(0);
+                }
+            }
+
+            coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
+            registerComplete = coordinator.addCoordinator();
+            if(registerComplete){
+                generateConfirmation("The register was complete");
+                openWindowGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
+            }else{
+                generateError("This coordinator is already registered ");
+            }
+        }
+    }
+
+    public void logOut(ActionEvent actionEvent) {
+       logOutGeneral();
+    }
 }

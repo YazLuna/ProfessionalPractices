@@ -16,6 +16,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+/**
+ * class FXMLSectionProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLSectionProjectController implements Initializable {
     @FXML private Button btnHome;
     @FXML private Button btnRegisterProject;
@@ -23,7 +28,6 @@ public class FXMLSectionProjectController implements Initializable {
     @FXML private Button btnListProject;
     @FXML private Button btnLogout;
     @FXML private Button btnDeleteProject;
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -49,6 +53,8 @@ public class FXMLSectionProjectController implements Initializable {
 
         btnUpdateProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                FXMLChooseProjectController chooseProject = new FXMLChooseProjectController();
+                chooseProject.controllerSection("update");
                 Stage stagePrincipal = (Stage) btnUpdateProject.getScene().getWindow();
                 stagePrincipal.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
@@ -67,9 +73,11 @@ public class FXMLSectionProjectController implements Initializable {
 
         btnDeleteProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                FXMLChooseProjectController chooseProject = new FXMLChooseProjectController();
+                chooseProject.controllerSection("delete");
                 Stage stagePrincipal = (Stage) btnDeleteProject.getScene().getWindow();
                 stagePrincipal.close();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLDeleteProject.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
                 Stage stage = new Stage();
                 try {
                     Parent root1 = (Parent) fxmlLoader.load();

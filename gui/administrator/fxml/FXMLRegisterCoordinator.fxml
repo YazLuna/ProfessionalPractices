@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -7,15 +6,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.RadioButton?>
 <?import java.net.URL?>
 
-<?import javafx.scene.control.RadioButton?>
 <AnchorPane id="AnchorPane" prefHeight="409.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.administrator.controller.FXMLRegisterCoordinatorController">
-    <stylesheets>
-        <URL value="@../css/fxmlregistercoordinator.css" />
-    </stylesheets>
+   <stylesheets>
+      <URL value="@../css/fxmlregistercoordinator.css" />
+   </stylesheets>
    <children>
-      <ImageView fx:id="imgBackground" fitHeight="417.0" fitWidth="601.0" layoutY="-5.0" pickOnBounds="true">
+      <ImageView fx:id="imgBackground" fitHeight="457.0" fitWidth="601.0" layoutY="-5.0" pickOnBounds="true">
          <image>
             <Image url="@../../images/background.png" />
          </image>
@@ -60,7 +59,7 @@
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnLoadProfilePicture" layoutX="428.0" layoutY="257.0" mnemonicParsing="false" text="Load Profile Picture">
+      <Button fx:id="btnLoadProfilePicture" layoutX="428.0" layoutY="257.0" mnemonicParsing="false" onAction="#loadProfilePicture" text="Load Profile Picture">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
@@ -72,17 +71,17 @@
       <TextField fx:id="tfEmail" layoutX="166.0" layoutY="208.0" prefHeight="25.0" prefWidth="208.0" />
       <TextField fx:id="tfAlternateEmail" layoutX="166.0" layoutY="239.0" prefHeight="25.0" prefWidth="208.0" />
       <TextField fx:id="tfPhone" layoutX="166.0" layoutY="269.0" prefHeight="25.0" prefWidth="208.0" />
-      <Button fx:id="btnRegister" layoutX="197.0" layoutY="332.0" mnemonicParsing="false" text="Register">
+      <Button fx:id="btnRegister" layoutX="198.0" layoutY="372.0" mnemonicParsing="false" onAction="#register" text="Register">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnCancel" layoutX="339.0" layoutY="331.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="73.0" text="Cancel">
+      <Button fx:id="btnCancel" layoutX="317.0" layoutY="372.0" mnemonicParsing="false" onAction="#cancel" prefHeight="27.0" prefWidth="73.0" text="Cancel">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnLogOut" layoutX="499.0" layoutY="26.0" mnemonicParsing="false" text="Log Out">
+      <Button fx:id="btnLogOut" layoutX="499.0" layoutY="26.0" mnemonicParsing="false" onAction="#logOut" text="Log Out">
          <font>
             <Font name="Arial Bold" size="12.0" />
          </font>
@@ -94,5 +93,17 @@
       </ImageView>
       <RadioButton fx:id="rbMale" layoutX="174.0" layoutY="173.0" mnemonicParsing="false" text="Male" />
       <RadioButton fx:id="rbFemale" layoutX="287.0" layoutY="173.0" mnemonicParsing="false" text="Female" />
+      <Label fx:id="lbPassword" layoutX="37.0" layoutY="334.0" text="Password">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfPassword" layoutX="166.0" layoutY="329.0" prefHeight="25.0" prefWidth="208.0" />
+      <TextField fx:id="tfUserName" layoutX="166.0" layoutY="299.0" prefHeight="25.0" prefWidth="208.0" />
+      <Label fx:id="lbUserName" layoutX="36.0" layoutY="304.0" text="UserName">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -35,6 +35,11 @@ import logic.ValidateDataPerson;
 import logic.ValidateLinkedOrganizarion;
 import logic.ValidateProject;
 
+/**
+ * class FXMLRegisterProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLRegisterProjectController implements Initializable {
     @FXML private Button btnRegisterProject;
     @FXML private Button btnCancelProject;
@@ -63,8 +68,6 @@ public class FXMLRegisterProjectController implements Initializable {
     @FXML private TextArea taResource;
     @FXML private TextArea taActivities;
     @FXML private TextArea taResponsabilities;
-    @FXML private ScrollBar sbSpacer;
-    @FXML private VBox vData;
     private List<String> allCity = new ArrayList<>();
     private List<String> allState = new ArrayList<>();
     private List<String> allSector = new ArrayList<>();
@@ -80,13 +83,11 @@ public class FXMLRegisterProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        startScrollBar();
         startTextField();
         startComboBox();
         btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 String message;
-                getDataProject();
                 if(!validateDataProject()) {
                     Alert alertDataProject = new Alert(Alert.AlertType.NONE);
                     alertDataProject.setAlertType(Alert.AlertType.WARNING);
@@ -94,6 +95,7 @@ public class FXMLRegisterProjectController implements Initializable {
                     alertDataProject.setTitle("Warning");
                     alertDataProject.show();
                 }else{
+                    getDataProject();
                     message = project.registerProject();
                     Alert alertDataProject = new Alert(Alert.AlertType.NONE);
                     alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
@@ -127,18 +129,6 @@ public class FXMLRegisterProjectController implements Initializable {
                 }
             }
         });
-    }
-    public void startScrollBar(){
-        sbSpacer.setMin(0);
-        sbSpacer.setPrefHeight(455);
-        sbSpacer.setMax(1050);
-        sbSpacer.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                vData.setLayoutY((-new_val.doubleValue()));
-            }
-        });
-
     }
 
     public void startTextField (){
@@ -303,6 +293,9 @@ public class FXMLRegisterProjectController implements Initializable {
         cbCharge.getItems().addAll(allCharge);
     }
 
+    public void getdata () {
+
+    }
     public void getDataProject () {
         project.setNameProject(validateProject.deleteSpace(tfNameProject.getText()));
         project.setDescription(validateProject.deleteSpace(taDescription.getText()));
@@ -313,8 +306,8 @@ public class FXMLRegisterProjectController implements Initializable {
         project.setResources(validateProject.deleteSpace(taResource.getText()));
         project.setActivities(validateProject.deleteSpace(taActivities.getText()));
         project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
-        project.setLapse(validateProject.deleteSpace((String) cbLapse.getValue()));
-        project.setStaffNumberCoordinator(4);
+        project.setLapse(validateProject.deleteSpace(cbLapse.getEditor().getText()));
+        project.setStaffNumberCoordinator(8);
         int duration = Integer.parseInt(tfDuration.getText());
         project.setDuration(duration);
         int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
@@ -327,143 +320,170 @@ public class FXMLRegisterProjectController implements Initializable {
         organization.setEmail(tfEmailOrganization.getText());
         organization.setPhoneNumber(tfPhoneNumber.getText());
         organization.setAddress(validateProject.deleteSpace(tfAdress.getText()));
-        organization.setCity(validateProject.deleteSpace((String) cbCity.getValue()));
-        organization.setSector(validateProject.deleteSpace((String) cbSector.getValue()));
-        organization.setState(validateProject.deleteSpace((String) cbState.getValue()));
+        organization.setCity(validateProject.deleteSpace(cbCity.getEditor().getText()));
+        organization.setSector(validateProject.deleteSpace(cbSector.getEditor().getText()));
+        organization.setState(validateProject.deleteSpace(cbState.getEditor().getText()));
         project.setOrganization(organization);
         responsible.setName(validateProject.deleteSpace(tfNameResponsible.getText()));
         responsible.setLastName(validateProject.deleteSpace(tfLastNameResponsible.getText()));
         responsible.setEmail(tfEmailResponsible.getText());
-        responsible.setCharge(validateProject.deleteSpace((String) cbCharge.getValue()));
+        responsible.setCharge(validateProject.deleteSpace(cbCharge.getEditor().getText()));
         project.setResponsible(responsible);
     }
 
     public boolean validateDataProject (){
         boolean result = true;
-        if(!validateProject.validateNotEmpty(tfNameProject.getText()) ||
-                !validateProject.validateNameProject(project.getNameProject()))  {
+        if(!validateProject.validateNameProject(tfNameProject.getText()))  {
             tfNameProject.getStyleClass().add("error");
             result= false;
+        }else{
+            tfNameProject.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(taDescription.getText()) ||
-                !validateProject.validateTextArea(project.getDescription())){
+        if(!validateProject.validateTextArea(taDescription.getText())){
             taDescription.getStyleClass().add("error");
             result= false;
+        }else{
+            taDescription.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(taObjectiveGeneral.getText()) ||
-                !validateProject.validateTextArea(project.getObjectiveGeneral())){
+        if(!validateProject.validateTextArea(taObjectiveGeneral.getText())){
             taObjectiveGeneral.getStyleClass().add("error");
             result= false;
+        }else{
+            taObjectiveGeneral.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(taObjectiveInmediate.getText()) ||
-                !validateProject.validateTextArea(project.getObjectiveInmediate())){
+        if(!validateProject.validateTextArea(taObjectiveInmediate.getText())){
             taObjectiveInmediate.getStyleClass().add("error");
             result= false;
+        }else{
+            taObjectiveInmediate.getStyleClass().remove("error");
         }
         if(!validateProject.validateNotEmpty(taObjectiveMediate.getText()) ||
-                !validateProject.validateTextArea(project.getObjectiveMediate())){
+                !validateProject.validateTextArea(taObjectiveMediate.getText())){
             taObjectiveMediate.getStyleClass().add("error");
             result= false;
+        }else {
+            taObjectiveMediate.getStyleClass().remove("error");
         }
         if(!validateProject.validateNotEmpty(tfMethodology.getText()) ||
-                !validateProject.validateMethology(project.getMethodology())){
+                !validateProject.validateMethology(tfMethodology.getText())){
             tfMethodology.getStyleClass().add("error");
             result= false;
+        }else {
+            tfMethodology.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(taResource.getText()) ||
-                !validateProject.validateTextArea(project.getResources())){
+        if(!validateProject.validateTextArea(taResource.getText())){
             taResource.getStyleClass().add("error");
             result= false;
+        }else {
+            taResource.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(taActivities.getText()) ||
-                !validateProject.validateText(project.getActivities())){
+        if(!validateProject.validateText(taActivities.getText())){
             taActivities.getStyleClass().add("error");
             result= false;
+        }else {
+            taActivities.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(taResponsabilities.getText()) ||
-                !validateProject.validateText(project.getResponsabilities())){
+        if(!validateProject.validateText(taResponsabilities.getText())){
             taResponsabilities.getStyleClass().add("error");
             result= false;
+        }else {
+            taResponsabilities.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(project.getLapse()) ||
-                !validateProject.validateLapse(project.getLapse())){
+        if(!validateProject.validateLapse(cbLapse.getEditor().getText())){
             cbLapse.getStyleClass().add("error");
             result= false;
+        }else {
+            cbLapse.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfDuration.getText()) ||
-                !validateProject.validateDuration(project.getDuration())){
+        if(!validateProject.validateNotEmpty(tfDuration.getText())){
             tfDuration.getStyleClass().add("error");
             result= false;
+        }else {
+            tfDuration.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfQuiantityPractitioners.getText()) ||
-                !validateProject.validateQuiantityPractitioner(project.getQuantityPractitioner())){
+        if(!validateProject.validateNotEmpty(tfQuiantityPractitioners.getText())){
             tfQuiantityPractitioners.getStyleClass().add("error");
             result= false;
+        }else{
+            tfQuiantityPractitioners.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfNameOrganization.getText()) ||
-                !validateOrganizarion.validateNameLinked(project.getOrganization().getName())){
+        if(!validateOrganizarion.validateNameLinked(tfNameOrganization.getText())){
             tfNameOrganization.getStyleClass().add("error");
             result= false;
+        }else {
+            tfNameOrganization.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfDirectUsers.getText()) ||
-                !validateOrganizarion.validateNumberUsers(project.getOrganization().getDirectUsers())){
+        if(!validateProject.validateNotEmpty(tfDirectUsers.getText())){
             tfDirectUsers.getStyleClass().add("error");
             result= false;
+        }else {
+            tfDirectUsers.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfIndirectUsers.getText()) ||
-                !validateOrganizarion.validateNumberUsers(project.getOrganization().getIndirectUsers())){
+        if(!validateProject.validateNotEmpty(tfIndirectUsers.getText())){
             tfIndirectUsers.getStyleClass().add("error");
             result= false;
+        }else {
+            tfIndirectUsers.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfPhoneNumber.getText()) ||
-                !validateOrganizarion.validatePhoneNumber(project.getOrganization().getPhoneNumber())){
+        if(!validateOrganizarion.validatePhoneNumber(tfPhoneNumber.getText())){
             tfPhoneNumber.getStyleClass().add("error");
             result= false;
+        }else {
+            tfPhoneNumber.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfAdress.getText()) ||
-                !validateOrganizarion.validateAddress(project.getOrganization().getAddress())){
+        if(!validateOrganizarion.validateAddress(tfAdress.getText())){
             tfAdress.getStyleClass().add("error");
             result= false;
+        }else {
+            tfAdress.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(project.getOrganization().getCity()) ||
-                !validateOrganizarion.validateComboBox(project.getOrganization().getCity())){
+        if(!validateOrganizarion.validateComboBox(cbCity.getEditor().getText())){
             cbCity.getStyleClass().add("error");
             result= false;
+        }else {
+            cbCity.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(project.getOrganization().getSector()) ||
-                !validateOrganizarion.validateComboBox(project.getOrganization().getSector())){
+        if(!validateOrganizarion.validateComboBox(cbSector.getEditor().getText())){
             cbSector.getStyleClass().add("error");
             result= false;
+        }else {
+            cbSector.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(project.getOrganization().getState()) ||
-                !validateOrganizarion.validateComboBox(project.getOrganization().getState())){
+        if(!validateOrganizarion.validateComboBox(cbState.getEditor().getText())){
             cbState.getStyleClass().add("error");
             result= false;
+        }else {
+            cbState.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfEmailOrganization.getText()) ||
-                !validateDataPerson.validateEmail(project.getOrganization().getEmail())){
+        if(!validateDataPerson.validateEmail(tfEmailOrganization.getText())){
             tfEmailOrganization.getStyleClass().add("error");
             result= false;
+        }else {
+            tfEmailOrganization.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfNameResponsible.getText()) ||
-                !validateDataPerson.validateName(project.getResponsible().getName())){
+        if(!validateDataPerson.validateName(tfNameResponsible.getText())){
             tfNameResponsible.getStyleClass().add("error");
             result= false;
+        }else {
+            tfNameResponsible.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfLastNameResponsible.getText()) ||
-                !validateDataPerson.validateLastName(project.getResponsible().getLastName())){
+        if(!validateDataPerson.validateLastName(tfLastNameResponsible.getText())){
             tfLastNameResponsible.getStyleClass().add("error");
             result= false;
+        }else {
+            tfLastNameResponsible.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfEmailResponsible.getText()) ||
-                !validateDataPerson.validateEmail(project.getResponsible().getEmail())){
+        if(!validateDataPerson.validateEmail(tfEmailResponsible.getText())){
             tfEmailResponsible.getStyleClass().add("error");
             result= false;
+        }else {
+            tfEmailResponsible.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(project.getResponsible().getCharge()) ||
-                !validateDataPerson.validateCharge(project.getResponsible().getCharge())){
+        if(!validateDataPerson.validateCharge(cbCharge.getEditor().getText())){
             cbCharge.getStyleClass().add("error");
             result= false;
+        }else {
+            cbCharge.getStyleClass().remove("error");
         }
         return result;
     }

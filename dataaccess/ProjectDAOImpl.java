@@ -10,31 +10,38 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Project;
-/**
- *
- * @author: Martha M. Ortiz
- * @version: 08/05/2020
- */
 
+
+/**
+ * Implementation of the IProjectDAO
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class ProjectDAOImpl implements IProjectDAO {
     private final Connexion connexion;
     private Connection connection;
     private Statement consultation;
     private ResultSet results;
-    
+
+    /**
+     * Constructor for the ProjectDAOImpl class
+     */
     public ProjectDAOImpl (){
         connexion= new Connexion();
     }
-    
 
+
+    /**
+     * Method to get the Project list
+     * @return The Project list
+     */
     @Override
     public List<Project> getAllProjects (){
         List<Project> projects = new ArrayList<>();
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
-            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse"+
-                    " where status='available'");
+            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
             LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
             ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
 
@@ -67,6 +74,51 @@ public class ProjectDAOImpl implements IProjectDAO {
         return projects;
     }
 
+    @Override
+    public List<Project> getAllProjectsAvailable (){
+        List<Project> projects = new ArrayList<>();
+        try{
+            connection = connexion.getConnection();
+            consultation  = connection.createStatement();
+            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse"+
+                    " where status='available'");
+            LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
+            ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
+
+            while(results.next()){
+                Project project = new Project();
+                project.setIdProject(results.getInt("idProject"));
+                project.setNameProject(results.getString("nameProject"));
+                project.setDescription(results.getString("description"));
+                project.setObjectiveGeneral(results.getString("objectiveGeneral"));
+                project.setObjectiveInmediate(results.getString("objectiveInmediate"));
+                project.setObjectiveMediate(results.getString("objectiveMediate"));
+                project.setMethodology(results.getString("methodology"));
+                project.setResources(results.getString("resources"));
+                project.setStatus(results.getString("status"));
+                project.setActivities(results.getString("activities"));
+                project.setResponsabilities(results.getString("responsabilities"));
+                project.setDuration(results.getInt("duration"));
+                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setLapse(results.getString("lapse"));
+                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
+                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));
+                project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
+                projects.add(project);
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return projects;
+    }
+
+    /**
+     * Method to get the Project
+     * @param nameProject The nameProject parameter defines the name of the Project
+     * @return The Project of the searched nameProject
+     */
     @Override
     public Project getProject (String nameProject) {
         Project project = null;
@@ -107,6 +159,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         
     }
 
+    /**
+     * Method to add a Project
+     * @param project The data of the Project
+     * @return The message if the Project was added
+     */
     @Override
     public String updateProject (Project project) {
         String result = "The project could not be registered";
@@ -166,6 +223,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
     }
 
+    /**
+     * Method to delete a Project
+     * @param project The data of the Project
+     * @return The message if the Project was deleted
+     */
     @Override
     public String deleteProject (Project project) {
         String result= "The project could not be removed";
@@ -186,6 +248,11 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
     }
 
+    /**
+     * Update method of the Project
+     * @param project The data of the Project
+     * @return The message if the Project was updated
+     */
     @Override
     public String actualizationProject (Project project) {
         String result = "The project could not be updated";
@@ -247,6 +314,12 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
     }
 
+    /**
+     * Method to make a request for a project
+     * @param enrollment The enrollment parameter defines the enrollment of the Practitioner
+     * @param idProject The idProject parameter defines the id of the Project
+     * @return The message if the project request was made
+     */
     @Override
     public String requestProject (String enrollment, int idProject) {
         String message=null;
@@ -267,6 +340,12 @@ public class ProjectDAOImpl implements IProjectDAO {
         return message;
     }
 
+    /**
+     * Method for assigning a project
+     * @param enrollment The enrollment parameter defines the enrollment of the Practitioner
+     * @param idProject The idProject parameter defines the id of the Project
+     * @return The message if the project assignment was made
+     */
     @Override
     public String assignProject (String enrollment, int idProject) {
         String status=null;

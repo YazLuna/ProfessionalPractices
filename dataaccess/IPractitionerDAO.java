@@ -4,6 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import domain.Practitioner;
 
+/**
+ * DAO User
+ * @author Yazmin
+ * @version 08/05/2020
+ */
+
 public interface IPractitionerDAO {
     public Practitioner getPractitioner (String enrollment) throws SQLException;
     public int updatePractitioner (String enrollment, Practitioner practitioner) throws SQLException;

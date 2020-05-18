@@ -10,16 +10,28 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implementation of the ILapseDAO
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class LapseDAOImpl implements ILapseDAO {
     private final Connexion connexion;
     private Connection connection;
     private Statement consultation;
     private ResultSet results;
 
+    /**
+     * Constructor for the LapseDAOImpl class
+     */
     public LapseDAOImpl (){
         connexion= new Connexion();
     }
 
+    /**
+     * Method to add a lapse
+     * @param lapse The lapse parameter defines the period of the semester
+     */
     @Override
     public void updateLapse (String lapse) {
         try{
@@ -34,6 +46,11 @@ public class LapseDAOImpl implements ILapseDAO {
         }
     }
 
+    /**
+     * Method to search for a lapse
+     * @param lapse The lapse parameter defines the period of the semester
+     * @return The idLapse of the searched lapse
+     */
     public int searchLapse (String lapse) {
         int idLapse=0;
         try{
@@ -53,6 +70,10 @@ public class LapseDAOImpl implements ILapseDAO {
         return idLapse;
     }
 
+    /**
+     * Method to get the lapse list
+     * @return The lapse list
+     */
     @Override
     public List<String> getAllLapse() {
         List<String> lapses = new ArrayList<>();

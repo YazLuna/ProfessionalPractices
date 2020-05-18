@@ -1,79 +1,79 @@
 package gui.administrator.controller;
 
-import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.control.Button;
 
-public class FXMLMenuAdministratorController implements Initializable {
-    @FXML private Button btnCoordinator;
-    @FXML private Button btnTeacher;
-    @FXML private Button btnLogOut;
+import domain.Coordinator;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import gui.FXMLGeneralController;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+public class FXMLMenuAdministratorController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnRegisterCoordinator;
+    @FXML private Button btnRegisterTeacher;
+    @FXML private Button btnDeleteCoordinator;
+    @FXML private Button btnDeleteTeacher;
+    @FXML private Button btnUpdateCoordinator;
+    @FXML private Button btnUpdateTeacher;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnCoordinator.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnCoordinator.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/administrator/fxml/FXMLSectionCoordinator.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
 
-        btnTeacher.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnTeacher.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/administrator/fxml/FXMLSectionTeacher.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
-
-        btnLogOut.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnLogOut.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/FXMLLogin.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
     }
 
+    public void logOut(ActionEvent actionEvent) {
+        logOutGeneral();
+    }
+
+    public void registerCoordinator(ActionEvent actionEvent) throws SQLException {
+        Coordinator coordinator = new Coordinator();
+        coordinator = coordinator.getCoordinator();
+        if(coordinator.getName() == null){
+            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterCoordinator.fxml");
+            Stage stagePrincipal = (Stage) btnRegisterCoordinator.getScene().getWindow();
+            stagePrincipal.close();
+        }else{
+            generateError("An active coordinator already exists");
+        }
+    }
+
+    public void deleteCoordinator(ActionEvent actionEvent) throws SQLException {
+        Coordinator coordinator = new Coordinator();
+        coordinator = coordinator.getCoordinator();
+        if(coordinator.getName() != null){
+            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteCoordinator.fxml");
+            Stage stagePrincipal = (Stage) btnDeleteCoordinator.getScene().getWindow();
+            stagePrincipal.close();
+        }else{
+            generateError("There is no active coordinator");
+        }
+    }
+
+    public void updateCoordinator(ActionEvent actionEvent) {
+        Stage stagePrincipal = (Stage) btnUpdateCoordinator.getScene().getWindow();
+        stagePrincipal.close();
+        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml");
+    }
+
+    public void registerTeacher(ActionEvent actionEvent) {
+        Stage stagePrincipal = (Stage) btnRegisterTeacher.getScene().getWindow();
+        stagePrincipal.close();
+        openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml");
+    }
+
+    public void deleteTeacher(ActionEvent actionEvent) {
+        Stage stagePrincipal = (Stage) btnDeleteTeacher.getScene().getWindow();
+        stagePrincipal.close();
+        openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml");
+    }
+
+    public void updateTeacher(ActionEvent actionEvent) {
+        Stage stagePrincipal = (Stage) btnUpdateTeacher.getScene().getWindow();
+        stagePrincipal.close();
+        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
+    }
 }
