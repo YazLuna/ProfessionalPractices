@@ -19,12 +19,12 @@
             <Font name="Arial" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="btnCancel" layoutX="149.0" layoutY="508.0" mnemonicParsing="false" onAction="#cancel" prefHeight="42.0" prefWidth="95.0" text="Cancel">
+      <Button fx:id="btnCancel" layoutX="365.0" layoutY="509.0" mnemonicParsing="false" onAction="#cancel" prefHeight="42.0" prefWidth="95.0" text="Cancel">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="btnConfirm" layoutX="346.0" layoutY="508.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Confirm">
+      <Button fx:id="btnConfirm" layoutX="175.0" layoutY="509.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Confirm">
          <font>
             <Font name="Arial" size="16.0" />
          </font>

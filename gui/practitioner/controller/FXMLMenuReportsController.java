@@ -5,10 +5,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,19 +22,13 @@ import java.util.logging.Logger;
  * @version 16/05/2020
  */
 
-public class FXMLMenuReportsController extends Application {
+public class FXMLMenuReportsController implements Initializable {
     @FXML private Button btnGenerateReportPartial;
     @FXML private Button btnGenerateReport;
     @FXML private Button btnLogOut;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
-    public void start(Stage primaryStage) {
-
-    }
+    public void initialize(URL url, ResourceBundle rb){ }
 
     public void logOut(ActionEvent actionEvent) {
         btnLogOut.setOnAction(new EventHandler<ActionEvent>() {
