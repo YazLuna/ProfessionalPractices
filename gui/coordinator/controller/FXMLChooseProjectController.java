@@ -54,7 +54,7 @@ public class FXMLChooseProjectController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stagePrincipal = (Stage) btnBehind.getScene().getWindow();
                 stagePrincipal.close();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLSectionProject.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml"));
                 Stage stage = new Stage();
                 try {
                     Parent root1 = (Parent) fxmlLoader.load();

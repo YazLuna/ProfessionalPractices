@@ -1,6 +1,5 @@
 package gui.administrator.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import java.net.URL;
@@ -10,6 +9,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import gui.FXMLGeneralController;
 import domain.Coordinator;
@@ -23,7 +23,10 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     @FXML private Label lbPhone;
     @FXML private Label lbRegistrationDate;
     @FXML private Label lbStaffNumber;
+    @FXML private Button btnCancel;
+    @FXML private Button btnDelete;
     Coordinator coordinator = new Coordinator();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -45,21 +48,21 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
         lbStaffNumber.setText(String.valueOf(coordinator.getStaffNumber()));
     }
 
-    public void logOut(ActionEvent actionEvent) {
+    public void logOut() {
         logOutGeneral();
     }
 
-    public void cancel(ActionEvent actionEvent) {
-        cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+    public void cancel() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
     }
 
-    public void delete(ActionEvent actionEvent) throws SQLException {
+    public void delete() throws SQLException {
         boolean delete;
         Date myDate = new Date();
         coordinator.setDischargeDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
         delete = coordinator.deleteCoordinator("Inactive",coordinator.getDischargeDate());
         if(delete){
-            cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnDelete);
             generateInformation("The coordinator was successfully deleted");
         }else{
             generateError("Could not delete coordinator");

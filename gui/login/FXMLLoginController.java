@@ -23,12 +23,12 @@ import javafx.scene.control.Button;
 /**
  * DAO User
  * @author Yazmin
- * @version 08/05/2020
+ * @version 18/05/2020
  */
 
 public class FXMLLoginController implements Initializable {
     @FXML private Button btnLogin;
-    @FXML private TextField tfUsser;
+    @FXML private TextField tfUser;
     @FXML private PasswordField pfPassword;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -38,7 +38,7 @@ public class FXMLLoginController implements Initializable {
     public void login(ActionEvent actionEvent) throws IOException, SQLException {
         UserMethodDAOImpl user =new UserMethodDAOImpl();
         boolean login= false;
-        login = user.searchLoginAccount(tfUsser.getText(),pfPassword.getText());
+        login = user.searchLoginAccount(tfUser.getText(),pfPassword.getText());
         /*if(login){
             try {
                 Stage stagePrincipal = (Stage) btnLogin.getScene().getWindow();
@@ -54,7 +54,7 @@ public class FXMLLoginController implements Initializable {
                 logger.log(Level.SEVERE, "Failed to create new Window.", e);
             }
         }*/
-        String usserLogin = tfUsser.getText();
+        String usserLogin = tfUser.getText();
         if(usserLogin.equalsIgnoreCase("Administrator")){
             btnLogin.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
@@ -118,7 +118,7 @@ public class FXMLLoginController implements Initializable {
                                 try {
                                     Stage stagePrincipal = (Stage) btnLogin.getScene().getWindow();
                                     stagePrincipal.close();
-                                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/teacher/FXMLMenuTeacher.fxml"));
+                                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/teacher/fxml/FXMLMenuTeacher.fxml"));
                                     Parent root1 = (Parent) fxmlLoader.load();
                                     Stage stage = new Stage();
                                     stage.setResizable(false);
@@ -131,7 +131,7 @@ public class FXMLLoginController implements Initializable {
                             }
                         });
                     }else{
-                        tfUsser.setText("This usser is wrong");
+                        tfUser.setText("This usser is wrong");
                     }
                 }
             }

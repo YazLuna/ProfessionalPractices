@@ -11,7 +11,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="409.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.administrator.controller.FXMLRegisterCoordinatorController">
    <stylesheets>
-      <URL value="@../css/fxmlregistercoordinator.css" />
+      <URL value="@../../fxmlregister.css" />
    </stylesheets>
    <children>
       <ImageView fx:id="imgBackground" fitHeight="457.0" fitWidth="601.0" layoutY="-5.0" pickOnBounds="true">
@@ -88,7 +88,7 @@
       </Button>
       <ImageView fx:id="imgLongOut" fitHeight="37.0" fitWidth="36.0" layoutX="463.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../images/logout.png" />
+            <Image url="@../../images/LogOut.png" />
          </image>
       </ImageView>
       <RadioButton fx:id="rbMale" layoutX="174.0" layoutY="173.0" mnemonicParsing="false" text="Male" />

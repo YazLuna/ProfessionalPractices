@@ -19,20 +19,18 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 
 public class FXMLUpdateTeacherListController extends FXMLGeneralController implements Initializable {
-    @FXML private Button btnReturn;
-    @FXML private Button btnLogOut;
+    @FXML private Button btnCancel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
     }
 
-
-    public void cancel(ActionEvent actionEvent) {
-        cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+    public void cancel() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
-    public void logOut(ActionEvent actionEvent) {
+    public void logOut() {
         logOutGeneral();
     }
 }

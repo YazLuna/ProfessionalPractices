@@ -1,49 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="350.0" prefWidth="565.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLMenuCoordinatorController">
-   <children>
-      <ImageView fx:id="imgBackground" fitHeight="350.0" fitWidth="571.0" layoutX="-2.0" pickOnBounds="true">
-         <image>
-            <Image url="@../../images/background.png" />
-         </image>
-      </ImageView>
-      <Button fx:id="btnProject" layoutX="162.0" layoutY="106.0" mnemonicParsing="false"  prefHeight="59.0" prefWidth="221.0" text="Projects">
+<AnchorPane id="AnchorPane" prefHeight="590.0" prefWidth="764.0" styleClass="mainFxmlClass"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.coordinator.controller.FXMLMenuCoordinatorController">
+   <Pane layoutY="-2.0" prefHeight="107.0" prefWidth="764.0" style="-fx-background-color: #053d01;">
+      <Label layoutX="149.0" layoutY="34.0" text="Professional Practices" textFill="WHITE">
          <font>
-            <Font name="Arial" size="16.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnPractitioner" layoutX="162.0" layoutY="189.0" mnemonicParsing="false"  prefHeight="59.0" prefWidth="221.0" text="Practitioners">
-         <font>
-            <Font name="Arial" size="16.0" />
-         </font>
-      </Button>
-      <Label id="lTittle" fx:id="lbProfessionalPractices" layoutX="165.0" layoutY="41.0" text="Professional Practices" textFill="#26462b">
-         <font>
-            <Font name="Arial Bold" size="24.0" />
+            <Font name="Arial Bold" size="36.0"/>
          </font>
       </Label>
-      <Button id="bExit" fx:id="btnLogOut" layoutX="485.0" layoutY="16.0" mnemonicParsing="false"  prefHeight="27.0" prefWidth="68.0" text="Log Out" />
-      <ImageView fx:id="imgLogOut" fitHeight="39.0" fitWidth="42.0" layoutX="443.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/logout.png" />
-         </image>
+      <ImageView fitHeight="53.0" fitWidth="92.0" layoutX="23.0" layoutY="14.0" pickOnBounds="true"
+                 preserveRatio="true" smooth="false">
+         <Image url="@../../images/Coordinator.png"/>
       </ImageView>
-      <ImageView fx:id="imgLogOut" fitHeight="59.0" fitWidth="81.0" layoutX="20.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/logoCoordinator.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="lbCoordinator" layoutX="25.0" layoutY="91.0" text="Coordinator">
+      <Label layoutX="23.0" layoutY="68.0" prefHeight="14.0" prefWidth="79.0" text="Coordinator" textFill="WHITE">
          <font>
-            <Font name="Arial Bold" size="12.0" />
+            <Font name="System Bold" size="11.0"/>
          </font>
       </Label>
-   </children>
+      <Button fx:id="btnLogOut" layoutX="656.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut"
+              prefHeight="27.0" prefWidth="79.0" style="-fx-background-color: #ffffff;" text="LogOut">
+         <font>
+            <Font name="Arial Bold" size="12.0"/>
+         </font>
+      </Button>
+      <ImageView fitHeight="42.0" fitWidth="45.0" layoutX="621.0" layoutY="24.0" pickOnBounds="true"
+                 preserveRatio="true">
+         <Image url="@../../images/LogOut.png"/>
+      </ImageView>
+   </Pane>
+   <Pane layoutX="16.0" layoutY="142.0" prefHeight="423.0" prefWidth="357.0" style="-fx-border-color: GREEN;">
+      <Button fx:id="btnRegisterPractitioner" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="60.0"
+              mnemonicParsing="false" onAction="#registerPractitioner" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #7ae69f;" text="Register Practitioner" textAlignment="RIGHT"
+              textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnDeletePractitioner" alignment="BOTTOM_CENTER" layoutX="181.0" layoutY="60.0"
+              mnemonicParsing="false" onAction="#deletePractitioner" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #f05959;" text="Delete Practitioner" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnUpdatePractitioner" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="181.0"
+              mnemonicParsing="false" onAction="#updatePractitioner" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #5998f0;" text="Update Practitioner" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnListPractitioner" alignment="BOTTOM_CENTER" layoutX="181.0" layoutY="181.0"
+              mnemonicParsing="false" onAction="#listPractitioner" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #6e6e6e;" text="List Practitioner" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Label layoutX="118.0" layoutY="14.0" prefHeight="25.0" prefWidth="126.0" text="Practitoner"
+             textAlignment="CENTER" textFill="#14431a">
+         <font>
+            <Font name="Arial Bold" size="21.0"/>
+         </font>
+      </Label>
+      <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="44.0" layoutY="60.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/Add.png"/>
+      </ImageView>
+      <ImageView fitHeight="70.0" fitWidth="100.0" layoutX="221.0" layoutY="67.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/Delete.png"/>
+      </ImageView>
+      <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="54.0" layoutY="189.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/Update.png"/>
+      </ImageView>
+      <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="221.0" layoutY="189.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/List.png"/>
+      </ImageView>
+      <Button fx:id="btnAssignProject" alignment="BOTTOM_CENTER" layoutX="99.0" layoutY="300.0"
+              mnemonicParsing="false" onAction="#assignProject" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #ac58ed;" text="Assign Project" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="138.0" layoutY="309.0" pickOnBounds="true"
+                 preserveRatio="true">
+         <Image url="@../../images/Assign.png"/>
+      </ImageView>
+   </Pane>
+   <Pane layoutX="389.0" layoutY="142.0" prefHeight="300.0" prefWidth="357.0" style="-fx-border-color: GREEN;">
+      <Label layoutX="132.0" layoutY="14.0" prefHeight="25.0" prefWidth="87.0" text="Project" textAlignment="CENTER"
+             textFill="#14431a">
+         <font>
+            <Font name="Arial Bold" size="21.0"/>
+         </font>
+      </Label>
+      <Button fx:id="btnListProject" alignment="BOTTOM_CENTER" layoutX="182.0" layoutY="177.0"
+              mnemonicParsing="false" onAction="#listProject" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #6e6e6e;" text="List Project" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnUpdateProject" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="177.0"
+              mnemonicParsing="false" onAction="#updateProject" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #5998f0;" text="Update Project" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnDeleteProject" alignment="BOTTOM_CENTER" layoutX="182.0" layoutY="56.0"
+              mnemonicParsing="false" onAction="#deleteProject" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #f05959;" text="Delete Project" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnRegisterProject" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="56.0"
+              mnemonicParsing="false" onAction="#registerProject" prefHeight="100.0" prefWidth="160.0"
+              style="-fx-background-color: #7ae69f;" text="Register Project" textAlignment="RIGHT" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0"/>
+         </font>
+      </Button>
+      <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="222.0" layoutY="185.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/List.png"/>
+      </ImageView>
+      <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="55.0" layoutY="185.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/Update.png"/>
+      </ImageView>
+      <ImageView fitHeight="70.0" fitWidth="100.0" layoutX="222.0" layoutY="63.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/Delete.png"/>
+      </ImageView>
+      <ImageView fitHeight="92.0" fitWidth="117.0" layoutX="37.0" layoutY="54.0" mouseTransparent="true"
+                 pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../images/Register.png"/>
+      </ImageView>
+   </Pane>
 </AnchorPane>
