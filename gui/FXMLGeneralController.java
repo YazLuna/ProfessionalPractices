@@ -7,10 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,12 +16,12 @@ import java.util.logging.Logger;
 /**
  * DAO User
  * @author Yazmin
- * @version 08/05/2020
+ * @version 19/05/2020
  */
 
 public class FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
-    @FXML private Button btnCancel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -45,27 +43,11 @@ public class FXMLGeneralController implements Initializable {
         }
     }
 
-    public void openWindowGeneral(String fxmlBack) {
+    public void openWindowGeneral(String fxml, Button buttonOrigin) {
         try {
-            //Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
-            //stagePrincipal.close();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlBack));
-            Parent root1 = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setResizable(false);
-            stage.setScene(new Scene(root1));
-            stage.show();
-        } catch(Exception e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create new Window.", e);
-        }
-    }
-
-    public void cancelGeneral(String fxmlBack) {
-        try {
-            Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
+            Stage stagePrincipal = (Stage) buttonOrigin.getScene().getWindow();
             stagePrincipal.close();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlBack));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setResizable(false);

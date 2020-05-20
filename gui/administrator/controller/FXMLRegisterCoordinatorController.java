@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -31,6 +30,8 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     @FXML private TextField tfPassword;
     @FXML private RadioButton rbMale;
     @FXML private RadioButton rbFemale;
+    @FXML private Button btnCancel;
+    @FXML private Button btnRegister;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
@@ -38,18 +39,18 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
 
     }
 
-    public void cancel(ActionEvent actionEvent) {
+    public void cancel() {
         Alert cancel = new Alert(Alert.AlertType.NONE);
         cancel.setAlertType(Alert.AlertType.CONFIRMATION);
         cancel.setHeaderText("Do you want to cancel?");
         cancel.setTitle("Cancel");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.get() == ButtonType.OK) {
-            cancelGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
         }
     }
 
-    public void loadProfilePicture(ActionEvent actionEvent) {
+    public void loadProfilePicture() {
     }
 
     public boolean validate(){
@@ -133,9 +134,8 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     }
 
 
-    public void register(ActionEvent actionEvent) throws SQLException {
+    public void register() throws SQLException {
         boolean validate;
-        int band =0;
         boolean registerComplete;
         Date myDate = new Date();
         removeStyle();
@@ -166,14 +166,14 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             registerComplete = coordinator.addCoordinator();
             if(registerComplete){
                 generateConfirmation("The register was complete");
-                openWindowGeneral("/gui/administrator/fxml/FXMLSectionCoordinator.fxml");
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
             }else{
                 generateError("This coordinator is already registered ");
             }
         }
     }
 
-    public void logOut(ActionEvent actionEvent) {
+    public void logOut() {
        logOutGeneral();
     }
 }

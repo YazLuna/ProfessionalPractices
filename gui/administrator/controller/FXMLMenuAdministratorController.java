@@ -4,15 +4,17 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import domain.Coordinator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import gui.FXMLGeneralController;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import domain.Coordinator;
+import gui.FXMLGeneralController;
 
 public class FXMLMenuAdministratorController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnListCoordinator;
+    @FXML private Button btnListTeacher;
     @FXML private Button btnRegisterCoordinator;
     @FXML private Button btnRegisterTeacher;
     @FXML private Button btnDeleteCoordinator;
@@ -25,55 +27,50 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     }
 
-    public void logOut(ActionEvent actionEvent) {
+    public void logOut() {
         logOutGeneral();
     }
 
-    public void registerCoordinator(ActionEvent actionEvent) throws SQLException {
+    public void registerCoordinator() throws SQLException {
         Coordinator coordinator = new Coordinator();
         coordinator = coordinator.getCoordinator();
         if(coordinator.getName() == null){
-            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterCoordinator.fxml");
-            Stage stagePrincipal = (Stage) btnRegisterCoordinator.getScene().getWindow();
-            stagePrincipal.close();
+            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterCoordinator.fxml",btnRegisterCoordinator);
         }else{
             generateError("An active coordinator already exists");
         }
     }
 
-    public void deleteCoordinator(ActionEvent actionEvent) throws SQLException {
+    public void deleteCoordinator() throws SQLException {
         Coordinator coordinator = new Coordinator();
         coordinator = coordinator.getCoordinator();
         if(coordinator.getName() != null){
-            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteCoordinator.fxml");
-            Stage stagePrincipal = (Stage) btnDeleteCoordinator.getScene().getWindow();
-            stagePrincipal.close();
+            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteCoordinator.fxml",btnDeleteCoordinator);
         }else{
             generateError("There is no active coordinator");
         }
     }
 
-    public void updateCoordinator(ActionEvent actionEvent) {
-        Stage stagePrincipal = (Stage) btnUpdateCoordinator.getScene().getWindow();
-        stagePrincipal.close();
-        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml");
+    public void updateCoordinator() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml",btnUpdateCoordinator);
     }
 
-    public void registerTeacher(ActionEvent actionEvent) {
-        Stage stagePrincipal = (Stage) btnRegisterTeacher.getScene().getWindow();
-        stagePrincipal.close();
-        openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml");
+    public void registerTeacher() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
     }
 
-    public void deleteTeacher(ActionEvent actionEvent) {
-        Stage stagePrincipal = (Stage) btnDeleteTeacher.getScene().getWindow();
-        stagePrincipal.close();
-        openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml");
+    public void deleteTeacher() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
     }
 
-    public void updateTeacher(ActionEvent actionEvent) {
-        Stage stagePrincipal = (Stage) btnUpdateTeacher.getScene().getWindow();
-        stagePrincipal.close();
-        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
+    public void updateTeacher() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
     }
+
+    public void listCoordinator() {
+    }
+
+    public void listTeacher() {
+    }
+
 }

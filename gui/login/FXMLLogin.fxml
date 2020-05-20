@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -8,38 +7,39 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.text.Font?>
-<?import java.net.URL?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.login.FXMLLoginController">
-   <children>
-      <ImageView fx:id="imgBackground" fitHeight="400.0" fitWidth="600.0" layoutY="8.0" pickOnBounds="true">
-         <image>
-            <Image url="@../images/background.png" />
-         </image>
-      </ImageView>
-      <Button fx:id="btnLogin" layoutX="343.0" layoutY="247.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="72.0" text="Login">
+<AnchorPane id="AnchorPane" prefHeight="290.0" prefWidth="475.0" styleClass="mainFxmlClass"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.login.FXMLLoginController">
+   <Button fx:id="btnLogin" layoutX="371.0" layoutY="223.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0"
+           prefWidth="72.0" style="-fx-background-color: #053d01;" text="Login" textFill="WHITE">
+      <font>
+         <Font name="Arial Bold" size="15.0"/>
+      </font>
+   </Button>
+   <Label layoutX="208.0" layoutY="129.0" text="User">
+      <font>
+         <Font name="Arial" size="15.0"/>
+      </font>
+   </Label>
+   <Label layoutX="175.0" layoutY="164.0" text="Password">
+      <font>
+         <Font name="Arial" size="15.0"/>
+      </font>
+   </Label>
+   <TextField fx:id="tfUser" layoutX="274.0" layoutY="125.0" prefHeight="25.0" prefWidth="169.0"/>
+   <PasswordField fx:id="pfPassword" layoutX="274.0" layoutY="160.0" prefHeight="25.0" prefWidth="169.0"/>
+   <ImageView fitHeight="120.0" fitWidth="135.0" layoutX="24.0" layoutY="94.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../images/LogoSystem.png"/>
+   </ImageView>
+   <Pane layoutY="-3.0" prefHeight="86.0" prefWidth="475.0" style="-fx-background-color: #053d01;">
+      <Label layoutX="31.0" layoutY="16.0" prefHeight="54.0" prefWidth="396.0"
+             text="Professional Practices" textFill="WHITE">
          <font>
-            <Font name="Arial" size="15.0" />
-         </font></Button>
-      <Label fx:id="lbUser" layoutX="201.0" layoutY="146.0" text="Usser">
-         <font>
-            <Font name="Arial" size="15.0" />
-         </font></Label>
-      <Label fx:id="lbPassword" layoutX="180.0" layoutY="192.0" text="Password">
-         <font>
-            <Font name="Arial" size="15.0" />
-         </font></Label>
-      <TextField fx:id="tfUsser" layoutX="266.0" layoutY="142.0" />
-      <PasswordField fx:id="pfPassword" layoutX="266.0" layoutY="188.0" />
-      <ImageView fx:id="imgLogoSystem" fitHeight="120.0" fitWidth="135.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/logoSystem.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="lbProfessionalPractices" layoutX="163.0" layoutY="55.0" prefHeight="54.0" prefWidth="396.0" text="Professional Practices" textFill="#098633">
-         <font>
-            <Font name="Arial Bold" size="36.0" />
+            <Font name="Arial Bold" size="36.0"/>
          </font>
       </Label>
-   </children>
+   </Pane>
 </AnchorPane>
