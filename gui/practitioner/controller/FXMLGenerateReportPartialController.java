@@ -2,10 +2,10 @@ package gui.practitioner.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
 
@@ -17,7 +17,7 @@ import gui.FXMLGeneralController;
 
 public class FXMLGenerateReportPartialController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
-    @FXML private Button btnConfirm;
+    @FXML private Button btnGenerate;
     @FXML private Button btnCancel;
     @FXML private TextField tfNumberReport;
     @FXML private TextField tfHoursCovered;
@@ -34,7 +34,18 @@ public class FXMLGenerateReportPartialController extends FXMLGeneralController i
     }
 
     public void cancel() {
-        openWindowGeneral("/gui/practitioner/fxml/FXMLMenuPractitioner.fxml",btnCancel);
+        Alert cancel = new Alert(Alert.AlertType.NONE);
+        cancel.setAlertType(Alert.AlertType.CONFIRMATION);
+        cancel.setHeaderText("Do you want to cancel?");
+        cancel.setTitle("Cancel");
+        Optional<ButtonType> action = cancel.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            openWindowGeneral("/gui/practitioner/fxml/FXMLMenuPractitioner.fxml",btnCancel);
+        }
+    }
+
+    public void generate() {
+        openWindowGeneral("/gui/practitioner/fxml/FXMLPreviewReportPartial.fxml",btnGenerate);
     }
 
 }

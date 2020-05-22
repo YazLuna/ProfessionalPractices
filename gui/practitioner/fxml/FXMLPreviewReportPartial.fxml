@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.practitioner.controller.FXMLPreviewReportPartialController">
+   <children>
+      <Pane prefHeight="72.0" prefWidth="600.0" style="-fx-background-color: #053d01;">
+         <children>
+            <Label layoutX="172.0" layoutY="21.0" text="Partial report preview" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="25.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnLogOut" layoutX="494.0" layoutY="14.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="78.0" text="LogOut">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Button fx:id="btnPost" layoutX="153.0" layoutY="324.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="90.0" style="-fx-background-color: #59ad55;" text="Post" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnCancel" layoutX="371.0" layoutY="324.0" mnemonicParsing="false" onAction="#cancel" prefHeight="37.0" prefWidth="85.0" style="-fx-background-color: #cc2d2d;" text="Cancel" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
