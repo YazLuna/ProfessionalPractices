@@ -34,8 +34,6 @@ public class AddTestProject {
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");
-        organization.setDirectUsers(20);
-        organization.setIndirectUsers(10);
         project.setOrganization(organization);
         responsible.setName("Jahir");
         responsible.setLastName("Betanzos");
@@ -89,8 +87,6 @@ public class AddTestProject {
         organization.setState("Veracruz");
         organization.setSector("Educativo");
         organization.setCity("Xalapa");
-        organization.setDirectUsers(20);
-        organization.setIndirectUsers(10);
         project.setOrganization(organization);
         responsible.setName("Gustavo Antonio");
         responsible.setLastName("Ruiz Zapata");
@@ -144,8 +140,6 @@ public class AddTestProject {
         organization.setState("Veracruz");
         organization.setSector("Educativo");
         organization.setCity("Xalapa");
-        organization.setDirectUsers(20);
-        organization.setIndirectUsers(10);
         project.setOrganization(organization);
         responsible.setName("Gustavo Antonio");
         responsible.setLastName("Ruiz Zapata");

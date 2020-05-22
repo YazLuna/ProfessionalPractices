@@ -10,3 +10,24 @@
     -fx-border-color: #00CC00;
     -fx-border-width: 2px ;
 }
+
+.text-area.error {
+    -fx-border-color: #ff0000;
+    -fx-border-width: 2px ;
+}
+.text-area.ok {
+    -fx-border-color: #00CC00;
+    -fx-border-width: 2px ;
+}
+.combo-box.error{
+    -fx-border-color: #ff0000;
+    -fx-border-width: 2px ;
+}
+.combo-box.ok {
+    -fx-border-color: #00CC00;
+    -fx-border-width: 2px ;
+}
+.combo-box{
+    -fx-font-size: 11pt;
+    -fx-font-family: "Arial";
+}

@@ -11,8 +11,8 @@ public class LinkedOrganization{
     private String city;
     private String state;
     private String sector;
-    private int directUsers;
-    private int indirectUsers;
+    private String directUsers;
+    private String indirectUsers;
     private int idLinkedOrganization;
     
     public LinkedOrganization () {
@@ -75,19 +75,19 @@ public class LinkedOrganization{
         this.sector =sector;
     }
     
-    public int getDirectUsers () {
+    public String getDirectUsers () {
         return directUsers;
     }
     
-    public void setDirectUsers (int directUsers) {
+    public void setDirectUsers (String directUsers) {
         this.directUsers = directUsers;
     }
     
-    public int getIndirectUsers () {
+    public String getIndirectUsers () {
         return indirectUsers;
     }
     
-    public void setIndirectUsers (int indirectUsers) {
+    public void setIndirectUsers (String indirectUsers) {
         this.indirectUsers = indirectUsers;
     }
     

@@ -34,8 +34,6 @@ public class UpdateTestProject {
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");
-        organization.setDirectUsers(30);
-        organization.setIndirectUsers(10);
         project.setOrganization(organization);
         responsible.setName("Jahir");
         responsible.setLastName("Betanzos");
@@ -72,8 +70,6 @@ public class UpdateTestProject {
         organization.setState("Mexico");
         organization.setSector("Educativo");
         organization.setCity("Mexico");
-        organization.setDirectUsers(30);
-        organization.setIndirectUsers(10);
         project.setOrganization(organization);
         responsible.setName("Jahir");
         responsible.setLastName("Betanzos");
