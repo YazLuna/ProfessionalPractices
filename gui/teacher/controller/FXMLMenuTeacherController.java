@@ -14,7 +14,7 @@ import gui.FXMLGeneralController;
  */
 
 public class FXMLMenuTeacherController extends FXMLGeneralController implements Initializable {
-    @FXML private Button btnRegisterActivity;
+    @FXML private Button btnGenerateActivity;
     @FXML private Button btnListActivity;
     @FXML private Button btnUpdateActivity;
     @FXML private Button btnDeleteActivity;
@@ -30,7 +30,8 @@ public class FXMLMenuTeacherController extends FXMLGeneralController implements 
     public void updateActivity() {
     }
 
-    public void registerActivity() {
+    public void generateActivity() {
+        openWindowGeneral("/gui/teacher/fxml/FXMLGenerateActivity.fxml",btnGenerateActivity);
     }
 
     public void listActivity() {

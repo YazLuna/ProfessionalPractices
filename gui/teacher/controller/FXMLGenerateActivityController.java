@@ -1,4 +1,4 @@
-package gui.practitioner.controller;
+package gui.teacher.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,18 +9,19 @@ import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
 
 /**
- * Creation of the controller FXMLGenerateReport
+ * Creation of the controller FXMLGenerateActivity
  * @author Ivana Correa
- * @version 16/05/2020
+ * @version 21/05/2020
  */
 
-public class FXMLGenerateReportController extends FXMLGeneralController implements Initializable {
+public class FXMLGenerateActivityController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnLogOut;
     @FXML private Button btnGenerate;
     @FXML private Button btnCancel;
     @FXML private TextField tftName;
-    @FXML private DatePicker dpCompletionDate;
+    @FXML private TextField tftValue;
+    @FXML private TextField tftDescription;
     @FXML private DatePicker dpDeliverDate;
-    @FXML private TextArea tftActivities;
 
     @Override
     public void initialize(URL url, ResourceBundle rb){ }
@@ -36,12 +37,11 @@ public class FXMLGenerateReportController extends FXMLGeneralController implemen
         cancel.setTitle("Cancel");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.get() == ButtonType.OK) {
-            openWindowGeneral("/gui/practitioner/fxml/FXMLMenuPractitioner.fxml",btnCancel);
+            openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml",btnCancel);
         }
     }
 
     public void generate() {
-        openWindowGeneral("/gui/practitioner/fxml/FXMLPreviewReport.fxml",btnGenerate);
+        openWindowGeneral("/gui/teacher/fxml/FXMLPreviewActivity.fxml",btnGenerate);
     }
-
 }
