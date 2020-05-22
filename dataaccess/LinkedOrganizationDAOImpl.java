@@ -44,8 +44,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                 LinkedOrganization linkedOrganization = new LinkedOrganization();
                 linkedOrganization.setIdLinkedOrganization(results.getInt("idLinkedOrganization"));
                 linkedOrganization.setName(results.getString("name"));
-                linkedOrganization.setDirectUsers(results.getInt("directUsers"));
-                linkedOrganization.setIndirectUsers(results.getInt("indirectUsers"));
+                linkedOrganization.setDirectUsers(results.getString("directUsers"));
+                linkedOrganization.setIndirectUsers(results.getString("indirectUsers"));
                 linkedOrganization.setEmail(results.getString("email"));
                 linkedOrganization.setPhoneNumber(results.getString("phoneNumber"));
                 linkedOrganization.setAddress(results.getString("address"));
@@ -81,8 +81,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                 linkedOrganization = new LinkedOrganization();
                 linkedOrganization.setIdLinkedOrganization(results.getInt("idLinkedOrganization"));
                 linkedOrganization.setName(results.getString("name"));
-                linkedOrganization.setDirectUsers(results.getInt("directUsers"));
-                linkedOrganization.setIndirectUsers(results.getInt("indirectUsers"));
+                linkedOrganization.setDirectUsers(results.getString("directUsers"));
+                linkedOrganization.setIndirectUsers(results.getString("indirectUsers"));
                 linkedOrganization.setEmail(results.getString("email"));
                 linkedOrganization.setPhoneNumber(results.getString("phoneNumber"));
                 linkedOrganization.setAddress(results.getString("address"));
@@ -130,8 +130,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             PreparedStatement sentenceOrganization = connection.prepareStatement("insert into LinkedOrganization(name,"+
                     "directUsers,indirectUsers,email,phoneNumber,address,idCity,idState,idSector) values (?,?,?,?,?,?,?,?,?)");
             sentenceOrganization.setString(1,organization.getName());
-            sentenceOrganization.setInt(2,organization.getDirectUsers());
-            sentenceOrganization.setInt(3,organization.getIndirectUsers());
+            sentenceOrganization.setString(2,organization.getDirectUsers());
+            sentenceOrganization.setString(3,organization.getIndirectUsers());
             sentenceOrganization.setString(4,organization.getEmail());
             sentenceOrganization.setString(5,organization.getPhoneNumber());
             sentenceOrganization.setString(6,organization.getAddress());
@@ -182,8 +182,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                     " phoneNumber=?, address=?, idCity=?, idState=?, idSector=? where idLinkedOrganization=?";
             PreparedStatement sentence = connection.prepareStatement(queryOrganization);
             sentence.setString(1, organization.getName());
-            sentence.setInt(2, organization.getDirectUsers());
-            sentence.setInt(3, organization.getIndirectUsers());
+            sentence.setString(2, organization.getDirectUsers());
+            sentence.setString(3, organization.getIndirectUsers());
             sentence.setString(4, organization.getEmail());
             sentence.setString(5, organization.getPhoneNumber());
             sentence.setString(6, organization.getAddress());
@@ -259,7 +259,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setString(1,name);
             results= sentence.executeQuery();
             while(results.next()){
-                idCity =results.getInt("idCity");
+                idCity =results.getInt("nameCity");
             }
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);

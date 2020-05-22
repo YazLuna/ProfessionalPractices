@@ -85,6 +85,25 @@ public class FXMLRegisterProjectController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         startTextField();
         startComboBox();
+        registerProject();
+        cancelProject();
+    }
+
+    public void cancelProject () {
+        btnCancelProject.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                Alert cancel = new Alert(Alert.AlertType.NONE);
+                cancel.setAlertType(Alert.AlertType.CONFIRMATION);
+                cancel.setHeaderText("Do you want to cancel?");
+                cancel.setTitle("Cancel");
+                Optional<ButtonType> action = cancel.showAndWait();
+                if (action.get() == ButtonType.OK) {
+
+                }
+            }
+        });
+    }
+    public void registerProject() {
         btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 String message;
@@ -105,70 +124,34 @@ public class FXMLRegisterProjectController implements Initializable {
                 }
             }
         });
-        btnCancelProject.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Alert cancel = new Alert(Alert.AlertType.NONE);
-                cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-                cancel.setHeaderText("Do you want to cancel?");
-                cancel.setTitle("Cancel");
-                Optional<ButtonType> action = cancel.showAndWait();
-                if (action.get() == ButtonType.OK) {
-                    Stage stagePrincipal = (Stage) btnCancelProject.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLSectionProject.fxml"));
-                    Stage stage = new Stage();
-                    try {
-                        Parent root1 = (Parent) fxmlLoader.load();
-                        stage.setScene(new Scene(root1));
-                    } catch(Exception e) {
-                        Logger logger = Logger.getLogger(getClass().getName());
-                        logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                    }
-                    stage.setResizable(false);
-                    stage.show();
-                }
-            }
-        });
     }
-
     public void startTextField (){
         limitTextField(tfNameOrganization,50);
         deleteNumberTextField(tfNameOrganization);
-
-        limitTextField(tfDirectUsers,2);
-        deleteWorkTextField(tfDirectUsers);
-
-        limitTextField(tfIndirectUsers,2);
-        deleteWorkTextField(tfIndirectUsers);
-
+        limitTextField(tfDirectUsers,100);
+        deleteNumberTextField(tfDirectUsers);
+        limitTextField(tfIndirectUsers,100);
+        deleteNumberTextField(tfIndirectUsers);
         limitTextField(tfEmailOrganization,30);
         deleteSpacesTextField(tfEmailOrganization);
         limitTextField(tfEmailResponsible,50);
         deleteSpacesTextField(tfEmailResponsible);
         limitTextField(tfAdress,50);
         deleteSpacesTextField(tfAdress);
-
         limitTextField(tfPhoneNumber,10);
         deleteWorkTextField(tfPhoneNumber);
-
         limitTextField(tfNameResponsible,50);
         deleteNumberTextField(tfNameResponsible);
-
         limitTextField(tfLastNameResponsible,50);
         deleteNumberTextField(tfLastNameResponsible);
-
         limitTextField(tfNameProject,25);
         deleteNumberTextField(tfNameProject);
-
         limitTextField(tfMethodology,15);
         deleteNumberTextField(tfMethodology);
-
         limitTextField(tfDuration,2);
         deleteWorkTextField(tfDuration);
-
         limitTextField(tfQuiantityPractitioners,1);
         deleteWorkTextField(tfQuiantityPractitioners);
-
         limitTextField(cbState.getEditor(),25);
         deleteNumberTextField(cbState.getEditor());
         limitTextField(cbCity.getEditor(),25);
@@ -179,7 +162,6 @@ public class FXMLRegisterProjectController implements Initializable {
         deleteNumberTextField(cbCharge.getEditor());
         limitTextField(cbLapse.getEditor(),30);
         deleteSpacesTextField(cbLapse.getEditor());
-
         limitTextArea(taDescription,100);
         deleteSpacesTextArea(taDescription);
         limitTextArea(taObjectiveGeneral,100);
@@ -194,7 +176,6 @@ public class FXMLRegisterProjectController implements Initializable {
         deleteSpacesTextArea(taActivities);
         limitTextArea(taResponsabilities,255);
         deleteSpacesTextArea(taResponsabilities);
-
     }
 
     public static void limitTextField(TextField textField, int limit) {
@@ -293,9 +274,6 @@ public class FXMLRegisterProjectController implements Initializable {
         cbCharge.getItems().addAll(allCharge);
     }
 
-    public void getdata () {
-
-    }
     public void getDataProject () {
         project.setNameProject(validateProject.deleteSpace(tfNameProject.getText()));
         project.setDescription(validateProject.deleteSpace(taDescription.getText()));
@@ -313,10 +291,7 @@ public class FXMLRegisterProjectController implements Initializable {
         int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
         project.setQuantityPractitioner(quiantityPractitioner);
         organization.setName(validateProject.deleteSpace(tfNameOrganization.getText()));
-        int directUsers = Integer.parseInt(tfDirectUsers.getText());
-        organization.setDirectUsers(directUsers);
-        int indirectUsers = Integer.parseInt(tfIndirectUsers.getText());
-        organization.setIndirectUsers(indirectUsers);
+
         organization.setEmail(tfEmailOrganization.getText());
         organization.setPhoneNumber(tfPhoneNumber.getText());
         organization.setAddress(validateProject.deleteSpace(tfAdress.getText()));

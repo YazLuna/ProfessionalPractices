@@ -110,10 +110,7 @@ public class FXMLUpdateLinkedOrganizationController implements Initializable {
 
     public void getDataOrganization () {
         project.getOrganization().setName(validateProject.deleteSpace(tfNameOrganization.getText()));
-        int directUsers = Integer.parseInt(tfDirectUsers.getText());
-        project.getOrganization().setDirectUsers(directUsers);
-        int indirectUsers = Integer.parseInt(tfIndirectUsers.getText());
-        project.getOrganization().setIndirectUsers(indirectUsers);
+
         project.getOrganization().setEmail(tfEmail.getText());
         project.getOrganization().setPhoneNumber(tfPhoneNumber.getText());
         project.getOrganization().setAddress(validateProject.deleteSpace(tfAdress.getText()));
