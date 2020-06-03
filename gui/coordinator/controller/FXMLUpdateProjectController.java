@@ -170,7 +170,7 @@ public class FXMLUpdateProjectController implements Initializable {
 
     public boolean validateDataProject () {
         boolean result = true;
-        if (!validateProject.validateNameProject(tfName.getText())) {
+        if (!validateProject.validateName(tfName.getText())) {
             tfName.getStyleClass().add("error");
             result = false;
         } else {
