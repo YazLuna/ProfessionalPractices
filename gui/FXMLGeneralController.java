@@ -2,30 +2,43 @@ package gui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextArea;
 
 /**
  * DAO User
  * @author Yazmin
- * @version 19/05/2020
+ * @version 03/06/2020
  */
 
 public class FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
+    File imgFile;
+    FileChooser fileChooser = new FileChooser();
+    public ImageView imgProfilePicture;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -42,7 +55,7 @@ public class FXMLGeneralController implements Initializable {
             stage.setResizable(false);
             stage.setScene(new Scene(root1));
             stage.show();
-        } catch(Exception e) {
+        } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
@@ -58,22 +71,22 @@ public class FXMLGeneralController implements Initializable {
             stage.setResizable(false);
             stage.setScene(new Scene(root1));
             stage.show();
-        } catch(Exception e) {
+        } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
     }
 
 
-    public void generateAlert(String message){
+    public void generateAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.WARNING);
         alert.setHeaderText(message);
-        alert.setTitle("Advertencia");
+        alert.setTitle("Warning");
         alert.show();
     }
 
-    public void generateError(String message){
+    public void generateError(String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setHeaderText(message);
@@ -81,28 +94,35 @@ public class FXMLGeneralController implements Initializable {
         alert.show();
     }
 
-    public void generateConfirmation(String message){
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setAlertType(Alert.AlertType.CONFIRMATION);
-        alert.setHeaderText(message);
-        alert.setTitle("Confirmacion");
-        alert.show();
+    public boolean generateConfirmation(String message) {
+        boolean option = false;
+        ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
+        ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, message, YES, NO);
+        cancel.setTitle("Confirmar");
+        Optional<ButtonType> action = cancel.showAndWait();
+        if (action.orElse(NO) == YES) {
+            option = true;
+        }
+        return option;
     }
-    public void generateInformation(String message){
+
+    public void generateInformation(String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.INFORMATION);
         alert.setHeaderText(message);
-        alert.setTitle("Informacion");
+        alert.setTitle("Information");
         alert.show();
     }
-    public void generateCancel(String message,Button btnCancel) {
+
+    public void generateCancel(String message, Button btnCancel, String fxml) {
         ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
         ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert cancel = new Alert(Alert.AlertType.CONFIRMATION,message,YES,NO);
+        Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, message, YES, NO);
         cancel.setTitle("Cancelar");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.orElse(NO) == YES) {
-            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnCancel);
+            openWindowGeneral(fxml, btnCancel);
         }
     }
 
@@ -138,7 +158,7 @@ public class FXMLGeneralController implements Initializable {
         textArea.setTextFormatter(new TextFormatter(textLimitFilter));
     }
 
-    public static void deleteWorkTextField (TextField textField){
+    public static void deleteWorkTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -150,14 +170,14 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteNumberTextField (TextField textField){
+    public static void deleteNumberTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (newValue.matches("^\\s")) {
                     textField.setText(newValue.replaceAll("[\\s]", ""));
-                }else{
+                } else {
                     if (!newValue.matches("[A-Za-z_\\s]")) {
                         textField.setText(newValue.replaceAll("[^A-Za-z_\\s]", ""));
                     }
@@ -166,7 +186,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteSpacesTextField(TextField textField){
+    public static void deleteSpacesTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -178,7 +198,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteSpacesTextArea(TextArea textArea){
+    public static void deleteSpacesTextArea(TextArea textArea) {
         textArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -188,6 +208,21 @@ public class FXMLGeneralController implements Initializable {
                 }
             }
         });
+    }
+
+    public void loadImage(){
+        fileChooser.setTitle("Buscar Imagen");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+
+        imgFile = fileChooser.showOpenDialog(null);
+
+        if (imgFile != null) {
+            Image image = new Image("file:" + imgFile.getAbsolutePath());
+            imgProfilePicture.setImage(image);
+        }
     }
 
 }

@@ -3,12 +3,9 @@ package gui.administrator.controller;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 
@@ -32,22 +29,24 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
     }
 
     public void registerCoordinator() throws SQLException {
+        boolean isActive;
         Coordinator coordinator = new Coordinator();
-        coordinator = coordinator.getCoordinator();
-        if(coordinator.getName() == null){
+        isActive = coordinator.activeCoordinator();
+        if(!isActive){
             openWindowGeneral("/gui/administrator/fxml/FXMLRegisterCoordinator.fxml",btnRegisterCoordinator);
         }else{
-            generateError("An active coordinator already exists");
+            generateError("Ya existe un coordinador activo");
         }
     }
 
     public void deleteCoordinator() throws SQLException {
+        boolean isActive;
         Coordinator coordinator = new Coordinator();
-        coordinator = coordinator.getCoordinator();
-        if(coordinator.getName() != null){
+        isActive = coordinator.activeCoordinator();
+        if(isActive){
             openWindowGeneral("/gui/administrator/fxml/FXMLDeleteCoordinator.fxml",btnDeleteCoordinator);
         }else{
-            generateError("There is no active coordinator");
+            generateError("No hay ningún coordinador activo");
         }
     }
 

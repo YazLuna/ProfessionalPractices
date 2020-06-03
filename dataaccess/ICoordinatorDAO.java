@@ -8,7 +8,7 @@ import domain.Coordinator;
 /**
  * DAO User
  * @author Yazmin
- * @version 08/05/2020
+ * @version 03/06/2020
  */
 
 public interface ICoordinatorDAO {
@@ -18,4 +18,5 @@ public interface ICoordinatorDAO {
    boolean addCoordinator (Coordinator coordinator) throws SQLException;
    List <Coordinator> getAllCoordinator () throws SQLException;
    boolean recoverCoordinator(Coordinator coordinator) throws  SQLException;
+   boolean activeCoordinator() throws SQLException ;
 }

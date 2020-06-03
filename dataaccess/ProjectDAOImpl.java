@@ -170,6 +170,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idResponsibleProject;
         int idOrganization;
         int idLapse;
+        //int ORGANIZATION_NOT_EXIST = 0; O enumerator
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         if(idOrganization == 0) {
@@ -177,11 +178,11 @@ public class ProjectDAOImpl implements IProjectDAO {
             idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         }
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
-        if(idResponsibleProject == 0) {
-            result = responsibleImpl.updateResponsibleProject(project.getResponsible());
-            idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
-        }
+        //idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        //if(idResponsibleProject == 0) {
+           // result = responsibleImpl.updateResponsibleProject(project.getResponsible());
+            //idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        //}
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
         if(idLapse == 0) {
@@ -208,7 +209,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(11, project.getDuration());
             sentenceProject.setInt(12, project.getQuantityPractitioner());
             sentenceProject.setInt(13, idOrganization);
-            sentenceProject.setInt(14,idResponsibleProject);
+           // sentenceProject.setInt(14,idResponsibleProject);
             sentenceProject.setInt(15,project.getStaffNumberCoordinator());
             sentenceProject.setInt(16,idLapse);
             sentenceProject.executeUpdate();
@@ -268,12 +269,12 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
         
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
-        if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
-            result = responsibleImpl.actualizationResponsibleProject(project.getResponsible());
-        }else{
-            project.getResponsible().setIdResponsible(idResponsibleProject);
-        }
+       // idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        //if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
+          //  result = responsibleImpl.actualizationResponsibleProject(project.getResponsible());
+        //}else{
+          //  project.getResponsible().setIdResponsible(idResponsibleProject);
+        //}
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
         if(idLapse==0){

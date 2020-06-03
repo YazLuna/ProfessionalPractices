@@ -1,10 +1,7 @@
 package domain;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import dataaccess.CoordinatorDAOImpl;
 import dataaccess.ProjectDAOImpl;
 
@@ -92,6 +89,13 @@ public class Coordinator extends User{
     public Project getProject (String name)  throws SQLException{
         ProjectDAOImpl getProject = new ProjectDAOImpl();
         return getProject.getProject(name);
+    }
+
+    public boolean activeCoordinator() throws SQLException {
+        CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
+        boolean result;
+        result = activeCoordinator.activeCoordinator();
+        return result;
     }
 
 }
