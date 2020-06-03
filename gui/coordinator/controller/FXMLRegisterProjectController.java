@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import gui.FXMLGeneralController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -40,7 +41,7 @@ import logic.ValidateProject;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class FXMLRegisterProjectController implements Initializable {
+public class FXMLRegisterProjectController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnRegisterProject;
     @FXML private Button btnCancelProject;
     @FXML private TextField tfNameOrganization;
@@ -178,89 +179,6 @@ public class FXMLRegisterProjectController implements Initializable {
         deleteSpacesTextArea(taResponsabilities);
     }
 
-    public static void limitTextField(TextField textField, int limit) {
-        UnaryOperator<Change> textLimitFilter = change -> {
-            if (change.isContentChange()) {
-                int newLength = change.getControlNewText().length();
-                if (newLength > limit) {
-                    String trimmedText = change.getControlNewText().substring(0, limit);
-                    change.setText(trimmedText);
-                    int oldLength = change.getControlText().length();
-                    change.setRange(0, oldLength);
-                }
-            }
-            return change;
-        };
-        textField.setTextFormatter(new TextFormatter(textLimitFilter));
-    }
-
-    public static void limitTextArea(TextArea textArea, int limit) {
-        UnaryOperator<Change> textLimitFilter = change -> {
-            if (change.isContentChange()) {
-                int newLength = change.getControlNewText().length();
-                if (newLength > limit) {
-                    String trimmedText = change.getControlNewText().substring(0, limit);
-                    change.setText(trimmedText);
-                    int oldLength = change.getControlText().length();
-                    change.setRange(0, oldLength);
-                }
-            }
-            return change;
-        };
-        textArea.setTextFormatter(new TextFormatter(textLimitFilter));
-    }
-
-    public static void deleteWorkTextField (TextField textField){
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    textField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-    }
-
-    public static void deleteNumberTextField (TextField textField){
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (newValue.matches("^\\s")) {
-                    textField.setText(newValue.replaceAll("[\\s]", ""));
-                }else{
-                    if (!newValue.matches("[A-Za-z_\\s]")) {
-                        textField.setText(newValue.replaceAll("[^A-Za-z_\\s]", ""));
-                    }
-                }
-            }
-        });
-    }
-    public static void deleteSpacesTextField(TextField textField){
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (newValue.matches("^\\s")) {
-                    textField.setText(newValue.replaceAll("[\\s]", ""));
-                }
-            }
-        });
-    }
-
-    public static void deleteSpacesTextArea(TextArea textArea){
-        textArea.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (newValue.matches("^\\s")) {
-                    textArea.setText(newValue.replaceAll("[\\s]", ""));
-                }
-            }
-        });
-    }
-
     public void startComboBox () {
         allCity = organization.listCity();
         cbCity.getItems().addAll(allCity);
@@ -308,7 +226,7 @@ public class FXMLRegisterProjectController implements Initializable {
 
     public boolean validateDataProject (){
         boolean result = true;
-        if(!validateProject.validateNameProject(tfNameProject.getText()))  {
+        if(!validateProject.validateName(tfNameProject.getText()))  {
             tfNameProject.getStyleClass().add("error");
             result= false;
         }else{
@@ -382,7 +300,7 @@ public class FXMLRegisterProjectController implements Initializable {
         }else{
             tfQuiantityPractitioners.getStyleClass().remove("error");
         }
-        if(!validateOrganizarion.validateNameLinked(tfNameOrganization.getText())){
+        if(!validateOrganizarion.validateName(tfNameOrganization.getText())){
             tfNameOrganization.getStyleClass().add("error");
             result= false;
         }else {
@@ -463,4 +381,3 @@ public class FXMLRegisterProjectController implements Initializable {
         return result;
     }
 }
-
