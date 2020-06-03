@@ -1,6 +1,7 @@
 package domain;
 
 
+import dataaccess.ProjectDAOImpl;
 import dataaccess.ResponsibleProjectDAOImpl;
 import java.util.List;
 
@@ -9,10 +10,11 @@ public class ResponsibleProject{
     private String lastName;
     private String email;
     private String charge;
+    private String status;
     private int idResponsible;
     
     public ResponsibleProject(){
-        
+        this.status="available";
     }
     
     public String getName () {
@@ -46,6 +48,14 @@ public class ResponsibleProject{
     public void setCharge (String charge) {
         this.charge = charge;
     }
+
+    public String getStatus () {
+        return status;
+    }
+
+    public void setStatus (String status) {
+        this.status = status;
+    }
     
     public int getIdResponsible () {
         return idResponsible;
@@ -58,6 +68,13 @@ public class ResponsibleProject{
     public List<String> listCharge () {
         ResponsibleProjectDAOImpl listCharge = new ResponsibleProjectDAOImpl();
         return listCharge.getAllCharge();
+    }
+
+    public String addResponsibleProject () {
+        String result;
+        ResponsibleProjectDAOImpl addResponsible = new ResponsibleProjectDAOImpl();
+        result = addResponsible.addResponsibleProject(this);
+        return result;
     }
     
 }
