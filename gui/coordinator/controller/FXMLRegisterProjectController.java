@@ -381,4 +381,3 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         return result;
     }
 }
-
