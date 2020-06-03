@@ -18,7 +18,7 @@ public class RecoverCoordinatorTest {
         boolean result;
         Coordinator coordinator = new Coordinator();
         coordinator.setStatus("Active");
-        coordinator.setStaffNumber(4);
+        coordinator.setStaffNumber(1);
         result = coordinator.recoverCoordinator();
         Assert.assertTrue(result);
     }

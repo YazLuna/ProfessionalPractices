@@ -33,7 +33,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
     public void cancel () {
-        generateCancel("¿Seguro desea cancelar?",btnCancel);
+        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
     public void startComponent (){
         limitTextField(tfEmailResponsible,50);

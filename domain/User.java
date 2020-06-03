@@ -1,5 +1,7 @@
 package domain;
 
+import javafx.scene.image.ImageView;
+
 import java.io.File;
 
 /**

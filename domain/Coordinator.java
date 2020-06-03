@@ -91,4 +91,11 @@ public class Coordinator extends User{
         return getProject.getProject(name);
     }
 
+    public boolean activeCoordinator() throws SQLException {
+        CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
+        boolean result;
+        result = activeCoordinator.activeCoordinator();
+        return result;
+    }
+
 }

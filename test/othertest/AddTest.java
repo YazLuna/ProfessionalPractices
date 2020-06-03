@@ -1,9 +1,13 @@
 package test.othertest;
 
+import dataaccess.CoordinatorDAOImpl;
+import dataaccess.UserMethodDAOImpl;
 import domain.Practitioner;
 import domain.Teacher;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.sql.SQLException;
 
 public class AddTest {
 
@@ -41,4 +45,19 @@ public class AddTest {
         Assert.assertEquals(1,result);
     }
 
+    @Test
+    public void testSearch() throws SQLException {
+        int result =0;
+        UserMethodDAOImpl us = new UserMethodDAOImpl();
+        result=us.searchIdUserStatus("Active");
+        Assert.assertEquals(0,result);
+    }
+
+    @Test
+    public void testSearchIsActive() throws SQLException {
+        boolean result =false;
+        CoordinatorDAOImpl us = new CoordinatorDAOImpl();
+        result=us.activeCoordinator();
+        Assert.assertTrue(result);
+    }
 }

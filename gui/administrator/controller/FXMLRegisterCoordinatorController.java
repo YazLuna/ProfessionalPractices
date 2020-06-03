@@ -6,7 +6,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -49,23 +48,11 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     }
 
     public void cancel() {
-        generateConfirmationCancel("do you want to cancel?","Cancel","/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
     }
 
     public void loadProfilePicture() throws IOException {
-            fileChooser.setTitle("Buscar Imagen");
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-                    new FileChooser.ExtensionFilter("PNG", "*.png")
-            );
-
-            imgFile = fileChooser.showOpenDialog(null);
-
-            if (imgFile != null) {
-                Image image = new Image("file:" + imgFile.getAbsolutePath());
-                imgProfilePicture.setImage(image);
-            }
-
+        loadImage();
     }
 
     public boolean validate(){
@@ -187,15 +174,14 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
                     coordinator.setGender(0);
                 }
             }
-
             coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
             coordinator.setProfilePicture(imgFile);
             registerComplete = coordinator.addCoordinator();
             if(registerComplete){
-                generateConfirmation("The register was complete");
+                generateInformation("Registro Exitoso");
                 openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
             }else{
-                generateError("This coordinator is already registered ");
+                generateError("Este coordinador ya esta registrado");
             }
         }
     }

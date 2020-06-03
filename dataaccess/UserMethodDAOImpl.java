@@ -1,5 +1,7 @@
 package dataaccess;
 
+import domain.Search;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,8 +93,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
                 sentenceAddUser.setString(4, email);
                 sentenceAddUser.setString(5, alternateEmail);
                 sentenceAddUser.setString(6, phone);
-                FileInputStream convertImage = new FileInputStream (image);
-                sentenceAddUser.setBinaryStream(7,convertImage,image.length());
+                if(image!=null){
+                    FileInputStream convertImage = new FileInputStream (image);
+                    sentenceAddUser.setBinaryStream(7,convertImage,image.length());
+                }else{
+                    sentenceAddUser.setBinaryStream(7,null);
+                }
                 sentenceAddUser.executeUpdate();
                 addRelations(email,alternateEmail,phone,status,userType,userName,password);
                 result = true;
@@ -141,8 +147,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public int searchIdUserStatus(String status)  throws SQLException{
-        int idUserStatus = 0;
+    public int searchIdUserStatus(String status) throws SQLException {
+        int idUserStatus = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
             String queryUserStatus = "Select idUserStatus from UserStatus where status =?";
