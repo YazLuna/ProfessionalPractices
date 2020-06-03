@@ -1,89 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="443.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gui.administrator.controller.FXMLDeleteCoordinatorController">
-    <ImageView fx:id="imgBackground" fitHeight="400.0" fitWidth="600.0" layoutY="1.0" pickOnBounds="true">
-        <Image url="@../../images/background.png"/>
-    </ImageView>
-    <ImageView fitHeight="70.0" fitWidth="68.0" layoutX="27.0" layoutY="12.0"
-               pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../images/Administrator.png"/>
-    </ImageView>
-    <Label layoutX="232.0" layoutY="24.0" text="Coordinator" textFill="#1b4325">
+    <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#cancel"
+            style="-fx-background-color: #707070;" text="Cancelar" textFill="WHITE">
         <font>
-            <Font name="System Bold" size="24.0"/>
-        </font>
-    </Label>
-    <Button fx:id="btnCancel" layoutX="325.0" layoutY="340.0" mnemonicParsing="false" onAction="#cancel" text="Cancel">
-        <font>
-            <Font name="Arial" size="12.0"/>
+            <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <Button fx:id="btnLogOut" layoutX="510.0" layoutY="30.0" mnemonicParsing="false" onAction="#logOut" text="Log Out">
+    <Button fx:id="btnDelete" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#delete"
+            style="-fx-background-color: #cc2d2d;" text="Eliminar" textFill="WHITE">
         <font>
-            <Font name="Arial" size="12.0"/>
+            <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <Button fx:id="btnDelete" layoutX="232.0" layoutY="340.0" mnemonicParsing="false" onAction="#delete" text="Delete">
-        <font>
-          <Font name="Arial" size="12.0"/>
-        </font>
-    </Button>
-    <ImageView fx:id="imgLogOut" fitHeight="35.0" fitWidth="40.0" layoutX="470.0" layoutY="24.0" pickOnBounds="true"
-               preserveRatio="true">
-        <image>
-          <Image url="@../../images/LogOut.png"/>
-        </image>
-    </ImageView>
     <ImageView fx:id="imgCoordinator" fitHeight="130.0" fitWidth="130.0" layoutX="235.0" layoutY="59.0"
                pickOnBounds="true" preserveRatio="true"/>
-    <Label fx:id="lbName" layoutX="191.0" layoutY="192.0"/>
-    <Label fx:id="lbLastName" layoutX="343.0" layoutY="192.0"/>
-    <Label fx:id="lbStaffNumber" layoutX="191.0" layoutY="215.0"/>
-    <Label fx:id="lbGender" layoutX="191.0" layoutY="236.0"/>
-    <Label fx:id="lbEmail" layoutX="191.0" layoutY="255.0"/>
-    <Label fx:id="lbAlternateEmail" layoutX="191.0" layoutY="274.0"/>
-    <Label fx:id="lbPhone" layoutX="191.0" layoutY="294.0"/>
-    <Label fx:id="lbRegistrationDate" layoutX="191.0" layoutY="314.0"/>
-    <Label fx:id="lbNameHead" layoutX="77.0" layoutY="193.0" text="Name">
+    <Label fx:id="lbName" layoutX="191.0" layoutY="214.0"/>
+    <Label fx:id="lbLastName" layoutX="343.0" layoutY="214.0"/>
+    <Label fx:id="lbStaffNumber" layoutX="191.0" layoutY="236.0"/>
+    <Label fx:id="lbGender" layoutX="191.0" layoutY="257.0"/>
+    <Label fx:id="lbEmail" layoutX="191.0" layoutY="276.0"/>
+    <Label fx:id="lbAlternateEmail" layoutX="191.0" layoutY="295.0"/>
+    <Label fx:id="lbPhone" layoutX="191.0" layoutY="315.0"/>
+    <Label fx:id="lbRegistrationDate" layoutX="191.0" layoutY="335.0"/>
+    <Label layoutX="75.0" layoutY="214.0" text="Nombre">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbStaffNumberHead" layoutX="77.0" layoutY="215.0" text="StaffNumber">
+    <Label layoutX="75.0" layoutY="236.0" text="No. Personal">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbGenderHead" layoutX="77.0" layoutY="236.0" text="Gender">
+    <Label layoutX="75.0" layoutY="257.0" text="Género">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbEmailHead" layoutX="77.0" layoutY="255.0" text="Email">
+    <Label layoutX="75.0" layoutY="276.0" text="Correo">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbAlternateEmailHead" layoutX="77.0" layoutY="274.0" text="Alternate Email">
+    <Label layoutX="75.0" layoutY="295.0" text="Correo Alternativo">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbPhoneHead" layoutX="77.0" layoutY="294.0" text="Phone">
+    <Label layoutX="75.0" layoutY="315.0" text="Teléfono">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbRegistrationDateHead" layoutX="77.0" layoutY="314.0" text="Registration Date">
+    <Label layoutX="75.0" layoutY="335.0" text="Fecha de Registro">
         <font>
-          <Font name="System Bold" size="12.0"/>
+            <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
+    <Pane layoutX="-2.0" prefHeight="66.0" prefWidth="604.0" style="-fx-background-color: #053d01;">
+        <Label layoutX="194.0" layoutY="14.0" text="Eliminar Coordinador" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Label>
+        <ImageView fitHeight="35.0" fitWidth="40.0" layoutX="458.0" layoutY="17.0"
+                   pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../images/LogOut.png"/>
+        </ImageView>
+        <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOut"
+                prefHeight="0.0" prefWidth="92.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
+            <font>
+                <Font name="Arial" size="12.0"/>
+            </font>
+        </Button>
+    </Pane>
 </AnchorPane>

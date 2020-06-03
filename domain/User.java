@@ -1,5 +1,9 @@
 package domain;
 
+import javafx.scene.image.ImageView;
+
+import java.io.File;
+
 /**
  * DAO User
  * @author Yazmin
@@ -17,6 +21,7 @@ public class User{
     private String password;
     private String userType;
     private String userName;
+    private File profilePicture;
 
     public User () {
         this.status= "Active";
@@ -102,5 +107,12 @@ public class User{
         this.userName = userName;
     }
 
+    public File getProfilePicture(){
+        return profilePicture;
+    }
+
+    public void setProfilePicture(File profilePicture){
+        this.profilePicture = profilePicture;
+    }
 
 }

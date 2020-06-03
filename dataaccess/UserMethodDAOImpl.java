@@ -1,5 +1,10 @@
 package dataaccess;
 
+import domain.Search;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,7 +77,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 
     @Override
     public boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
-            , String userType, String status, int gender, String userName) throws SQLException {
+            , String userType, String status, int gender, String userName, File image) throws SQLException {
         boolean validate;
         boolean result = false;
         validate = validateUser(email, alternateEmail, phone,userName);
@@ -80,7 +85,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             try {
                 connection = connexion.getConnection();
                 String queryAddUser = "INSERT INTO User  (name, lastName, gender, email,  alternateEmail" +
-                        ", phone)  VALUES (?,?, ?, ?, ?,?)";
+                        ", phone, profilePicture)  VALUES (?,?, ?, ?, ?,?,?)";
                 PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddUser);
                 sentenceAddUser.setString(1, name);
                 sentenceAddUser.setString(2, lastName);
@@ -88,12 +93,18 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
                 sentenceAddUser.setString(4, email);
                 sentenceAddUser.setString(5, alternateEmail);
                 sentenceAddUser.setString(6, phone);
+                if(image!=null){
+                    FileInputStream convertImage = new FileInputStream (image);
+                    sentenceAddUser.setBinaryStream(7,convertImage,image.length());
+                }else{
+                    sentenceAddUser.setBinaryStream(7,null);
+                }
                 sentenceAddUser.executeUpdate();
                 addRelations(email,alternateEmail,phone,status,userType,userName,password);
                 result = true;
-            } catch (SQLException ex) {
+            } catch (SQLException | FileNotFoundException ex) {
                 Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }finally {
+            } finally {
                 connection.close();
             }
         }
@@ -136,8 +147,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public int searchIdUserStatus(String status)  throws SQLException{
-        int idUserStatus = 0;
+    public int searchIdUserStatus(String status) throws SQLException {
+        int idUserStatus = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
             String queryUserStatus = "Select idUserStatus from UserStatus where status =?";

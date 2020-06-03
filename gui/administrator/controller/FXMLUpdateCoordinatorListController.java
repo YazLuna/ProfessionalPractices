@@ -31,4 +31,7 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
     public void logOut() {
         logOutGeneral();
     }
+
+    public void updateCoordinator() {
+    }
 }
