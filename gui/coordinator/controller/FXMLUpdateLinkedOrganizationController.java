@@ -1,4 +1,5 @@
 
+
 package gui.coordinator.controller;
 
 import domain.Project;
@@ -166,7 +167,7 @@ public class FXMLUpdateLinkedOrganizationController implements Initializable {
 
     public boolean validateDataOrganization (){
         boolean result = true;
-        if(!validateOrganizarion.validateNameLinked(tfNameOrganization.getText())){
+        if(!validateOrganizarion.validateName(tfNameOrganization.getText())){
             tfNameOrganization.getStyleClass().add("error");
             result= false;
         }else {
