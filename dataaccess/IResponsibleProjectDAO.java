@@ -9,7 +9,8 @@ import domain.ResponsibleProject;
  */
 public interface IResponsibleProjectDAO {
     public ResponsibleProject getResponsibleProject (int idResponsible);
-    public String updateResponsibleProject (ResponsibleProject responsible);
-    public String actualizationResponsibleProject (ResponsibleProject responsible);
-    public int searchResponsibleProject (String email);
+    public String addResponsibleProject (ResponsibleProject responsible);
+    public String modifyResponsibleProject (ResponsibleProject responsible);
+    public int getIdResponsibleProject(String email);
+    public boolean searchResponsibleProject (String email);
 }

@@ -40,7 +40,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         ResponsibleProject responsible = null;     
         try{
             connection = connexion.getConnection();
-            String query= "Select * from ResponsibleProject inner join Charge on ResponsibleProject.idCharge = Charge.idCharge where idResponsibleProject=?";
+            String query= "Select * from ResponsibleProject inner join Charge on ResponsibleProject.idCharge = Charge.idCharge where email=?";
             PreparedStatement sentence =connection.prepareStatement(query);
             sentence.setInt(1,idResponsible);
             results= sentence.executeQuery();
@@ -50,6 +50,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 responsible.setName(results.getString("name"));
                 responsible.setLastName(results.getString("lastName"));
                 responsible.setEmail(results.getString("email"));
+                responsible.setStatus(results.getString("status"));
                 responsible.setCharge(results.getString("Charge.nameCharge"));
             }
         }catch(SQLException ex){
@@ -63,25 +64,27 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     /**
      * Method to add a Responsible of the project
      * @param responsible The data of the responsible of the project
-     * @return The message if the responsible the of project was added
+     * @return The responsible the of project was added
      */
     @Override
-    public String updateResponsibleProject (ResponsibleProject responsible) {
-        int idCharge = searchCharge(responsible.getCharge());
-        String result = "The responsible for the project could not register";
-        if(idCharge==0){
-            updateCharge(responsible.getCharge());
-            idCharge=searchCharge(responsible.getCharge());
-        } 
+    public String addResponsibleProject (ResponsibleProject responsible) {
+        assert searchResponsibleProject(responsible.getEmail())!=true : "Existe un responsable del proyecto con el mismo correo electrónico registrado";
+        int idCharge;
+        String result = "El responsable del proyecto no pudo registrarse";
+        if(!searchCharge(responsible.getCharge())){
+            addCharge(responsible.getCharge());
+        }
+        idCharge= getCharge(responsible.getCharge());
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceOrganization = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,idCharge) values(?,?,?,?)");
+            PreparedStatement sentenceOrganization = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,status,idCharge) values(?,?,?,?,?)");
             sentenceOrganization.setString(1,responsible.getName());
             sentenceOrganization.setString(2,responsible.getLastName());
             sentenceOrganization.setString(3,responsible.getEmail());
-            sentenceOrganization.setInt(4,idCharge);   
+            sentenceOrganization.setString(4, responsible.getStatus());
+            sentenceOrganization.setInt(5,idCharge);
             sentenceOrganization.executeUpdate();
-            result = "The responsible of the project registered correctly";
+            result = "El responsable del proyecto se registro exitosamente";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -91,22 +94,21 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     /**
-     * Update method of the responsible of the project
+     * Update method of the modify of the project
      * @param responsible The data of the responsible of the project
-     * @return The message if the responsible for the project was updated
+     * @return The person of the project was successfully modified
      */
     @Override
-    public String actualizationResponsibleProject (ResponsibleProject responsible) {
+    public String modifyResponsibleProject (ResponsibleProject responsible) {
         int idCharge;
-        String result = "The responsible project could not be updated";
-        idCharge = searchCharge(responsible.getCharge());
-        if(idCharge == 0){
-            updateCharge(responsible.getCharge());
-            idCharge = searchCharge(responsible.getCharge());
+        String result = "El responsable del proyecto no pudo modificarse";
+        if(!searchCharge(responsible.getCharge())){
+            addCharge(responsible.getCharge());
         }
+        idCharge = getCharge(responsible.getCharge());
+        String queryResponsible = "update ResponsibleProject set name=?, lastName=?, email=?, idCharge=? where idResponsibleProject=?";
         try{
             connection = connexion.getConnection();
-            String queryResponsible = "update ResponsibleProject set name=?, lastName=?, email=?, idCharge=? where idResponsibleProject=?";
             PreparedStatement sentenceResponsible = connection.prepareStatement(queryResponsible);
             sentenceResponsible.setString(1, responsible.getName());
             sentenceResponsible.setString(2, responsible.getLastName());
@@ -114,7 +116,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             sentenceResponsible.setInt(4, idCharge);
             sentenceResponsible.setInt(5, responsible.getIdResponsible());
             sentenceResponsible.executeUpdate();
-            result = "The responsible the project was updated correctly";
+            result = "El responsable del proyecto se modificó con éxito";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -129,7 +131,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      * @return The idResponsibleProject of the searched email
      */
     @Override
-    public int searchResponsibleProject (String email) {
+    public int getIdResponsibleProject (String email) {
         int idResponsibleProject=0;
         try{
             connection = connexion.getConnection();
@@ -148,45 +150,87 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return idResponsibleProject;
     }
 
-    /**
-     * Method to add a Charge
-     * @param name The name parameter defines the charge of responsible of the project
-     */
-    public void updateCharge (String name) {
+    @Override
+    public boolean searchResponsibleProject (String email) {
+        boolean isResponsibleProject=false;
+        String queryResponsible= "Select idResponsibleProject from ResponsibleProject where email=?";
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceCharge = connection.prepareStatement("insert into Charge (nameCharge) values (?)");
-            sentenceCharge.setString(1,name);
-            sentenceCharge.executeUpdate();
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-    }
-
-    /**
-     * Method to search for a charge
-     * @param name The name parameter defines the charge of responsible of the project
-     * @return The idCharge of the searched charge
-     */
-    public int searchCharge (String name) {
-        int idCharge=0;
-        try{
-            connection = connexion.getConnection();
-            String queryCharge= "Select idCharge from Charge where nameCharge=?";
-            PreparedStatement sentence =connection.prepareStatement(queryCharge);
-            sentence.setString(1,name);
+            PreparedStatement sentence =connection.prepareStatement(queryResponsible);
+            sentence.setString(1,email);
             results= sentence.executeQuery();
-            while(results.next()){
-                idCharge =results.getInt("idCharge");
+            if(results.next()){
+                isResponsibleProject=true;
             }
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
+        return isResponsibleProject;
+    }
+
+    /**
+     * Method to add a Charge
+     * @param name The name parameter defines the charge of responsible of the project
+     */
+    public String addCharge (String name) {
+        assert !searchCharge(name) : "El Cargo ya existe";
+        String result = "El Cargo no se pudo registrar";
+        String queryCharge = "insert into Charge (nameCharge) values (?)";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceCharge = connection.prepareStatement(queryCharge);
+            sentenceCharge.setString(1,name);
+            sentenceCharge.executeUpdate();
+            result = "El cargo se registro con exito";
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return result;
+    }
+
+    /**
+     * Method to get for a charge
+     * @param name The name parameter defines the charge of responsible of the project
+     * @return The idCharge of the charge obtained
+     */
+    public int getCharge (String name) {
+        int idCharge = 0;
+        String queryCharge= "Select idCharge from Charge where nameCharge=?";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentence =connection.prepareStatement(queryCharge);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            idCharge = results.getInt("idCharge");
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
         return idCharge;
+    }
+
+    public boolean searchCharge (String name) {
+        boolean isCharge = false;
+        String queryCharge= "Select idCharge from Charge where nameCharge=?";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentence =connection.prepareStatement(queryCharge);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            if(results.next()){
+                isCharge=true;
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isCharge;
     }
 
     /**

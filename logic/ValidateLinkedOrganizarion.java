@@ -8,14 +8,14 @@ import java.util.regex.Pattern;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class ValidateLinkedOrganizarion {
+public class ValidateLinkedOrganizarion extends ValidateGeneral{
 
     /**
      * Method to validate name of Linked Organization
      * @param name The name parameter defines the name of the Linked Organization
      * @return If the name is valid
      */
-    public boolean validateNameLinked (String name) {
+    public boolean validateName (String name) {
         boolean result;
         Pattern pattern = Pattern
                 .compile("[A-Za-z]{3,50}");

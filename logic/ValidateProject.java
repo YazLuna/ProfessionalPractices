@@ -8,29 +8,14 @@ import java.util.regex.Pattern;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class ValidateProject {
-
-    /**
-     * Method to validate words
-     * @param words The words parameter defines the words
-     * @return If the words is valid
-     */
-    public boolean validateNotEmpty (String words) {
-        boolean result;
-        if(words.length()!=0){
-            result=true;
-        }else{
-            result=false;
-        }
-        return result;
-    }
+public class ValidateProject extends ValidateGeneral {
 
     /**
      * Method to validate name of Project
      * @param name The name parameter defines the name of the project
      * @return If the name is valid
      */
-    public boolean validateNameProject (String name) {
+    public boolean validateName (String name) {
         boolean result;
         Pattern pattern = Pattern
                 .compile("[A-Za-z]{8,25}");
@@ -38,22 +23,6 @@ public class ValidateProject {
         result = mather.find();
         return result;
     }
-
-    /**
-     * Method to delete space of words
-     * @param words The words parameter defines the works
-     * @return The words without spaces
-     */
-    public String deleteSpace (String words) {
-        if(words.length()>0) {
-            words = words.replaceAll("\\s+", " ");
-            if (words.charAt(words.length() - 1) == ' ') {
-                words = words.substring(0, words.length() - 1);
-            }
-        }
-        return words;
-    }
-
 
     /**
      * Method to validate methodology of Project
