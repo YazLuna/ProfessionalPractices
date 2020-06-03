@@ -177,10 +177,10 @@ public class ProjectDAOImpl implements IProjectDAO {
             idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         }
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        idResponsibleProject = responsibleImpl.getIdResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == 0) {
-            result = responsibleImpl.updateResponsibleProject(project.getResponsible());
-            idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+            result = responsibleImpl.addResponsibleProject(project.getResponsible());
+            idResponsibleProject = responsibleImpl.getIdResponsibleProject(project.getResponsible().getEmail());
         }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
@@ -268,9 +268,9 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
         
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        idResponsibleProject = responsibleImpl.getIdResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
-            result = responsibleImpl.actualizationResponsibleProject(project.getResponsible());
+            result = responsibleImpl.modifyResponsibleProject(project.getResponsible());
         }else{
             project.getResponsible().setIdResponsible(idResponsibleProject);
         }
