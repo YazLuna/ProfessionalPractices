@@ -7,8 +7,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +41,7 @@ public class FXMLGeneralController implements Initializable {
             stage.setResizable(false);
             stage.setScene(new Scene(root1));
             stage.show();
-        } catch(Exception e) {
+        } catch(IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
@@ -57,6 +61,11 @@ public class FXMLGeneralController implements Initializable {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
+    }
+
+    public void loadPicture() throws IOException {
+        Process p = new ProcessBuilder("explorer.exe", "/select,C:\\directory\\selectedFile").start();
+
     }
 
 
@@ -90,4 +99,17 @@ public class FXMLGeneralController implements Initializable {
         alert.setTitle("Information");
         alert.show();
     }
+
+    public void generateConfirmationCancel(String header,String title,String fxml,Button btnCancel){
+        Alert cancel = new Alert(Alert.AlertType.NONE);
+        cancel.setAlertType(Alert.AlertType.CONFIRMATION);
+        cancel.setHeaderText(header);
+        cancel.setTitle(title);
+        Optional<ButtonType> action = cancel.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            openWindowGeneral(fxml,btnCancel);
+        }
+    }
+
 }
+

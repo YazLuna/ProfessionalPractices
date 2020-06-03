@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.io.File;
 import java.sql.SQLException;
 
 /**
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 public interface IUserMethodDAO {
     int searchIdUser(String email, String alternateEmail, String phone) throws SQLException ;
     boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
-            , String userType, String status, int gender,String userName) throws SQLException ;
+            , String userType, String status, int gender, String userName, File image) throws SQLException ;
     int searchStaffNumberCoordinator(int staffNumberSearch)  throws SQLException ;
     int searchStaffNumberTeacher(int staffNumberSearch)  throws SQLException ;
     boolean searchLoginAccount(String userName, String password) throws SQLException;

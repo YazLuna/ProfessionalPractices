@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import domain.Coordinator;
+import javafx.scene.image.Image;
+
 
 /**
  * DAO User
@@ -33,7 +36,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         idUserStatus = searchIdUserStatus("Active");
         try {
             connection = connexion.getConnection();
-            String queryGetCoordinator = "SELECT * from Coordinator, User, UserType, UserStatus, User_UserStatus WHERE Coordinator.idUser="+
+            String queryGetCoordinator = "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,registrationDate from Coordinator, User, UserType, UserStatus, User_UserStatus WHERE Coordinator.idUser="+
                     "User.idUser AND User_UserStatus.idUser = User.idUser AND UserType.type='Coordinator'" +
                     " AND User_UserStatus.idUserStatus=?";
             PreparedStatement sentence = connection.prepareStatement(queryGetCoordinator);
@@ -48,6 +51,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                 coordinator.setPhone(result.getString("phone"));
                 coordinator.setStaffNumber(result.getInt("staffNumber"));
                 coordinator.setRegistrationDate(result.getString("registrationDate"));
+                File f = new File(String.valueOf(result.getBlob("profilePicture")));
+                coordinator.setProfilePicture(f);
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,7 +99,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         boolean result = false;
         int idUserStatus;
         idUserStatus = searchIdUserStatus(status);
-        if(idUserStatus==0){
+        if(idUserStatus == 0){
             addUserStatus(status);
             idUserStatus = searchIdUserStatus(status);
         }
@@ -155,7 +160,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             if(validationStaffNumber) {
                 addUserValidate = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(), coordinator.getAlternateEmail(),
                         coordinator.getPhone(), coordinator.getPassword(), coordinator.getUserType(),
-                        coordinator.getStatus(), coordinator.getGender(), coordinator.getUserName());
+                        coordinator.getStatus(), coordinator.getGender(), coordinator.getUserName(),coordinator.getProfilePicture());
+
                 if(addUserValidate){
                     validation = true;
                 }

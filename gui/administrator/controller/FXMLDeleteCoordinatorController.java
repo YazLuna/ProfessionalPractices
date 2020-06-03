@@ -13,6 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import gui.FXMLGeneralController;
 import domain.Coordinator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 
 public class FXMLDeleteCoordinatorController extends FXMLGeneralController implements Initializable {
     @FXML private Label lbName;
@@ -25,10 +28,15 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     @FXML private Label lbStaffNumber;
     @FXML private Button btnCancel;
     @FXML private Button btnDelete;
+    @FXML private ImageView imgCoordinator;
     Coordinator coordinator = new Coordinator();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        colocateCoordinator();
+    }
+
+    private void colocateCoordinator() {
         try {
             coordinator = coordinator.getCoordinator();
         } catch (SQLException exception) {

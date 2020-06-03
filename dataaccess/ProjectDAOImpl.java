@@ -170,6 +170,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idResponsibleProject;
         int idOrganization;
         int idLapse;
+        //int ORGANIZATION_NOT_EXIST = 0; O enumerator
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         if(idOrganization == 0) {
