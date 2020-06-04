@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import logic.ValidateDataPerson;
-import logic.ValidateLinkedOrganizarion;
+import logic.ValidateLinkedOrganization;
 import logic.ValidateProject;
 
 import java.net.URL;
@@ -46,7 +46,7 @@ public class FXMLUpdateLinkedOrganizationController implements Initializable {
     private List<String> allState = new ArrayList<>();
     private List<String> allSector = new ArrayList<>();
     private ValidateProject validateProject = new ValidateProject();
-    private ValidateLinkedOrganizarion validateOrganizarion = new ValidateLinkedOrganizarion();
+    private ValidateLinkedOrganization validateOrganizarion = new ValidateLinkedOrganization();
     private ValidateDataPerson validateDataPerson = new ValidateDataPerson();
     private static Project project;
 

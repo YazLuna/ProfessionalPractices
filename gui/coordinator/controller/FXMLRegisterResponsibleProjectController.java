@@ -1,15 +1,17 @@
 package gui.coordinator.controller;
 
-import domain.ResponsibleProject;
-import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import logic.ValidateDataPerson;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import gui.FXMLGeneralController;
+import domain.ResponsibleProject;
+import logic.ValidateDataPerson;
 
 public class FXMLRegisterResponsibleProjectController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnBehind;
@@ -38,11 +40,14 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     public void startComponent (){
         limitTextField(tfEmailResponsible,50);
         deleteSpacesTextField(tfEmailResponsible);
+
         limitTextField(tfNameResponsible,50);
         deleteNumberTextField(tfNameResponsible);
+
         limitTextField(tfLastNameResponsible,50);
         deleteNumberTextField(tfLastNameResponsible);
-        limitTextField(cbCharge.getEditor(),50);
+
+        limitTextField(cbCharge.getEditor(),70);
         deleteNumberTextField(cbCharge.getEditor());
     }
 
@@ -61,7 +66,12 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         }else{
             responsible = getDataResponsible();
             message = responsible.addResponsibleProject();
-            generateInformation(message);
+            if(message.equals("El responsable del proyecto se registro exitosamente")){
+                generateInformation(message);
+                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+            } else {
+                generateError(message);
+            }
         }
     }
 
