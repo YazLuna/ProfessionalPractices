@@ -83,7 +83,7 @@ public class AddTestProject {
         organization.setName("Dirección de Desarrollo Informático de Apoyo Académicos");
         organization.setEmail("acolunga@uv.mx");
         organization.setPhoneNumber("2281848962");
-        organization.setAddress("Circuito");
+        organization.setAddress("Circuito Aguirre Beltrán S/N");
         organization.setState("Veracruz");
         organization.setSector("Educativo");
         organization.setCity("Xalapa");

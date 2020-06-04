@@ -4,36 +4,24 @@ import gui.FXMLGeneralController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import domain.LinkedOrganization;
 import domain.ResponsibleProject;
 import domain.Project;
 import logic.ValidateDataPerson;
-import logic.ValidateLinkedOrganizarion;
+import logic.ValidateLinkedOrganization;
 import logic.ValidateProject;
 
 /**
@@ -78,7 +66,7 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     private Project project = new Project();
     private ResponsibleProject responsible = new ResponsibleProject();
     private ValidateProject validateProject = new ValidateProject();
-    private ValidateLinkedOrganizarion validateOrganizarion = new ValidateLinkedOrganizarion();
+    private ValidateLinkedOrganization validateOrganizarion = new ValidateLinkedOrganization();
     private ValidateDataPerson validateDataPerson = new ValidateDataPerson();
 
 

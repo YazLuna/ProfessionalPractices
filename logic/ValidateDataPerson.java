@@ -31,7 +31,7 @@ public class ValidateDataPerson extends ValidateGeneral {
     public boolean validateCharge (String charge) {
         boolean isValidCharge;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{6,25}");
+                .compile("[A-Za-z]{7,70}");
         Matcher mather = pattern.matcher(charge);
         isValidCharge = mather.find();
         return isValidCharge;

@@ -10,7 +10,12 @@ import java.io.IOException ;
 public class windowsMain extends Application {
     @Override
     public void start(Stage stageLogin) throws  IOException {
-        Parent rootLogin = FXMLLoader.load(getClass().getResource("/gui/login/FXMLLogin.fxml"));
+        /*Parent rootLogin = FXMLLoader.load(getClass().getResource("/gui/Coordinator/fxml/FXMLChooseSection.fxml"));
+        Scene sceneLogin = new Scene(rootLogin);
+        stageLogin.setScene(sceneLogin);
+        stageLogin.setResizable(false);
+        stageLogin.show();*/
+        Parent rootLogin = FXMLLoader.load(getClass().getResource("/gui/Coordinator/fxml/FXMLRegisterResponsibleProject.fxml"));
         Scene sceneLogin = new Scene(rootLogin);
         stageLogin.setScene(sceneLogin);
         stageLogin.setResizable(false);

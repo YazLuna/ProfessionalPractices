@@ -2,6 +2,8 @@ package dataaccess;
 
 import domain.ResponsibleProject;
 
+import java.util.List;
+
 /**
  * Interface of Responsible Project
  * @author MARTHA
@@ -11,6 +13,6 @@ public interface IResponsibleProjectDAO {
     public ResponsibleProject getResponsibleProject (int idResponsible);
     public String addResponsibleProject (ResponsibleProject responsible);
     public String modifyResponsibleProject (ResponsibleProject responsible);
-    public int getIdResponsibleProject(String email);
-    public boolean searchResponsibleProject (String email);
+    public int searchResponsibleProject(String email);
+    public List<String>  getAllResponsible();
 }

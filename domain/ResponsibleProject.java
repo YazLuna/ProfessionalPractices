@@ -1,7 +1,5 @@
 package domain;
 
-
-import dataaccess.ProjectDAOImpl;
 import dataaccess.ResponsibleProjectDAOImpl;
 import java.util.List;
 
@@ -73,7 +71,11 @@ public class ResponsibleProject{
     public String addResponsibleProject () {
         String result;
         ResponsibleProjectDAOImpl addResponsible = new ResponsibleProjectDAOImpl();
-        result = addResponsible.addResponsibleProject(this);
+        if(addResponsible.searchResponsibleProject(email) == Search.NOTFOUND.getValue()){
+            result = addResponsible.addResponsibleProject(this);
+        } else {
+            result = "Existe un responsable del proyecto con el mismo correo electrónico registrado";
+        }
         return result;
     }
     

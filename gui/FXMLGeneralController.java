@@ -11,7 +11,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextArea;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -20,13 +26,6 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextArea;
 
 /**
  * DAO User
@@ -82,7 +81,7 @@ public class FXMLGeneralController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.WARNING);
         alert.setHeaderText(message);
-        alert.setTitle("Warning");
+        alert.setTitle("Advertencia");
         alert.show();
     }
 
@@ -111,8 +110,8 @@ public class FXMLGeneralController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.INFORMATION);
         alert.setHeaderText(message);
-        alert.setTitle("Information");
-        alert.show();
+        alert.setTitle("Informacion");
+        alert.showAndWait();
     }
 
     public void generateCancel(String message, Button btnCancel, String fxml) {
