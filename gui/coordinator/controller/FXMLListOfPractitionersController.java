@@ -48,7 +48,7 @@ public class FXMLListOfPractitionersController implements Initializable {
                 try {
                     Stage stagePrincipal = (Stage) btnLogout.getScene().getWindow();
                     stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/FXMLLogin.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/fxml/FXMLLogin.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
                     Stage stage = new Stage();
                     stage.setResizable(false);

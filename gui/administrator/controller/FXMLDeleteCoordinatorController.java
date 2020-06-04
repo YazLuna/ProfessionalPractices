@@ -1,6 +1,5 @@
 package gui.administrator.controller;
 
-import domain.Gender;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import java.net.URL;
@@ -16,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import gui.FXMLGeneralController;
 import domain.Coordinator;
+import domain.Gender;
 
 
 public class FXMLDeleteCoordinatorController extends FXMLGeneralController implements Initializable {
@@ -72,11 +72,11 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
 
     public void delete() throws SQLException {
         boolean delete;
-        Date myDate = new Date();
-        boolean replyConfirmation = false;
+        Date actualDate = new Date();
+        boolean replyConfirmation;
         replyConfirmation= generateConfirmation("¿Seguro que desea eliminar el coordinador?");
         if(replyConfirmation){
-            coordinator.setDischargeDate(new SimpleDateFormat("yyyy-MM-dd").format(myDate));
+            coordinator.setDischargeDate(new SimpleDateFormat("yyyy-MM-dd").format(actualDate));
             delete = coordinator.deleteCoordinator("Inactive",coordinator.getDischargeDate());
             if(delete){
                 openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnDelete);

@@ -24,4 +24,6 @@ public interface IUserMethodDAO {
     int searchIdUserStatus(String status)  throws SQLException;
     boolean validateUser(String email, String alternateEmail, String phone, String userName) throws SQLException;
     int searchStaffNumber(int staffNumberSearch)  throws SQLException;
+   // boolean firstLogin(String userName, String password) throws SQLException;
+    //String searchUserTypeWithLoginAccount(String user, String password) throws SQLException;
 }

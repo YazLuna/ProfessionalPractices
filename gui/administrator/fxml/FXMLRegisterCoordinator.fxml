@@ -109,7 +109,7 @@
             <Font name="Arial" size="14.0"/>
          </font>
       </Label>
-      <TextField fx:id="tfPassword" layoutX="138.0" layoutY="8.0" prefHeight="25.0" prefWidth="208.0"/>
-      <TextField fx:id="tfUserName" layoutX="139.0" layoutY="41.0" prefHeight="25.0" prefWidth="208.0"/>
+      <TextField fx:id="tfUserName" layoutX="138.0" layoutY="8.0" prefHeight="25.0" prefWidth="208.0"/>
+      <TextField fx:id="tfPassword" layoutX="139.0" layoutY="41.0" prefHeight="25.0" prefWidth="208.0"/>
    </Pane>
 </AnchorPane>

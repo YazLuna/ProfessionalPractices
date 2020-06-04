@@ -7,7 +7,12 @@ import domain.Teacher;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import org.apache.commons.codec.binary.Hex;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AddTest {
 
@@ -59,5 +64,34 @@ public class AddTest {
         CoordinatorDAOImpl us = new CoordinatorDAOImpl();
         result=us.activeCoordinator();
         Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testEncryption() throws NoSuchAlgorithmException {
+        MessageDigest md = null;
+        String password = "Wigettaz4BTS";
+        md= MessageDigest.getInstance("SHA-512");
+        md.update(password.getBytes());
+        byte[] mb = md.digest();
+        System.out.println(Hex.encodeHex(mb));
+    }
+
+    @Test
+    public void password (){
+        String password = "123";
+            String passwordEncrypt= null;
+            try{
+                MessageDigest md;
+                md= MessageDigest.getInstance("SHA-512");
+                md.update(password.getBytes());
+                byte[] mb = md.digest();
+                passwordEncrypt= String.valueOf(Hex.encodeHex(mb));
+                System.out.println(passwordEncrypt);
+            }catch (NoSuchAlgorithmException e){
+                Logger logger = Logger.getLogger(getClass().getName());
+                logger.log(Level.SEVERE, "Failed to create an encrypt Password", e);
+            }
+
+
     }
 }

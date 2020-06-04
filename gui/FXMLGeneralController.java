@@ -11,10 +11,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
@@ -27,6 +28,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextArea;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * DAO User
@@ -49,7 +51,7 @@ public class FXMLGeneralController implements Initializable {
         try {
             Stage stagePrincipal = (Stage) btnLogOut.getScene().getWindow();
             stagePrincipal.close();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/FXMLLogin.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/fxml/FXMLLogin.fxml"));
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setResizable(false);
@@ -223,6 +225,21 @@ public class FXMLGeneralController implements Initializable {
             Image image = new Image("file:" + imgFile.getAbsolutePath());
             imgProfilePicture.setImage(image);
         }
+    }
+
+    public String encryptPassword(String password){
+        String passwordEncrypt= null;
+        try{
+            MessageDigest md;
+            md= MessageDigest.getInstance("SHA-512");
+            md.update(password.getBytes());
+            byte[] mb = md.digest();
+            passwordEncrypt= String.valueOf(Hex.encodeHex(mb));
+        }catch (NoSuchAlgorithmException e){
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create an encrypt Password", e);
+        }
+        return passwordEncrypt;
     }
 
 }

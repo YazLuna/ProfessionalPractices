@@ -35,7 +35,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         try {
             connection = connexion.getConnection();
             String queryUserName =
-                    "Select userName, password from LoginAccount where userName=? AND password=?";
+                    "Select userName, password, status from LoginAccount, UserStatus where LoginAccount.userName=? AND LoginAccount.password=?";
             PreparedStatement sentence = connection.prepareStatement(queryUserName);
             sentence.setString(1, userName);
             sentence.setString(2, password);
@@ -130,6 +130,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         }
         return userType;
     }
+
 
     @Override
     public void addUserStatus(String status)  throws SQLException {
@@ -357,11 +358,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     private void createLoginAccount(String userName, String password, int idUser) throws SQLException {
         try {
             connection = connexion.getConnection();
-            String queryAddUserType = "INSERT INTO LoginAccount (userName,password,idUser)  VALUES (?,?,?)";
+            String queryAddUserType = "INSERT INTO LoginAccount (userName,password,idUser,firstLogin)  VALUES (?,?,?,?)";
             PreparedStatement sentenceAddUserType = connection.prepareStatement(queryAddUserType);
             sentenceAddUserType.setString(1, userName);
             sentenceAddUserType.setString(2, password);
             sentenceAddUserType.setInt(3, idUser);
+            sentenceAddUserType.setInt(4,0);
             sentenceAddUserType.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
