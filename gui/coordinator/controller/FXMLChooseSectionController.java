@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -50,9 +51,8 @@ public class FXMLChooseSectionController implements Initializable {
                 try {
                     Parent root1 = (Parent) fxmlLoader.load();
                     stage.setScene(new Scene(root1));
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 stage.setResizable(false);
                 stage.show();

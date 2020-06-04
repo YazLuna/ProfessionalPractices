@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import logic.ValidateLinkedOrganizarion;
 import logic.ValidateProject;
 
 import java.net.URL;

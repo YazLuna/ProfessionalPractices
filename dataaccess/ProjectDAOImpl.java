@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Project;
+import domain.Search;
 
 
 /**
@@ -173,14 +174,14 @@ public class ProjectDAOImpl implements IProjectDAO {
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         if(idOrganization == 0) {
-            result = organizationImpl.updateLinkedOrganization(project.getOrganization());
+            result = organizationImpl.addLinkedOrganization(project.getOrganization());
             idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         }
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.getIdResponsibleProject(project.getResponsible().getEmail());
-        if(idResponsibleProject == 0) {
+        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        if(idResponsibleProject == Search.NOTFOUND.getValue()) {
             result = responsibleImpl.addResponsibleProject(project.getResponsible());
-            idResponsibleProject = responsibleImpl.getIdResponsibleProject(project.getResponsible().getEmail());
+            idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
         }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
@@ -262,13 +263,13 @@ public class ProjectDAOImpl implements IProjectDAO {
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         if(idOrganization == 0 || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
-            result = organizationImpl.actualizationOrganization(project.getOrganization());
+            result = organizationImpl.modifyLinkedOrganization(project.getOrganization());
         }else{
             project.getOrganization().setIdLinkedOrganization(idOrganization);
         }
         
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.getIdResponsibleProject(project.getResponsible().getEmail());
+        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
             result = responsibleImpl.modifyResponsibleProject(project.getResponsible());
         }else{

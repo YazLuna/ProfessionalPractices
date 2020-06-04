@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class ValidateLinkedOrganizarion extends ValidateGeneral{
+public class ValidateLinkedOrganization extends ValidateGeneral{
 
     /**
      * Method to validate name of Linked Organization
@@ -18,7 +18,7 @@ public class ValidateLinkedOrganizarion extends ValidateGeneral{
     public boolean validateName (String name) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{3,50}");
+                .compile("[A-Za-z]{9,100}");
         Matcher mather = pattern.matcher(name);
         result = mather.find();
         return result;
@@ -60,7 +60,7 @@ public class ValidateLinkedOrganizarion extends ValidateGeneral{
     public boolean validateComboBox (String comboBox) {
         boolean result;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{6,25}");
+                .compile("[A-Za-z]{6,30}");
         Matcher mather = pattern.matcher(comboBox);
         result = mather.find();
         return result;

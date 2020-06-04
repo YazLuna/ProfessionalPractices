@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.LinkedOrganization;
+import domain.Search;
 
 /**
  * Implementation of the IProjectDAO
@@ -34,25 +35,15 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The Linked Organization list
      */
     @Override
-    public List<LinkedOrganization> getAllLinkedOrganization () {
-        List<LinkedOrganization> linkedOrganizations = new ArrayList<>();
+    public List<String> getAllLinkedOrganization () {
+        List<String> linkedOrganizations = new ArrayList<>();
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
-            results = consultation.executeQuery("select * from LinkedOrganization inner join City on LinkedOrganization.idCity = City.idCyti inner join State LinkedOrganization.idState = State.idState inner join Sector on LinkedOrganization.idSector = Sector.idSector");
+            results = consultation.executeQuery("select name,email from LinkedOrganization");
             while(results.next()){
-                LinkedOrganization linkedOrganization = new LinkedOrganization();
-                linkedOrganization.setIdLinkedOrganization(results.getInt("idLinkedOrganization"));
-                linkedOrganization.setName(results.getString("name"));
-                linkedOrganization.setDirectUsers(results.getString("directUsers"));
-                linkedOrganization.setIndirectUsers(results.getString("indirectUsers"));
-                linkedOrganization.setEmail(results.getString("email"));
-                linkedOrganization.setPhoneNumber(results.getString("phoneNumber"));
-                linkedOrganization.setAddress(results.getString("address"));
-                linkedOrganization.setCity(results.getString("Cyti.nameCity"));
-                linkedOrganization.setState(results.getString("State.nameState"));
-                linkedOrganization.setSector(results.getString("Sector.nameSector"));
-                linkedOrganizations.add(linkedOrganization);
+                linkedOrganizations.add(results.getString("name"));
+                linkedOrganizations.add(results.getString("email"));
             }
         }catch (SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -102,26 +93,26 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The message if the Linked Organization was added
      */
     @Override
-    public String updateLinkedOrganization(LinkedOrganization organization) {
+    public String addLinkedOrganization(LinkedOrganization organization) {
         int idCity;
         int idState;
         int idSector;
-        String result = "Could not register the linked organization";
+        String result = "La organización vinculada no pudo registrarse";
         idState = searchState(organization.getState());
-        if(idState == 0){
-            updateState(organization.getState());
+        if(idState == Search.NOTFOUND.getValue()){
+            addState(organization.getState());
             idState = searchState(organization.getState());
         }
         
         idCity = searchCity(organization.getCity());
-        if(idCity == 0){
-            updateCity(organization.getCity());
+        if(idCity == Search.NOTFOUND.getValue()){
+            addCity(organization.getCity());
             idCity = searchCity(organization.getCity());
         }
         
         idSector = searchSector(organization.getSector());
-        if(idSector == 0){
-            updateSector(organization.getSector());
+        if(idSector == Search.NOTFOUND.getValue()){
+            addSector(organization.getSector());
             idSector = searchSector(organization.getSector());
         }
         
@@ -139,7 +130,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceOrganization.setInt(8,idState);
             sentenceOrganization.setInt(9,idSector);
             sentenceOrganization.executeUpdate();
-            result = "The linked organization was successfully registered";
+            result = "La organizacion vinculada se registro exitosamente";
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -154,26 +145,26 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The message if the Linked Organization was updated
      */
     @Override
-    public String actualizationOrganization (LinkedOrganization organization) {
+    public String modifyLinkedOrganization (LinkedOrganization organization) {
         int idState;
         int idCity;
         int idSector;
         String result = "Could not update linked organization";
         idState = searchState(organization.getState());
-        if(idState == 0){
-            updateState(organization.getState());
+        if(idState == Search.NOTFOUND.getValue()){
+            addState(organization.getState());
             idState = searchState(organization.getState());
         }
             
         idCity = searchCity(organization.getCity());
-        if(idCity == 0){
-            updateCity(organization.getCity());
+        if(idCity == Search.NOTFOUND.getValue()){
+            addCity(organization.getCity());
             idCity = searchCity(organization.getCity());
         }
             
         idSector = searchSector(organization.getSector());
-        if(idState == 0){
-            updateSector(organization.getSector());
+        if(idState == Search.NOTFOUND.getValue()){
+            addSector(organization.getSector());
             idSector = searchState(organization.getSector());
         }
         try{
@@ -232,7 +223,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * Method to add a City
      * @param name The name parameter defines the city of Linked Organization
      */
-    public void updateCity (String name) {
+    public void addCity(String name) {
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceCity = connection.prepareStatement("insert into City (nameCity) values (?)");
@@ -294,7 +285,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * Method to add a State
      * @param name The name parameter defines the state of Linked Organization
      */
-    public void updateState (String name) {
+    public void addState(String name) {
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceState = connection.prepareStatement("insert into State (nameState) values (?)");
@@ -356,7 +347,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * Method to add a Sector
      * @param name The name parameter defines the sector of Linked Organization
      */
-    public void updateSector (String name) {
+    public void addSector(String name) {
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceSector = connection.prepareStatement("insert into Sector (nameSector) values (?)");

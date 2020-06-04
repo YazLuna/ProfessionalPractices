@@ -9,9 +9,9 @@ import domain.LinkedOrganization;
  * @version 08/05/2020
  */
 public interface ILinkedOrganizationDAO {
-    public List<LinkedOrganization> getAllLinkedOrganization ();
+    public List<String> getAllLinkedOrganization ();
     public LinkedOrganization getLinkedOrganization (int idOrganization);
     public int searchLinkedOrganization (String name, String email);
-    public String updateLinkedOrganization (LinkedOrganization organization);
-    public String actualizationOrganization (LinkedOrganization organization);
+    public String addLinkedOrganization (LinkedOrganization organization);
+    public String modifyLinkedOrganization (LinkedOrganization organization);
 }
