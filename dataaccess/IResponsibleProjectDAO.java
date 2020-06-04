@@ -13,6 +13,6 @@ public interface IResponsibleProjectDAO {
     public ResponsibleProject getResponsibleProject (int idResponsible);
     public String addResponsibleProject (ResponsibleProject responsible);
     public String modifyResponsibleProject (ResponsibleProject responsible);
-    public int searchResponsibleProject(String email);
+    public int searchIdResponsibleProject(String email);
     public List<String>  getAllResponsible();
 }

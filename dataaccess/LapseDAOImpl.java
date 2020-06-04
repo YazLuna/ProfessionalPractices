@@ -33,7 +33,7 @@ public class LapseDAOImpl implements ILapseDAO {
      * @param lapse The lapse parameter defines the period of the semester
      */
     @Override
-    public void updateLapse (String lapse) {
+    public void addLapse(String lapse) {
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceLapse = connection.prepareStatement("insert into Lapse (lapse) values (?)");
