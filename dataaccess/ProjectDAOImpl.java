@@ -178,15 +178,15 @@ public class ProjectDAOImpl implements IProjectDAO {
             idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
         }
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == Search.NOTFOUND.getValue()) {
             result = responsibleImpl.addResponsibleProject(project.getResponsible());
-            idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+            idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
         }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
         if(idLapse == 0) {
-            lapse.updateLapse(project.getLapse());
+            lapse.addLapse(project.getLapse());
             idLapse=lapse.searchLapse(project.getLapse());
         }
 
@@ -269,7 +269,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
         
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchResponsibleProject(project.getResponsible().getEmail());
+        idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
         if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
             result = responsibleImpl.modifyResponsibleProject(project.getResponsible());
         }else{
@@ -278,7 +278,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
         if(idLapse==0){
-            lapse.updateLapse(project.getLapse());
+            lapse.addLapse(project.getLapse());
             idLapse=lapse.searchLapse(project.getLapse());
         }
         try{

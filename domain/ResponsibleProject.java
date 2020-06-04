@@ -71,7 +71,7 @@ public class ResponsibleProject{
     public String addResponsibleProject () {
         String result;
         ResponsibleProjectDAOImpl addResponsible = new ResponsibleProjectDAOImpl();
-        if(addResponsible.searchResponsibleProject(email) == Search.NOTFOUND.getValue()){
+        if(addResponsible.searchIdResponsibleProject(email) == Search.NOTFOUND.getValue()){
             result = addResponsible.addResponsibleProject(this);
         } else {
             result = "Existe un responsable del proyecto con el mismo correo electrónico registrado";
