@@ -64,7 +64,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         LinkedOrganization linkedOrganization = null;
         try{
             connection = connexion.getConnection();
-            String queryLikendOrganization = "select * from LinkedOrganization inner join City on LinkedOrganization.idCity = City.idCity inner join State on LinkedOrganization.idState = State.idState inner join Sector on LinkedOrganization.idSector = Sector.idSector where idLinkedOrganization =?";
+            String queryLikendOrganization = "select * from LinkedOrganization inner join City on LinkedOrganization.idCity = City.idCity inner join " +
+                    "State on LinkedOrganization.idState = State.idState inner join Sector on LinkedOrganization.idSector = Sector.idSector where idLinkedOrganization =?";
             PreparedStatement sentence = connection.prepareStatement(queryLikendOrganization);
             sentence.setInt(1,idOrganization);
             results= sentence.executeQuery();
@@ -94,32 +95,37 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      */
     @Override
     public String addLinkedOrganization(LinkedOrganization organization) {
-        int idCity;
+        String result = "La organizacion vinculada no pudo registrarse";
         int idState;
-        int idSector;
-        String result = "La organización vinculada no pudo registrarse";
-        idState = searchState(organization.getState());
+        idState = searchIdState(organization.getState());
         if(idState == Search.NOTFOUND.getValue()){
             addState(organization.getState());
-            idState = searchState(organization.getState());
+            idState = searchIdState(organization.getState());
         }
-        
-        idCity = searchCity(organization.getCity());
+        int idCity;
+        idCity = searchIdCity(organization.getCity());
         if(idCity == Search.NOTFOUND.getValue()){
             addCity(organization.getCity());
-            idCity = searchCity(organization.getCity());
+            idCity = searchIdCity(organization.getCity());
         }
-        
-        idSector = searchSector(organization.getSector());
+        int idSector;
+        idSector = searchIdSector(organization.getSector());
         if(idSector == Search.NOTFOUND.getValue()){
             addSector(organization.getSector());
-            idSector = searchSector(organization.getSector());
+            idSector = searchIdSector(organization.getSector());
+        }
+        int idStatus;
+        StatusDAOImpl status = new StatusDAOImpl();
+        idStatus = status.searchIdStatus(organization.getStatus());
+        if(idStatus == Search.NOTFOUND.getValue()){
+            status.addStatus(organization.getStatus());
+            idStatus = status.searchIdStatus(organization.getStatus());
         }
         
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceOrganization = connection.prepareStatement("insert into LinkedOrganization(name,"+
-                    "directUsers,indirectUsers,email,phoneNumber,address,idCity,idState,idSector) values (?,?,?,?,?,?,?,?,?)");
+                    "directUsers,indirectUsers,email,phoneNumber,address,idCity,idState,idSector,idStatus) values (?,?,?,?,?,?,?,?,?,?)");
             sentenceOrganization.setString(1,organization.getName());
             sentenceOrganization.setString(2,organization.getDirectUsers());
             sentenceOrganization.setString(3,organization.getIndirectUsers());
@@ -129,6 +135,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceOrganization.setInt(7,idCity);
             sentenceOrganization.setInt(8,idState);
             sentenceOrganization.setInt(9,idSector);
+            sentenceOrganization.setInt(10,idStatus);
             sentenceOrganization.executeUpdate();
             result = "La organizacion vinculada se registro exitosamente";
         }catch(SQLException ex){
@@ -150,22 +157,22 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         int idCity;
         int idSector;
         String result = "Could not update linked organization";
-        idState = searchState(organization.getState());
+        idState = searchIdState(organization.getState());
         if(idState == Search.NOTFOUND.getValue()){
             addState(organization.getState());
-            idState = searchState(organization.getState());
+            idState = searchIdState(organization.getState());
         }
             
-        idCity = searchCity(organization.getCity());
+        idCity = searchIdCity(organization.getCity());
         if(idCity == Search.NOTFOUND.getValue()){
             addCity(organization.getCity());
-            idCity = searchCity(organization.getCity());
+            idCity = searchIdCity(organization.getCity());
         }
             
-        idSector = searchSector(organization.getSector());
+        idSector = searchIdSector(organization.getSector());
         if(idState == Search.NOTFOUND.getValue()){
             addSector(organization.getSector());
-            idSector = searchState(organization.getSector());
+            idSector = searchIdState(organization.getSector());
         }
         try{
             connection = connexion.getConnection();
@@ -199,14 +206,15 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The idLinkedOrganization of the searched email and name
      */
     @Override
-    public int searchLinkedOrganization (String name, String email) {
-        int idLinkedOrganization=0;
+    public int searchIdLinkedOrganization (String name, String email, String phoneNumber) {
+        int idLinkedOrganization = Search.NOTFOUND.getValue();
+        String queryOrganization= "Select idLinkedOrganization from LinkedOrganization where name=? or email=? or phoneNumber=?";
         try{
             connection = connexion.getConnection();
-            String queryOrganization= "Select idLinkedOrganization from LinkedOrganization where name=? or email=?";
             PreparedStatement sentence =connection.prepareStatement(queryOrganization);
             sentence.setString(1,name);
             sentence.setString(2,email);
+            sentence.setString(3, phoneNumber);
             results= sentence.executeQuery();
             while(results.next()){
                 idLinkedOrganization =results.getInt("idLinkedOrganization");
@@ -241,8 +249,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @param name The name parameter defines the city of linked organization
      * @return The idCity of the searched city
      */
-    public int searchCity (String name) {
-        int idCity=0;
+    public int searchIdCity(String name) {
+        int idCity = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String queryCity= "Select idCity from City where nameCity=?";
@@ -250,7 +258,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setString(1,name);
             results= sentence.executeQuery();
             while(results.next()){
-                idCity =results.getInt("nameCity");
+                idCity =results.getInt("idCity");
             }
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -303,8 +311,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @param name The name parameter defines the state of linked organization
      * @return The idState of the searched state
      */
-    public int searchState (String name) {
-        int idState=0;
+    public int searchIdState(String name) {
+        int idState = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String queryState= "Select idState from State where nameState=?";
@@ -365,8 +373,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @param name The name parameter defines the sector of linked organization
      * @return The idSector of the searched sector
      */
-    public int searchSector (String name) {
-        int idSector=0;
+    public int searchIdSector(String name) {
+        int idSector = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String querySector= "Select idSector from Sector where nameSector=?";

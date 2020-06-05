@@ -41,7 +41,8 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         ResponsibleProject responsible = null;     
         try{
             connection = connexion.getConnection();
-            String query= "Select * from ResponsibleProject inner join Charge on ResponsibleProject.idCharge = Charge.idCharge where email=?";
+            String query= "Select * from ResponsibleProject inner join Charge on ResponsibleProject.idCharge = Charge.idCharge inner join Status on " +
+                    "ResponsibleProject.idStatus = Status.idStatus where email=?";
             PreparedStatement sentence =connection.prepareStatement(query);
             sentence.setInt(1,idResponsible);
             results= sentence.executeQuery();
@@ -69,22 +70,29 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      */
     @Override
     public String addResponsibleProject (ResponsibleProject responsible) {
+        int idStatus;
+        StatusDAOImpl status = new StatusDAOImpl();
+        idStatus = status.searchIdStatus(responsible.getStatus());
+        if(idStatus == Search.NOTFOUND.getValue()){
+            status.addStatus(responsible.getStatus());
+            idStatus = status.searchIdStatus(responsible.getStatus());
+        }
         int idCharge;
         String result = "El responsable del proyecto no pudo registrarse";
-        idCharge = searchCharge(responsible.getCharge());
+        idCharge = searchIdCharge(responsible.getCharge());
         if(idCharge == Search.NOTFOUND.getValue()){
             addCharge(responsible.getCharge());
-            idCharge = searchCharge(responsible.getCharge());
+            idCharge = searchIdCharge(responsible.getCharge());
         }
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceOrganization = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,status,idCharge) values(?,?,?,?,?)");
-            sentenceOrganization.setString(1,responsible.getName());
-            sentenceOrganization.setString(2,responsible.getLastName());
-            sentenceOrganization.setString(3,responsible.getEmail());
-            sentenceOrganization.setString(4, responsible.getStatus());
-            sentenceOrganization.setInt(5,idCharge);
-            sentenceOrganization.executeUpdate();
+            PreparedStatement sentenceResponsible = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,idStatus,idCharge) values(?,?,?,?,?)");
+            sentenceResponsible.setString(1,responsible.getName());
+            sentenceResponsible.setString(2,responsible.getLastName());
+            sentenceResponsible.setString(3,responsible.getEmail());
+            sentenceResponsible.setInt(4, idStatus);
+            sentenceResponsible.setInt(5,idCharge);
+            sentenceResponsible.executeUpdate();
             result = "El responsable del proyecto se registro exitosamente";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,10 +111,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     public String modifyResponsibleProject (ResponsibleProject responsible) {
         int idCharge;
         String result = "El responsable del proyecto no pudo modificarse";
-        idCharge = searchCharge(responsible.getCharge());
+        idCharge = searchIdCharge(responsible.getCharge());
         if(idCharge == Search.NOTFOUND.getValue()){
             addCharge(responsible.getCharge());
-            idCharge = searchCharge(responsible.getCharge());
+            idCharge = searchIdCharge(responsible.getCharge());
         }
         String queryResponsible = "update ResponsibleProject set name=?, lastName=?, email=?, idCharge=? where idResponsibleProject=?";
         try{
@@ -153,8 +161,8 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      * @return The idResponsibleProject of the searched email
      */
     @Override
-    public int searchResponsibleProject (String email) {
-        int idResponsibleProject=0;
+    public int searchIdResponsibleProject (String email) {
+        int idResponsibleProject= Search.NOTFOUND.getValue();;
         try{
             connection = connexion.getConnection();
             String queryResponsible= "Select idResponsibleProject from ResponsibleProject where email=?";
@@ -199,8 +207,8 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      * @param name The name parameter defines the charge of responsible of the project
      * @return The idCharge of the charge searched
      */
-    public int searchCharge (String name) {
-        int idCharge = 0;
+    public int searchIdCharge(String name) {
+        int idCharge = Search.NOTFOUND.getValue();;
         String queryCharge= "Select idCharge from Charge where nameCharge=?";
         try{
             connection = connexion.getConnection();

@@ -8,7 +8,7 @@ import java.util.List;
  * @version 08/05/2020
  */
 public interface ILapseDAO {
-    public void updateLapse (String lapse);
+    public void addLapse(String lapse);
     public int searchLapse (String lapse);
     public List<String> getAllLapse ();
 }

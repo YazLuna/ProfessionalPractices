@@ -2,7 +2,6 @@ package domain;
 
 import java.util.List;
 import dataaccess.LinkedOrganizationDAOImpl;
-import dataaccess.ResponsibleProjectDAOImpl;
 
 public class LinkedOrganization{
     private String name;
@@ -18,7 +17,7 @@ public class LinkedOrganization{
     private int idLinkedOrganization;
     
     public LinkedOrganization () {
-        this.status="available";
+        this.status = "available";
     }
     
     public String getName () {
@@ -127,10 +126,10 @@ public class LinkedOrganization{
     public String addLinkedOrganization () {
         String result;
         LinkedOrganizationDAOImpl addOrganization = new LinkedOrganizationDAOImpl();
-        if(addOrganization.searchLinkedOrganization(name,email) == Search.NOTFOUND.getValue()){
+        if(addOrganization.searchIdLinkedOrganization(name,email,phoneNumber) == Search.NOTFOUND.getValue()){
             result = addOrganization.addLinkedOrganization(this);
         } else {
-            result = "Existe una organizacion vinculada con el mismo nombre o correo registrado";
+            result = "Existe una organizacion vinculada con el mismo nombre, correo o telefono registrado";
         }
         return result;
     }
