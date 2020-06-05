@@ -4,117 +4,142 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import domain.Search;
+
+/**
+ * LoginAccountImpl
+ * @author Yazmin
+ * @version 04/06/2020
+ */
 
 public class LoginAccountImpl implements ILoginAccount{
     private final Connexion connexion;
     private Connection connection;
     private ResultSet result;
+    private PreparedStatement sentence;
 
     public LoginAccountImpl() {
         connexion = new Connexion();
     }
 
     @Override
-    public String searchUserTypeWithLoginAccount(String user, String password) throws SQLException {
-        String userType= null;
+    public List<String> searchUserTypeWithLoginAccount(String user, String password) {
+        List<String> type = new ArrayList<>();
         try {
             connection = connexion.getConnection();
-            String queryUserType = "Select type from UserType,LoginAccount,User where LoginAccount.idUser=User.idUser AND LoginAccount.userName=? AND LoginAccount.password=?";
-            PreparedStatement sentence = connection.prepareStatement(queryUserType);
+            String queryUserType = "Select type from UserType,LoginAccount,User_UserType where User_UserType.idUserType=UserType.idUserType AND" +
+                    " User_UserType.idUser=LoginAccount.idUser AND LoginAccount.userName=? AND LoginAccount.password=?";
+            sentence = connection.prepareStatement(queryUserType);
             sentence.setString(1, user);
             sentence.setString(2,password);
             result = sentence.executeQuery();
             while (result.next()) {
-                userType = result.getString("type");
+                type.add(result.getString("type"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            connection.close();
+            connexion.closeConnection();
         }
-        return userType;
+        return type;
     }
 
     @Override
-    public boolean firstLogin(String userName, String password) throws SQLException{
+    public boolean firstLogin(String userName, String password) {
         boolean search = false;
-        String userNameFound ;
-        String passwordFound;
         try {
             connection = connexion.getConnection();
-            String queryUserName =
-                    "Select userName, password, status from LoginAccount, UserStatus where LoginAccount.userName=? AND LoginAccount.password=? AND UserStatus.status=? AND LoginAccount.firstLogin=?";
-            PreparedStatement sentence = connection.prepareStatement(queryUserName);
+            String queryFirstLogin =
+                    "Select userName, password, status from LoginAccount, Status where LoginAccount.userName=? AND" +
+                            " LoginAccount.password=? AND Status.status=? AND LoginAccount.firstLogin=?";
+            sentence = connection.prepareStatement(queryFirstLogin);
             sentence.setString(1, userName);
             sentence.setString(2, password);
             sentence.setString(3,"Active");
-            sentence.setInt(4,0);
+            sentence.setInt(4, Search.NOTFOUND.getValue());
             result = sentence.executeQuery();
             while (result.next()) {
-                userNameFound = result.getString("userName");
-                userNameFound = result.getString("password");
                 search = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
-            connection.close();
+            connexion.closeConnection();
         }
         return search;
     }
 
     @Override
-    public boolean searchLoginAccount(String userName, String password) throws SQLException{
+    public boolean searchLoginAccount(String userName, String password) {
         boolean search = false;
-        String userNameFound ;
-        String passwordFound;
         try {
             connection = connexion.getConnection();
-            String queryUserName =
-                    "Select userName, password, status from LoginAccount, UserStatus where LoginAccount.userName=? AND LoginAccount.password=? AND UserStatus.status=?";
-            PreparedStatement sentence = connection.prepareStatement(queryUserName);
+            String querySearchLoginAccount = "Select userName, password, status from LoginAccount, Status where LoginAccount.userName=? AND " +
+                            "LoginAccount.password=? AND Status.status=?";
+            sentence = connection.prepareStatement(querySearchLoginAccount);
             sentence.setString(1, userName);
             sentence.setString(2, password);
             sentence.setString(3,"Active");
             result = sentence.executeQuery();
             while (result.next()) {
-                userNameFound = result.getString("userName");
-                userNameFound = result.getString("password");
                 search = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
-            connection.close();
+            connexion.closeConnection();
         }
         return search;
     }
 
     @Override
-    public boolean updateLoginAccount(String userNamePrevious, String passwordPrevious, String passwordNew, String userNameNew) throws SQLException{
+    public boolean updateLoginAccount(String userNamePrevious, String passwordPrevious, String passwordNew, String userNameNew){
         boolean update = false;
+        boolean userExist = searchUserName(userNameNew);
         try {
-            connection = connexion.getConnection();
-            String queryUserName =
-                    "update userName, password from LoginAccount SET userName=?, password=?, firstLogin=? where userName=? AND password=? ";
-            PreparedStatement sentence = connection.prepareStatement(queryUserName);
-            sentence.setString(1, userNameNew);
-            sentence.setString(2, passwordNew);
-            sentence.setInt(3,1);
-            sentence.setString(4,userNamePrevious);
-            sentence.setString(5,passwordPrevious);
-            result = sentence.executeQuery();
-            while (result.next()) {
+            if(!userExist){
+                connection = connexion.getConnection();
+                String queryUpdateLoginAccount=
+                        "update LoginAccount SET userName=?, password=?, firstLogin=? where userName=? AND password=? ";
+                sentence = connection.prepareStatement(queryUpdateLoginAccount);
+                sentence.setString(1, userNameNew);
+                sentence.setString(2, passwordNew);
+                sentence.setInt(3,Search.FOUND.getValue());
+                sentence.setString(4,userNamePrevious);
+                sentence.setString(5,passwordPrevious);
+                sentence.executeUpdate();
                 update=true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
-            connection.close();
+            connexion.closeConnection();
         }
         return update;
+    }
+
+    @Override
+    public boolean searchUserName(String userName){
+        boolean search = false;
+        try {
+            connection = connexion.getConnection();
+            String queryUserName = "Select userName from LoginAccount where userName=?";
+            sentence = connection.prepareStatement(queryUserName);
+            sentence.setString(1, userName);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                search = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connexion.closeConnection();
+        }
+        return search;
     }
 
 }

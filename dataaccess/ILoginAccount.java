@@ -1,13 +1,17 @@
 package dataaccess;
 
-import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * ILoginAccount
+ * @author Yazmin
+ * @version 04/06/2020
+ */
 
 public interface ILoginAccount {
-    public boolean firstLogin(String userName, String password) throws SQLException;
-
-    public String searchUserTypeWithLoginAccount(String user, String password) throws SQLException;
-
-    public boolean searchLoginAccount(String userName, String password) throws SQLException;
-
-    public boolean updateLoginAccount(String userNamePrevious, String passwordPrevious, String passwordNew, String userNameNew) throws SQLException;
+    boolean firstLogin(String userName, String password);
+    List<String> searchUserTypeWithLoginAccount(String user, String password);
+    boolean searchLoginAccount(String userName, String password);
+    boolean updateLoginAccount(String userNamePrevious, String passwordPrevious, String passwordNew, String userNameNew);
+    boolean searchUserName(String userName);
 }

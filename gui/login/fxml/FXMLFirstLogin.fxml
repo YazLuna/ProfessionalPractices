@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import java.net.URL?>
 
-<AnchorPane id="AnchorPane" prefHeight="290.0" prefWidth="475.0" styleClass="mainFxmlClass"
+<AnchorPane id="AnchorPane" prefHeight="333.0" prefWidth="475.0" styleClass="mainFxmlClass"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gui.login.controller.FXMLFirstLoginController">
    <stylesheets>
@@ -30,7 +30,7 @@
          </font>
       </Button>
    </Pane>
-   <Button fx:id="btnSaveChanges" layoutX="278.0" layoutY="231.0" mnemonicParsing="false" onAction="#saveChanges"
+   <Button fx:id="btnSaveChanges" layoutX="279.0" layoutY="292.0" mnemonicParsing="false" onAction="#saveChanges"
            prefHeight="27.0" prefWidth="169.0" style="-fx-background-color: #053d01;" text="Guardar Cambios"
            textFill="WHITE">
       <font>
@@ -52,4 +52,10 @@
       <Image url="@../../images/LogoSystem.png"/>
    </ImageView>
    <TextField fx:id="tfPassword" layoutX="194.0" layoutY="189.0" prefHeight="25.0" prefWidth="169.0"/>
+   <TextField fx:id="tfPasswordConfirm" layoutX="194.0" layoutY="250.0" prefHeight="25.0" prefWidth="169.0"/>
+   <Label layoutX="194.0" layoutY="227.0" text="Confirme su nueva Contraseña">
+      <font>
+         <Font name="Arial" size="15.0"/>
+      </font>
+   </Label>
 </AnchorPane>
