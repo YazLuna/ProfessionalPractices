@@ -58,40 +58,40 @@ public class Coordinator extends User{
         return result;
     }
 
-     public boolean deleteCoordinator(String status, String dischargeDate) throws SQLException {
+     public boolean deleteCoordinator(String status, String dischargeDate) {
          CoordinatorDAOImpl deleteCoordinator = new CoordinatorDAOImpl();
          boolean result;
          result = deleteCoordinator.deleteCoordinator(status, dischargeDate);
          return result;
      }
 
-     public Coordinator getCoordinator() throws SQLException {
+     public Coordinator getCoordinator() {
          CoordinatorDAOImpl getCoordinator = new CoordinatorDAOImpl();
          Coordinator coordinator ;
          coordinator = getCoordinator.getCoordinator();
          return coordinator;
      }
 
-    public List<Coordinator> getAllCoordinator() throws SQLException {
+    public List<Coordinator> getAllCoordinator() {
         CoordinatorDAOImpl getAllCoordinator = new CoordinatorDAOImpl();
         List<Coordinator> coordinators;
         coordinators = getAllCoordinator.getAllCoordinator();
         return coordinators;
     }
 
-    public boolean recoverCoordinator() throws SQLException {
+    public boolean recoverCoordinator() {
         CoordinatorDAOImpl recoverCoordinator = new CoordinatorDAOImpl();
         boolean result;
         result = recoverCoordinator.recoverCoordinator(this);
         return result;
     }
 
-    public Project getProject (String name)  throws SQLException{
+    public Project getProject (String name) {
         ProjectDAOImpl getProject = new ProjectDAOImpl();
         return getProject.getProject(name);
     }
 
-    public boolean activeCoordinator() throws SQLException {
+    public boolean activeCoordinator() {
         CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
         boolean result;
         result = activeCoordinator.activeCoordinator();

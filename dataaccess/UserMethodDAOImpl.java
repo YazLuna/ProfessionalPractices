@@ -35,7 +35,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         try {
             connection = connexion.getConnection();
             String queryUserName =
-                    "Select userName, password, status from LoginAccount, UserStatus where LoginAccount.userName=? AND LoginAccount.password=?";
+                    "Select userName, password, status from LoginAccount, Status where LoginAccount.userName=? AND LoginAccount.password=?";
             PreparedStatement sentence = connection.prepareStatement(queryUserName);
             sentence.setString(1, userName);
             sentence.setString(2, password);
@@ -133,26 +133,26 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 
 
     @Override
-    public void addUserStatus(String status)  throws SQLException {
+    public void addUserStatus(String status)  {
         try {
             connection = connexion.getConnection();
-            String queryAddUserStatus = "INSERT INTO UserStatus (status)  VALUES (?)";
+            String queryAddUserStatus = "INSERT INTO Status (status)  VALUES (?)";
             PreparedStatement sentenceAddUserStatus = connection.prepareStatement(queryAddUserStatus);
             sentenceAddUserStatus.setString(1, status);
             sentenceAddUserStatus.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
-            connection.close();
+            connexion.closeConnection();
         }
     }
 
     @Override
-    public int searchIdUserStatus(String status) throws SQLException {
+    public int searchIdUserStatus(String status) {
         int idUserStatus = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
-            String queryUserStatus = "Select idUserStatus from UserStatus where status =?";
+            String queryUserStatus = "Select idStatus from Status where status =?";
             PreparedStatement sentence = connection.prepareStatement(queryUserStatus);
             sentence.setString(1, status);
             result = sentence.executeQuery();
@@ -162,7 +162,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            connection.close();
+            connexion.closeConnection();
         }
         return idUserStatus;
     }
@@ -343,7 +343,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     private void addUserUserStatus(int idUserAdd, int idUserStatus) throws SQLException{
         try {
             connection = connexion.getConnection();
-            String queryAddUserUserStatus = "INSERT INTO User_UserStatus (idUser, idUserStatus)  VALUES (?,?)";
+            String queryAddUserUserStatus = "INSERT INTO User_UserStatus (idUser, idStatus)  VALUES (?,?)";
             PreparedStatement sentenceAddUserUserStatus = connection.prepareStatement(queryAddUserUserStatus);
             sentenceAddUserUserStatus.setInt(1, idUserAdd);
             sentenceAddUserUserStatus.setInt(2, idUserStatus);

@@ -7,11 +7,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import gui.FXMLGeneralController;
 import domain.Coordinator;
@@ -38,11 +35,7 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     }
 
     private void colocateCoordinator() {
-        try {
             coordinator = coordinator.getCoordinator();
-        } catch (SQLException exception) {
-            Logger.getLogger(FXMLDeleteCoordinatorController.class.getName()).log(Level.SEVERE, null, exception);
-        }
         lbName.setText(coordinator.getName());
         lbLastName.setText(coordinator.getLastName());
         lbEmail.setText(coordinator.getEmail());

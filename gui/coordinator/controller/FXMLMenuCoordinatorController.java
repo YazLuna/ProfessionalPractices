@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,6 +15,15 @@ import gui.FXMLGeneralController;
  */
 
 public class FXMLMenuCoordinatorController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnRegisterGroup;
+    @FXML private Button btnUpdateGroup;
+    @FXML private Button btnAssignProject;
+    @FXML private Button btnUpdateLinkedOrganization;
+    @FXML private Button btnDeleteLinkedOrganization;
+    @FXML private Button btnRegisterLinkedOrganization;
+    @FXML private Button btnUpdateResponsible;
+    @FXML private Button btnDeleteResponsible;
+    @FXML private Button btnRegisterResponsible;
     @FXML private Button btnListPractitioner;
     @FXML private Button btnListProject;
     @FXML private Button btnRegisterPractitioner;
@@ -22,7 +32,6 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     @FXML private Button btnDeleteProject;
     @FXML private Button btnUpdatePractitioner;
     @FXML private Button btnUpdateProject;
-    @FXML private Button btnAssignProject;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -75,4 +84,35 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
         openWindowGeneral("/gui/coordinator/fxml/FXMLChooseProject.fxml",btnListProject);
     }
 
+    public void registerLinkedOrganization() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterLinkedOrganization.fxml",btnRegisterLinkedOrganization);
+    }
+
+    public void deleteLinkedOrganization() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteLinkedOrganization.fxml",btnDeleteLinkedOrganization);
+    }
+
+    public void updateLinkedOrganization() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateLinkedOrganization.fxml",btnUpdateLinkedOrganization);
+    }
+
+    public void updateGroup() {
+        //openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterGroup.fxml",btnUpdateGroup);
+    }
+
+    public void registerGroup() {
+        //openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterGroup.fxml",btnRegisterGroup);
+    }
+
+    public void updateResponsible() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateResponsibleProject.fxml",btnUpdateResponsible);
+    }
+
+    public void registerReponsible() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterResponsibleProject.fxml",btnUpdateResponsible);
+    }
+
+    public void deleteResponsible() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteResponsibleProject.fxml",btnUpdateResponsible);
+    }
 }

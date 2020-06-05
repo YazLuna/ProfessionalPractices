@@ -1,6 +1,5 @@
 package dataaccess;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,14 +11,12 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Coordinator;
 import domain.Search;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 
 /**
  * DAO User
  * @author Yazmin
- * @version 17/05/2020
+ * @version 04/06/2020
  */
 
 public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinatorDAO {
@@ -32,15 +29,14 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     }
 
     @Override
-    public Coordinator getCoordinator() throws SQLException {
+    public Coordinator getCoordinator() {
         Coordinator coordinator = new Coordinator();
-        int idUserStatus;
-        idUserStatus = searchIdUserStatus("Active");
+        int idUserStatus = searchIdUserStatus("Active");
         try {
             connection = connexion.getConnection();
-            String queryGetCoordinator = "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,registrationDate from Coordinator, User, UserType, UserStatus, User_UserStatus WHERE Coordinator.idUser="+
-                    "User.idUser AND User_UserStatus.idUser = User.idUser AND UserType.type='Coordinator'" +
-                    " AND User_UserStatus.idUserStatus=?";
+            String queryGetCoordinator = "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,registrationDate from Coordinator, User" +
+                    ", UserType, UserStatus, User_UserStatus WHERE Coordinator.idUser=User.idUser AND User_UserStatus.idUser = User.idUser AND" +
+                    " UserType.type='Coordinator' AND User_UserStatus.idUserStatus=?";
             PreparedStatement sentence = connection.prepareStatement(queryGetCoordinator);
             sentence.setInt(1,idUserStatus);
             result = sentence.executeQuery();
@@ -57,11 +53,13 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return coordinator;
     }
 
-    @Override
+    @Override //aun no
     public boolean updateCoordinator(int staffNumber, Coordinator coordinatorEdit) throws SQLException {
         boolean result = false;
         boolean validate;
@@ -98,13 +96,13 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     @Override
     public boolean deleteCoordinator(String status, String dischargeDate) {
         boolean result = false;
-        int idUserStatus;
+        StatusDAOImpl statusDao = new StatusDAOImpl();
+        int idUserStatus = statusDao.searchIdStatus(status);
+        if(idUserStatus == Search.NOTFOUND.getValue()){
+            statusDao.addStatus(status);
+            idUserStatus = statusDao.searchIdStatus(status);
+        }
         try {
-            idUserStatus = searchIdUserStatus(status);
-            if(idUserStatus == Search.NOTFOUND.getValue()){
-                addUserStatus(status);
-                idUserStatus = searchIdUserStatus(status);
-            }
             connection = connexion.getConnection();
             PreparedStatement sentenceDeleteCoordinator =
                     connection.prepareStatement("UPDATE Coordinator, User, User_UserStatus SET User_UserStatus.idUserStatus=?" +
@@ -115,6 +113,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             result = true;
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return result;
     }
@@ -138,6 +138,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                     resultAdd = true;
                 } catch (SQLException ex) {
                     Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    connexion.closeConnection();
                 }
         }
         return resultAdd;
@@ -162,7 +164,6 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                 addUserValidate = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(), coordinator.getAlternateEmail(),
                         coordinator.getPhone(), coordinator.getPassword(), coordinator.getUserType(),
                         coordinator.getStatus(), coordinator.getGender(), coordinator.getUserName(),coordinator.getProfilePicture());
-
                 if(addUserValidate){
                     validation = true;
                 }
@@ -192,41 +193,37 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     }
 
     @Override
-    public List<Coordinator> getAllCoordinator() throws SQLException {
+    public List<Coordinator> getAllCoordinator() {
         List<Coordinator> coordinators = new ArrayList<>();
         try {
             connection = connexion.getConnection();
             Statement consult = connection.createStatement();
-            result = consult.executeQuery("Select * from Coordinator INNER JOIN User ON Coordinator.idUser =" +
+            result = consult.executeQuery("Select name, lastName,staffNumber from Coordinator INNER JOIN User ON Coordinator.idUser =" +
                     " User.idUser");
             while (result.next()) {
                 Coordinator coordinator = new Coordinator();
                 coordinator.setName(result.getString("name"));
                 coordinator.setLastName(result.getString("lastName"));
-                coordinator.setGender(result.getInt("gender"));
-                coordinator.setEmail(result.getString("email"));
-                coordinator.setAlternateEmail(result.getString("alternateEmail"));
-                coordinator.setPhone(result.getString("phone"));
                 coordinator.setStaffNumber(result.getInt("staffNumber"));
-                coordinator.setRegistrationDate(result.getString("registrationDate"));
-                coordinator.setDischargeDate(result.getString("dischargeDate"));
                 coordinators.add(coordinator);
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return coordinators;
     }
 
     @Override
-    public boolean recoverCoordinator(Coordinator coordinator) throws SQLException {
+    public boolean recoverCoordinator(Coordinator coordinator) {
         boolean result = false;
-        int idUserStatus;
            if(coordinator.getCoordinator().getStaffNumber() == Search.NOTFOUND.getValue()){
-                idUserStatus = searchIdUserStatus(coordinator.getStatus());
-                if(idUserStatus == 0 ){
-                    addUserStatus(coordinator.getStatus());
-                    idUserStatus = searchIdUserStatus(coordinator.getStatus());
+                StatusDAOImpl statusDao = new StatusDAOImpl();
+                int idUserStatus = statusDao.searchIdStatus(coordinator.getStatus());
+                if(idUserStatus == Search.NOTFOUND.getValue() ){
+                    statusDao.addStatus(coordinator.getStatus());
+                    idUserStatus = statusDao.searchIdStatus(coordinator.getStatus());
                 }
                 try {
                     connection = connexion.getConnection();
@@ -241,13 +238,15 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                     result = true;
                 } catch (SQLException ex) {
                     Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    connexion.closeConnection();
                 }
-            }
+           }
            return result;
     }
 
     @Override
-    public boolean activeCoordinator() throws SQLException {
+    public boolean activeCoordinator() {
         boolean isActive = false;
         int idUserStatus;
         idUserStatus = searchIdUserStatus("Active");
@@ -264,6 +263,8 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             }
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return isActive;
     }
