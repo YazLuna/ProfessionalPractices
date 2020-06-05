@@ -20,18 +20,18 @@
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TextArea?>
 
-<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="593.0" style="-fx-background-color: #ffffff;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLRegisterProjectController">
+<AnchorPane id="AnchorPane" prefHeight="909.0" prefWidth="593.0" style="-fx-background-color: #ffffff;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLRegisterProjectController">
     <stylesheets>
         <URL value="@../../fxmlregister.css" />
     </stylesheets>
    <children>
-      <ScrollPane prefHeight="554.0" prefWidth="593.0">
+      <ScrollPane prefHeight="872.0" prefWidth="593.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="578.0" style="-fx-background-color: #ffffff;">
                <children>
                   <VBox fx:id="vData" alignment="TOP_CENTER" layoutY="-1.0" spacing="25.0">
                      <children>
-                        <FlowPane hgap="100.0" style="-fx-background-color: #053d01;">
+                        <FlowPane hgap="90.0" style="-fx-background-color: #053d01;">
                            <children>
                               <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
                                  <graphic>
@@ -45,9 +45,9 @@
                                     <Insets left="30.0" top="20.0" />
                                  </FlowPane.margin>
                               </Button>
-                              <Label text="Register Project" textAlignment="CENTER" textFill="WHITE">
+                              <Label text="Registrar Proyecto" textAlignment="CENTER" textFill="WHITE">
                                  <FlowPane.margin>
-                                    <Insets top="15.0" />
+                                    <Insets top="20.0" />
                                  </FlowPane.margin>
                                  <font>
                                     <Font name="Arial" size="28.0" />
@@ -58,197 +58,6 @@
                               <Insets bottom="30.0" />
                            </padding>
                         </FlowPane>
-                        <Label text="Data of the linked organization" textAlignment="CENTER" textFill="#0e005e">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                        </Label>
-                        <FlowPane alignment="CENTER" hgap="5.0">
-                           <children>
-                              <Label text="Choose a linked organization: ">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="cbOrganization" prefHeight="27.0" prefWidth="234.0" />
-                           </children>
-                        </FlowPane>
-                        <GridPane prefHeight="346.0" prefWidth="365.0" vgap="10.0">
-                          <columnConstraints>
-                            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" maxWidth="271.0" minWidth="10.0" prefWidth="230.0" />
-                            <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="263.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Name:  " textAlignment="RIGHT">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label text="Direct Users:  " textAlignment="RIGHT" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label text="Indirect Users:  " textAlignment="RIGHT" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="28.0" prefWidth="48.0" text="Email: " textAlignment="RIGHT" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="28.0" prefWidth="109.0" text="Phone number: " textAlignment="RIGHT" GridPane.rowIndex="4">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="28.0" prefWidth="58.0" text="Adress:" textAlignment="RIGHT" GridPane.rowIndex="5">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="28.0" prefWidth="44.0" text="State:" textAlignment="RIGHT" GridPane.rowIndex="6">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="28.0" prefWidth="36.0" text="City: " textAlignment="RIGHT" GridPane.rowIndex="7">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="28.0" prefWidth="52.0" text="Sector: " textAlignment="RIGHT" GridPane.rowIndex="8">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="tfNameOrganization" prefHeight="27.0" prefWidth="221.0" GridPane.columnIndex="1">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="tfEmailOrganization" prefHeight="23.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="tfPhoneNumber" alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="tfAdress" prefHeight="25.0" prefWidth="218.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <ComboBox fx:id="cbState" editable="true" prefHeight="27.0" prefWidth="175.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                              <ComboBox fx:id="cbCity" editable="true" prefHeight="27.0" prefWidth="176.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                              <ComboBox fx:id="cbSector" editable="true" prefHeight="27.0" prefWidth="175.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                              <TextField fx:id="tfDirectUsers" prefHeight="27.0" prefWidth="221.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="tfIndirectUsers" prefHeight="27.0" prefWidth="219.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                           </children>
-                        </GridPane>
-                        <Label text="Data of the responsible of the project" textFill="#0e005e">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                        </Label>
-                        <FlowPane alignment="CENTER" hgap="5.0">
-                           <children>
-                              <Label text="Choose the responsible of the project: ">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="cbResponsibleProject" prefHeight="27.0" prefWidth="225.0" />
-                           </children>
-                        </FlowPane>
-                        <GridPane vgap="10.0">
-                          <columnConstraints>
-                            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="281.0" minWidth="0.0" prefWidth="230.0" />
-                            <ColumnConstraints fillWidth="false" maxWidth="375.0" minWidth="10.0" prefWidth="356.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label prefHeight="21.0" prefWidth="52.0" text="Name:" textAlignment="RIGHT">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="21.0" prefWidth="81.0" text="Last Name: " textAlignment="RIGHT" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="21.0" prefWidth="45.0" text="Email:" textAlignment="RIGHT" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="21.0" prefWidth="57.0" text="Charge:" textAlignment="RIGHT" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="tfLastNameResponsible" minWidth="-Infinity" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="tfEmailResponsible" minWidth="-Infinity" prefHeight="27.0" prefWidth="232.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                              <ComboBox fx:id="cbCharge" editable="true" prefHeight="27.0" prefWidth="176.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <TextField fx:id="tfNameResponsible" minWidth="-Infinity" prefHeight="27.0" prefWidth="159.0" GridPane.columnIndex="1">
-                                 <font>
-                                    <Font name="Arial" size="15.0" />
-                                 </font>
-                              </TextField>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="5.0" />
-                           </VBox.margin>
-                        </GridPane>
-                        <Label text="Project data" textFill="#0e005e">
-                           <font>
-                              <Font name="Arial" size="22.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="3.0" />
-                           </VBox.margin>
-                        </Label>
                         <GridPane vgap="15.0">
                           <columnConstraints>
                             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="304.0" minWidth="10.0" prefWidth="235.0" />
@@ -274,7 +83,7 @@
                                     <Font name="Arial" size="15.0" />
                                  </font>
                               </TextField>
-                              <Label prefHeight="17.0" prefWidth="56.0" text="Name:  " textAlignment="RIGHT" GridPane.halignment="RIGHT">
+                              <Label prefHeight="17.0" text="Nombre: *  " textAlignment="RIGHT" GridPane.halignment="RIGHT">
                                  <font>
                                     <Font name="Arial" size="15.0" />
                                  </font>
@@ -387,6 +196,34 @@
                               <ComboBox fx:id="cbLapse" editable="true" prefHeight="25.0" prefWidth="212.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                            </children>
                         </GridPane>
+                        <FlowPane alignment="CENTER" hgap="5.0">
+                           <children>
+                              <Label text="Choose a linked organization: ">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cbOrganization" prefHeight="27.0" prefWidth="234.0" />
+                           </children>
+                        </FlowPane>
+                        <Label text="Data of the responsible of the project" textFill="#0e005e">
+                           <font>
+                              <Font name="Arial" size="22.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <FlowPane alignment="CENTER" hgap="5.0">
+                           <children>
+                              <Label text="Choose the responsible of the project: ">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cbResponsibleProject" prefHeight="27.0" prefWidth="225.0" />
+                           </children>
+                        </FlowPane>
                         <Label text="Scheduling of activities" textFill="#0e005e">
                            <VBox.margin>
                               <Insets top="5.0" />

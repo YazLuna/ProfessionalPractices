@@ -62,4 +62,18 @@ public class ValidateGeneral {
         isValidEmail = mather.find();
         return isValidEmail;
     }
+
+    /**
+     * Method to validate phone Number
+     * @param phoneNumber The phoneNumber parameter defines the phoneNumber
+     * @return If the phoneNumber is valid
+     */
+    public boolean validatePhoneNumber (String phoneNumber) {
+        boolean isValidPhoneNumber;
+        Pattern pattern = Pattern
+                .compile("[0-9]{10}");
+        Matcher mather = pattern.matcher(phoneNumber);
+        isValidPhoneNumber = mather.find();
+        return isValidPhoneNumber;
+    }
 }
