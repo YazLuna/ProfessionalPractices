@@ -177,8 +177,24 @@ public class FXMLGeneralController implements Initializable {
                 if (newValue.matches("^\\s")) {
                     textField.setText(newValue.replaceAll("[\\s]", ""));
                 } else {
-                    if (!newValue.matches("[A-Za-z_\\s]")) {
-                        textField.setText(newValue.replaceAll("[^A-Za-z_\\s]", ""));
+                    if (!newValue.matches("[A-Za-z_\\s_ñ_á_é_í_ú_ó]")) {
+                        textField.setText(newValue.replaceAll("[^A-Za-z_\\s_ñ_á_é_í_ú_ó]", ""));
+                    }
+                }
+            }
+        });
+    }
+
+    public static void deleteNumberInWorksTextField(TextField textField) {
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (newValue.matches("^\\s")) {
+                    textField.setText(newValue.replaceAll("[\\s]", ""));
+                } else {
+                    if (!newValue.matches("[A-Za-z_\\s_,_ñ_á_é_í_ú_ó]")) {
+                        textField.setText(newValue.replaceAll("[^A-Za-z_\\s_,_ñ_á_é_í_ú_ó]", ""));
                     }
                 }
             }

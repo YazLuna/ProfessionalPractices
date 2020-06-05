@@ -11,7 +11,7 @@ import domain.LinkedOrganization;
 public interface ILinkedOrganizationDAO {
     public List<String> getAllLinkedOrganization ();
     public LinkedOrganization getLinkedOrganization (int idOrganization);
-    public int searchLinkedOrganization (String name, String email);
+    public int searchIdLinkedOrganization (String name, String email, String phoneNumber);
     public String addLinkedOrganization (LinkedOrganization organization);
     public String modifyLinkedOrganization (LinkedOrganization organization);
 }

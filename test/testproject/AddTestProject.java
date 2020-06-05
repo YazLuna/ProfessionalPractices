@@ -88,7 +88,7 @@ public class AddTestProject {
         organization.setSector("Educativo");
         organization.setCity("Xalapa");
         project.setOrganization(organization);
-        responsible.setName("Gustavo Antonio");
+        responsible.setName("Gustavo Antonio, ");
         responsible.setLastName("Ruiz Zapata");
         responsible.setEmail("guruiz@uv.mx");
         responsible.setCharge("Jefe de departamento de Tecnología Educativa");

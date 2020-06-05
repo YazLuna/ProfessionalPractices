@@ -48,10 +48,10 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         deleteNumberTextField(tfNameOrganization);
 
         limitTextField(tfIndirectUsers,100);
-        deleteNumberTextField(tfIndirectUsers);
+        deleteNumberInWorksTextField(tfIndirectUsers);
 
         limitTextField(tfDirectUsers,100);
-        deleteNumberTextField(tfDirectUsers);
+        deleteNumberInWorksTextField(tfDirectUsers);
 
         limitTextField(cbSector.getEditor(),30);
         deleteNumberTextField(cbSector.getEditor());
@@ -65,7 +65,7 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         limitTextField(tfEmailOrganization,50);
         deleteSpacesTextField(tfEmailOrganization);
 
-        limitTextField(tfAddress,50);
+        limitTextField(tfAddress,100);
         deleteSpacesTextField(tfAddress);
 
         limitTextField(tfPhoneNumber,10);
@@ -95,7 +95,7 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         }else{
             organization = getDataOrganization();
             message = organization.addLinkedOrganization();
-            if(message.equals("La organización vinculada se registro exitosamente")){
+            if(message.equals("La organizacion vinculada se registro exitosamente")){
                 generateInformation(message);
                 openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
             } else {
@@ -111,8 +111,11 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         organization.setDirectUsers(validateDataOrganization.deleteSpace(tfDirectUsers.getText()));
         organization.setIndirectUsers(validateDataOrganization.deleteSpace(tfIndirectUsers.getText()));
         organization.setEmail(tfEmailOrganization.getText());
-        organization.setEmail(tfPhoneNumber.getText());
+        organization.setPhoneNumber(tfPhoneNumber.getText());
+        organization.setAddress(validateDataOrganization.deleteSpace(tfAddress.getText()));
         organization.setCity(validateDataOrganization.deleteSpace(cbCity.getEditor().getText()));
+        organization.setSector(validateDataOrganization.deleteSpace(cbSector.getEditor().getText()));
+        organization.setState(validateDataOrganization.deleteSpace(cbState.getEditor().getText()));
         return organization;
     }
 
@@ -131,7 +134,7 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
 
         tfDirectUsers.getStyleClass().remove("error");
         tfDirectUsers.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateNotEmpty(tfDirectUsers.getText())){
+        if(!validateDataOrganization.validateUsersOrganization(tfDirectUsers.getText())){
             tfDirectUsers.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
@@ -140,7 +143,7 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
 
         tfIndirectUsers.getStyleClass().remove("error");
         tfIndirectUsers.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateNotEmpty(tfIndirectUsers.getText())){
+        if(!validateDataOrganization.validateUsersOrganization(tfIndirectUsers.getText())){
             tfIndirectUsers.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {

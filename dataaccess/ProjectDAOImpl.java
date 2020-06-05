@@ -172,10 +172,10 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idOrganization;
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
-        idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
+        idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(), project.getOrganization().getPhoneNumber());
         if(idOrganization == 0) {
             result = organizationImpl.addLinkedOrganization(project.getOrganization());
-            idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
+            idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
         }
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
         idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
@@ -261,7 +261,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idOrganization;
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
-        idOrganization = organizationImpl.searchLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail());
+        idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
         if(idOrganization == 0 || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
             result = organizationImpl.modifyLinkedOrganization(project.getOrganization());
         }else{

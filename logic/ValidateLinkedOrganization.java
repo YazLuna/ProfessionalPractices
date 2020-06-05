@@ -16,27 +16,15 @@ public class ValidateLinkedOrganization extends ValidateGeneral{
      * @return If the name is valid
      */
     public boolean validateName (String name) {
-        boolean result;
+        boolean isValidName;
         Pattern pattern = Pattern
                 .compile("[A-Za-z]{9,100}");
         Matcher mather = pattern.matcher(name);
-        result = mather.find();
-        return result;
+        isValidName = mather.find();
+        return isValidName;
     }
 
-    /**
-     * Method to validate phone Number of Linked Organization
-     * @param phoneNumber The phoneNumber parameter defines the phoneNumber of the Linked Organization
-     * @return If the phoneNumber is valid
-     */
-    public boolean validatePhoneNumber (String phoneNumber) {
-        boolean result;
-        Pattern pattern = Pattern
-                .compile("[0-9]{10}");
-        Matcher mather = pattern.matcher(phoneNumber);
-        result = mather.find();
-        return result;
-    }
+
 
     /**
      * Method to validate address of Linked Organization
@@ -44,12 +32,12 @@ public class ValidateLinkedOrganization extends ValidateGeneral{
      * @return If the address is valid
      */
     public boolean validateAddress (String address) {
-        boolean result;
+        boolean isValidAddress;
         Pattern pattern = Pattern
-                .compile("[A-Za-z_0-9_\\s]{15,50}");
+                .compile("[A-Za-z_0-9_\\s]{15,100}");
         Matcher mather = pattern.matcher(address);
-        result = mather.find();
-        return result;
+        isValidAddress = mather.find();
+        return isValidAddress;
     }
 
     /**
@@ -58,26 +46,31 @@ public class ValidateLinkedOrganization extends ValidateGeneral{
      * @return If the comboBox is valid
      */
     public boolean validateComboBox (String comboBox) {
-        boolean result;
+        boolean isValidComboBox;
         Pattern pattern = Pattern
                 .compile("[A-Za-z]{6,30}");
         Matcher mather = pattern.matcher(comboBox);
-        result = mather.find();
-        return result;
+        isValidComboBox = mather.find();
+        return isValidComboBox;
     }
 
     /**
      * Method to validate number Users of Linked Organization
-     * @param numberUsers The numberUsers parameter defines the number Users of the Linked Organization
+     * @param usersOrganization The numberUsers parameter defines the number Users of the Linked Organization
      * @return If the number Users is valid
      */
-    public boolean validateNumberUsers (int numberUsers) {
-        boolean result=true;
-        if(numberUsers != 0 && numberUsers > 3){
-            result = true;
-        }else {
-            result = false;
+    public boolean validateUsersOrganization (String usersOrganization) {
+        boolean isUserOrganization;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z_,]{6,100}");
+        Matcher mather = pattern.matcher(usersOrganization);
+        isUserOrganization = mather.find();
+        if(!isUserOrganization){
+            Pattern patternUsersFinal = Pattern
+                    .compile("[A-Za-z]{6,100}");
+            Matcher matherFinal = patternUsersFinal.matcher(usersOrganization);
+            isUserOrganization = matherFinal.find();
         }
-        return result;
+        return isUserOrganization;
     }
 }

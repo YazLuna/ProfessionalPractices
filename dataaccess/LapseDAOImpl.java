@@ -1,5 +1,7 @@
 package dataaccess;
 
+import domain.Search;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,7 +54,7 @@ public class LapseDAOImpl implements ILapseDAO {
      * @return The idLapse of the searched lapse
      */
     public int searchLapse (String lapse) {
-        int idLapse=0;
+        int idLapse = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String queryLapse= "Select idLapse from Lapse where lapse=?";

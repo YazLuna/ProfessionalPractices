@@ -86,13 +86,13 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         }
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceOrganization = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,idStatus,idCharge) values(?,?,?,?,?)");
-            sentenceOrganization.setString(1,responsible.getName());
-            sentenceOrganization.setString(2,responsible.getLastName());
-            sentenceOrganization.setString(3,responsible.getEmail());
-            sentenceOrganization.setInt(4, idStatus);
-            sentenceOrganization.setInt(5,idCharge);
-            sentenceOrganization.executeUpdate();
+            PreparedStatement sentenceResponsible = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,idStatus,idCharge) values(?,?,?,?,?)");
+            sentenceResponsible.setString(1,responsible.getName());
+            sentenceResponsible.setString(2,responsible.getLastName());
+            sentenceResponsible.setString(3,responsible.getEmail());
+            sentenceResponsible.setInt(4, idStatus);
+            sentenceResponsible.setInt(5,idCharge);
+            sentenceResponsible.executeUpdate();
             result = "El responsable del proyecto se registro exitosamente";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
