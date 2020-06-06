@@ -75,7 +75,6 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
     private void openMenu(String user, String password) {
         LoginAccountImpl newLogin = new LoginAccountImpl();
         List<String> userTypes=newLogin.searchUserTypeWithLoginAccount(user,password);
-        System.out.println(userTypes.size());
         if(userTypes.size() == 1){
             String userType= userTypes.get(0);
             switch (userType){

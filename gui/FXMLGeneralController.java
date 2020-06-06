@@ -84,7 +84,7 @@ public class FXMLGeneralController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.WARNING);
         alert.setHeaderText(message);
-        alert.setTitle("Warning");
+        alert.setTitle("Advertencia");
         alert.show();
     }
 
@@ -113,7 +113,7 @@ public class FXMLGeneralController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.INFORMATION);
         alert.setHeaderText(message);
-        alert.setTitle("Information");
+        alert.setTitle("Información");
         alert.show();
     }
 

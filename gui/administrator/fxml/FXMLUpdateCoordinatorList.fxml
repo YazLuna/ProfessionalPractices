@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,44 +7,45 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 
-<AnchorPane prefHeight="443.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.administrator.controller.FXMLUpdateCoordinatorListController">
-   <children>
-       <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #707070;" text="Regresar" textFill="WHITE">
-           <font>
-               <Font name="Arial Bold" size="12.0" />
-           </font>
-       </Button>
-       <Button fx:id="btnUpdate" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#updateCoordinator" style="-fx-background-color: #cc2d2d;" text="Modificar" textFill="WHITE">
-           <font>
-               <Font name="Arial Bold" size="12.0" />
-           </font>
-       </Button>
-       <Pane layoutX="-2.0" prefHeight="66.0" prefWidth="604.0" style="-fx-background-color: #053d01;">
-          <children>
-              <Label layoutX="173.0" layoutY="14.0" text="Lista de Coordinadores" textFill="WHITE">
-                  <font>
-                      <Font name="System Bold" size="24.0" />
-                  </font>
-              </Label>
-              <ImageView fitHeight="35.0" fitWidth="40.0" layoutX="458.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
-                 <image>
-                     <Image url="@../../images/LogOut.png" />
-                 </image>
-              </ImageView>
-              <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOut" prefHeight="23.0" prefWidth="99.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
-                  <font>
-                      <Font name="Arial" size="12.0" />
-                  </font>
-              </Button>
-          </children>
-       </Pane>
-      <TableView layoutX="40.0" layoutY="90.0" prefHeight="268.0" prefWidth="521.0">
+<AnchorPane prefHeight="443.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.administrator.controller.FXMLUpdateCoordinatorListController">
+    <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#cancel"
+            style="-fx-background-color: #707070;" text="Regresar" textFill="WHITE">
+        <font>
+            <Font name="Arial Bold" size="12.0"/>
+        </font>
+    </Button>
+    <Button fx:id="btnUpdate" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#updateCoordinator"
+            style="-fx-background-color: #cc2d2d;" text="Modificar" textFill="WHITE">
+        <font>
+            <Font name="Arial Bold" size="12.0"/>
+        </font>
+    </Button>
+    <Pane layoutX="-2.0" prefHeight="66.0" prefWidth="604.0" style="-fx-background-color: #053d01;">
+        <Label layoutX="173.0" layoutY="14.0" text="Lista de Coordinadores" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Label>
+        <ImageView fitHeight="35.0" fitWidth="40.0" layoutX="458.0" layoutY="17.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <Image url="@../../images/LogOut.png"/>
+        </ImageView>
+        <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOut"
+                prefHeight="23.0" prefWidth="99.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
+            <font>
+                <Font name="Arial" size="12.0"/>
+            </font>
+        </Button>
+    </Pane>
+    <TableView fx:id="tableCoordinators" layoutX="69.0" layoutY="88.0" prefHeight="268.0" prefWidth="462.0">
         <columns>
-          <TableColumn prefWidth="109.0" text="No. Personal" />
-          <TableColumn prefWidth="216.0" text="Nombres" />
-            <TableColumn prefWidth="195.0" text="Apellidos" />
+            <TableColumn fx:id="noPersonal" prefWidth="109.0" text="No. Personal"/>
+            <TableColumn fx:id="name" prefWidth="167.0" text="Nombres"/>
+            <TableColumn fx:id="lastName" prefWidth="185.0" text="Apellidos"/>
         </columns>
-      </TableView>
-   </children>
+    </TableView>
 </AnchorPane>

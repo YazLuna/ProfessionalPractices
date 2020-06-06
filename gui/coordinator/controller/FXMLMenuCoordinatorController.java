@@ -113,6 +113,8 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void deleteResponsible() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteResponsibleProject.fxml",btnUpdateResponsible);
+        openWindowGeneral("/gui/coordinator/fxml/FXMLDelete" +
+                "" +
+                "ResponsibleProject.fxml",btnUpdateResponsible);
     }
 }

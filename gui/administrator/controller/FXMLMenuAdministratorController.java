@@ -1,7 +1,6 @@
 package gui.administrator.controller;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +27,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
         logOutGeneral();
     }
 
-    public void registerCoordinator() throws SQLException {
+    public void registerCoordinator() {
         boolean isActive;
         Coordinator coordinator = new Coordinator();
         isActive = coordinator.activeCoordinator();
@@ -39,7 +38,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
         }
     }
 
-    public void deleteCoordinator() throws SQLException {
+    public void deleteCoordinator()  {
         boolean isActive;
         Coordinator coordinator = new Coordinator();
         isActive = coordinator.activeCoordinator();
@@ -51,7 +50,23 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
     }
 
     public void updateCoordinator() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml",btnUpdateCoordinator);
+        Coordinator coordinator = new Coordinator();
+        boolean areCoordinator = coordinator.areCoordinator();
+        if(areCoordinator){
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml",btnUpdateCoordinator);
+        }else{
+            generateError("No hay ningún coordinador registrado");
+        }
+    }
+
+    public void listCoordinator() {
+        Coordinator coordinator = new Coordinator();
+        boolean areCoordinator = coordinator.areCoordinator();
+        if(areCoordinator){
+            openWindowGeneral("/gui/administrator/fxml/FXMLListCoordinator.fxml",btnListCoordinator);
+        }else{
+            generateError("No hay ningún coordinador registrado");
+        }
     }
 
     public void registerTeacher() {
@@ -64,9 +79,6 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     public void updateTeacher() {
         openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
-    }
-
-    public void listCoordinator() {
     }
 
     public void listTeacher() {

@@ -3,7 +3,6 @@ package gui.administrator.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import java.net.URL;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -27,7 +26,7 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     @FXML private Button btnCancel;
     @FXML private Button btnDelete;
     @FXML private ImageView imgCoordinator;
-    Coordinator coordinator = new Coordinator();
+    private Coordinator coordinator = new Coordinator();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -63,7 +62,7 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
         openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
     }
 
-    public void delete() throws SQLException {
+    public void delete()  {
         boolean delete;
         Date actualDate = new Date();
         boolean replyConfirmation;

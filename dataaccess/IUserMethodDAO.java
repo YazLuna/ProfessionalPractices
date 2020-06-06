@@ -1,10 +1,6 @@
 package dataaccess;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 import java.io.File;
-import java.sql.SQLException;
 
 /**
  * DAO User
@@ -13,15 +9,12 @@ import java.sql.SQLException;
  */
 
 public interface IUserMethodDAO {
-    int searchIdUser(String email, String alternateEmail, String phone) throws SQLException ;
+    int searchIdUser(String email, String alternateEmail, String phone)  ;
     boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
-            , String userType, String status, int gender, String userName, File image) throws SQLException ;
-    int searchStaffNumberCoordinator(int staffNumberSearch)  throws SQLException ;
-    int searchStaffNumberTeacher(int staffNumberSearch)  throws SQLException ;
-    boolean searchLoginAccount(String userName, String password) throws SQLException;
-    String searchUserType(int idUser) throws SQLException;
-    void addUserStatus(String status)  throws SQLException ;
-    int searchIdUserStatus(String status)  throws SQLException;
-    boolean validateUser(String email, String alternateEmail, String phone, String userName) throws SQLException;
-    int searchStaffNumber(int staffNumberSearch)  throws SQLException;
+            , String userType, String status, int gender, String userName, File image) ;
+    int searchStaffNumberCoordinator(int staffNumberSearch)  ;
+    int searchStaffNumberTeacher(int staffNumberSearch) ;
+    int searchIdUserStatus(String status);
+    boolean validateUser(String email, String alternateEmail, String phone, String userName);
+    int searchStaffNumber(int staffNumberSearch) ;
 }

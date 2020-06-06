@@ -2,6 +2,7 @@ package gui.administrator.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -22,7 +23,7 @@ import domain.Gender;
  * @version 03/06/2020
  */
 
-public class FXMLRegisterCoordinatorController extends FXMLGeneralController implements Initializable  {
+public class FXMLUpdateCoordinatorController extends FXMLGeneralController implements Initializable  {
     public ImageView imgProfilePicture;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
@@ -30,18 +31,18 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     @FXML private TextField tfEmail;
     @FXML private TextField tfAlternateEmail;
     @FXML private TextField tfPhone;
-    @FXML private TextField tfUserName;
-    @FXML private TextField tfPassword;
     @FXML private RadioButton rbMale;
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
-    @FXML private Button btnRegister;
+    @FXML private Button btnUpdate;
     private File imgFile;
+    public static int staffNumber;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setLimitsTextFields();
+        colocateCoordinator();
     }
 
     public void logOut() {
@@ -49,25 +50,31 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     }
 
     public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml");
     }
 
     public void loadProfilePicture() {
         loadImage();
     }
 
-    public void register() {
+    public void update(){
+        boolean validate;
+        boolean registerComplete;
         removeStyle();
-        boolean validate = validate();
+        validate = validate();
         if(validate){
-            Coordinator coordinator = new Coordinator();
-            createObjectCoordinator(coordinator);
-            boolean registerComplete = coordinator.addCoordinator();
+            boolean confirm = generateConfirmation("¿Seguro que desea modificar el Coordinador?");
+            if(confirm){
+                Coordinator coordinator = new Coordinator();
+                createObjectCoordinator(coordinator);
+            /*registerComplete = coordinator.addCoordinator();
             if(registerComplete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
                 generateInformation("Registro Exitoso");
             }else{
                 generateError("Este coordinador ya esta registrado");
+            }*/
+                System.out.println("Ya es válido");
             }
         }
     }
@@ -78,9 +85,28 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         limitTextField(tfEmail,50);
         limitTextField(tfAlternateEmail,50);
         limitTextField(tfPhone,10);
-        limitTextField(tfUserName,50);
-        limitTextField(tfPassword,20);
         limitTextField(tfStaffNumber,10);
+    }
+
+    private void colocateCoordinator() {
+        Coordinator coordinator = new Coordinator();
+        coordinator = coordinator.getCoordinatorSelected(staffNumber);
+        tfName.setText(coordinator.getName());
+        tfLastName.setText(coordinator.getLastName());
+        tfEmail.setText(coordinator.getEmail());
+        tfAlternateEmail.setText(coordinator.getAlternateEmail());
+        if(coordinator.getGender()== Gender.MALE.getGender()){
+            rbMale.isSelected();
+        }else{
+            rbFemale.isSelected();
+        }
+        tfPhone.setText(coordinator.getPhone());
+        tfStaffNumber.setText(String.valueOf(coordinator.getStaffNumber()));
+        if(coordinator.getProfilePicture()==null){
+            //imgCoordinator.setImage("/images/Add.png");
+        }else{
+            //imgCoordinator.setImage(coordinator.getProfilePicture());
+        }
     }
 
     public void removeStyle(){
@@ -89,8 +115,6 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         tfLastName.getStyleClass().remove("ok");
         tfEmail.getStyleClass().remove("ok");
         tfAlternateEmail.getStyleClass().remove("ok");
-        tfUserName.getStyleClass().remove("ok");
-        tfPassword.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
     }
 
@@ -138,20 +162,6 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfPassword.getText())) {
-            tfPassword.getStyleClass().add("ok");
-        }else{
-            tfPassword.getStyleClass().add("error");
-            validation = false;
-        }
-
-        if(validateAddUser.validateEmpty(tfUserName.getText())) {
-            tfUserName.getStyleClass().add("ok");
-        }else{
-            tfUserName.getStyleClass().add("error");
-            validation = false;
-        }
-
         if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
             validation = false;
             rbMale.getStyleClass().add("error");
@@ -176,9 +186,6 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         coordinator.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
         coordinator.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
         coordinator.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
-        coordinator.setUserName(tfUserName.getText());
-        String passwordEncryption = encryptPassword(tfPassword.getText());
-        coordinator.setPassword(passwordEncryption);
         if(rbMale.isSelected()){
             coordinator.setGender(Gender.MALE.getGender());
         }else{
@@ -186,8 +193,6 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
                 coordinator.setGender(Gender.FEMALE.getGender());
             }
         }
-        Date registerDate = new Date();
-        coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(registerDate));
         coordinator.setProfilePicture(imgFile);
     }
 

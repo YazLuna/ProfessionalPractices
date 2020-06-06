@@ -1,5 +1,7 @@
 package dataaccess;
 
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,7 +40,11 @@ public class Connexion {
             ex.printStackTrace();
 
         }
-        connexion=DriverManager.getConnection (dataBase,user,password);
+        try {
+            connexion=DriverManager.getConnection (dataBase,user,password);
+        } catch (CommunicationsException ex){
+            Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void closeConnection(){
