@@ -13,7 +13,6 @@ import gui.FXMLGeneralController;
 import domain.Coordinator;
 import domain.Gender;
 
-
 public class FXMLDeleteCoordinatorController extends FXMLGeneralController implements Initializable {
     @FXML private Label lbName;
     @FXML private Label lbLastName;
@@ -47,9 +46,7 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
         lbPhone.setText(coordinator.getPhone());
         lbRegistrationDate.setText(coordinator.getRegistrationDate());
         lbStaffNumber.setText(String.valueOf(coordinator.getStaffNumber()));
-        if(coordinator.getProfilePicture()==null){
-            //imgCoordinator.setImage("/images/Add.png");
-        }else{
+        if(coordinator.getProfilePicture() != null){
             //imgCoordinator.setImage(coordinator.getProfilePicture());
         }
     }
@@ -63,13 +60,11 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     }
 
     public void delete()  {
-        boolean delete;
         Date actualDate = new Date();
-        boolean replyConfirmation;
-        replyConfirmation= generateConfirmation("¿Seguro que desea eliminar el coordinador?");
+        boolean replyConfirmation = generateConfirmation("¿Seguro que desea eliminar el coordinador?");
         if(replyConfirmation){
             coordinator.setDischargeDate(new SimpleDateFormat("yyyy-MM-dd").format(actualDate));
-            delete = coordinator.deleteCoordinator("Inactive",coordinator.getDischargeDate());
+            boolean delete = coordinator.deleteCoordinator("Inactive",coordinator.getDischargeDate());
             if(delete){
                 openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnDelete);
                 generateInformation("El coordinador fue eliminado exitosamente");

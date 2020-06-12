@@ -3,7 +3,7 @@ package dataaccess;
 import java.io.File;
 
 /**
- * DAO User
+ * Interface DAO User
  * @author Yazmin
  * @version 17/05/2020
  */

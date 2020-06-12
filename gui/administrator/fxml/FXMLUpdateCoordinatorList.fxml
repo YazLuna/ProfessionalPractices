@@ -43,7 +43,7 @@
     </Pane>
     <TableView fx:id="tableCoordinators" layoutX="69.0" layoutY="88.0" prefHeight="268.0" prefWidth="462.0">
         <columns>
-            <TableColumn fx:id="noPersonal" prefWidth="109.0" text="No. Personal"/>
+            <TableColumn fx:id="staffNumber" prefWidth="109.0" text="No. Personal"/>
             <TableColumn fx:id="name" prefWidth="167.0" text="Nombres"/>
             <TableColumn fx:id="lastName" prefWidth="185.0" text="Apellidos"/>
         </columns>

@@ -1,12 +1,11 @@
 package domain;
 
-import java.sql.SQLException;
 import java.util.List;
 import dataaccess.CoordinatorDAOImpl;
 import dataaccess.ProjectDAOImpl;
 
 /**
- * DAO User
+ * Coordinator
  * @author Yazmin
  * @version 05/06/2020
  */

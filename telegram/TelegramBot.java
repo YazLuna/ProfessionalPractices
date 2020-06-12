@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * DAO User
+ * TelegramBot
  * @author Yazmin
  * @version 08/05/2020
  */

@@ -11,18 +11,18 @@ import java.util.logging.Logger;
 import domain.Search;
 
 /**
- * LoginAccountImpl
+ * LoginAccountDAOImpl
  * @author Yazmin
  * @version 04/06/2020
  */
 
-public class LoginAccountImpl implements ILoginAccount{
+public class LoginAccountDAOImpl implements ILoginAccountDAO {
     private final Connexion connexion;
     private Connection connection;
     private ResultSet result;
     private PreparedStatement sentence;
 
-    public LoginAccountImpl() {
+    public LoginAccountDAOImpl() {
         connexion = new Connexion();
     }
 
@@ -41,7 +41,7 @@ public class LoginAccountImpl implements ILoginAccount{
                 type.add(result.getString("type"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             connexion.closeConnection();
         }
@@ -66,7 +66,7 @@ public class LoginAccountImpl implements ILoginAccount{
                 search = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
@@ -89,7 +89,7 @@ public class LoginAccountImpl implements ILoginAccount{
                 search = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
@@ -115,7 +115,29 @@ public class LoginAccountImpl implements ILoginAccount{
                 update=true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connexion.closeConnection();
+        }
+        return update;
+    }
+
+    @Override
+    public boolean updateLoginAccountPractitioner(String userNamePrevious, String passwordPrevious, String passwordNew){
+        boolean update = false;
+        try {
+            connection = connexion.getConnection();
+            String queryUpdateLoginAccount=
+                    "update LoginAccount SET password=?, firstLogin=? where userName=? AND password=? ";
+            sentence = connection.prepareStatement(queryUpdateLoginAccount);
+            sentence.setString(1, passwordNew);
+            sentence.setInt(2,Search.FOUND.getValue());
+            sentence.setString(3,userNamePrevious);
+            sentence.setString(4,passwordPrevious);
+            sentence.executeUpdate();
+            update=true;
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
@@ -135,11 +157,10 @@ public class LoginAccountImpl implements ILoginAccount{
                 search = true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoginAccountImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
         return search;
     }
-
 }

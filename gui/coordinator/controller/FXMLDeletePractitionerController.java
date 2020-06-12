@@ -1,69 +1,74 @@
 package gui.coordinator.controller;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import domain.Gender;
+import domain.Practitioner;
+import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
+import javafx.scene.control.Label;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class FXMLDeletePractitionerController extends Application {
-    @FXML private Button btnLogOut;
-    @FXML private Button btnReturn;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+public class FXMLDeletePractitionerController extends FXMLGeneralController implements Initializable {
+    @FXML private Label lbName;
+    @FXML private Label lbLastName;
+    @FXML private Label lbGender;
+    @FXML private Label lbEmail;
+    @FXML private Label lbAlternateEmail;
+    @FXML private Label lbPhone;
+    @FXML private Label lbEnrollment;
+    @FXML private Button btnCancel;
+    @FXML private Button btnDelete;
+    public static String enrollment;
+    private Practitioner practitioner = new Practitioner();
 
     @Override
-    public void start(Stage primaryStage) {
-
+    public void initialize(URL url, ResourceBundle rb) {
+        practitioner.setEnrollment(enrollment);
+        colocatePractitioner();
     }
 
-    public void backToSectionPractitioner(ActionEvent actionEvent) throws IOException {
-        btnReturn.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnReturn.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLSectionPractitioner.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
+    private void colocatePractitioner() {
+        practitioner = practitioner.getPractitioner();
+        lbName.setText(practitioner.getName());
+        lbLastName.setText(practitioner.getLastName());
+        lbEmail.setText(practitioner.getEmail());
+        lbAlternateEmail.setText(practitioner.getAlternateEmail());
+        if(practitioner.getGender()== Gender.MALE.getGender()){
+            lbGender.setText("Masculino");
+        }else{
+            lbGender.setText("Femenino");
+        }
+        lbPhone.setText(practitioner.getPhone());
+        lbEnrollment.setText(practitioner.getEnrollment());
+        if(practitioner.getProfilePicture() != null){
+            //imgPractitioner.setImage(practitioner.getProfilePicture());
+        }
+    }
+
+    public void logOut() {
+        logOutGeneral();
+    }
+
+    public void cancel() {
+        FXMLUpdateDeletePractitionerListController.action = "Delete";
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnCancel);
+    }
+
+    public void delete()  {
+        boolean replyConfirmation = generateConfirmation("¿Seguro que desea eliminar el practicante?");
+        if(replyConfirmation){
+            boolean delete = practitioner.deletePractitioner();
+            if(delete){
+                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
+                generateInformation("El practicante fue eliminado exitosamente");
+            }else{
+                generateError("No se pudo eliminar el practicante");
             }
-        });
+        }
     }
+  
 
-    public void logOut(ActionEvent actionEvent) throws IOException {
-        btnLogOut.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                try {
-                    Stage stagePrincipal = (Stage) btnLogOut.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/fxml/FXMLLogin.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    Stage stage = new Stage();
-                    stage.setResizable(false);
-                    stage.setScene(new Scene(root1));
-                    stage.show();
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-            }
-        });
-    }
 }

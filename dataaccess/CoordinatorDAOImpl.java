@@ -15,7 +15,7 @@ import domain.Coordinator;
 import domain.Search;
 
 /**
- * DAO User
+ * CoordinatorDAOImpl
  * @author Yazmin
  * @version 04/06/2020
  */
@@ -67,8 +67,10 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         try {
             connection = connexion.getConnection();
             String queryGetCoordinatorSelected =
-                    "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber from Coordinator, User, UserType WHERE " +
-                            "Coordinator.idUser=User.idUser AND UserType.type='Coordinator' AND Coordinator.staffNumber=?";
+                    "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,status from " +
+                            "Coordinator, User, UserType,Status,User_Status WHERE Coordinator.idUser=User.idUser AND" +
+                            " UserType.type='Coordinator' AND Coordinator.staffNumber=? AND User_Status.idUser =" +
+                            " User.idUser AND User_Status.idStatus = Status.idStatus";
             preparedStatement = connection.prepareStatement(queryGetCoordinatorSelected);
             preparedStatement.setInt(1,staffNumber);
             resultSet = preparedStatement.executeQuery();
@@ -80,6 +82,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                 coordinator.setAlternateEmail(resultSet.getString("alternateEmail"));
                 coordinator.setPhone(resultSet.getString("phone"));
                 coordinator.setStaffNumber(resultSet.getInt("staffNumber"));
+                coordinator.setStatus(resultSet.getString("status"));
                 //image
             }
         } catch (SQLException ex) {
@@ -92,7 +95,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
 
     @Override
     public boolean updateCoordinator(int staffNumber, Coordinator coordinatorEdit)  {
-        boolean resultSet = false;
+        boolean result = false;
         int staffNumberFound = searchStaffNumber(coordinatorEdit.getStaffNumber());
         if(staffNumberFound == Search.NOTFOUND.getValue() ){
             boolean validate = validateUser(coordinatorEdit.getEmail(),coordinatorEdit.getAlternateEmail(),
@@ -119,7 +122,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                     preparedStatement.setInt(8, coordinatorEdit.getStaffNumber());
                     preparedStatement.setInt(9, staffNumber);
                     preparedStatement.executeUpdate();
-                    resultSet = true;
+                    result = true;
                 } catch (SQLException | FileNotFoundException ex) {
                     Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
@@ -127,12 +130,12 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                 }
             }
         }
-        return resultSet;
+        return result;
     }
 
     @Override
     public boolean deleteCoordinator(String status, String dischargeDate) {
-        boolean resultSet = false;
+        boolean result = false;
         StatusDAOImpl statusDao = new StatusDAOImpl();
         int idUserStatus = statusDao.searchIdStatus(status);
         if(idUserStatus == Search.NOTFOUND.getValue()){
@@ -147,18 +150,18 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             preparedStatement.setInt(1, idUserStatus);
             preparedStatement.setString(2, dischargeDate);
             preparedStatement.executeUpdate();
-            resultSet = true;
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             connexion.closeConnection();
         }
-        return resultSet;
+        return result;
     }
 
     @Override
     public boolean addCoordinator(Coordinator coordinator) {
-        boolean resultSetAdd = false;
+        boolean resultAdd = false;
         boolean validate = validateCoordinator(coordinator);
         if(validate){
                 int idUser = searchIdUser(coordinator.getEmail(),coordinator.getAlternateEmail(),coordinator.getPhone());
@@ -170,32 +173,29 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                     preparedStatement.setString(2, coordinator.getRegistrationDate());
                     preparedStatement.setInt(3, idUser);
                     preparedStatement.executeUpdate();
-                    resultSetAdd = true;
+                    resultAdd = true;
                 } catch (SQLException ex) {
                     Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     connexion.closeConnection();
                 }
         }
-        return resultSetAdd;
+        return resultAdd;
     }
 
     private boolean validateCoordinator(Coordinator coordinator) {
-        boolean validation = false;
-        boolean addUserValidate;
-        boolean teacher;
         boolean activeCoordinator= coordinator.activeCoordinator();
-        boolean validationStaffNumber;
+        boolean validation= false;
         if(!activeCoordinator){
-            validationStaffNumber = validateStaffNumber(coordinator.getStaffNumber());
+            boolean validationStaffNumber = validateStaffNumber(coordinator.getStaffNumber());
             if(!validationStaffNumber){
-                teacher = isTeacher(coordinator.getStaffNumber());
-                if(teacher){
+                boolean isTeacher = isTeacher(coordinator.getStaffNumber());
+                if(isTeacher){
                     validation = true;
                 }
             }
             if(validationStaffNumber) {
-                addUserValidate = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(), coordinator.getAlternateEmail(),
+                boolean addUserValidate = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(), coordinator.getAlternateEmail(),
                         coordinator.getPhone(), coordinator.getPassword(), coordinator.getUserType(),
                         coordinator.getStatus(), coordinator.getGender(), coordinator.getUserName(),coordinator.getProfilePicture());
                 if(addUserValidate){
@@ -207,21 +207,21 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     }
 
     private boolean isTeacher(int staffNumber) {
-        boolean resultSet = false;
+        boolean result = false;
         int staffNumberFound = searchStaffNumberTeacher(staffNumber);
             if(staffNumberFound != Search.NOTFOUND.getValue() ){
-              resultSet = true;
+              result = true;
             }
-            return resultSet;
+            return result;
     }
 
     private boolean validateStaffNumber(int staffNumber) {
-        boolean resultSet = false;
+        boolean result = false;
         int staffNumberFound = searchStaffNumberCoordinator(staffNumber);
             if(staffNumberFound == Search.NOTFOUND.getValue()){
-                resultSet = true;
+                result = true;
             }
-        return resultSet;
+        return result;
     }
 
     @Override
@@ -253,9 +253,9 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         try {
             connection = connexion.getConnection();
             Statement consult = connection.createStatement();
-            resultSet = consult.executeQuery("Select name, lastName,staffNumber,email,alternateEmail" +
-                    ",phone from Coordinator INNER JOIN User ON Coordinator.idUser =" +
-                    " User.idUser");
+            resultSet = consult.executeQuery("Select name, lastName,staffNumber,email,alternateEmail,phone,status from" +
+                    " Coordinator,User, User_Status,Status WHERE Coordinator.idUser = User.idUser AND" +
+                    " User_Status.idUser=User.idUser AND User_Status.idStatus= Status.idStatus");
             while (resultSet.next()) {
                 Coordinator coordinator = new Coordinator();
                 coordinator.setName(resultSet.getString("name"));
@@ -264,6 +264,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
                 coordinator.setEmail(resultSet.getString("email"));
                 coordinator.setAlternateEmail(resultSet.getString("alternateEmail"));
                 coordinator.setPhone(resultSet.getString("phone"));
+                coordinator.setStatus(resultSet.getString("status"));
                 coordinators.add(coordinator);
             }
         } catch (SQLException ex) {
@@ -276,32 +277,32 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
 
     @Override
     public boolean recoverCoordinator(Coordinator coordinator) {
-        boolean resultSet = false;
-           if(coordinator.getCoordinator().getStaffNumber() == Search.NOTFOUND.getValue()){
-                StatusDAOImpl statusDao = new StatusDAOImpl();
-                int idUserStatus = statusDao.searchIdStatus(coordinator.getStatus());
-                if(idUserStatus == Search.NOTFOUND.getValue() ){
-                    statusDao.addStatus(coordinator.getStatus());
-                    idUserStatus = statusDao.searchIdStatus(coordinator.getStatus());
-                }
-                try {
-                    connection = connexion.getConnection();
-                    preparedStatement =
-                            connection.prepareStatement("UPDATE Coordinator, User, User_Status SET User_Status.idStatus=?" +
-                                    ", Coordinator.dischargeDate=? WHERE Coordinator.idUser = User.idUser AND User_Status.idUser =" +
-                                    " User.idUser AND Coordinator.staffNumber =? ");
-                    preparedStatement.setInt(1, idUserStatus);
-                    preparedStatement.setString(2, null);
-                    preparedStatement.setInt(3, coordinator.getStaffNumber());
-                    preparedStatement.executeUpdate();
-                    resultSet = true;
-                } catch (SQLException ex) {
-                    Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    connexion.closeConnection();
-                }
-           }
-           return resultSet;
+        boolean result = false;
+        if(!coordinator.activeCoordinator()){
+            StatusDAOImpl statusDao = new StatusDAOImpl();
+            int idUserStatus = statusDao.searchIdStatus(coordinator.getStatus());
+            if(idUserStatus == Search.NOTFOUND.getValue() ){
+                statusDao.addStatus(coordinator.getStatus());
+                idUserStatus = statusDao.searchIdStatus(coordinator.getStatus());
+            }
+            try {
+                connection = connexion.getConnection();
+                preparedStatement =
+                        connection.prepareStatement("UPDATE Coordinator, User, User_Status SET User_Status.idStatus=?" +
+                                ", Coordinator.dischargeDate=? WHERE Coordinator.idUser = User.idUser AND User_Status.idUser =" +
+                                " User.idUser AND Coordinator.staffNumber =? ");
+                preparedStatement.setInt(1, idUserStatus);
+                preparedStatement.setString(2, null);
+                preparedStatement.setInt(3, coordinator.getStaffNumber());
+                preparedStatement.executeUpdate();
+                result = true;
+            } catch (SQLException ex) {
+                Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                connexion.closeConnection();
+            }
+        }
+        return result;
     }
 
     @Override

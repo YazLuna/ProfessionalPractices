@@ -1,7 +1,6 @@
 package dataaccess;
 
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * DAO User
+ * Connexion
  * @author Yazmin
  * @version 08/05/2020
  */
@@ -28,12 +27,12 @@ public class Connexion {
     }
     
     private void connect() throws SQLException{
-        Properties prop = new Properties();
+        Properties properties = new Properties();
         try {
-            prop.load( Connexion.class.getClassLoader().getResourceAsStream("dataaccess/propertiesDataAccess") );
-            dataBase = prop.getProperty("dataBase");
-            user = prop.getProperty("user");
-            password = prop.getProperty("password");
+            properties.load( Connexion.class.getClassLoader().getResourceAsStream("dataaccess/propertiesDataAccess") );
+            dataBase = properties.getProperty("dataBase");
+            user = properties.getProperty("user");
+            password = properties.getProperty("password");
         }catch(IOException ex)
         {
             System.err.println("Error accessing properties file");

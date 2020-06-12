@@ -1,5 +1,7 @@
 package dataaccess;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,237 +12,326 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import domain.Teacher;
+import domain.Search;
 
 /**
- * DAO User
+ * TeacherDAOImpl
  * @author Yazmin
- * @version 08/05/2020
+ * @version 07/06/2020
  */
 
-public class TeacherDAOImpl implements ITeacherDAO {
+public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
     private final Connexion connexion;
     private Connection connection;
-    private Statement consult;
-    private ResultSet result;
+    private ResultSet resultSet;
+    private PreparedStatement preparedStatement;
 
     public TeacherDAOImpl() {
-        connexion = new Connexion ();
+        connexion = new Connexion();
     }
 
     @Override
-    public Teacher getTeacher (int staffNumber) throws SQLException {
-        Teacher Teacher = new Teacher ();
+    public Teacher getTeacherSelected(int staffNumber) {
+        Teacher teacher = new Teacher();
         try {
-            connection = connexion.getConnection () ;
-            String queryFoundTeacher = "Select * from Teacher INNER JOIN User ON Teacher.idUser = User.idUser where Teacher.staffNumber = ?";
-            PreparedStatement sentence = connection.prepareStatement (queryFoundTeacher);
-            sentence.setInt (1,staffNumber);
-            result = sentence.executeQuery();
-            while (result.next()){
-                Teacher.setName(result.getString("name"));
-                Teacher.setLastName(result.getString("lastName"));
-                Teacher.setGender(result.getInt("gender"));
-                Teacher.setEmail(result.getString("email"));
-                Teacher.setAlternateEmail(result.getString("alternateEmail"));
-                Teacher.setPhone(result.getString("phone"));
-                Teacher.setStaffNumber(result.getInt("staffNumber"));
-                Teacher.setRegistrationDate(result.getString("registrationDate"));
+            connection = connexion.getConnection();
+            String queryGetTeacherSelected =
+                    "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,status from Teacher, User, UserType,Status,User_Status WHERE " +
+                            "Teacher.idUser=User.idUser AND UserType.type='Teacher' AND Teacher.staffNumber=? AND Status.idStatus = User_Status.idStatus AND " +
+                            "User_Status.idUser = User.idUser ";
+            preparedStatement = connection.prepareStatement(queryGetTeacherSelected);
+            preparedStatement.setInt(1,staffNumber);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                teacher.setName(resultSet.getString("name"));
+                teacher.setLastName(resultSet.getString("lastName"));
+                teacher.setGender(resultSet.getInt("gender"));
+                teacher.setEmail(resultSet.getString("email"));
+                teacher.setAlternateEmail(resultSet.getString("alternateEmail"));
+                teacher.setPhone(resultSet.getString("phone"));
+                teacher.setStaffNumber(resultSet.getInt("staffNumber"));
+                teacher.setStatus(resultSet.getString("status"));
+                //image
             }
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
-        return Teacher;
+        return teacher;
     }
 
     @Override
-    public int updateTeacher (int staffNumber, Teacher TeacherEdit) throws SQLException {
-        int result = 0;
-        try {
-            connection = connexion.getConnection();
-            PreparedStatement sentenceUpdateTeacher = connection.prepareStatement ("UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?,"
-                    + " User.alternateEmail = ?, User.phone = ?, Teacher.staffNumber = ?, Teacher.registrationDate = ?  WHERE Teacher.staffNumber = ?");
-            sentenceUpdateTeacher.setString(1, TeacherEdit.getName());
-            sentenceUpdateTeacher.setString(2, TeacherEdit.getLastName());
-            sentenceUpdateTeacher.setInt(3, TeacherEdit.getGender());
-            sentenceUpdateTeacher.setString(4, TeacherEdit.getEmail());
-            sentenceUpdateTeacher.setString(5, TeacherEdit.getAlternateEmail());
-            sentenceUpdateTeacher.setString(6, TeacherEdit.getPhone());
-            sentenceUpdateTeacher.setInt(7, TeacherEdit.getStaffNumber());
-            sentenceUpdateTeacher.setString(8, TeacherEdit.getRegistrationDate());
-            sentenceUpdateTeacher.setInt(9, staffNumber);
-            sentenceUpdateTeacher.executeUpdate();
-            result = 1;
-        }catch(SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    @Override
-    public int recoverTeacher (Teacher TeacherEdit) throws SQLException {
-        int result = 0;
-        try {
-            connection = connexion.getConnection();
-            PreparedStatement sentenceRecoverTeacher = connection.prepareStatement ("UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET User.status = 'Active' WHERE Teacher.staffNumber = ?");
-            sentenceRecoverTeacher.setInt(1, TeacherEdit.getStaffNumber());
-            sentenceRecoverTeacher.executeUpdate();
-            result = 1;
-        }catch(SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    @Override
-    public int deleteTeacher (Teacher Teacher) throws SQLException {
-        int result = 0;
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceDeleteTeacher=connection.prepareStatement("UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET status = 'Inactive' WHERE Teacher.staffNumber=?");
-            sentenceDeleteTeacher.setInt(1,Teacher.getStaffNumber());
-            sentenceDeleteTeacher.executeUpdate();
-            result = 1;
-        }catch(SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    @Override
-    public int addTeacher (Teacher teacher) throws SQLException {
-        int resultAdd = 0;
-        int staffNumber = searchStaffNumber(teacher.getStaffNumber());
-        if (staffNumber == 0){
-            int userAdd= addUser(teacher);
-            if (userAdd == 1) {
-                int idUser = searchIdUser(teacher);
-                try{
+    public boolean updateTeacher(int staffNumber, Teacher teacherEdit)  {
+        boolean result = false;
+        int staffNumberFound = searchStaffNumber(teacherEdit.getStaffNumber());
+        if(staffNumberFound == Search.NOTFOUND.getValue() ){
+            boolean validate = validateUser(teacherEdit.getEmail(),teacherEdit.getAlternateEmail(),
+                    teacherEdit.getPhone(),teacherEdit.getUserName());
+            if(validate){
+                try {
                     connection = connexion.getConnection();
-                    String queryAddTeacher = "INSERT INTO Teacher  (staffNumber, registrationDate, idUser) VALUES ( ?, ?, ?)";
-                    PreparedStatement sentenceAdd = connection.prepareStatement(queryAddTeacher);
-                    sentenceAdd.setInt(1, teacher.getStaffNumber());
-                    sentenceAdd.setString(2, teacher.getRegistrationDate());
-                    sentenceAdd.setInt(3, idUser);
-                    sentenceAdd.executeUpdate();
-                    resultAdd = 1;
-                }catch(SQLException ex){
+                    String queryTeacherUpdate = "UPDATE Teacher INNER JOIN User ON Teacher.idUser =" +
+                            " User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?" +
+                            ", User.alternateEmail = ?, User.phone = ?, User.profilePicture=?, Teacher.staffNumber = ?  WHERE Teacher.staffNumber = ?";
+                    preparedStatement = connection.prepareStatement(queryTeacherUpdate);
+                    preparedStatement.setString(1, teacherEdit.getName());
+                    preparedStatement.setString(2, teacherEdit.getLastName());
+                    preparedStatement.setInt(3, teacherEdit.getGender());
+                    preparedStatement.setString(4, teacherEdit.getEmail());
+                    preparedStatement.setString(5, teacherEdit.getAlternateEmail());
+                    preparedStatement.setString(6, teacherEdit.getPhone());
+                    if(teacherEdit.getProfilePicture() != null){
+                        FileInputStream convertImage = new FileInputStream (teacherEdit.getProfilePicture());
+                        preparedStatement.setBinaryStream(7,convertImage,teacherEdit.getProfilePicture().length());
+                    }else{
+                        preparedStatement.setBinaryStream(7,null);
+                    }
+                    preparedStatement.setInt(8, teacherEdit.getStaffNumber());
+                    preparedStatement.setInt(9, staffNumber);
+                    preparedStatement.executeUpdate();
+                    result = true;
+                } catch (SQLException | FileNotFoundException ex) {
                     Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    connexion.closeConnection();
                 }
             }
         }
-        return resultAdd;
+        return result;
     }
 
-    private int searchStaffNumber(int staffNumberSearch) {
-        int staffNumber = 0;
-        int resultAdd = 0;
-        try{
-            connection = connexion.getConnection();
-            String queryStaffNumber= "Select staffNumber from Teacher where staffNumber=?";
-            PreparedStatement sentence = connection.prepareStatement(queryStaffNumber);
-            sentence.setInt(1, staffNumberSearch);
-            result= sentence.executeQuery();
-            while(result.next()){
-                staffNumber =result.getInt("staffNumber");
-            }
-            if(staffNumber != 0){
-                resultAdd = 1;
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+    @Override
+    public boolean deleteTeacher(String status, String dischargeDate, int staffNumber) {
+        boolean result = false;
+        StatusDAOImpl statusDao = new StatusDAOImpl();
+        int idUserStatus = statusDao.searchIdStatus(status);
+        if(idUserStatus == Search.NOTFOUND.getValue()){
+            statusDao.addStatus(status);
+            idUserStatus = statusDao.searchIdStatus(status);
         }
-        return resultAdd;
-    }
-
-    public int addUser(Teacher teacher){
-        int result = 0;
-        try{
+        try {
             connection = connexion.getConnection();
-            String queryAddTeacherUser = "INSERT INTO User  (name, lastName, gender, status, email,  alternateEmail, phone)  VALUES (?,?, ?, ?, ?, ?, ?)";
-            PreparedStatement sentenceAddUser = connection.prepareStatement(queryAddTeacherUser);
-            sentenceAddUser.setString(1, teacher.getName());
-            sentenceAddUser.setString(2, teacher.getLastName());
-            sentenceAddUser.setInt(3, teacher.getGender());
-            sentenceAddUser.setString(4, teacher.getStatus());
-            sentenceAddUser.setString(5, teacher.getEmail());
-            sentenceAddUser.setString(6, teacher.getAlternateEmail());
-            sentenceAddUser.setString(7, teacher.getPhone());
-            sentenceAddUser.executeUpdate();
-            result = 1;
+            preparedStatement =
+                    connection.prepareStatement("UPDATE Teacher, User, User_Status SET User_Status.idStatus=?, Teacher.dischargeDate=? WHERE" +
+                            " Teacher.idUser = User.idUser AND User_Status.idUser = User.idUser AND Teacher.staffNumber=?");
+            preparedStatement.setInt(1, idUserStatus);
+            preparedStatement.setString(2, dischargeDate);
+            preparedStatement.setInt(3,staffNumber);
+            preparedStatement.executeUpdate();
+            result = true;
         } catch (SQLException ex) {
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return result;
     }
 
-    public int searchIdUser (Teacher teacher){
-        int idUser = 0;
-        try{
-            connection = connexion.getConnection();
-            String queryUser= "Select idUser from User where name=? AND lastName=? AND email=? AND alternateEmail=? AND phone=?";
-            PreparedStatement sentence =connection.prepareStatement(queryUser);
-            sentence.setString(1, teacher.getName());
-            sentence.setString(2, teacher.getLastName());
-            sentence.setString(3, teacher.getEmail());
-            sentence.setString(4, teacher.getAlternateEmail());
-            sentence.setString(5, teacher.getPhone());
-            result= sentence.executeQuery();
-            while(result.next()){
-                idUser =result.getInt("idUser");
+    @Override
+    public boolean addTeacher(Teacher teacher) {
+        boolean resultAdd = false;
+        boolean validate = validateTeacher(teacher);
+        if(validate){
+            int idUser = searchIdUser(teacher.getEmail(),teacher.getAlternateEmail(),teacher.getPhone());
+            try {
+                connection = connexion.getConnection();
+                String queryAddTeacher = "INSERT INTO Teacher (staffNumber, registrationDate, idUser) VALUES (?, ?, ?)";
+                preparedStatement = connection.prepareStatement(queryAddTeacher);
+                preparedStatement.setInt(1, teacher.getStaffNumber());
+                preparedStatement.setString(2, teacher.getRegistrationDate());
+                preparedStatement.setInt(3, idUser);
+                preparedStatement.executeUpdate();
+                resultAdd = true;
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                connexion.closeConnection();
             }
-        }catch(SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return idUser;
+        return resultAdd;
+    }
+
+    private boolean validateTeacher(Teacher teacher) {
+        boolean validation = false;
+        int activeTeacher= teacher.activeTeacher();
+        if(activeTeacher <= Search.FOUND.getValue()){
+            boolean validationStaffNumber = validateStaffNumber(teacher.getStaffNumber());
+            if(!validationStaffNumber){
+                boolean isTeacher = isTeacher(teacher.getStaffNumber());
+                if(isTeacher){
+                    validation = true;
+                }
+            }
+            if(validationStaffNumber) {
+                boolean addUserValidate = addUser(teacher.getName(), teacher.getLastName(), teacher.getEmail(), teacher.getAlternateEmail(),
+                        teacher.getPhone(), teacher.getPassword(), teacher.getUserType(),
+                        teacher.getStatus(), teacher.getGender(), teacher.getUserName(),teacher.getProfilePicture());
+                if(addUserValidate){
+                    validation = true;
+                }
+            }
+        }
+        return validation;
+    }
+
+    private boolean isTeacher(int staffNumber) {
+        boolean resultSet = false;
+        int staffNumberFound = searchStaffNumberTeacher(staffNumber);
+        if(staffNumberFound != Search.NOTFOUND.getValue() ){
+            resultSet = true;
+        }
+        return resultSet;
+    }
+
+    private boolean validateStaffNumber(int staffNumber) {
+        boolean resultSet = false;
+        int staffNumberFound = searchStaffNumberTeacher(staffNumber);
+        if(staffNumberFound == Search.NOTFOUND.getValue()){
+            resultSet = true;
+        }
+        return resultSet;
     }
 
     @Override
-    public List <Teacher> getAllTeacher () throws SQLException{
+    public List<Teacher> getAllTeacher() {
         List<Teacher> teachers = new ArrayList<>();
         try {
             connection = connexion.getConnection();
-            consult = connection.createStatement();
-            result = consult.executeQuery("Select * from Teacher INNER JOIN User ON Teacher.idUser = User.idUser");
-            while(result.next()){
+            Statement consult = connection.createStatement();
+            resultSet = consult.executeQuery("Select name, lastName,staffNumber from Teacher INNER JOIN User ON Teacher.idUser =" +
+                    " User.idUser");
+            while (resultSet.next()) {
                 Teacher teacher = new Teacher();
-                teacher.setName(result.getString("name"));
-                teacher.setLastName(result.getString("lastName"));
-                teacher.setGender(result.getInt("gender"));
-                teacher.setEmail(result.getString("email"));
-                teacher.setAlternateEmail (result.getString("alternateEmail"));
-                teacher.setPhone(result.getString("phone"));
-                teacher.setStaffNumber(result.getInt("staffNumber"));
-                teacher.setRegistrationDate(result.getString("registrationDate"));
+                teacher.setName(resultSet.getString("name"));
+                teacher.setLastName(resultSet.getString("lastName"));
+                teacher.setStaffNumber(resultSet.getInt("staffNumber"));
                 teachers.add(teacher);
             }
         } catch (SQLException ex) {
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return teachers;
     }
 
     @Override
-    public List <Teacher> getTeachersActive () throws SQLException{
+    public List<Teacher> getTeachersActive() {
         List<Teacher> teachers = new ArrayList<>();
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        int idUserStatus = statusDAO.searchIdStatus("Active");
+        if(idUserStatus == Search.NOTFOUND.getValue()){
+            statusDAO.addStatus("Active");
+            idUserStatus = statusDAO.searchIdStatus("Active");
+        }
         try {
             connection = connexion.getConnection();
-            consult = connection.createStatement();
-            result = consult.executeQuery("Select * from Teacher INNER JOIN User ON Teacher.idUser = User.idUser WHERE User.status = 'Active'");
-            while(result.next()){
+            String queryTeacherActive = "Select name, lastName,staffNumber from Teacher,User, User_Status WHERE" +
+                    " Teacher.idUser = User.idUser AND User_Status.idStatus=? AND User_Status.idUser=User.idUser";
+            preparedStatement =connection.prepareStatement(queryTeacherActive);
+            preparedStatement.setInt(1,idUserStatus);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
                 Teacher teacher = new Teacher();
-                teacher.setName(result.getString("name"));
-                teacher.setLastName(result.getString("lastName"));
-                teacher.setGender(result.getInt("gender"));
-                teacher.setEmail(result.getString("email"));
-                teacher.setAlternateEmail (result.getString("alternateEmail"));
-                teacher.setPhone(result.getString("phone"));
-                teacher.setStaffNumber(result.getInt("staffNumber"));
-                teacher.setRegistrationDate(result.getString("registrationDate"));
+                teacher.setName(resultSet.getString("name"));
+                teacher.setLastName(resultSet.getString("lastName"));
+                teacher.setStaffNumber(resultSet.getInt("staffNumber"));
                 teachers.add(teacher);
             }
         } catch (SQLException ex) {
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
         }
         return teachers;
     }
+
+    @Override
+    public List<Teacher> getInformationAllTeacher() {
+        List<Teacher> teachers = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            Statement consult = connection.createStatement();
+            resultSet = consult.executeQuery("Select name, lastName,staffNumber,email,alternateEmail,phone,status FROM " +
+                    "Teacher,User, User_Status,Status WHERE Teacher.idUser = User.idUser AND User_Status.idUser=" +
+                    "User.idUser AND User_Status.idStatus= Status.idStatus;");
+            while (resultSet.next()) {
+                Teacher teacher = new Teacher();
+                teacher.setName(resultSet.getString("name"));
+                teacher.setLastName(resultSet.getString("lastName"));
+                teacher.setStaffNumber(resultSet.getInt("staffNumber"));
+                teacher.setEmail(resultSet.getString("email"));
+                teacher.setAlternateEmail(resultSet.getString("alternateEmail"));
+                teacher.setPhone(resultSet.getString("phone"));
+                teacher.setStatus(resultSet.getString("status"));
+                teachers.add(teacher);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return teachers;
+    }
+
+    @Override
+    public boolean recoverTeacher(Teacher teacher) {
+        boolean result = false;
+        int activeTeachers = teacher.activeTeacher();
+        if(activeTeachers <= Search.FOUND.getValue()){
+            StatusDAOImpl statusDao = new StatusDAOImpl();
+            int idUserStatus = statusDao.searchIdStatus(teacher.getStatus());
+            if(idUserStatus == Search.NOTFOUND.getValue() ){
+                statusDao.addStatus(teacher.getStatus());
+                idUserStatus = statusDao.searchIdStatus(teacher.getStatus());
+            }
+            try {
+                connection = connexion.getConnection();
+                preparedStatement =
+                        connection.prepareStatement("UPDATE Teacher, User, User_Status SET User_Status.idStatus=?" +
+                                ", Teacher.dischargeDate=? WHERE Teacher.idUser = User.idUser AND User_Status.idUser =" +
+                                " User.idUser AND Teacher.staffNumber =? ");
+                preparedStatement.setInt(1, idUserStatus);
+                preparedStatement.setString(2, null);
+                preparedStatement.setInt(3, teacher.getStaffNumber());
+                preparedStatement.executeUpdate();
+                result = true;
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                connexion.closeConnection();
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int activeTeacher() {
+        int isActive = Search.NOTFOUND.getValue();
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        int idUserStatus = statusDAO.searchIdStatus("Active");
+        if(idUserStatus == Search.NOTFOUND.getValue()){
+            statusDAO.addStatus("Active");
+            idUserStatus = statusDAO.searchIdStatus("Active");
+        }
+        try {
+            connection = connexion.getConnection();
+            String queryActiveTeacher =
+                    "SELECT staffNumber from Teacher, User, UserType, User_Status WHERE Teacher.idUser= User.idUser AND" +
+                            " User_Status.idUser = User.idUser AND UserType.type='Teacher' AND User_Status.idStatus=?";
+            preparedStatement = connection.prepareStatement(queryActiveTeacher);
+            preparedStatement.setInt(1,idUserStatus);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                isActive++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return isActive;
+    }
+
 }

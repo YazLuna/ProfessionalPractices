@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import logic.ValidateAddUser;
-import dataaccess.LoginAccountImpl;
+import dataaccess.LoginAccountDAOImpl;
 import gui.FXMLGeneralController;
 
 /**
@@ -31,7 +31,7 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
         removeStyle();
         boolean validate= validate();
         if(validate){
-            LoginAccountImpl newLogin = new LoginAccountImpl();
+            LoginAccountDAOImpl newLogin = new LoginAccountDAOImpl();
             String password= encryptPassword(pfPassword.getText());
             String user = tfUser.getText();
             boolean isFirstLogin = newLogin.firstLogin(user,password);
@@ -73,7 +73,7 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
     }
 
     private void openMenu(String user, String password) {
-        LoginAccountImpl newLogin = new LoginAccountImpl();
+        LoginAccountDAOImpl newLogin = new LoginAccountDAOImpl();
         List<String> userTypes=newLogin.searchUserTypeWithLoginAccount(user,password);
         if(userTypes.size() == 1){
             String userType= userTypes.get(0);

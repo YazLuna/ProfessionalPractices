@@ -1,11 +1,9 @@
 package domain;
 
-import javafx.scene.image.ImageView;
-
 import java.io.File;
 
 /**
- * DAO User
+ * User
  * @author Yazmin
  * @version 08/05/2020
  */

@@ -45,31 +45,31 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
     }
     public void startComponent (){
         limitTextField(tfNameOrganization,100);
-        deleteNumberTextField(tfNameOrganization);
+        prohibitNumberTextField(tfNameOrganization);
 
         limitTextField(tfIndirectUsers,100);
-        deleteNumberInWorksTextField(tfIndirectUsers);
+        prohibitNumberAllowSpecialCharTextField(tfIndirectUsers);
 
         limitTextField(tfDirectUsers,100);
-        deleteNumberInWorksTextField(tfDirectUsers);
+        prohibitNumberAllowSpecialCharTextField(tfDirectUsers);
 
         limitTextField(cbSector.getEditor(),30);
-        deleteNumberTextField(cbSector.getEditor());
+        prohibitNumberTextField(cbSector.getEditor());
 
         limitTextField(cbState.getEditor(),30);
-        deleteNumberTextField(cbState.getEditor());
+        prohibitNumberTextField(cbState.getEditor());
 
         limitTextField(cbCity.getEditor(),30);
-        deleteNumberTextField(cbCity.getEditor());
+        prohibitNumberTextField(cbCity.getEditor());
 
         limitTextField(tfEmailOrganization,50);
-        deleteSpacesTextField(tfEmailOrganization);
+        prohibitSpacesTextField(tfEmailOrganization);
 
         limitTextField(tfAddress,100);
-        deleteSpacesTextField(tfAddress);
+        prohibitSpacesTextField(tfAddress);
 
         limitTextField(tfPhoneNumber,10);
-        deleteWorkTextField(tfPhoneNumber);
+        prohibitWordTextField(tfPhoneNumber);
     }
 
     public void startComboBox () {

@@ -29,18 +29,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextArea;
 import org.apache.commons.codec.binary.Hex;
-
-/**
- * DAO User
- * @author Yazmin
- * @version 03/06/2020
- */
+import gui.administrator.controller.FXMLRegisterCoordinatorController;
 
 public class FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
-    File imgFile;
     FileChooser fileChooser = new FileChooser();
-    public ImageView imgProfilePicture;
+    @FXML public ImageView imgProfilePicture;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -160,7 +154,7 @@ public class FXMLGeneralController implements Initializable {
         textArea.setTextFormatter(new TextFormatter(textLimitFilter));
     }
 
-    public static void deleteWorkTextField(TextField textField) {
+    public static void prohibitWordTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -172,7 +166,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteNumberTextField(TextField textField) {
+    public static void prohibitNumberTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -188,7 +182,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteNumberInWorksTextField(TextField textField) {
+    public static void prohibitNumberAllowSpecialCharTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -204,7 +198,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteSpacesTextField(TextField textField) {
+    public static void prohibitSpacesTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -216,7 +210,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteSpacesTextArea(TextArea textArea) {
+    public static void prohibitSpacesTextArea(TextArea textArea) {
         textArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -229,6 +223,7 @@ public class FXMLGeneralController implements Initializable {
     }
 
     public void loadImage(){
+        File imgFile;
         fileChooser.setTitle("Buscar Imagen");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG", "*.jpg"),
@@ -240,6 +235,7 @@ public class FXMLGeneralController implements Initializable {
         if (imgFile != null) {
             Image image = new Image("file:" + imgFile.getAbsolutePath());
             imgProfilePicture.setImage(image);
+            FXMLRegisterCoordinatorController.imgFile = imgFile;
         }
     }
 

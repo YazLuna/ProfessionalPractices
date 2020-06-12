@@ -1,17 +1,12 @@
 package domain;
 
+import java.util.List;
 import dataaccess.TeacherDAOImpl;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
- * DAO User
+ * Teacher
  * @author Yazmin
- * @version 08/05/2020
+ * @version 06/06/2020
  */
 
 public class Teacher extends User{
@@ -20,7 +15,7 @@ public class Teacher extends User{
     private String dischargeDate;
     
     public Teacher () {
-        
+        setUserType("Teacher");
     }
     
     public int getStaffNumber () {
@@ -47,92 +42,63 @@ public class Teacher extends User{
         this.dischargeDate = dischargeDate;
     }
 
-    public int addTeacher(){
+    public boolean addTeacher() {
         TeacherDAOImpl addTeacher = new TeacherDAOImpl();
-        int result = 0;
-        try{
-            result = addTeacher.addTeacher(this);
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result = addTeacher.addTeacher(this);
         return result;
     }
 
-    public int updateTeacher(){
+    public boolean updateTeacher(int staffNumberTeacher) {
         TeacherDAOImpl updateTeacher = new TeacherDAOImpl();
-        int result = 0;
-        try{
-            result = updateTeacher.updateTeacher(this.staffNumber,this);
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result = updateTeacher.updateTeacher(staffNumberTeacher, this);
         return result;
     }
 
-    //modify staffNumber
-    public int updateTeacher(int staffNumberTeacher){
-        TeacherDAOImpl updateTeacher = new TeacherDAOImpl();
-        int result = 0;
-        try{
-            result = updateTeacher.updateTeacher(staffNumberTeacher, this);
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    public int recoverTeacher(){
-        TeacherDAOImpl recoverTeacher = new TeacherDAOImpl();
-        int result = 0;
-        try{
-            result = recoverTeacher.recoverTeacher(this);
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    public int deleteTeacher(){
+    public boolean deleteTeacher(String status, String dischargeDate, int staffNumber) {
         TeacherDAOImpl deleteTeacher = new TeacherDAOImpl();
-        int result = 0;
-        try{
-            result = deleteTeacher.deleteTeacher(this);
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return  result;
+        boolean result = deleteTeacher.deleteTeacher(status, dischargeDate,staffNumber);
+        return result;
     }
 
-    public Teacher getTeacher(){
+    public Teacher getTeacher() {
         TeacherDAOImpl getTeacher = new TeacherDAOImpl();
-        Teacher teacher = new Teacher();
-        try{
-            teacher = getTeacher.getTeacher(this.staffNumber);
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return teacher;
+        Teacher Teacher = getTeacher.getTeacherSelected(staffNumber);
+        return Teacher;
     }
 
-    public List<Teacher> getAllTeacher(){
+    public List<Teacher> getAllTeacher() {
         TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> teachers= new ArrayList<>();
-        try{
-            teachers = getAllTeacher.getAllTeacher();
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return teachers;
+        List<Teacher> Teachers = getAllTeacher.getAllTeacher();
+        return Teachers;
     }
 
-    public List<Teacher> getTeachersActive(){
+    public boolean recoverTeacher() {
+        TeacherDAOImpl recoverTeacher = new TeacherDAOImpl();
+        boolean result = recoverTeacher.recoverTeacher(this);
+        return result;
+    }
+
+    public int activeTeacher() {
+        TeacherDAOImpl activeTeacher = new TeacherDAOImpl();
+        int result = activeTeacher.activeTeacher();
+        return result;
+    }
+
+    public Teacher getTeacherSelected(int staffNumber) {
+        TeacherDAOImpl getTeacher = new TeacherDAOImpl();
+        Teacher Teacher = getTeacher.getTeacherSelected(staffNumber);
+        return Teacher;
+    }
+
+    public List<Teacher> getInformationAllTeacher() {
         TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> teachers= new ArrayList<>();
-        try{
-            teachers = getAllTeacher.getTeachersActive();
-        }catch (SQLException ex){
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return teachers;
+        List<Teacher> Teachers = getAllTeacher.getInformationAllTeacher();
+        return Teachers;
+    }
+
+    public List<Teacher> getAllTeacherActive() {
+        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
+        List<Teacher> Teachers = getAllTeacher.getTeachersActive();
+        return Teachers;
     }
 }

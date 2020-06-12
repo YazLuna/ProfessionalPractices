@@ -1,21 +1,23 @@
 package dataaccess;
 
-import java.sql.SQLException;
 import java.util.List;
 import domain.Practitioner;
 
 /**
- * DAO User
+ * IPractitionerDAAO
  * @author Yazmin
- * @version 08/05/2020
+ * @version 11/06/2020
  */
 
 public interface IPractitionerDAO {
-    public Practitioner getPractitioner (String enrollment) throws SQLException;
-    public int updatePractitioner (String enrollment, Practitioner practitioner) throws SQLException;
-    public int deletePractitioner (Practitioner practitioner) throws SQLException;
-    public int addPractitioner (Practitioner practitioner) throws SQLException;
-    public List <Practitioner> getAllPractitioner () throws SQLException;
-    public List <Practitioner> getPractitionersActive () throws SQLException;
-    public int recoverPractitioner(Practitioner practitioner) throws  SQLException;
+    Practitioner getPractitioner (String enrollment) ;
+    boolean updatePractitioner (String enrollment, Practitioner practitioner);
+    boolean deletePractitioner (String enrollment, String status);
+    boolean addPractitioner (Practitioner practitioner);
+    List <Practitioner> getAllPractitioner () ;
+    List <Practitioner> getPractitionersActive () ;
+    boolean recoverPractitioner(Practitioner practitioner);
+    List <Practitioner> getInformationPractitioner ();
+    boolean activePractitioner();
+    boolean arePractitioner();
 }

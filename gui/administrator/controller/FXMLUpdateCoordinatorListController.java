@@ -1,7 +1,5 @@
 package gui.administrator.controller;
 
-import domain.Coordinator;
-import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,10 +9,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import domain.Coordinator;
+import gui.FXMLGeneralController;
 
 public class FXMLUpdateCoordinatorListController extends FXMLGeneralController implements Initializable {
     public TableView<Coordinator> tableCoordinators;
-    public TableColumn<Coordinator, Integer> noPersonal;
+    public TableColumn<Coordinator, Integer> staffNumber;
     public TableColumn<Coordinator, String> name;
     public TableColumn<Coordinator, String> lastName;
     @FXML private Button btnCancel;
@@ -28,7 +28,7 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
     private void colocateListCoordinators() {
         Coordinator coordinator = new Coordinator();
         List<Coordinator> coordinatorList=coordinator.getAllCoordinator();
-        noPersonal.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+        staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableCoordinators.getItems().setAll(coordinatorList);

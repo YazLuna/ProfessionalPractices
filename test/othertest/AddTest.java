@@ -11,14 +11,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Hex;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddTest {
 
     @Test
     public void testAddPractitioner() {
-        int result;
+        boolean result;
         Practitioner practitioner = new Practitioner();
         practitioner.setName("Lucio");
         practitioner.setLastName("Garcia");
@@ -36,7 +40,7 @@ public class AddTest {
 
     @Test
     public void testAddTeacher() {
-        int result = 0;
+        boolean result = false;
         Teacher teacher = new Teacher();
         teacher.setName("Pablo");
         teacher.setLastName("Hernandez");
@@ -47,7 +51,7 @@ public class AddTest {
         teacher.setStaffNumber(4);
         teacher.setRegistrationDate("2020-04-29");
         result= teacher.addTeacher();
-        Assert.assertEquals(1,result);
+        Assert.assertTrue(result);
     }
 
     @Test
@@ -78,7 +82,7 @@ public class AddTest {
 
     @Test
     public void password (){
-        String password = "123";
+        String password = "yaz";
             String passwordEncrypt= null;
             try{
                 MessageDigest md;
@@ -93,5 +97,29 @@ public class AddTest {
             }
 
 
+    }
+
+    @Test
+    public void month(){
+        Date date = new Date();
+        String month = new SimpleDateFormat("MM").format(date);
+        String year = new SimpleDateFormat("yyyy").format(date);
+        String periodo;
+        if(Integer.parseInt(month) > 1 && Integer.parseInt(month) <= 7){
+            periodo = "FEBRERO-JULIO "+year;
+        } else{
+            periodo = "AGOSTO-ENERO "+year+ " " +(Integer.parseInt(year)+1);
+        }
+        System.out.println(periodo);
+    }
+    @Test
+    public void validateEnrollment () {
+        String enrollment = "S18012124";
+        boolean isValidEnrollment;
+        Pattern pattern = Pattern
+                .compile("^[S]"+ "[0-9]{8}");
+        Matcher mather = pattern.matcher(enrollment);
+        isValidEnrollment = mather.find();
+        Assert.assertTrue(isValidEnrollment);
     }
 }

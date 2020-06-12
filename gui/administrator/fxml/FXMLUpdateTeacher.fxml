@@ -13,12 +13,12 @@
 
 <AnchorPane id="AnchorPane" prefHeight="406.0" prefWidth="603.0" styleClass="mainFxmlClass"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.administrator.controller.FXMLUpdateCoordinatorController">
+            fx:controller="gui.administrator.controller.FXMLUpdateTeacherController">
    <stylesheets>
       <URL value="@../../fxmlregister.css"/>
    </stylesheets>
    <Pane prefHeight="70.0" prefWidth="603.0" style="-fx-background-color: #053d01;">
-      <Label layoutX="163.0" layoutY="23.0" text="Modificar Coordinador" textFill="WHITE">
+      <Label layoutX="163.0" layoutY="23.0" text="Modificar Profesor" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="24.0"/>
          </font>
@@ -77,14 +77,14 @@
    </Button>
    <ImageView fx:id="imgProfilePicture" fitHeight="129.0" fitWidth="143.0" layoutX="428.0" layoutY="114.0"
               pickOnBounds="true" preserveRatio="true">
-   </ImageView>
+</ImageView>
    <TextField fx:id="tfStaffNumber" layoutX="167.0" layoutY="100.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfName" layoutX="167.0" layoutY="130.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfLastName" layoutX="167.0" layoutY="160.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfEmail" layoutX="167.0" layoutY="239.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfAlternateEmail" layoutX="167.0" layoutY="270.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfPhone" layoutX="167.0" layoutY="300.0" prefHeight="25.0" prefWidth="208.0"/>
-   <Button fx:id="btnUpdate" layoutX="188.0" layoutY="356.0" mnemonicParsing="false" onAction="#update"
+   <Button fx:id="btnUpdate" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" onAction="#update"
            style="-fx-background-color: #59ad55;" text="Modificar" textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="14.0"/>
@@ -98,11 +98,5 @@
    </Button>
    <RadioButton fx:id="rbMale" layoutX="175.0" layoutY="204.0" mnemonicParsing="false" text="Masculino"/>
    <RadioButton fx:id="rbFemale" layoutX="288.0" layoutY="204.0" mnemonicParsing="false" text="Femenino"/>
-   <Button fx:id="btnRecoverCoordinator" layoutX="410.0" layoutY="356.0" mnemonicParsing="false"
-           onAction="#recoverCoordinator" style="-fx-background-color: #707070;" text="Reactivar Coordinador"
-           textFill="WHITE" visible="false">
-      <font>
-         <Font name="Arial" size="14.0"/>
-      </font>
-   </Button>
+   <Button fx:id="btnRecoverTeacher" layoutX="410.0" layoutY="356.0" mnemonicParsing="false" onAction="#recoverTeacher" style="-fx-background-color: #707070;" text="Reactivar Profesor" textFill="WHITE" visible="false"/>
 </AnchorPane>

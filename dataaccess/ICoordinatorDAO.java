@@ -1,12 +1,10 @@
 package dataaccess;
 
-import java.sql.SQLException;
 import java.util.List;
-
 import domain.Coordinator;
 
 /**
- * DAO User
+ * Interface DAO Coordinator
  * @author Yazmin
  * @version 03/06/2020
  */

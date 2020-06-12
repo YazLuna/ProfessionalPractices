@@ -7,6 +7,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
+import domain.Search;
+import domain.Teacher;
 
 public class FXMLMenuAdministratorController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnListCoordinator;
@@ -70,18 +72,43 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
     }
 
     public void registerTeacher() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
+        Teacher teacher = new Teacher();
+        int isActive = teacher.activeTeacher();
+        if(isActive <= Search.FOUND.getValue()){
+            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
+        }else{
+            generateError("Ya hay dos profesores activos");
+        }
     }
 
     public void deleteTeacher() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
+        Teacher teacher = new Teacher();
+        int isActive = teacher.activeTeacher();
+        if(isActive != Search.NOTFOUND.getValue()){
+            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
+        }else{
+            generateError("No hay ningún profesor activo");
+        }
     }
 
     public void updateTeacher() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
+        Teacher teacher = new Teacher();
+        int areTeacher = teacher.activeTeacher();
+        if(areTeacher == Search.NOTFOUND.getValue()){
+            generateError("No hay ningún profesor registrado");
+        }else{
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
+        }
     }
 
     public void listTeacher() {
+        Teacher teacher = new Teacher();
+        int areTeacher = teacher.activeTeacher();
+        if(areTeacher == Search.NOTFOUND.getValue()){
+            generateError("No hay ningún profesor registrado");
+        }else{
+            openWindowGeneral("/gui/administrator/fxml/FXMLListTeacher.fxml",btnListTeacher);
+        }
     }
 
 }

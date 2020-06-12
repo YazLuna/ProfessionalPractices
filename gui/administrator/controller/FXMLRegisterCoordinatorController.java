@@ -16,12 +16,6 @@ import domain.Coordinator;
 import gui.FXMLGeneralController;
 import domain.Gender;
 
-/**
- * DAO User
- * @author Yazmin
- * @version 03/06/2020
- */
-
 public class FXMLRegisterCoordinatorController extends FXMLGeneralController implements Initializable  {
     public ImageView imgProfilePicture;
     @FXML private TextField tfStaffNumber;
@@ -36,12 +30,12 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnRegister;
-    private File imgFile;
+    public static File imgFile;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setLimitsTextFields();
+        configureTextFields();
     }
 
     public void logOut() {
@@ -72,15 +66,19 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         }
     }
 
-    private void setLimitsTextFields() {
+    private void configureTextFields() {
         limitTextField(tfName,30);
+        prohibitNumberTextField(tfName);
         limitTextField(tfLastName,30);
+        prohibitNumberTextField(tfLastName);
         limitTextField(tfEmail,50);
         limitTextField(tfAlternateEmail,50);
         limitTextField(tfPhone,10);
+        prohibitWordTextField(tfPhone);
         limitTextField(tfUserName,50);
         limitTextField(tfPassword,20);
         limitTextField(tfStaffNumber,10);
+        prohibitWordTextField(tfStaffNumber);
     }
 
     public void removeStyle(){
@@ -95,22 +93,36 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     }
 
     public boolean validate(){
+        prohibitSpacesTextField(tfName);
+        prohibitSpacesTextField(tfLastName);
+        prohibitSpacesTextField(tfEmail);
+        prohibitSpacesTextField(tfAlternateEmail);
+        prohibitSpacesTextField(tfPhone);
+        prohibitSpacesTextField(tfUserName);
+        prohibitSpacesTextField(tfPassword);
         boolean validation= true;
-        if((validateAddUser.validateEmpty(tfStaffNumber.getText())) && (validateAddUser.validateStaffNumber(tfStaffNumber.getText()))){
+        if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
         }else{
             tfStaffNumber.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateName(tfName.getText()))) {
-            tfName.getStyleClass().add("ok");
+        if((validateAddUser.validateEmpty(tfName.getText()))) {
+            String nameWithOutSpaces = validateAddUser.deleteSpace(tfName.getText());
+            tfName.setText(nameWithOutSpaces);
+            if(validateAddUser.validateName(tfName.getText())){
+                tfName.getStyleClass().add("ok");
+            }else{
+                tfName.getStyleClass().add("error");
+            }
+
         }else{
             tfName.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateLastName(tfLastName.getText()))) {
+        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateNameUser(tfLastName.getText()))) {
             tfLastName.getStyleClass().add("ok");
         }else{
             tfLastName.getStyleClass().add("error");
@@ -131,7 +143,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhone(tfPhone.getText()))) {
+        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhoneNumber(tfPhone.getText()))) {
             tfPhone.getStyleClass().add("ok");
         }else{
             tfPhone.getStyleClass().add("error");
@@ -156,13 +168,13 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             validation = false;
             rbMale.getStyleClass().add("error");
             rbFemale.getStyleClass().add("error");
-            generateAlert("Select the gender");
+            generateAlert("Selecciona un género");
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;
                 rbMale.getStyleClass().add("error");
                 rbFemale.getStyleClass().add("error");
-                generateAlert("Select only one gender");
+                generateAlert("Selecciona solo un género");
             }
         }
 

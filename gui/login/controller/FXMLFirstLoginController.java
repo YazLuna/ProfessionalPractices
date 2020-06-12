@@ -2,10 +2,11 @@ package gui.login.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
-import dataaccess.LoginAccountImpl;
+import dataaccess.LoginAccountDAOImpl;
 import gui.FXMLGeneralController;
 import logic.ValidateAddUser;
 
@@ -13,11 +14,20 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
     @FXML  private TextField tfPassword;
     @FXML  private TextField tfUser;
     @FXML  private TextField tfPasswordConfirm;
+    @FXML  private Label lbUser;
     public static String password;
     public static String userName;
+    private boolean isPractitioner;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ValidateAddUser validateAddUser = new ValidateAddUser();
+        isPractitioner = validateAddUser.validateEnrollment(userName.toUpperCase());
+        if(isPractitioner){
+            tfUser.setVisible(false);
+            lbUser.setText("Nombre de usuario: "+userName);
+            tfUser.setText(userName);
+        }
         limitTextField(tfUser,50);
         limitTextField(tfPassword,20);
         limitTextField(tfPasswordConfirm,20);
@@ -31,8 +41,13 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         if(passwordEquals && validate && loginAccountNew){
             String passwordNew = encryptPassword(tfPassword.getText());
             String userNameNew= tfUser.getText();
-            LoginAccountImpl login = new LoginAccountImpl();
-            boolean updateWin= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
+            LoginAccountDAOImpl login = new LoginAccountDAOImpl();
+            boolean updateWin= false;
+            if(isPractitioner){
+                updateWin = login.updateLoginAccountPractitioner(userName,password,passwordNew);
+            } else {
+                updateWin= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
+            }
             if(updateWin){
                 logOutGeneral();
                 generateInformation("Cambios guardados correctamente");
@@ -53,11 +68,13 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
             tfPasswordConfirm.getStyleClass().add("error");
             generateError("Tienes que ingresar una contraseña diferente a la anterior ");
         }
-        if(userName.equalsIgnoreCase(tfUser.getText())){
-            validate = false;
-            tfUser.getStyleClass().remove("ok");
-            tfUser.getStyleClass().add("error");
-            generateError("Tienes que ingresar un nombre de usuario diferente al anterior ");
+        if(!isPractitioner){
+            if(userName.equalsIgnoreCase(tfUser.getText())){
+                validate = false;
+                tfUser.getStyleClass().remove("ok");
+                tfUser.getStyleClass().add("error");
+                generateError("Tienes que ingresar un nombre de usuario diferente al anterior ");
+            }
         }
         return validate;
     }

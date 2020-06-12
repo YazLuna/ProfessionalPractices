@@ -1,17 +1,17 @@
 package gui.coordinator.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import java.net.URL;
 import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
+import domain.Practitioner;
 
 /**
  * DAO User
  * @author Yazmin
- * @version 19/05/2020
+ * @version 12/06/2020
  */
 
 public class FXMLMenuCoordinatorController extends FXMLGeneralController implements Initializable {
@@ -47,15 +47,35 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void deletePractitioner() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLDeletePractitioner.fxml",btnDeletePractitioner);
+        Practitioner practitioner = new Practitioner();
+        FXMLUpdateDeletePractitionerListController.action = "Delete";
+        boolean activePractitioner = practitioner.activePractitioner();
+        if(activePractitioner){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnDeletePractitioner);
+        } else {
+            generateError("No hay algún practicante activo");
+        }
    }
 
     public void updatePractitioner() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdatePractitioner.fxml",btnUpdatePractitioner);
+        Practitioner practitioner = new Practitioner();
+        FXMLUpdateDeletePractitionerListController.action = "Update";
+        boolean arePractitioner = practitioner.arePractitioner();
+        if(arePractitioner){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnUpdatePractitioner);
+        } else {
+            generateError("No hay algún practicante registrado");
+        }
     }
 
     public void listPractitioner() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLListOfPractitioner.fxml",btnListPractitioner);
+        Practitioner practitioner = new Practitioner();
+        boolean arePractitioner = practitioner.arePractitioner();
+        if(arePractitioner){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLListPractitioner.fxml",btnListPractitioner);
+        } else {
+            generateError("No hay algún practicante registrado");
+        }
     }
 
     public void assignProject() {

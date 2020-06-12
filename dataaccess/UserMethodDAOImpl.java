@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import domain.Search;
 
 /**
- * DAO User
+ * UserMethodDAOImpl
  * @author Yazmin
  * @version 05/06/2020
  */

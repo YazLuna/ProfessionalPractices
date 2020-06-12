@@ -85,7 +85,7 @@
    <TextField fx:id="tfAlternateEmail" layoutX="167.0" layoutY="270.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfPhone" layoutX="167.0" layoutY="300.0" prefHeight="25.0" prefWidth="208.0"/>
    <Button fx:id="btnRegister" layoutX="185.0" layoutY="430.0" mnemonicParsing="false" onAction="#register"
-           style="-fx-background-color: #59ad55;" text="Registrar" textFill="WHITE">
+           style="-fx-background-color: #59ad55;" text="Aceptar" textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="14.0"/>
       </font>

@@ -2,9 +2,6 @@ package gui.administrator.controller;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,14 +14,9 @@ import domain.Coordinator;
 import gui.FXMLGeneralController;
 import domain.Gender;
 
-/**
- * DAO User
- * @author Yazmin
- * @version 03/06/2020
- */
-
 public class FXMLUpdateCoordinatorController extends FXMLGeneralController implements Initializable  {
     public ImageView imgProfilePicture;
+    @FXML private Button btnRecoverCoordinator;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
     @FXML private TextField tfLastName;
@@ -107,6 +99,10 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
         }else{
             //imgCoordinator.setImage(coordinator.getProfilePicture());
         }
+        boolean activeCoordinator = coordinator.activeCoordinator();
+        if(coordinator.getStatus().equalsIgnoreCase("Inactive") && !activeCoordinator){
+            btnRecoverCoordinator.setVisible(true);
+        }
     }
 
     public void removeStyle(){
@@ -120,21 +116,21 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
 
     public boolean validate(){
         boolean validation= true;
-        if((validateAddUser.validateEmpty(tfStaffNumber.getText())) && (validateAddUser.validateStaffNumber(tfStaffNumber.getText()))){
+        if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
         }else{
             tfStaffNumber.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateName(tfName.getText()))) {
+        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateNameUser(tfName.getText()))) {
             tfName.getStyleClass().add("ok");
         }else{
             tfName.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateLastName(tfLastName.getText()))) {
+        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateNameUser(tfLastName.getText()))) {
             tfLastName.getStyleClass().add("ok");
         }else{
             tfLastName.getStyleClass().add("error");
@@ -155,7 +151,7 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhone(tfPhone.getText()))) {
+        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhoneNumber(tfPhone.getText()))) {
             tfPhone.getStyleClass().add("ok");
         }else{
             tfPhone.getStyleClass().add("error");
@@ -196,4 +192,18 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
         coordinator.setProfilePicture(imgFile);
     }
 
+    public void recoverCoordinator() {
+        Coordinator coordinator = new Coordinator();
+        coordinator.setStaffNumber(staffNumber);
+        boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este coordinador?");
+        if(recoverOk){
+            boolean recoverSuccessful = coordinator.recoverCoordinator();
+            if(recoverSuccessful){
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverCoordinator);
+                generateInformation("Coordinador reactivado exitosamente");
+            }else{
+                generateError("No se puedo reactivar el Coordinador");
+            }
+        }
+    }
 }

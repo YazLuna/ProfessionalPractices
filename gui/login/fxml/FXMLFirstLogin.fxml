@@ -30,14 +30,14 @@
          </font>
       </Button>
    </Pane>
-   <Button fx:id="btnSaveChanges" layoutX="279.0" layoutY="292.0" mnemonicParsing="false" onAction="#saveChanges"
+   <Button layoutX="279.0" layoutY="292.0" mnemonicParsing="false" onAction="#saveChanges"
            prefHeight="27.0" prefWidth="169.0" style="-fx-background-color: #053d01;" text="Guardar Cambios"
            textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="15.0"/>
       </font>
    </Button>
-   <Label layoutX="194.0" layoutY="108.0" text="Ingrese su nuevo nombre de Usuario">
+   <Label fx:id="lbUser" layoutX="194.0" layoutY="108.0" text="Ingrese su nuevo nombre de Usuario">
       <font>
          <Font name="Arial" size="15.0"/>
       </font>
