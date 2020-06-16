@@ -1,13 +1,14 @@
 package gui.administrator.controller;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
+import domain.Search;
+import domain.Teacher;
 
 public class FXMLMenuAdministratorController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnListCoordinator;
@@ -28,7 +29,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
         logOutGeneral();
     }
 
-    public void registerCoordinator() throws SQLException {
+    public void registerCoordinator() {
         boolean isActive;
         Coordinator coordinator = new Coordinator();
         isActive = coordinator.activeCoordinator();
@@ -39,7 +40,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
         }
     }
 
-    public void deleteCoordinator() throws SQLException {
+    public void deleteCoordinator()  {
         boolean isActive;
         Coordinator coordinator = new Coordinator();
         isActive = coordinator.activeCoordinator();
@@ -51,25 +52,63 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
     }
 
     public void updateCoordinator() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml",btnUpdateCoordinator);
-    }
-
-    public void registerTeacher() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
-    }
-
-    public void deleteTeacher() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
-    }
-
-    public void updateTeacher() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
+        Coordinator coordinator = new Coordinator();
+        boolean areCoordinator = coordinator.areCoordinator();
+        if(areCoordinator){
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml",btnUpdateCoordinator);
+        }else{
+            generateError("No hay ningún coordinador registrado");
+        }
     }
 
     public void listCoordinator() {
+        Coordinator coordinator = new Coordinator();
+        boolean areCoordinator = coordinator.areCoordinator();
+        if(areCoordinator){
+            openWindowGeneral("/gui/administrator/fxml/FXMLListCoordinator.fxml",btnListCoordinator);
+        }else{
+            generateError("No hay ningún coordinador registrado");
+        }
+    }
+
+    public void registerTeacher() {
+        Teacher teacher = new Teacher();
+        int isActive = teacher.activeTeacher();
+        if(isActive <= Search.FOUND.getValue()){
+            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
+        }else{
+            generateError("Ya hay dos profesores activos");
+        }
+    }
+
+    public void deleteTeacher() {
+        Teacher teacher = new Teacher();
+        int isActive = teacher.activeTeacher();
+        if(isActive != Search.NOTFOUND.getValue()){
+            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
+        }else{
+            generateError("No hay ningún profesor activo");
+        }
+    }
+
+    public void updateTeacher() {
+        Teacher teacher = new Teacher();
+        int areTeacher = teacher.activeTeacher();
+        if(areTeacher == Search.NOTFOUND.getValue()){
+            generateError("No hay ningún profesor registrado");
+        }else{
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
+        }
     }
 
     public void listTeacher() {
+        Teacher teacher = new Teacher();
+        int areTeacher = teacher.activeTeacher();
+        if(areTeacher == Search.NOTFOUND.getValue()){
+            generateError("No hay ningún profesor registrado");
+        }else{
+            openWindowGeneral("/gui/administrator/fxml/FXMLListTeacher.fxml",btnListTeacher);
+        }
     }
 
 }

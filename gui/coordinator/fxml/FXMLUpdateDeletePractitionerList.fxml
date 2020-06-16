@@ -11,21 +11,21 @@
 <?import javafx.scene.control.TableColumn?>
 
 <AnchorPane prefHeight="443.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.administrator.controller.FXMLUpdateTeacherListController">
+            fx:controller="gui.coordinator.controller.FXMLUpdateDeletePractitionerListController">
     <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#cancel"
             style="-fx-background-color: #707070;" text="Regresar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <Button fx:id="btnUpdate" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#updateTeacher"
-            style="-fx-background-color: #cc2d2d;" text="Modificar" textFill="WHITE">
+    <Button fx:id="btnUpdate" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#updatePractitioner"
+            style="-fx-background-color: #cc2d2d;" text="Modificar" textFill="WHITE" visible="false">
         <font>
             <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
     <Pane layoutX="-2.0" prefHeight="66.0" prefWidth="604.0" style="-fx-background-color: #053d01;">
-        <Label layoutX="173.0" layoutY="14.0" text="Lista de Profesores" textFill="WHITE">
+        <Label layoutX="173.0" layoutY="14.0" text="Lista de Practicantes" textFill="WHITE">
             <font>
                 <Font name="System Bold" size="24.0"/>
             </font>
@@ -41,11 +41,18 @@
             </font>
         </Button>
     </Pane>
-    <TableView fx:id="tableTeachers" layoutX="69.0" layoutY="88.0" prefHeight="268.0" prefWidth="462.0">
+    <TableView fx:id="tablePractitioner" layoutX="69.0" layoutY="88.0" prefHeight="268.0" prefWidth="462.0">
         <columns>
-            <TableColumn fx:id="staffNumber" prefWidth="109.0" text="No. Personal"/>
+            <TableColumn fx:id="enrollment" prefWidth="109.0" text="Matrícula"/>
             <TableColumn fx:id="name" prefWidth="167.0" text="Nombres"/>
             <TableColumn fx:id="lastName" prefWidth="185.0" text="Apellidos"/>
         </columns>
     </TableView>
+    <Button fx:id="btnDelete" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#deletePractitioner"
+            prefHeight="23.0" prefWidth="70.0" style="-fx-background-color: #cc2d2d;" text="Eliminar" textFill="WHITE"
+            visible="false">
+        <font>
+          <Font name="Arial Bold" size="12.0"/>
+        </font>
+    </Button>
 </AnchorPane>
