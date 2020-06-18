@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @version 08/05/2020
  */
 
-public class Practitioner extends User{
+public class  Practitioner extends User{
     private String enrollment;
     private String period;
     
