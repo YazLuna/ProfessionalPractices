@@ -1,7 +1,6 @@
 package gui.administrator.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,13 +11,16 @@ import java.util.ResourceBundle;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 
-public class FXMLUpdateCoordinatorListController extends FXMLGeneralController implements Initializable {
+public class FXMLListCoordinatorController extends FXMLGeneralController {
     public TableView<Coordinator> tableCoordinators;
     public TableColumn<Coordinator, Integer> staffNumber;
     public TableColumn<Coordinator, String> name;
     public TableColumn<Coordinator, String> lastName;
+    public TableColumn<Coordinator, String> email;
+    public TableColumn<Coordinator, String> alternateEmail;
+    public TableColumn<Coordinator, String> phone;
+    public TableColumn<Coordinator, String> status;
     @FXML private Button btnCancel;
-    @FXML private Button btnUpdate;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -27,10 +29,14 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
 
     private void colocateListCoordinators() {
         Coordinator coordinator = new Coordinator();
-        List<Coordinator> coordinatorList=coordinator.getAllCoordinator();
+        List<Coordinator> coordinatorList=coordinator.getInformationAllCoordinator();
         staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        alternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+        phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
         tableCoordinators.getItems().setAll(coordinatorList);
     }
 
@@ -40,15 +46,5 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
 
     public void logOut() {
         logOutGeneral();
-    }
-
-    public void updateCoordinator() {
-        Coordinator coordinatorSelected = tableCoordinators.getSelectionModel().getSelectedItem();
-        if(coordinatorSelected == null){
-            generateAlert("Por favor seleccione algún coordinador");
-        }else{
-            FXMLUpdateCoordinatorController.staffNumber =coordinatorSelected.getStaffNumber();
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinator.fxml",btnUpdate);
-        }
     }
 }

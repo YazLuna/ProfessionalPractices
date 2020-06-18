@@ -39,16 +39,16 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     }
     public void startComponent (){
         limitTextField(tfEmailResponsible,50);
-        deleteSpacesTextField(tfEmailResponsible);
+        prohibitSpacesTextField(tfEmailResponsible);
 
         limitTextField(tfNameResponsible,50);
-        deleteNumberTextField(tfNameResponsible);
+        prohibitNumberTextField(tfNameResponsible);
 
         limitTextField(tfLastNameResponsible,50);
-        deleteNumberTextField(tfLastNameResponsible);
+        prohibitNumberTextField(tfLastNameResponsible);
 
         limitTextField(cbCharge.getEditor(),70);
-        deleteNumberTextField(cbCharge.getEditor());
+        prohibitNumberTextField(cbCharge.getEditor());
     }
 
     public void startComboBox () {

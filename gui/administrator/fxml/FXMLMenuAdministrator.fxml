@@ -40,29 +40,29 @@
    <Pane layoutX="16.0" layoutY="142.0" prefHeight="300.0" prefWidth="357.0" style="-fx-border-color: GREEN;">
       <Button fx:id="btnRegisterCoordinator" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="60.0"
               mnemonicParsing="false" onAction="#registerCoordinator" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #7ae69f;" text="Registrar Coordinador" textAlignment="RIGHT"
+              style="-fx-background-color: #7ae69f;" text="Registrar" textAlignment="RIGHT"
               textFill="WHITE">
          <font>
-            <Font name="Arial Black" size="11.0"/>
+            <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
       <Button fx:id="btnDeleteCoordinator" alignment="BOTTOM_CENTER" layoutX="181.0" layoutY="60.0"
               mnemonicParsing="false" onAction="#deleteCoordinator" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #f05959;" text="Eliminar Coordinador" textFill="WHITE">
+              style="-fx-background-color: #f05959;" text="Eliminar" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
       <Button fx:id="btnUpdateCoordinator" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="181.0"
               mnemonicParsing="false" onAction="#updateCoordinator" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #5998f0;" text="Modificar Coordinador" textFill="WHITE">
+              style="-fx-background-color: #5998f0;" text="Modificar" textFill="WHITE">
          <font>
-            <Font name="Arial Black" size="11.0"/>
+            <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
       <Button fx:id="btnListCoordinator" alignment="BOTTOM_CENTER" layoutX="181.0" layoutY="181.0"
               mnemonicParsing="false" onAction="#listCoordinator" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #6e6e6e;" text="Lista Coordinadores" textFill="WHITE">
+              style="-fx-background-color: #6e6e6e;" text="Ver Lista" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
@@ -99,28 +99,28 @@
       </Label>
       <Button fx:id="btnListTeacher" alignment="BOTTOM_CENTER" layoutX="182.0" layoutY="177.0"
               mnemonicParsing="false" onAction="#listTeacher" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #6e6e6e;" text="Lista Profesores" textFill="WHITE">
+              style="-fx-background-color: #6e6e6e;" text="Ver Lista" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
       <Button fx:id="btnUpdateTeacher" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="177.0"
               mnemonicParsing="false" onAction="#updateTeacher" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #5998f0;" text="Modificar Profesor" textFill="WHITE">
+              style="-fx-background-color: #5998f0;" text="Modificar" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
       <Button fx:id="btnDeleteTeacher" alignment="BOTTOM_CENTER" layoutX="182.0" layoutY="56.0"
               mnemonicParsing="false" onAction="#deleteTeacher" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #f05959;" text="Eliminar Profesor" textFill="WHITE">
+              style="-fx-background-color: #f05959;" text="Eliminar" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
       <Button fx:id="btnRegisterTeacher" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="56.0"
               mnemonicParsing="false" onAction="#registerTeacher" prefHeight="100.0" prefWidth="160.0"
-              style="-fx-background-color: #7ae69f;" text="Registrar Profesor" textAlignment="RIGHT"
+              style="-fx-background-color: #7ae69f;" text="Registrar" textAlignment="RIGHT"
               textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>

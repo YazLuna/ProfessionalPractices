@@ -1,22 +1,22 @@
 package dataaccess;
 
 import java.util.List;
-import java.sql.SQLException;
-
 import domain.Teacher;
 
 /**
- * DAO User
+ * Interface DAO Teacher
  * @author Yazmin
- * @version 08/05/2020
+ * @version 06/06/2020
  */
 
 public interface ITeacherDAO {
-    public Teacher getTeacher (int staffNumber) throws SQLException;
-    public int updateTeacher (int staffNumber, Teacher teacher) throws SQLException;
-    public int deleteTeacher (Teacher teacher) throws SQLException;
-    public int addTeacher (Teacher teacher) throws SQLException;
-    public List <Teacher> getAllTeacher() throws SQLException;
-    public List <Teacher> getTeachersActive () throws SQLException;
-    public int recoverTeacher(Teacher Teacher) throws  SQLException;
+    Teacher getTeacherSelected (int staffNumber) ;
+    boolean updateTeacher (int staffNumber, Teacher teacher);
+    boolean deleteTeacher(String status, String dischargeDate,int staffNumber) ;
+    boolean addTeacher (Teacher teacher) ;
+    List <Teacher> getAllTeacher();
+    List <Teacher> getTeachersActive () ;
+    boolean recoverTeacher(Teacher Teacher) ;
+    List<Teacher> getInformationAllTeacher();
+    int activeTeacher() ;
 }

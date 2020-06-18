@@ -10,7 +10,7 @@ public class RecoverTest {
 
     @Test
     public void testRecoverPractitioner() {
-        int result = 0;
+        boolean result;
         String enrollment = "s18098984";
         Practitioner practitioner = new Practitioner();
         practitioner.setEnrollment(enrollment);
@@ -20,11 +20,11 @@ public class RecoverTest {
 
     @Test
     public void testRecoverTeacher() {
-        int result = 0;
+        boolean result = false;
         int staffNumber = 4;
         Teacher Teacher = new Teacher();
         Teacher.setStaffNumber(staffNumber);
         result = Teacher.recoverTeacher();
-        Assert.assertEquals(1,result);
+        Assert.assertTrue(result);
     }
 }

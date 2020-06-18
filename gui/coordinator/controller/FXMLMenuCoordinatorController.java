@@ -6,14 +6,24 @@ import javafx.scene.control.Button;
 import java.net.URL;
 import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
+import domain.Practitioner;
 
 /**
  * DAO User
  * @author Yazmin
- * @version 19/05/2020
+ * @version 12/06/2020
  */
 
 public class FXMLMenuCoordinatorController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnRegisterGroup;
+    @FXML private Button btnUpdateGroup;
+    @FXML private Button btnAssignProject;
+    @FXML private Button btnUpdateLinkedOrganization;
+    @FXML private Button btnDeleteLinkedOrganization;
+    @FXML private Button btnRegisterLinkedOrganization;
+    @FXML private Button btnUpdateResponsible;
+    @FXML private Button btnDeleteResponsible;
+    @FXML private Button btnRegisterResponsible;
     @FXML private Button btnListPractitioner;
     @FXML private Button btnListProject;
     @FXML private Button btnRegisterPractitioner;
@@ -22,7 +32,6 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     @FXML private Button btnDeleteProject;
     @FXML private Button btnUpdatePractitioner;
     @FXML private Button btnUpdateProject;
-    @FXML private Button btnAssignProject;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -38,15 +47,35 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void deletePractitioner() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLDeletePractitioner.fxml",btnDeletePractitioner);
+        Practitioner practitioner = new Practitioner();
+        FXMLUpdateDeletePractitionerListController.action = "Delete";
+        boolean activePractitioner = practitioner.activePractitioner();
+        if(activePractitioner){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnDeletePractitioner);
+        } else {
+            generateError("No hay algún practicante activo");
+        }
    }
 
     public void updatePractitioner() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdatePractitioner.fxml",btnUpdatePractitioner);
+        Practitioner practitioner = new Practitioner();
+        FXMLUpdateDeletePractitionerListController.action = "Update";
+        boolean arePractitioner = practitioner.arePractitioner();
+        if(arePractitioner){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnUpdatePractitioner);
+        } else {
+            generateError("No hay algún practicante registrado");
+        }
     }
 
     public void listPractitioner() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLListOfPractitioner.fxml",btnListPractitioner);
+        Practitioner practitioner = new Practitioner();
+        boolean arePractitioner = practitioner.arePractitioner();
+        if(arePractitioner){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLListPractitioner.fxml",btnListPractitioner);
+        } else {
+            generateError("No hay algún practicante registrado");
+        }
     }
 
     public void assignProject() {
@@ -75,4 +104,37 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
         openWindowGeneral("/gui/coordinator/fxml/FXMLChooseProject.fxml",btnListProject);
     }
 
+    public void registerLinkedOrganization() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterLinkedOrganization.fxml",btnRegisterLinkedOrganization);
+    }
+
+    public void deleteLinkedOrganization() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteLinkedOrganization.fxml",btnDeleteLinkedOrganization);
+    }
+
+    public void updateLinkedOrganization() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateLinkedOrganization.fxml",btnUpdateLinkedOrganization);
+    }
+
+    public void updateGroup() {
+        //openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterGroup.fxml",btnUpdateGroup);
+    }
+
+    public void registerGroup() {
+        //openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterGroup.fxml",btnRegisterGroup);
+    }
+
+    public void updateResponsible() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateResponsibleProject.fxml",btnUpdateResponsible);
+    }
+
+    public void registerReponsible() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterResponsibleProject.fxml",btnUpdateResponsible);
+    }
+
+    public void deleteResponsible() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLDelete" +
+                "" +
+                "ResponsibleProject.fxml",btnUpdateResponsible);
+    }
 }

@@ -1,17 +1,12 @@
 package domain;
 
-import dataaccess.PractitionerDAOImpl;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import dataaccess.PractitionerDAOImpl;
 
 /**
  * DAO User
  * @author Yazmin
- * @version 08/05/2020
+ * @version 11/06/2020
  */
 
 public class  Practitioner extends User{
@@ -19,7 +14,7 @@ public class  Practitioner extends User{
     private String period;
     
     public Practitioner() {
-        
+        setUserType("Practitioner");
     }
     
     public String getEnrollment () {
@@ -38,93 +33,63 @@ public class  Practitioner extends User{
         this.period = period;
     }
 
-    public int addPractitioner(){
-        int result = 0;
+    public boolean addPractitioner(){
         PractitionerDAOImpl addPractitioner = new PractitionerDAOImpl();
-        try{
-            result = addPractitioner.addPractitioner(this);
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result = addPractitioner.addPractitioner(this);
         return result;
     }
 
-    public int updatePractitioner(){
+    public boolean updatePractitioner(String enrollmentPractitioner){
         PractitionerDAOImpl updatePractitioner = new PractitionerDAOImpl();
-        int result = 0;
-        try{
-            result = updatePractitioner.updatePractitioner(enrollment, this);
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result = updatePractitioner.updatePractitioner(enrollmentPractitioner, this);
         return result;
     }
 
-    //modify enrollment
-    public int updatePractitioner(String enrollmentPractitioner){
-        PractitionerDAOImpl updatePractitioner = new PractitionerDAOImpl();
-        int result = 0;
-        try{
-            result = updatePractitioner.updatePractitioner(enrollmentPractitioner, this);
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    public int recoverPractitioner(){
+    public boolean recoverPractitioner(){
         PractitionerDAOImpl recoverPractitioner = new PractitionerDAOImpl();
-        int result = 0;
-        try{
-            result = recoverPractitioner.recoverPractitioner(this);
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result = recoverPractitioner.recoverPractitioner(this);
         return result;
     }
 
-    public int deletePractitioner(){
+    public boolean deletePractitioner(){
         PractitionerDAOImpl deletePractitioner = new PractitionerDAOImpl();
-        int result = 0;
-        try{
-            result = deletePractitioner.deletePractitioner(this);
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean result = deletePractitioner.deletePractitioner(enrollment,getStatus());
         return result;
     }
 
     public Practitioner getPractitioner(){
         PractitionerDAOImpl getPractitioner = new PractitionerDAOImpl();
-        Practitioner practitioner = new Practitioner();
-        try{
-            practitioner = getPractitioner.getPractitioner(enrollment);
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Practitioner practitioner =  getPractitioner.getPractitioner(enrollment);
         return practitioner ;
     }
 
     public List<Practitioner> getAllPractitioner(){
         PractitionerDAOImpl getAllPractitioner = new PractitionerDAOImpl();
-        List<Practitioner> practitioners = new ArrayList<>();
-        try{
-            getAllPractitioner.getAllPractitioner();
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        List<Practitioner> practitioners = getAllPractitioner.getAllPractitioner();
         return practitioners;
     }
 
     public List<Practitioner> getPractitionersActive(){
-        PractitionerDAOImpl getAllPractitioner = new PractitionerDAOImpl();
-        List<Practitioner> practitioners = new ArrayList<>();
-        try{
-            getAllPractitioner.getPractitionersActive();
-        }catch (SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        PractitionerDAOImpl getAllPractitionerActive = new PractitionerDAOImpl();
+        List<Practitioner> practitioners = getAllPractitionerActive.getPractitionersActive();
         return practitioners;
     }
-    
+
+    public List<Practitioner> getInformationPractitioner(){
+        PractitionerDAOImpl getAllPractitioner = new PractitionerDAOImpl();
+        List<Practitioner> practitioners = getAllPractitioner.getInformationPractitioner();
+        return practitioners;
+    }
+
+    public boolean activePractitioner () {
+        PractitionerDAOImpl areActive = new PractitionerDAOImpl();
+        boolean active = areActive.activePractitioner();
+        return active;
+    }
+
+    public boolean arePractitioner () {
+        PractitionerDAOImpl arePractitioner = new PractitionerDAOImpl();
+        boolean practitionerExist = arePractitioner.arePractitioner();
+        return practitionerExist;
+    }
 }

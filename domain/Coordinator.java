@@ -1,14 +1,13 @@
 package domain;
 
-import java.sql.SQLException;
 import java.util.List;
 import dataaccess.CoordinatorDAOImpl;
 import dataaccess.ProjectDAOImpl;
 
 /**
- * DAO User
+ * Coordinator
  * @author Yazmin
- * @version 08/05/2020
+ * @version 05/06/2020
  */
 
 public class Coordinator extends User{
@@ -44,58 +43,68 @@ public class Coordinator extends User{
         this.dischargeDate = dischargeDate;
     }
 
-    public boolean addCoordinator() throws SQLException{
+    public boolean addCoordinator() {
         CoordinatorDAOImpl addCoordinator = new CoordinatorDAOImpl();
-        boolean result;
-        result = addCoordinator.addCoordinator(this);
+        boolean result = addCoordinator.addCoordinator(this);
         return result;
     }
 
-    public boolean updateCoordinator(int staffNumberCoordinator) throws SQLException{
-        boolean result;
+    public boolean updateCoordinator(int staffNumberCoordinator) {
         CoordinatorDAOImpl updateCoordinator = new CoordinatorDAOImpl();
-        result = updateCoordinator.updateCoordinator(staffNumberCoordinator, this);
+        boolean result = updateCoordinator.updateCoordinator(staffNumberCoordinator, this);
         return result;
     }
 
-     public boolean deleteCoordinator(String status, String dischargeDate) throws SQLException {
+     public boolean deleteCoordinator(String status, String dischargeDate) {
          CoordinatorDAOImpl deleteCoordinator = new CoordinatorDAOImpl();
-         boolean result;
-         result = deleteCoordinator.deleteCoordinator(status, dischargeDate);
+         boolean result = deleteCoordinator.deleteCoordinator(status, dischargeDate);
          return result;
      }
 
-     public Coordinator getCoordinator() throws SQLException {
+     public Coordinator getCoordinator() {
          CoordinatorDAOImpl getCoordinator = new CoordinatorDAOImpl();
-         Coordinator coordinator ;
-         coordinator = getCoordinator.getCoordinator();
+         Coordinator coordinator = getCoordinator.getCoordinator();
          return coordinator;
      }
 
-    public List<Coordinator> getAllCoordinator() throws SQLException {
+    public List<Coordinator> getAllCoordinator() {
         CoordinatorDAOImpl getAllCoordinator = new CoordinatorDAOImpl();
-        List<Coordinator> coordinators;
-        coordinators = getAllCoordinator.getAllCoordinator();
+        List<Coordinator> coordinators = getAllCoordinator.getAllCoordinator();
         return coordinators;
     }
 
-    public boolean recoverCoordinator() throws SQLException {
+    public boolean recoverCoordinator() {
         CoordinatorDAOImpl recoverCoordinator = new CoordinatorDAOImpl();
-        boolean result;
-        result = recoverCoordinator.recoverCoordinator(this);
+        boolean result = recoverCoordinator.recoverCoordinator(this);
         return result;
     }
 
-    public Project getProject (String name)  throws SQLException{
+    public Project getProject (String name) {
         ProjectDAOImpl getProject = new ProjectDAOImpl();
         return getProject.getProject(name);
     }
 
-    public boolean activeCoordinator() throws SQLException {
+    public boolean activeCoordinator() {
         CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
-        boolean result;
-        result = activeCoordinator.activeCoordinator();
+        boolean result = activeCoordinator.activeCoordinator();
         return result;
     }
 
+    public Coordinator getCoordinatorSelected(int staffNumber) {
+        CoordinatorDAOImpl getCoordinator = new CoordinatorDAOImpl();
+        Coordinator coordinator = getCoordinator.getCoordinatorSelected(staffNumber);
+        return coordinator;
+    }
+
+    public List<Coordinator> getInformationAllCoordinator() {
+        CoordinatorDAOImpl getAllCoordinator = new CoordinatorDAOImpl();
+        List<Coordinator> coordinators = getAllCoordinator.getInformationAllCoordinator();
+        return coordinators;
+    }
+
+    public boolean areCoordinator() {
+        CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
+        boolean result = activeCoordinator.areCoordinator();
+        return result;
+    }
 }

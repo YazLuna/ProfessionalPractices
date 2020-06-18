@@ -11,6 +11,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -18,26 +28,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextArea;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-/**
- * DAO User
- * @author Yazmin
- * @version 03/06/2020
- */
+import org.apache.commons.codec.binary.Hex;
+import gui.administrator.controller.FXMLRegisterCoordinatorController;
 
 public class FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
-    File imgFile;
     FileChooser fileChooser = new FileChooser();
-    public ImageView imgProfilePicture;
+    @FXML public ImageView imgProfilePicture;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -48,7 +45,7 @@ public class FXMLGeneralController implements Initializable {
         try {
             Stage stagePrincipal = (Stage) btnLogOut.getScene().getWindow();
             stagePrincipal.close();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/FXMLLogin.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/login/fxml/FXMLLogin.fxml"));
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setResizable(false);
@@ -110,8 +107,8 @@ public class FXMLGeneralController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setAlertType(Alert.AlertType.INFORMATION);
         alert.setHeaderText(message);
-        alert.setTitle("Informacion");
-        alert.showAndWait();
+        alert.setTitle("Información");
+        alert.show();
     }
 
     public void generateCancel(String message, Button btnCancel, String fxml) {
@@ -157,7 +154,7 @@ public class FXMLGeneralController implements Initializable {
         textArea.setTextFormatter(new TextFormatter(textLimitFilter));
     }
 
-    public static void deleteWorkTextField(TextField textField) {
+    public static void prohibitWordTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -169,7 +166,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteNumberTextField(TextField textField) {
+    public static void prohibitNumberTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -185,7 +182,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteNumberInWorksTextField(TextField textField) {
+    public static void prohibitNumberAllowSpecialCharTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -201,7 +198,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteSpacesTextField(TextField textField) {
+    public static void prohibitSpacesTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -213,7 +210,7 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public static void deleteSpacesTextArea(TextArea textArea) {
+    public static void prohibitSpacesTextArea(TextArea textArea) {
         textArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -226,6 +223,7 @@ public class FXMLGeneralController implements Initializable {
     }
 
     public void loadImage(){
+        File imgFile;
         fileChooser.setTitle("Buscar Imagen");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG", "*.jpg"),
@@ -237,7 +235,23 @@ public class FXMLGeneralController implements Initializable {
         if (imgFile != null) {
             Image image = new Image("file:" + imgFile.getAbsolutePath());
             imgProfilePicture.setImage(image);
+            FXMLRegisterCoordinatorController.imgFile = imgFile;
         }
+    }
+
+    public String encryptPassword(String password){
+        String passwordEncrypt= null;
+        try{
+            MessageDigest md;
+            md= MessageDigest.getInstance("SHA-512");
+            md.update(password.getBytes());
+            byte[] mb = md.digest();
+            passwordEncrypt= String.valueOf(Hex.encodeHex(mb));
+        }catch (NoSuchAlgorithmException e){
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create an encrypt Password", e);
+        }
+        return passwordEncrypt;
     }
 
 }

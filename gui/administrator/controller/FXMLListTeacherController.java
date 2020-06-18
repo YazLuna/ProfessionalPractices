@@ -1,7 +1,6 @@
 package gui.administrator.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,13 +11,16 @@ import java.util.ResourceBundle;
 import domain.Teacher;
 import gui.FXMLGeneralController;
 
-public class FXMLUpdateTeacherListController extends FXMLGeneralController implements Initializable {
+public class FXMLListTeacherController extends FXMLGeneralController {
     public TableView<Teacher> tableTeachers;
     public TableColumn<Teacher, Integer> staffNumber;
     public TableColumn<Teacher, String> name;
     public TableColumn<Teacher, String> lastName;
+    public TableColumn<Teacher, String> email;
+    public TableColumn<Teacher, String> alternateEmail;
+    public TableColumn<Teacher, String> phone;
+    public TableColumn<Teacher, String> status;
     @FXML private Button btnCancel;
-    @FXML private Button btnUpdate;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -27,10 +29,14 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
 
     private void colocateListTeachers() {
         Teacher teacher = new Teacher();
-        List<Teacher> teacherList=teacher.getAllTeacher();
+        List<Teacher> teacherList=teacher.getInformationAllTeacher();
         staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        alternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+        phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
         tableTeachers.getItems().setAll(teacherList);
     }
 
@@ -40,15 +46,5 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
 
     public void logOut() {
         logOutGeneral();
-    }
-
-    public void updateTeacher() {
-        Teacher TeacherSelected = tableTeachers.getSelectionModel().getSelectedItem();
-        if(TeacherSelected == null){
-            generateAlert("Por favor seleccione algún profesor");
-        }else{
-            FXMLUpdateTeacherController.staffNumber =TeacherSelected.getStaffNumber();
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacher.fxml",btnUpdate);
-        }
     }
 }

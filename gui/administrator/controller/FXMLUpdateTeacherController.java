@@ -2,19 +2,20 @@ package gui.administrator.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import logic.ValidateAddUser;
 import java.io.File;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
-import javafx.scene.image.ImageView;
-import gui.FXMLGeneralController;
-import logic.ValidateAddUser;
+import domain.Search;
 import domain.Teacher;
 import domain.Gender;
+import gui.FXMLGeneralController;
 
-public class FXMLRegisterTeacherController extends FXMLGeneralController implements Initializable {
+public class FXMLUpdateTeacherController extends FXMLGeneralController implements Initializable  {
     public ImageView imgProfilePicture;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
@@ -22,18 +23,19 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     @FXML private TextField tfEmail;
     @FXML private TextField tfAlternateEmail;
     @FXML private TextField tfPhone;
-    @FXML private TextField tfUserName;
-    @FXML private TextField tfPassword;
     @FXML private RadioButton rbMale;
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
-    @FXML private Button btnRegister;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnRecoverTeacher;
     private File imgFile;
+    public static int staffNumber;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setLimitsTextFields();
+        colocateTeacher();
     }
 
     public void logOut() {
@@ -41,25 +43,31 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     }
 
     public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
     }
 
     public void loadProfilePicture() {
         loadImage();
     }
 
-    public void register() {
+    public void update(){
+        boolean validate;
+        boolean registerComplete;
         removeStyle();
-        boolean validate = validate();
+        validate = validate();
         if(validate){
-            Teacher teacher = new Teacher();
-            createObjectTeacher(teacher);
-            boolean registerComplete = teacher.addTeacher();
+            boolean confirm = generateConfirmation("¿Seguro que desea modificar el Coordinador?");
+            if(confirm){
+                Teacher teacher = new Teacher();
+                createObjectTeacher(teacher);
+            /*registerComplete = Teacher.addTeacher();
             if(registerComplete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
                 generateInformation("Registro Exitoso");
             }else{
-                generateError("Este profesor ya esta registrado");
+                generateError("Este coordinador ya esta registrado");
+            }*/
+                System.out.println("Ya es válido");
             }
         }
     }
@@ -70,9 +78,34 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         limitTextField(tfEmail,50);
         limitTextField(tfAlternateEmail,50);
         limitTextField(tfPhone,10);
-        limitTextField(tfUserName,50);
-        limitTextField(tfPassword,20);
         limitTextField(tfStaffNumber,10);
+    }
+
+    private void colocateTeacher() {
+        Teacher teacher = new Teacher();
+        teacher = teacher.getTeacherSelected(staffNumber);
+        tfName.setText(teacher.getName());
+        tfLastName.setText(teacher.getLastName());
+        tfEmail.setText(teacher.getEmail());
+        tfAlternateEmail.setText(teacher.getAlternateEmail());
+        if(teacher.getGender()== Gender.MALE.getGender()){
+            rbMale.isSelected();
+        }else{
+            rbFemale.isSelected();
+        }
+        tfPhone.setText(teacher.getPhone());
+        tfStaffNumber.setText(String.valueOf(teacher.getStaffNumber()));
+        if(teacher.getProfilePicture()!=null){
+            //imgProfilePicture = new ImageView(imageGeneric);
+            //imgProfilePicture.setImage(imageGeneric);
+            //imgTeacher.setImage(Teacher.getProfilePicture());
+        }
+
+
+        int activeCoordinator = teacher.activeTeacher();
+        if(teacher.getStatus().equalsIgnoreCase("Inactive") && activeCoordinator <= Search.FOUND.getValue()){
+            btnRecoverTeacher.setVisible(true);
+        }
     }
 
     public void removeStyle(){
@@ -81,8 +114,6 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         tfLastName.getStyleClass().remove("ok");
         tfEmail.getStyleClass().remove("ok");
         tfAlternateEmail.getStyleClass().remove("ok");
-        tfUserName.getStyleClass().remove("ok");
-        tfPassword.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
     }
 
@@ -130,20 +161,6 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfPassword.getText())) {
-            tfPassword.getStyleClass().add("ok");
-        }else{
-            tfPassword.getStyleClass().add("error");
-            validation = false;
-        }
-
-        if(validateAddUser.validateEmpty(tfUserName.getText())) {
-            tfUserName.getStyleClass().add("ok");
-        }else{
-            tfUserName.getStyleClass().add("error");
-            validation = false;
-        }
-
         if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
             validation = false;
             rbMale.getStyleClass().add("error");
@@ -157,6 +174,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
                 generateAlert("Select only one gender");
             }
         }
+
         return validation;
     }
 
@@ -167,9 +185,6 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         teacher.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
         teacher.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
         teacher.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
-        teacher.setUserName(tfUserName.getText());
-        String passwordEncryption = encryptPassword(tfPassword.getText());
-        teacher.setPassword(passwordEncryption);
         if(rbMale.isSelected()){
             teacher.setGender(Gender.MALE.getGender());
         }else{
@@ -177,10 +192,21 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
                 teacher.setGender(Gender.FEMALE.getGender());
             }
         }
-        Date registerDate = new Date();
-        teacher.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(registerDate));
         teacher.setProfilePicture(imgFile);
     }
 
-
+    public void recoverTeacher() {
+        Teacher teacher = new Teacher();
+        teacher.setStaffNumber(staffNumber);
+        boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este profesor?");
+        if(recoverOk){
+            boolean recoverSuccessful = teacher.recoverTeacher();
+            if(recoverSuccessful){
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverTeacher);
+                generateInformation("Profesor reactivado exitosamente");
+            }else{
+                generateError("No se puedo reactivar el Profesor");
+            }
+        }
+    }
 }
