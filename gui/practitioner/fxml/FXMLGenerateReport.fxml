@@ -18,46 +18,46 @@
             <Font name="Arial" size="29.0" />
          </font>
       </Label>
-      <Button fx:id="btnCancel" layoutX="342.0" layoutY="450.0" mnemonicParsing="false" onAction="#cancel" prefHeight="33.0" prefWidth="95.0" style="-fx-background-color: #cc2d2d;" text="Cancel" textFill="WHITE">
+      <Button fx:id="btnCancel" layoutX="342.0" layoutY="450.0" mnemonicParsing="false" onAction="#cancel" prefHeight="33.0" prefWidth="95.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="btnGenerate" layoutX="181.0" layoutY="450.0" mnemonicParsing="false" onAction="#generate" prefHeight="33.0" prefWidth="95.0" style="-fx-background-color: #59ad55;" text="Generate" textFill="WHITE">
+      <Button fx:id="btnGenerate" layoutX="181.0" layoutY="450.0" mnemonicParsing="false" onAction="#generate" prefHeight="33.0" prefWidth="95.0" style="-fx-background-color: #59ad55;" text="Generar" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="15.0" />
          </font>
       </Button>
       <TextArea fx:id="tftActivities" layoutX="164.0" layoutY="209.0" prefHeight="222.0" prefWidth="383.0" />
       <TextField fx:id="tftName" layoutX="165.0" layoutY="105.0" prefHeight="25.0" prefWidth="383.0" />
-      <Label layoutX="29.0" layoutY="107.0" text="Name:">
+      <Label layoutX="29.0" layoutY="107.0" text="Nombre:">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="29.0" layoutY="143.0" text="Completion date:">
+      <Label layoutX="29.0" layoutY="143.0" text="Fecha terminacion:">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="30.0" layoutY="176.0" text="Deliver date: ">
+      <Label layoutX="30.0" layoutY="176.0" text="Fecha entrega: ">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="30.0" layoutY="209.0" text="Activities:">
+      <Label layoutX="30.0" layoutY="209.0" text="Actividades:">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
       <Pane prefHeight="87.0" prefWidth="600.0" style="-fx-background-color: #053d01;">
          <children>
-            <Label layoutX="157.0" layoutY="30.0" text="Generate Monthly Report" textFill="WHITE">
+            <Label layoutX="157.0" layoutY="30.0" text="Generar reporte mensual " textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="btnLogOut" layoutX="509.0" layoutY="17.0" mnemonicParsing="false" onAction="#logOut" prefHeight="20.0" prefWidth="77.0" text="LogOut">
+            <Button fx:id="btnLogOut" layoutX="471.0" layoutY="17.0" mnemonicParsing="false" onAction="#logOut" prefHeight="26.0" prefWidth="115.0" text="Cerrar sesion">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>

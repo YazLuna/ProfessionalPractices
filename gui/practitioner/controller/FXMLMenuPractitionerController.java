@@ -38,6 +38,7 @@ public class FXMLMenuPractitionerController extends FXMLGeneralController implem
     }
 
     public void uploadActivity() {
+        openWindowGeneral("/gui/practitioner/fxml/FXMLListActivity.fxml",btnUploadActivity);
     }
 
     public void generateMonthlyReport() {

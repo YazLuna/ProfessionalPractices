@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.practitioner.controller.FXMLListActivityController">
+   <children>
+      <Pane prefHeight="85.0" prefWidth="600.0" style="-fx-background-color: #053d01;">
+         <children>
+            <Button fx:id="btnLogOut" layoutX="475.0" layoutY="17.0" mnemonicParsing="false" onAction="#logOut" text="Cerrar sesion">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+            </Button>
+            <Label layoutX="175.0" layoutY="29.0" text="Lista de actividades" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <TabPane layoutX="177.0" layoutY="106.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
+      <Button fx:id="btnAccept" layoutX="152.0" layoutY="321.0" mnemonicParsing="false" onAction="#accept" style="-fx-background-color: #59ad55;" text="Aceptar" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnCancel" layoutX="350.0" layoutY="321.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
