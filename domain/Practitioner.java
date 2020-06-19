@@ -9,7 +9,7 @@ import dataaccess.PractitionerDAOImpl;
  * @version 11/06/2020
  */
 
-public class Practitioner extends User{
+public class  Practitioner extends User{
     private String enrollment;
     private String period;
     

@@ -24,7 +24,7 @@ public class FXMLGenerateActivityController extends FXMLGeneralController implem
     @FXML private DatePicker dpDeliverDate;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb){ }
+    public void initialize(URL url, ResourceBundle rb){ configureTextFields(); }
 
     public void logOut() {
         logOutGeneral();
@@ -33,7 +33,7 @@ public class FXMLGenerateActivityController extends FXMLGeneralController implem
     public void cancel() {
         Alert cancel = new Alert(Alert.AlertType.NONE);
         cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-        cancel.setHeaderText("Do you want to cancel?");
+        cancel.setHeaderText("¿Seguro que desea cancelar?");
         cancel.setTitle("Cancel");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.get() == ButtonType.OK) {
@@ -41,7 +41,24 @@ public class FXMLGenerateActivityController extends FXMLGeneralController implem
         }
     }
 
+    public void configureTextFields(){
+        prohibitSpacesTextField(tftName);
+        limitTextField(tftName,20);
+        prohibitSpacesTextField(tftDescription);
+        limitTextField(tftDescription,100);
+        prohibitWordTextField(tftValue);
+        prohibitSpacesTextField(tftValue);
+        limitTextField(tftValue,5);
+    }
+
+    public void removeStyle(){
+        tftName.getStyleClass().remove("ok");
+        tftDescription.getStyleClass().remove("ok");
+        tftValue.getStyleClass().remove("ok");
+    }
+
     public void generate() {
+        removeStyle();
         openWindowGeneral("/gui/teacher/fxml/FXMLPreviewActivity.fxml",btnGenerate);
     }
 }

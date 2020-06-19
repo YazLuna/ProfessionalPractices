@@ -15,6 +15,7 @@ import gui.FXMLGeneralController;
  */
 
 public class FXMLGenerateReportController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnLogOut;
     @FXML private Button btnGenerate;
     @FXML private Button btnCancel;
     @FXML private TextField tftName;
@@ -23,7 +24,7 @@ public class FXMLGenerateReportController extends FXMLGeneralController implemen
     @FXML private TextArea tftActivities;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb){ }
+    public void initialize(URL url, ResourceBundle rb) { configureTextFields();}
 
     public void logOut() {
         logOutGeneral();
@@ -32,7 +33,7 @@ public class FXMLGenerateReportController extends FXMLGeneralController implemen
     public void cancel() {
         Alert cancel = new Alert(Alert.AlertType.NONE);
         cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-        cancel.setHeaderText("Do you want to cancel?");
+        cancel.setHeaderText("¿Desea cancelar?");
         cancel.setTitle("Cancel");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.get() == ButtonType.OK) {
@@ -40,7 +41,21 @@ public class FXMLGenerateReportController extends FXMLGeneralController implemen
         }
     }
 
+    public void configureTextFields(){
+        prohibitNumberTextField(tftName);
+        prohibitSpacesTextField(tftName);
+        limitTextField(tftName,30);
+        prohibitSpacesTextArea(tftActivities);
+        limitTextArea(tftActivities,200);
+    }
+
+    public void removeStyle(){
+        tftName.getStyleClass().remove("ok");
+        tftActivities.getStyleClass().remove("ok");
+    }
+
     public void generate() {
+        removeStyle();
         openWindowGeneral("/gui/practitioner/fxml/FXMLPreviewReport.fxml",btnGenerate);
     }
 
