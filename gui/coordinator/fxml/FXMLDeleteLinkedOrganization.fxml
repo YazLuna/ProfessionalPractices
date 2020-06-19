@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLDeleteLinkedOrganizationController">
+   <children>
+      <ScrollPane prefHeight="554.0" prefWidth="593.0">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="578.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <VBox fx:id="vData" alignment="TOP_CENTER" layoutY="-1.0" prefWidth="583.0" spacing="25.0">
+                     <children>
+                        <FlowPane hgap="30.0" style="-fx-background-color: #053d01;">
+                           <children>
+                              <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behind" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+                                 <graphic>
+                                    <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/home.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <FlowPane.margin>
+                                    <Insets left="25.0" top="20.0" />
+                                 </FlowPane.margin>
+                              </Button>
+                              <Label text="Eliminar Organización Vinculada" textAlignment="CENTER" textFill="WHITE">
+                                 <font>
+                                    <Font name="Arial" size="26.0" />
+                                 </font>
+                                 <FlowPane.margin>
+                                    <Insets top="25.0" />
+                                 </FlowPane.margin>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="30.0" />
+                           </padding>
+                        </FlowPane>
+                        <GridPane prefHeight="346.0" prefWidth="365.0" vgap="15.0">
+                           <children>
+                              <Label text="Nombre: *  " textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Usuarios directos: *  " textAlignment="RIGHT" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Usuarios indirectos: *  " textAlignment="RIGHT" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="28.0" text="Correo electrónico: *  " textAlignment="RIGHT" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="28.0" text="Telefono: *  " textAlignment="RIGHT" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="28.0" text="Dirección: *  " textAlignment="RIGHT" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="28.0" text="Estado: *  " textAlignment="RIGHT" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="28.0" text="Ciudad: *  " textAlignment="RIGHT" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="28.0" text="Sector: *  " textAlignment="RIGHT" GridPane.rowIndex="8">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbNameOrganization" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbUsersDirect" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbUsersIndirect" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbEmail" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbPhoneNumber" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbAddress" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbState" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbCity" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbSector" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                 <font>
+                                    <Font name="Arial" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" maxWidth="271.0" minWidth="10.0" prefWidth="221.0" />
+                              <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="284.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin>
+                        </GridPane>
+                        <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0">
+                           <children>
+                              <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#delete" prefHeight="38.0" prefWidth="103.0" style="-fx-background-color: #59ad55;" text="Eliminar" textFill="#f5f5f5">
+                                 <font>
+                                    <Font name="Arial" size="17.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" prefWidth="94.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+                                 <font>
+                                    <Font name="Arial" size="17.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets bottom="55.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets top="25.0" />
+                           </VBox.margin>
+                        </FlowPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

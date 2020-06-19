@@ -1,28 +1,29 @@
 package gui.coordinator.controller;
 
 import gui.FXMLGeneralController;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import java.util.Optional;
-import java.util.ArrayList;
+import javafx.scene.control.Label;
+import java.io.IOException;
 import java.util.List;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import domain.LinkedOrganization;
-import domain.ResponsibleProject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import domain.Project;
-import logic.ValidateDataPerson;
-import logic.ValidateLinkedOrganization;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import logic.ValidateProject;
+import org.w3c.dom.Text;
 
 /**
  * class FXMLRegisterProjectController
@@ -30,25 +31,20 @@ import logic.ValidateProject;
  * @version 08/05/2020
  */
 public class FXMLRegisterProjectController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnBehind;
     @FXML private Button btnRegisterProject;
     @FXML private Button btnCancelProject;
-    @FXML private TextField tfNameOrganization;
-    @FXML private TextField tfDirectUsers;
-    @FXML private TextField tfIndirectUsers;
-    @FXML private TextField tfEmailOrganization;
-    @FXML private TextField tfPhoneNumber;
-    @FXML private TextField tfAdress;
-    @FXML private TextField tfNameResponsible;
-    @FXML private TextField tfLastNameResponsible;
-    @FXML private TextField tfEmailResponsible;
+    @FXML private Button btnAddActivity;
+    @FXML private Button btnDeleteActivity;
+    @FXML private Button btnChooseLinkedOrganization;
+    @FXML private Button btnChooseResponsibleProject;
     @FXML private TextField tfNameProject;
     @FXML private TextField tfMethodology;
     @FXML private TextField tfDuration;
     @FXML private TextField tfQuiantityPractitioners;
-    @FXML private ComboBox cbState;
-    @FXML private ComboBox cbCity;
-    @FXML private ComboBox cbSector;
-    @FXML private ComboBox cbCharge;
+    @FXML private TextField tfDaysAndHours;
+    @FXML private TextField tfLinkedOrganization;
+    @FXML private TextField tfResponsibleProject;
     @FXML private ComboBox cbLapse;
     @FXML private TextArea taDescription;
     @FXML private TextArea taObjectiveGeneral;
@@ -57,127 +53,91 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     @FXML private TextArea taResource;
     @FXML private TextArea taActivities;
     @FXML private TextArea taResponsabilities;
-    private List<String> allCity = new ArrayList<>();
-    private List<String> allState = new ArrayList<>();
-    private List<String> allSector = new ArrayList<>();
-    private List<String> allCharge = new ArrayList<>();
-    private List<String> allLapse = new ArrayList<>();
-    private LinkedOrganization organization = new LinkedOrganization();
-    private Project project = new Project();
-    private ResponsibleProject responsible = new ResponsibleProject();
-    private ValidateProject validateProject = new ValidateProject();
-    private ValidateLinkedOrganization validateOrganizarion = new ValidateLinkedOrganization();
-    private ValidateDataPerson validateDataPerson = new ValidateDataPerson();
-
+    @FXML private GridPane gpActivity;
+    private  static String nameLinkedOrganization;
+    private List<String> allLapse;
+    private Project project;
+    private ValidateProject validateProject;
+    private int positionGrindActivity=0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         startTextField();
         startComboBox();
-        registerProject();
-        cancelProject();
+
+    }
+
+    public void behind () {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
 
     public void cancelProject () {
-        btnCancelProject.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Alert cancel = new Alert(Alert.AlertType.NONE);
-                cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-                cancel.setHeaderText("Do you want to cancel?");
-                cancel.setTitle("Cancel");
-                Optional<ButtonType> action = cancel.showAndWait();
-                if (action.get() == ButtonType.OK) {
-
-                }
-            }
-        });
+        generateCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
+
     public void registerProject() {
-        btnRegisterProject.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                String message;
-                if(!validateDataProject()) {
-                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
-                    alertDataProject.setAlertType(Alert.AlertType.WARNING);
-                    alertDataProject.setHeaderText("Enter correct data in the red fields");
-                    alertDataProject.setTitle("Warning");
-                    alertDataProject.show();
-                }else{
-                    getDataProject();
-                    message = project.registerProject();
-                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
-                    alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
-                    alertDataProject.setHeaderText(message);
-                    alertDataProject.setTitle("Information");
-                    alertDataProject.show();
-                }
-            }
-        });
+        String message;
+        if(!validateDataProject()) {
+            Alert alertDataProject = new Alert(Alert.AlertType.NONE);
+            alertDataProject.setAlertType(Alert.AlertType.WARNING);
+            alertDataProject.setHeaderText("Enter correct data in the red fields");
+            alertDataProject.setTitle("Warning");
+            alertDataProject.show();
+        }else{
+            getDataProject();
+            message = project.registerProject();
+            Alert alertDataProject = new Alert(Alert.AlertType.NONE);
+            alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
+            alertDataProject.setHeaderText(message);
+            alertDataProject.setTitle("Information");
+            alertDataProject.show();
+        }
     }
     public void startTextField (){
-        limitTextField(tfNameOrganization,50);
-        prohibitNumberTextField(tfNameOrganization);
-        limitTextField(tfDirectUsers,100);
-        prohibitNumberTextField(tfDirectUsers);
-        limitTextField(tfIndirectUsers,100);
-        prohibitNumberTextField(tfIndirectUsers);
-        limitTextField(tfEmailOrganization,30);
-        prohibitSpacesTextField(tfEmailOrganization);
-        limitTextField(tfEmailResponsible,50);
-        prohibitSpacesTextField(tfEmailResponsible);
-        limitTextField(tfAdress,50);
-        prohibitSpacesTextField(tfAdress);
-        limitTextField(tfPhoneNumber,10);
-        prohibitWordTextField(tfPhoneNumber);
-        limitTextField(tfNameResponsible,50);
-        prohibitNumberTextField(tfNameResponsible);
-        limitTextField(tfLastNameResponsible,50);
-        prohibitNumberTextField(tfLastNameResponsible);
-        limitTextField(tfNameProject,25);
+        limitTextField(tfNameProject,50);
         prohibitNumberTextField(tfNameProject);
-        limitTextField(tfMethodology,15);
+
+        limitTextField(tfMethodology,100);
         prohibitNumberTextField(tfMethodology);
+
         limitTextField(tfDuration,2);
         prohibitWordTextField(tfDuration);
+
         limitTextField(tfQuiantityPractitioners,1);
         prohibitWordTextField(tfQuiantityPractitioners);
-        limitTextField(cbState.getEditor(),25);
-        prohibitNumberTextField(cbState.getEditor());
-        limitTextField(cbCity.getEditor(),25);
-        prohibitNumberTextField(cbCity.getEditor());
-        limitTextField(cbSector.getEditor(),25);
-        prohibitNumberTextField(cbSector.getEditor());
-        limitTextField(cbCharge.getEditor(),25);
-        prohibitNumberTextField(cbCharge.getEditor());
+
         limitTextField(cbLapse.getEditor(),30);
         prohibitSpacesTextField(cbLapse.getEditor());
-        limitTextArea(taDescription,100);
+
+        limitTextArea(taDescription,255);
         prohibitSpacesTextArea(taDescription);
-        limitTextArea(taObjectiveGeneral,100);
+
+        limitTextArea(taObjectiveGeneral,255);
         prohibitSpacesTextArea(taObjectiveGeneral);
-        limitTextArea(taObjectiveInmediate,100);
+
+        limitTextArea(taObjectiveInmediate,255);
         prohibitSpacesTextArea(taObjectiveInmediate);
-        limitTextArea(taObjectiveMediate,100);
+
+        limitTextArea(taObjectiveMediate,255);
         prohibitSpacesTextArea(taObjectiveMediate);
-        limitTextArea(taResource,100);
+
+        limitTextArea(taResource,255);
         prohibitSpacesTextArea(taResource);
+
         limitTextArea(taActivities,255);
         prohibitSpacesTextArea(taActivities);
+
         limitTextArea(taResponsabilities,255);
         prohibitSpacesTextArea(taResponsabilities);
+
+        limitTextField(tfDaysAndHours,150);
+        prohibitSpacesTextField(tfDaysAndHours);
     }
 
     public void startComboBox () {
-        allCity = organization.listCity();
-        cbCity.getItems().addAll(allCity);
-        allState = organization.listState();
-        cbState.getItems().addAll(allState);
-        allSector = organization.listSector();
-        cbSector.getItems().addAll(allSector);
+        project = new Project();
         allLapse = project.listLapse();
         cbLapse.getItems().addAll(allLapse);
-        allCharge = responsible.listCharge();
-        cbCharge.getItems().addAll(allCharge);
     }
 
     public void getDataProject () {
@@ -196,23 +156,80 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         project.setDuration(duration);
         int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
         project.setQuantityPractitioner(quiantityPractitioner);
-        organization.setName(validateProject.deleteSpace(tfNameOrganization.getText()));
+    }
 
-        organization.setEmail(tfEmailOrganization.getText());
-        organization.setPhoneNumber(tfPhoneNumber.getText());
-        organization.setAddress(validateProject.deleteSpace(tfAdress.getText()));
-        organization.setCity(validateProject.deleteSpace(cbCity.getEditor().getText()));
-        organization.setSector(validateProject.deleteSpace(cbSector.getEditor().getText()));
-        organization.setState(validateProject.deleteSpace(cbState.getEditor().getText()));
-        project.setOrganization(organization);
-        responsible.setName(validateProject.deleteSpace(tfNameResponsible.getText()));
-        responsible.setLastName(validateProject.deleteSpace(tfLastNameResponsible.getText()));
-        responsible.setEmail(tfEmailResponsible.getText());
-        responsible.setCharge(validateProject.deleteSpace(cbCharge.getEditor().getText()));
-        project.setResponsible(responsible);
+    public void assignLinkedOrganization (String nameLinkedOrganization){
+        this.nameLinkedOrganization = nameLinkedOrganization;
+    }
+
+    public void assignResponsibleProject (String responsibleProject){
+        tfResponsibleProject.setText(responsibleProject);
+    }
+
+    public void addActivity () {
+        Label lMes = new Label();
+        lMes.setText("Mes:  ");
+        Label lActivity = new Label();
+        lActivity.setText("Actividad:  ");
+        TextField tfActivity = new TextField();
+        TextField tfMes = new TextField();
+        lMes.autosize();
+        lActivity.autosize();
+        tfActivity.autosize();
+        tfMes.autosize();
+        lMes.getStyleClass().add("details");
+        tfMes.getStyleClass().add("details");
+        lActivity.getStyleClass().add("details");
+        tfActivity.getStyleClass().add("details");
+        prohibitSpacesTextField(tfMes);
+        prohibitNumberTextField(tfMes);
+        prohibitSpacesTextField(tfActivity);
+        prohibitNumberTextField(tfActivity);
+        gpActivity.add(lMes,0,positionGrindActivity);
+        gpActivity.add(tfMes,1,positionGrindActivity);
+        gpActivity.add(lActivity,2,positionGrindActivity);
+        gpActivity.add(tfActivity,3,positionGrindActivity);
+        positionGrindActivity++;
+    }
+
+    public void deleteActivity () {
+        positionGrindActivity--;
+    }
+
+    public void chooseResponsibleProject () {
+        FXMLChooseResponsibleProjectController chooseResponsibleProject = new FXMLChooseResponsibleProjectController();
+        chooseResponsibleProject.controllerSection("register");
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseResponsibleProject.fxml"));
+        Stage stage = new Stage();
+        try {
+            Parent root1 = fxmlLoader.load();
+            stage.setScene(new Scene(root1));
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create new Window.", e);
+        }
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    public void chooseLinkedOrganization () {
+        FXMLChooseLinkedOrganizationController chooseLinkedOrganization = new FXMLChooseLinkedOrganizationController();
+        chooseLinkedOrganization.controllerSection("register");
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseLinkedOrganization.fxml"));
+        Stage stage = new Stage();
+        try {
+            Parent root1 = fxmlLoader.load();
+            stage.setScene(new Scene(root1));
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create new Window.", e);
+        }
+        stage.setResizable(false);
+        stage.show();
     }
 
     public boolean validateDataProject (){
+        validateProject = new ValidateProject();
         boolean result = true;
         if(!validateProject.validateName(tfNameProject.getText()))  {
             tfNameProject.getStyleClass().add("error");
@@ -287,84 +304,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
             result= false;
         }else{
             tfQuiantityPractitioners.getStyleClass().remove("error");
-        }
-        if(!validateOrganizarion.validateName(tfNameOrganization.getText())){
-            tfNameOrganization.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfNameOrganization.getStyleClass().remove("error");
-        }
-        if(!validateProject.validateNotEmpty(tfDirectUsers.getText())){
-            tfDirectUsers.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfDirectUsers.getStyleClass().remove("error");
-        }
-        if(!validateProject.validateNotEmpty(tfIndirectUsers.getText())){
-            tfIndirectUsers.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfIndirectUsers.getStyleClass().remove("error");
-        }
-        if(!validateOrganizarion.validatePhoneNumber(tfPhoneNumber.getText())){
-            tfPhoneNumber.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfPhoneNumber.getStyleClass().remove("error");
-        }
-        if(!validateOrganizarion.validateAddress(tfAdress.getText())){
-            tfAdress.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfAdress.getStyleClass().remove("error");
-        }
-        if(!validateOrganizarion.validateComboBox(cbCity.getEditor().getText())){
-            cbCity.getStyleClass().add("error");
-            result= false;
-        }else {
-            cbCity.getStyleClass().remove("error");
-        }
-        if(!validateOrganizarion.validateComboBox(cbSector.getEditor().getText())){
-            cbSector.getStyleClass().add("error");
-            result= false;
-        }else {
-            cbSector.getStyleClass().remove("error");
-        }
-        if(!validateOrganizarion.validateComboBox(cbState.getEditor().getText())){
-            cbState.getStyleClass().add("error");
-            result= false;
-        }else {
-            cbState.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateEmail(tfEmailOrganization.getText())){
-            tfEmailOrganization.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfEmailOrganization.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateName(tfNameResponsible.getText())){
-            tfNameResponsible.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfNameResponsible.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateLastName(tfLastNameResponsible.getText())){
-            tfLastNameResponsible.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfLastNameResponsible.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateEmail(tfEmailResponsible.getText())){
-            tfEmailResponsible.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfEmailResponsible.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateCharge(cbCharge.getEditor().getText())){
-            cbCharge.getStyleClass().add("error");
-            result= false;
-        }else {
-            cbCharge.getStyleClass().remove("error");
         }
         return result;
     }

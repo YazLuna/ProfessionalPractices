@@ -109,7 +109,9 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void deleteLinkedOrganization() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteLinkedOrganization.fxml",btnDeleteLinkedOrganization);
+        FXMLListLinkedOrganizationController listLinkedOrganization = new FXMLListLinkedOrganizationController();
+        listLinkedOrganization.controllerSection("delete");
+        openWindowGeneral("/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml",btnDeleteLinkedOrganization);
     }
 
     public void updateLinkedOrganization() {

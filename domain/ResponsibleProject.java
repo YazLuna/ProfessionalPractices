@@ -1,5 +1,6 @@
 package domain;
 
+import dataaccess.LinkedOrganizationDAOImpl;
 import dataaccess.ResponsibleProjectDAOImpl;
 import java.util.List;
 
@@ -78,5 +79,9 @@ public class ResponsibleProject{
         }
         return result;
     }
-    
+
+    public List<ResponsibleProject> listResponsibleProject () {
+        ResponsibleProjectDAOImpl getAllResponsibleProject = new ResponsibleProjectDAOImpl();
+        return getAllResponsibleProject.getAllResponsible();
+    }
 }
