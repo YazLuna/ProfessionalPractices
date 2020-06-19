@@ -27,7 +27,7 @@ public class FXMLGenerateReportPartialController extends FXMLGeneralController i
     @FXML private TextArea tfObservations;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb){ }
+    public void initialize(URL url, ResourceBundle rb) { configureTextFields(); }
 
     public void logOut() {
         logOutGeneral();
@@ -36,7 +36,7 @@ public class FXMLGenerateReportPartialController extends FXMLGeneralController i
     public void cancel() {
         Alert cancel = new Alert(Alert.AlertType.NONE);
         cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-        cancel.setHeaderText("Do you want to cancel?");
+        cancel.setHeaderText("¿Desea cancelar?");
         cancel.setTitle("Cancel");
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.get() == ButtonType.OK) {
@@ -44,7 +44,33 @@ public class FXMLGenerateReportPartialController extends FXMLGeneralController i
         }
     }
 
+    public void removeStyle(){
+        tfNumberReport.getStyleClass().remove("ok");
+        tfHoursCovered.getStyleClass().remove("ok");
+        tfMethodology.getStyleClass().remove("ok");
+        tfObjective.getStyleClass().remove("ok");
+        tfObservations.getStyleClass().remove("ok");
+        tfResultsObtained.getStyleClass().remove("ok");
+    }
+
+    public void configureTextFields(){
+        prohibitWordTextField(tfNumberReport);
+        prohibitSpacesTextField(tfNumberReport);
+        prohibitWordTextField(tfHoursCovered);
+        prohibitSpacesTextField(tfHoursCovered);
+        limitTextField(tfMethodology,50);
+        prohibitNumberTextField(tfMethodology);
+        prohibitSpacesTextField(tfMethodology);
+        limitTextArea(tfObjective,150);
+        prohibitSpacesTextArea(tfObjective);
+        limitTextArea(tfResultsObtained,150);
+        prohibitSpacesTextArea(tfResultsObtained);
+        limitTextArea(tfObservations,150);
+        prohibitSpacesTextArea(tfObservations);
+    }
+
     public void generate() {
+        removeStyle();
         openWindowGeneral("/gui/practitioner/fxml/FXMLPreviewReportPartial.fxml",btnGenerate);
     }
 

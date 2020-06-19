@@ -239,7 +239,7 @@ public class FXMLGeneralController implements Initializable {
         }
     }
 
-    public String encryptPassword(String password){
+  public String encryptPassword(String password){
         String passwordEncrypt= null;
         try{
             MessageDigest md;
