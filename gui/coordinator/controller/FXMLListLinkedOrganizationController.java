@@ -13,7 +13,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +34,11 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
     public void startTableOrganizations() {
         organization = new LinkedOrganization();
         allLinkedOrganization = new ArrayList<>();
-        allLinkedOrganization = organization.listOrganization();
+        if(controllerSection!= "delete"){
+            allLinkedOrganization = organization.listOrganization();
+        }else{
+            allLinkedOrganization = organization.listOrganizationAvailableNotAssing();
+        }
         TableColumn<LinkedOrganization, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<LinkedOrganization, String>("name"));
         TableColumn<LinkedOrganization, String> email = new TableColumn<>("Correo Electrónico");
@@ -69,10 +72,13 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
                     organization = organizationSelect.getValue();
                     if(tvLinkedOrganizations.getSelectionModel().getSelectedItem() != null) {
                         if(controllerSection != "delete") {
-                            FXMLUpdateProjectController updateProject = new FXMLUpdateProjectController();
+                            FXMLUpdateLinkedOrganizationController updateLinkedOrganization = new FXMLUpdateLinkedOrganizationController();
+                            updateLinkedOrganization.assignLinkedOrganization(organization.getName());
+                            openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateLinkedOrganization.fxml",tvLinkedOrganizations);
                         }else {
-                            FXMLDeleteLinkedOrganizationController deleteProject = new FXMLDeleteLinkedOrganizationController();
-                            deleteProject.assignLinkedOrganization(organization.getName());
+                            FXMLDeleteLinkedOrganizationController deleteLinkedOrganization = new FXMLDeleteLinkedOrganizationController();
+                            deleteLinkedOrganization.assignLinkedOrganization(organization.getName());
+                            openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteLinkedOrganization.fxml",tvLinkedOrganizations);
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,53 +9,70 @@
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
 
-<AnchorPane id="AnchorPane" prefHeight="411.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateResponsibleProjectController">
+<AnchorPane id="AnchorPane" prefHeight="471.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateResponsibleProjectController">
     <stylesheets>
-        <URL value="@../css/fxmlupdateresponsibleproject.css" />
+       <URL value="@../../fxmlregister.css" />
     </stylesheets>
    <children>
-      <GridPane layoutX="146.0" layoutY="124.0" prefHeight="153.0" prefWidth="346.0">
+      <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0" layoutX="100.0" layoutY="373.0">
          <children>
-            <Label prefHeight="21.0" prefWidth="52.0" text="Name:" textAlignment="RIGHT">
+            <Button fx:id="btnModify" mnemonicParsing="false" onAction="#modify" prefHeight="38.0" prefWidth="103.0" style="-fx-background-color: #59ad55;" text="Modificar" textFill="#f5f5f5">
                <font>
-                  <Font size="15.0" />
+                  <Font name="Arial" size="17.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" prefWidth="94.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="17.0" />
+               </font>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="60.0" />
+         </padding>
+      </FlowPane>
+      <GridPane layoutX="7.0" layoutY="153.0" vgap="15.0">
+         <children>
+            <Label prefHeight="21.0" text="Nombre: *  " textAlignment="RIGHT">
+               <font>
+                  <Font name="Arial" size="15.0" />
                </font>
             </Label>
-            <Label prefHeight="21.0" prefWidth="81.0" text="Last Name: " textAlignment="RIGHT" GridPane.rowIndex="1">
+            <Label prefHeight="21.0" text="Apellido: *  " textAlignment="RIGHT" GridPane.rowIndex="1">
                <font>
-                  <Font size="15.0" />
+                  <Font name="Arial" size="15.0" />
                </font>
             </Label>
-            <Label prefHeight="21.0" prefWidth="45.0" text="Email:" textAlignment="RIGHT" GridPane.rowIndex="2">
+            <Label prefHeight="21.0" text="Correo electrónico: *  " textAlignment="RIGHT" GridPane.rowIndex="2">
                <font>
-                  <Font size="15.0" />
+                  <Font name="Arial" size="15.0" />
                </font>
             </Label>
-            <Label prefHeight="21.0" prefWidth="57.0" text="Charge:" textAlignment="RIGHT" GridPane.rowIndex="3">
+            <Label prefHeight="21.0" text="Cargo: *  " textAlignment="RIGHT" GridPane.rowIndex="3">
                <font>
-                  <Font size="15.0" />
+                  <Font name="Arial" size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="tfLastName" minWidth="-Infinity" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="tfLastNameResponsible" minWidth="-Infinity" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-            <TextField fx:id="tfEmail" minWidth="-Infinity" prefHeight="27.0" prefWidth="232.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="tfEmailResponsible" minWidth="-Infinity" prefHeight="27.0" prefWidth="232.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-            <TextField fx:id="tfName" minWidth="-Infinity" prefHeight="27.0" prefWidth="159.0" GridPane.columnIndex="1">
+            <ComboBox fx:id="cbCharge" editable="true" prefHeight="27.0" prefWidth="176.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="tfNameResponsible" minWidth="-Infinity" prefHeight="27.0" prefWidth="159.0" GridPane.columnIndex="1">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-            <ComboBox fx:id="cbCharge" editable="true" prefHeight="25.0" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
          <columnConstraints>
-            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="166.0" minWidth="0.0" prefWidth="95.0" />
-            <ColumnConstraints fillWidth="false" maxWidth="254.0" minWidth="10.0" prefWidth="251.0" />
+            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="281.0" minWidth="0.0" prefWidth="243.0" />
+            <ColumnConstraints fillWidth="false" maxWidth="375.0" minWidth="10.0" prefWidth="343.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -63,29 +81,32 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <Label layoutX="121.0" layoutY="47.0" prefHeight="26.0" prefWidth="371.0" text="Data of the responsible of the project" textFill="#0e005e">
-         <font>
-            <Font name="Arial" size="22.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnCancel" layoutX="281.0" layoutY="322.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="77.0" text="Cancel" textFill="#000175">
-         <font>
-            <Font name="Arial" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnUpdate" layoutX="420.0" layoutY="322.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="Update" textFill="#000275">
-         <font>
-            <Font name="Arial" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="33.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="55.0" prefWidth="45.0" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
-         <graphic>
-            <ImageView fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../images/behind.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
+      <FlowPane hgap="33.0" prefHeight="91.0" prefWidth="600.0" style="-fx-background-color: #053d01;">
+         <children>
+            <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behind" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+               <graphic>
+                  <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/behind.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <FlowPane.margin>
+                  <Insets left="25.0" top="20.0" />
+               </FlowPane.margin>
+            </Button>
+            <Label text="Modificar Responsable del proyecto" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="25.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets top="25.0" />
+               </FlowPane.margin>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="30.0" />
+         </padding>
+      </FlowPane>
    </children>
 </AnchorPane>

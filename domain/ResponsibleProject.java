@@ -1,6 +1,5 @@
 package domain;
 
-import dataaccess.LinkedOrganizationDAOImpl;
 import dataaccess.ResponsibleProjectDAOImpl;
 import java.util.List;
 
@@ -65,23 +64,77 @@ public class ResponsibleProject{
     }
 
     public List<String> listCharge () {
-        ResponsibleProjectDAOImpl listCharge = new ResponsibleProjectDAOImpl();
-        return listCharge.getAllCharge();
+        ResponsibleProjectDAOImpl getAllCharge = new ResponsibleProjectDAOImpl();
+        List<String> listCharge = getAllCharge.getAllCharge();
+        return  listCharge;
     }
 
-    public String addResponsibleProject () {
-        String result;
-        ResponsibleProjectDAOImpl addResponsible = new ResponsibleProjectDAOImpl();
-        if(addResponsible.searchIdResponsibleProject(email) == Search.NOTFOUND.getValue()){
-            result = addResponsible.addResponsibleProject(this);
-        } else {
-            result = "Existe un responsable del proyecto con el mismo correo electrónico registrado";
+    public boolean searchResponsibleProject () {
+        int idResponsibleProjectFound;
+        boolean isFoundResponsibleProject;
+        ResponsibleProjectDAOImpl searchResponsible = new ResponsibleProjectDAOImpl();
+        idResponsibleProjectFound = searchResponsible.searchIdResponsibleProject(email);
+        if(idResponsibleProjectFound == Search.NOTFOUND.getValue()){
+            isFoundResponsibleProject = false;
+        }else {
+            isFoundResponsibleProject= true;
         }
-        return result;
+        return isFoundResponsibleProject;
+    }
+
+    public boolean addResponsibleProject () {
+        boolean isAddResponsibleProject;
+        ResponsibleProjectDAOImpl addResponsible = new ResponsibleProjectDAOImpl();
+        isAddResponsibleProject = addResponsible.addResponsibleProject(this);
+        return isAddResponsibleProject;
+    }
+
+    public ResponsibleProject getResponsible () {
+        ResponsibleProjectDAOImpl getResponsible = new ResponsibleProjectDAOImpl();
+        ResponsibleProject responsible = getResponsible.getResponsibleProject(email);
+        return responsible;
     }
 
     public List<ResponsibleProject> listResponsibleProject () {
         ResponsibleProjectDAOImpl getAllResponsibleProject = new ResponsibleProjectDAOImpl();
-        return getAllResponsibleProject.getAllResponsible();
+        List<ResponsibleProject> listResponsiblesProject = getAllResponsibleProject.getAllResponsible();
+        return listResponsiblesProject;
+    }
+
+    public List<ResponsibleProject> listResponsibleProjectAvailable () {
+        ResponsibleProjectDAOImpl getAllResponsibleProject = new ResponsibleProjectDAOImpl();
+        List<ResponsibleProject> listResponsiblesProject = getAllResponsibleProject.getAllResponsibleAvailable();
+        return listResponsiblesProject;
+    }
+
+    public List<ResponsibleProject> listResponsibleProjectAvailableNotAssing () {
+        ResponsibleProjectDAOImpl getAllResponsibleProject = new ResponsibleProjectDAOImpl();
+        List<ResponsibleProject> listResponsiblesProject = getAllResponsibleProject.getAllResponsibleAvailableNotAssing();
+        return listResponsiblesProject;
+    }
+
+    public boolean deleteResponsibleProject() {
+        boolean isDeleteResponsibleProject;
+        ResponsibleProjectDAOImpl deleteResponsible = new ResponsibleProjectDAOImpl();
+        isDeleteResponsibleProject = deleteResponsible.deleteResponsibleProject(idResponsible);
+        return isDeleteResponsibleProject;
+    }
+
+    public boolean thereAreResponsibleProject () {
+        ResponsibleProjectDAOImpl areresponsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        boolean thereAreResponsible = areresponsibleProjectDAO.thereAreResponsibleProject();
+        return thereAreResponsible;
+    }
+
+    public boolean thereAreResponsibleProjectAvailable () {
+        ResponsibleProjectDAOImpl areresponsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        boolean thereAreResponsibleAvailable = areresponsibleProjectDAO.thereAreResponsibleProjectAvailable();
+        return thereAreResponsibleAvailable;
+    }
+
+    public boolean thereAreResponsibleProjectAvailableNotAssing () {
+        ResponsibleProjectDAOImpl areresponsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        boolean thereAreResponsibleAvailable = areresponsibleProjectDAO.thereAreResponsibleProjectAvailableNotAssing();
+        return thereAreResponsibleAvailable;
     }
 }

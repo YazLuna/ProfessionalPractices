@@ -55,6 +55,79 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         return linkedOrganizations;
     }
 
+    @Override
+    public List<LinkedOrganization> getAllLinkedOrganizationAvailable () {
+        List<LinkedOrganization> linkedOrganizations = new ArrayList<>();
+        try{
+            connection = connexion.getConnection();
+            String queryAllLikendOrganization = "select idLinkedOrganization,name,email from LinkedOrganization inner join Status on " +
+                    "LinkedOrganization.idStatus = Status.idStatus where status =?";
+            PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
+            sentenceAllOrganization.setString(1, "available");
+            results= sentenceAllOrganization.executeQuery();
+            while(results.next()){
+                LinkedOrganization linkedOrganization = new LinkedOrganization();
+                linkedOrganization.setName(results.getString("name"));
+                linkedOrganization.setEmail(results.getString("email"));
+                linkedOrganizations.add(linkedOrganization);
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return linkedOrganizations;
+    }
+
+    @Override
+    public List<LinkedOrganization> getAllLinkedOrganizationAvailableNotAssing() {
+        List<LinkedOrganization> linkedOrganizations = new ArrayList<>();
+        int idLinkedOrganization;
+        try{
+            connection = connexion.getConnection();
+            String queryAllLikendOrganization = "select idLinkedOrganization,name,email from LinkedOrganization inner join Status on " +
+                    "LinkedOrganization.idStatus = Status.idStatus where status =?";
+            PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
+            sentenceAllOrganization.setString(1, "available");
+            results= sentenceAllOrganization.executeQuery();
+            while(results.next()){
+                idLinkedOrganization = results.getInt("idLinkedOrganization");
+                String queryAssingOrganization = "select idProject from Project,LinkedOrganization WHERE " +
+                        "LinkedOrganization.idLinkedOrganization = Project.idLinkedOrganization AND LinkedOrganization.idLinkedOrganization=?";
+                PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingOrganization);
+                sentenceAssing.setInt(1,idLinkedOrganization);
+                ResultSet resultAssing;
+                resultAssing = sentenceAssing.executeQuery();
+                if(resultAssing.next()){
+                    String queryAssingOrganizationAvailable  = "select idProject from Project,LinkedOrganization,Status WHERE " +
+                            "LinkedOrganization.idLinkedOrganization = Project.idLinkedOrganization AND " +
+                            "Project.idStatus = Status.idStatus AND status=? AND LinkedOrganization.idLinkedOrganization=?";
+                    PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingOrganizationAvailable);
+                    sentenceAssingAvailable.setString(1,"available");
+                    sentenceAssingAvailable.setInt(2,idLinkedOrganization);
+                    ResultSet resultAssingAvailable;
+                    resultAssingAvailable = sentenceAssingAvailable.executeQuery();
+                    if(!resultAssingAvailable.next()) {
+                        LinkedOrganization linkedOrganization = new LinkedOrganization();
+                        linkedOrganization.setName(results.getString("name"));
+                        linkedOrganization.setEmail(results.getString("email"));
+                        linkedOrganizations.add(linkedOrganization);
+                    }
+                }else {
+                    LinkedOrganization linkedOrganization = new LinkedOrganization();
+                    linkedOrganization.setName(results.getString("name"));
+                    linkedOrganization.setEmail(results.getString("email"));
+                    linkedOrganizations.add(linkedOrganization);
+                }
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return linkedOrganizations;
+    }
+
 
     /**
      * Method to get the Linked Organization of the Project
@@ -124,8 +197,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The message if the Linked Organization was added
      */
     @Override
-    public String addLinkedOrganization(LinkedOrganization organization) {
-        String result = "La organizacion vinculada no pudo registrarse";
+    public boolean addLinkedOrganization(LinkedOrganization organization) {
+        boolean result = false;
         int idState;
         idState = searchIdState(organization.getState());
         if(idState == Search.NOTFOUND.getValue()){
@@ -147,11 +220,6 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         int idStatus;
         StatusDAOImpl status = new StatusDAOImpl();
         idStatus = status.searchIdStatus(organization.getStatus());
-        if(idStatus == Search.NOTFOUND.getValue()){
-            status.addStatus(organization.getStatus());
-            idStatus = status.searchIdStatus(organization.getStatus());
-        }
-        
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceOrganization = connection.prepareStatement("insert into LinkedOrganization(name,"+
@@ -167,11 +235,13 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceOrganization.setInt(9,idSector);
             sentenceOrganization.setInt(10,idStatus);
             sentenceOrganization.executeUpdate();
-            result = "La organizacion vinculada se registro exitosamente";
+            result = true;
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
-            connexion.closeConnection();
+            if (connexion != null) {
+                connexion.closeConnection();
+            }
             return result;
         }
     }
@@ -182,11 +252,11 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The message if the Linked Organization was updated
      */
     @Override
-    public String modifyLinkedOrganization (LinkedOrganization organization) {
+    public boolean modifyLinkedOrganization (LinkedOrganization organization) {
         int idState;
         int idCity;
         int idSector;
-        String result = "Could not update linked organization";
+        boolean result = false;
         idState = searchIdState(organization.getState());
         if(idState == Search.NOTFOUND.getValue()){
             addState(organization.getState());
@@ -220,7 +290,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setInt(9, idSector);
             sentence.setInt(10, organization.getIdLinkedOrganization());
             sentence.executeUpdate();
-            result = "The linked organization was successfully updated";
+            result = true;
         }catch(SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -441,5 +511,111 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             connexion.closeConnection();
         }
         return sectors;
+    }
+
+    @Override
+    public boolean deleteLinkedOrganization (int idLinkedOrganization) {
+        boolean result= false;
+        StatusDAOImpl status = new StatusDAOImpl();
+        int idStatus = status.searchIdStatus("not available");
+        try{
+            connection = connexion.getConnection();
+            String queryDelete = "update LinkedOrganization set idStatus=? where idLinkedOrganization =?";
+            PreparedStatement sentence = connection.prepareStatement(queryDelete);
+            sentence.setInt(1, idStatus);
+            sentence.setInt(2, idLinkedOrganization);
+            sentence.executeUpdate();
+            result= true;
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            if(connexion!=null){
+                connexion.closeConnection();
+            }
+            return result;
+        }
+    }
+
+    @Override
+    public boolean thereAreLinkedOrganizationAvailable (){
+        boolean areLinkedOrganization = false;
+        int idLinkedOrganization;
+        try {
+            connection = connexion.getConnection();
+            String queryAllLikendOrganization = "select idLinkedOrganization,name,email from LinkedOrganization inner join Status on " +
+                    "LinkedOrganization.idStatus = Status.idStatus where status =?";
+            PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
+            sentenceAllOrganization.setString(1, "available");
+            results= sentenceAllOrganization.executeQuery();
+            while(results.next() && !areLinkedOrganization){
+                idLinkedOrganization = results.getInt("idLinkedOrganization");
+                String queryAssingOrganization = "select idProject from Project,LinkedOrganization WHERE " +
+                        "LinkedOrganization.idLinkedOrganization = Project.idLinkedOrganization AND LinkedOrganization.idLinkedOrganization=?";
+                PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingOrganization);
+                sentenceAssing.setInt(1,idLinkedOrganization);
+                ResultSet resultAssing;
+                resultAssing = sentenceAssing.executeQuery();
+                if(resultAssing.next()){
+                    String queryAssingOrganizationAvailable  = "select idProject from Project,LinkedOrganization,Status WHERE " +
+                            "LinkedOrganization.idLinkedOrganization = Project.idLinkedOrganization AND " +
+                            "Project.idStatus = Status.idStatus AND status=? AND LinkedOrganization.idLinkedOrganization=?";
+                    PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingOrganizationAvailable);
+                    sentenceAssingAvailable.setString(1,"available");
+                    sentenceAssingAvailable.setInt(2,idLinkedOrganization);
+                    ResultSet resultAssingAvailable;
+                    resultAssingAvailable = sentenceAssingAvailable.executeQuery();
+                    if(!resultAssingAvailable.next()) {
+                        areLinkedOrganization = true;
+                    }
+                }else {
+                    areLinkedOrganization = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return areLinkedOrganization;
+    }
+
+    @Override
+    public boolean thereAreLinkedOrganization(){
+        boolean areLinkedOrganization = false;
+        try {
+            connection = connexion.getConnection();
+            String queryAreLikendOrganization = "select name from LinkedOrganization";
+            PreparedStatement sentence = connection.prepareStatement(queryAreLikendOrganization);
+            results= sentence.executeQuery();
+            while (results.next()) {
+                areLinkedOrganization = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return areLinkedOrganization;
+    }
+
+    @Override
+    public boolean thereAreLinkedOrganizationAvailableNotAssing() {
+        boolean areLinkedOrganization = false;
+        try {
+            connection = connexion.getConnection();
+            String queryAllLikendOrganization = "select idLinkedOrganization,name,email from LinkedOrganization inner join Status on " +
+                    "LinkedOrganization.idStatus = Status.idStatus where status =?";
+            PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
+            sentenceAllOrganization.setString(1, "available");
+            results= sentenceAllOrganization.executeQuery();
+            while(results.next() && !areLinkedOrganization){
+                areLinkedOrganization = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return areLinkedOrganization;
     }
 }

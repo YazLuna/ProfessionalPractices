@@ -34,9 +34,11 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     public void behind () {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
+
     public void cancel () {
-        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
+
     public void startComponent (){
         limitTextField(tfEmailResponsible,50);
         prohibitSpacesTextField(tfEmailResponsible);
@@ -61,16 +63,25 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     public void register () {
         responsible = new ResponsibleProject();
         String message;
-        if(!validateDataResponsible()) {
+        boolean isValidDataResponsible = validateDataResponsible();
+        if(!isValidDataResponsible) {
             generateAlert("Ingresar datos válidos");
         }else{
             responsible = getDataResponsible();
-            message = responsible.addResponsibleProject();
-            if(message.equals("El responsable del proyecto se registro exitosamente")){
-                generateInformation(message);
-                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
-            } else {
-                generateError(message);
+            boolean isFoundLinkedOrganization;
+            isFoundLinkedOrganization = responsible.searchResponsibleProject();
+            if(!isFoundLinkedOrganization){
+                boolean isRegisterResponsibleProject;
+                isRegisterResponsibleProject = responsible.addResponsibleProject();
+                if(!isRegisterResponsibleProject){
+                    generateError("El responsable del proyecto no pudo registrarse");
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+                } else {
+                    generateInformation("El responsable del proyecto se registro exitosamente");
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+                }
+            }else  {
+                generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
             }
         }
     }
@@ -90,31 +101,38 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         boolean isValidDataResponsible = true;
         tfNameResponsible.getStyleClass().remove("error");
         tfNameResponsible.getStyleClass().remove("ok");
-        if(!validateDataPerson.validateName(tfNameResponsible.getText())){
+        boolean isValidName = validateDataPerson.validateName(tfNameResponsible.getText());
+        if(!isValidName){
             tfNameResponsible.getStyleClass().add("error");
             isValidDataResponsible = false;
         }else {
             tfNameResponsible.getStyleClass().add("ok");
         }
+
+        boolean isValidLastName = validateDataPerson.validateLastName(tfLastNameResponsible.getText());
         tfLastNameResponsible.getStyleClass().remove("error");
         tfLastNameResponsible.getStyleClass().remove("ok");
-        if(!validateDataPerson.validateLastName(tfLastNameResponsible.getText())){
+        if(!isValidLastName){
             tfLastNameResponsible.getStyleClass().add("error");
             isValidDataResponsible = false;
         }else {
             tfLastNameResponsible.getStyleClass().add("ok");
         }
+
+        boolean isValidEmailResponsible = validateDataPerson.validateEmail(tfEmailResponsible.getText());
         tfEmailResponsible.getStyleClass().remove("error");
         tfEmailResponsible.getStyleClass().remove("ok");
-        if(!validateDataPerson.validateEmail(tfEmailResponsible.getText())){
+        if(!isValidEmailResponsible){
             tfEmailResponsible.getStyleClass().add("error");
             isValidDataResponsible = false;
         }else {
             tfEmailResponsible.getStyleClass().add("ok");
         }
+
+        boolean isValidCharge = validateDataPerson.validateCharge(cbCharge.getEditor().getText());
         cbCharge.getStyleClass().remove("error");
         cbCharge.getStyleClass().remove("ok");
-        if(!validateDataPerson.validateCharge(cbCharge.getEditor().getText())){
+        if(!isValidCharge){
             cbCharge.getStyleClass().add("error");
             isValidDataResponsible = false;
         }else {

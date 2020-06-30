@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import domain.Project;
-import domain.Search;
+
+import domain.*;
 
 
 /**
@@ -42,29 +42,10 @@ public class ProjectDAOImpl implements IProjectDAO {
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
-            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
-            LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
-            ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
-
+            results = consultation.executeQuery("select nameProject from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
             while(results.next()){
                 Project project = new Project();
-                project.setIdProject(results.getInt("idProject"));
                 project.setNameProject(results.getString("nameProject"));
-                project.setDescription(results.getString("description"));
-                project.setObjectiveGeneral(results.getString("objectiveGeneral"));
-                project.setObjectiveInmediate(results.getString("objectiveInmediate"));
-                project.setObjectiveMediate(results.getString("objectiveMediate"));
-                project.setMethodology(results.getString("methodology"));
-                project.setResources(results.getString("resources"));
-                project.setStatus(results.getString("status"));
-                project.setActivities(results.getString("activities"));
-                project.setResponsabilities(results.getString("responsabilities"));
-                project.setDuration(results.getInt("duration"));
-                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
-                project.setLapse(results.getString("lapse"));
-                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
-                project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
-                project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
             }
         }catch (SQLException ex){
@@ -80,32 +61,61 @@ public class ProjectDAOImpl implements IProjectDAO {
         List<Project> projects = new ArrayList<>();
         try{
             connection = connexion.getConnection();
-            consultation  = connection.createStatement();
-            results = consultation.executeQuery("select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse"+
-                    " where status='available'");
-            LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
-            ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
-
+            String queryAllProject = "select nameProject from Project where status=?";
+            PreparedStatement sentence = connection.prepareStatement(queryAllProject);
+            sentence.setString(1, "available");
+            results= sentence.executeQuery();
             while(results.next()){
                 Project project = new Project();
-                project.setIdProject(results.getInt("idProject"));
                 project.setNameProject(results.getString("nameProject"));
-                project.setDescription(results.getString("description"));
-                project.setObjectiveGeneral(results.getString("objectiveGeneral"));
-                project.setObjectiveInmediate(results.getString("objectiveInmediate"));
-                project.setObjectiveMediate(results.getString("objectiveMediate"));
-                project.setMethodology(results.getString("methodology"));
-                project.setResources(results.getString("resources"));
-                project.setStatus(results.getString("status"));
-                project.setActivities(results.getString("activities"));
-                project.setResponsabilities(results.getString("responsabilities"));
-                project.setDuration(results.getInt("duration"));
-                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
-                project.setLapse(results.getString("lapse"));
-                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
-                project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
-                project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return projects;
+    }
+
+    @Override
+    public List<Project> getAllProjectsAvailableNotAssing (){
+        List<Project> projects = new ArrayList<>();
+        int idProject;
+        try{
+            connection = connexion.getConnection();
+            String queryAllProjectAvailable = "select idProject,nameProject from Project inner join Status on " +
+                    "Project.idStatus = Status.idStatus where status=?";
+            PreparedStatement sentenceAllProjectAvailable = connection.prepareStatement(queryAllProjectAvailable);
+            sentenceAllProjectAvailable.setString(1, "available");
+            results= sentenceAllProjectAvailable.executeQuery();
+            while(results.next()){
+                idProject = results.getInt("idProject");
+                String queryAssingProject = "select enrollment from Practitioner,Project where Practitioner.idProject = Project.idProject " +
+                        "AND Project.idProject =?";
+                PreparedStatement sentenceAssingProject = connection.prepareStatement(queryAssingProject);
+                sentenceAssingProject.setInt(1, idProject);
+                ResultSet resultAssingProject;
+                resultAssingProject = sentenceAssingProject.executeQuery();
+                if(resultAssingProject.next()) {
+                    String queryPractitionerActive = "select enrollment from Practitioner,Project,User_Status,Status where Practitioner.idProject = Project.idProject " +
+                            "AND Practitioner.idUser = User_Status.idUser AND Status.idStatus = User_Status.idStatus " +
+                            "AND status=? AND Project.idProject =?";
+                    PreparedStatement sentencePractitionerActive = connection.prepareStatement(queryPractitionerActive);
+                    sentencePractitionerActive.setString(1,"Active");
+                    sentencePractitionerActive.setInt(2, idProject);
+                    ResultSet resultPractitionerActive;
+                    resultPractitionerActive = sentencePractitionerActive.executeQuery();
+                    if(!resultPractitionerActive.next()){
+                        Project project = new Project();
+                        project.setNameProject(results.getString("nameProject"));
+                        projects.add(project);
+                    }
+                }else{
+                    Project project = new Project();
+                    project.setNameProject(results.getString("nameProject"));
+                    projects.add(project);
+                }
             }
         }catch (SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -125,12 +135,14 @@ public class ProjectDAOImpl implements IProjectDAO {
         Project project = null;
         try{
             connection = connexion.getConnection();
-            String queryProject = "select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse where nameProject=?";
+            String queryProject = "select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse " +
+                    "inner join Status on Project.idStatus = Status.idStatus where nameProject=?";
             PreparedStatement sentence = connection.prepareStatement(queryProject);
             sentence.setString(1,nameProject);
             results = sentence.executeQuery();
             LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
             ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
+            SchedulingActivitiesDAOImpl implementSchedulingActivities = new SchedulingActivitiesDAOImpl();
             while(results.next()){
                 project = new Project();
                 project.setIdProject(results.getInt("idProject"));
@@ -141,15 +153,18 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setObjectiveMediate(results.getString("objectiveMediate"));
                 project.setMethodology(results.getString("methodology"));
                 project.setResources(results.getString("resources"));
-                project.setStatus(results.getString("status"));
-                project.setActivities(results.getString("activities"));
+                project.setActivitiesAndFunctions(results.getString("activities"));
                 project.setResponsabilities(results.getString("responsabilities"));
-                project.setDuration(results.getInt("duration"));
+                project.setDaysHours(results.getString("daysHours"));
                 project.setLapse(results.getString("lapse"));
-                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
+                project.setStatus(results.getString("status"));
+                project.setDuration(results.getInt("duration"));
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setPlacesAvailable(results.getInt("placesAvailable"));
+                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
                 project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
-                project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
+                project.setResponsible(implementResponsible.getIdResponsibleProject(results.getInt("idResponsibleProject")));
+                project.setSchedulingActivitiesProject(implementSchedulingActivities.getAllSchedulingActivities(project.getIdProject()));
             }
         }catch (SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -157,7 +172,6 @@ public class ProjectDAOImpl implements IProjectDAO {
             connexion.closeConnection();
         }
         return project;
-        
     }
 
     /**
@@ -166,36 +180,29 @@ public class ProjectDAOImpl implements IProjectDAO {
      * @return The message if the Project was added
      */
     @Override
-    public String updateProject (Project project) {
-        String result = "The project could not be registered";
-        int idResponsibleProject;
-        int idOrganization;
+    public boolean addProject (Project project) {
+        boolean resultIsAddProject = false;
         int idLapse;
-        LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
-        idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(), project.getOrganization().getPhoneNumber());
-        if(idOrganization == Search.NOTFOUND.getValue()) {
-            result = organizationImpl.addLinkedOrganization(project.getOrganization());
-            idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
-        }
-        ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
-        if(idResponsibleProject == Search.NOTFOUND.getValue()) {
-            result = responsibleImpl.addResponsibleProject(project.getResponsible());
-            idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
-        }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
         if(idLapse == Search.NOTFOUND.getValue()) {
             lapse.addLapse(project.getLapse());
             idLapse=lapse.searchLapse(project.getLapse());
         }
-
+        StatusDAOImpl status = new StatusDAOImpl();
+        int idStatus = status.searchIdStatus(project.getStatus());
+        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        int idResponsibleProject = responsibleProjectDAO.searchIdResponsibleProject(project.getResponsible().getEmail());
+        LinkedOrganizationDAOImpl organizationDAO = new LinkedOrganizationDAOImpl();
+        int idLinkedOrganization = organizationDAO.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
+        int idProject = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("insert into Project(nameProject,description,objectiveGeneral,"+
-                    "objectiveInmediate,objectiveMediate,Methodology,resources,status,activities,"+
-                    "responsabilities,duration,quiantityPractitioner,idLinkedOrganization,idResponsibleProject,"+
-                    "staffNumberCoordinator,idLapse) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    "objectiveInmediate,objectiveMediate,methodology,resources,activities,"+
+                    "responsabilities,daysHours,duration,quiantityPractitioner,placesAvailable," +
+                    "idLinkedOrganization,idResponsibleProject,idStatus,"+
+                    "staffNumberCoordinator,idLapse) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             sentenceProject.setString(1, project.getNameProject());
             sentenceProject.setString(2, project.getDescription());
             sentenceProject.setString(3, project.getObjectiveGeneral());
@@ -203,49 +210,63 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setString(5, project.getObjectiveMediate());
             sentenceProject.setString(6, project.getMethodology());
             sentenceProject.setString(7, project.getResources());
-            sentenceProject.setString(8, project.getStatus());
-            sentenceProject.setString(9, project.getActivities());
-            sentenceProject.setString(10, project.getResponsabilities());
+            sentenceProject.setString(8, project.getActivitiesAndFunctions());
+            sentenceProject.setString(9, project.getResponsabilities());
+            sentenceProject.setString(10,project.getDaysHours());
             sentenceProject.setInt(11, project.getDuration());
             sentenceProject.setInt(12, project.getQuantityPractitioner());
-            sentenceProject.setInt(13, idOrganization);
-            sentenceProject.setInt(14,idResponsibleProject);
-            sentenceProject.setInt(15,project.getStaffNumberCoordinator());
-            sentenceProject.setInt(16,idLapse);
+            sentenceProject.setInt(13,project.getPlacesAvailable());
+            sentenceProject.setInt(14, idLinkedOrganization);
+            sentenceProject.setInt(15,idResponsibleProject);
+            sentenceProject.setInt(16,idStatus);
+            sentenceProject.setInt(17,project.getStaffNumberCoordinator());
+            sentenceProject.setInt(18,idLapse);
             sentenceProject.executeUpdate();
-            result="The project was successfully registered";
+            idProject = getIdProject(project.getNameProject());
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
             }
-            return result;
         }
+        if(idProject!=Search.NOTFOUND.getValue()) {
+            List<SchedulingActivities> listSchedulingActivities = project.getSchedulingActivitiesProject();
+            SchedulingActivitiesDAOImpl addSchedulingActivities = new SchedulingActivitiesDAOImpl();
+            for (int indexScheduling= Search.NOTFOUND.getValue();indexScheduling<listSchedulingActivities.size();indexScheduling++) {
+                addSchedulingActivities.addSchedulingActivities(idProject, listSchedulingActivities.get(indexScheduling));
+                resultIsAddProject = true;
+            }
+        }
+        return resultIsAddProject;
     }
 
     /**
      * Method to delete a Project
-     * @param project The data of the Project
+     * @param nameProject The name of the Project
      * @return The message if the Project was deleted
      */
     @Override
-    public String deleteProject (Project project) {
-        String result= "The project could not be removed";
+    public boolean deleteProject (String nameProject) {
+        boolean resultDeleteProject= false;
+        int idStatus = Search.NOTFOUND.getValue();
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        idStatus = statusDAO.searchIdStatus("not available");
         try{
             connection = connexion.getConnection();
-            String queryDelete = "update Project set status='not available' where idProject =?";
-            PreparedStatement sentence = connection.prepareStatement(queryDelete);
-            sentence.setInt(1, project.getIdProject());
+            String queryDeleteProject = "update Project set idStatus=? where nameProject =?";
+            PreparedStatement sentence = connection.prepareStatement(queryDeleteProject);
+            sentence.setInt(1, idStatus);
+            sentence.setString(2, nameProject);
             sentence.executeUpdate();
-            result= "The project was successfully removed";
+            resultDeleteProject= true;
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
             }
-            return result;
+            return resultDeleteProject;
         }
     }
 
@@ -255,26 +276,15 @@ public class ProjectDAOImpl implements IProjectDAO {
      * @return The message if the Project was updated
      */
     @Override
-    public String actualizationProject (Project project) {
-        String result = "The project could not be updated";
+    public boolean actualizationProject (Project project) {
+        boolean result = false;
         int idResponsibleProject;
         int idOrganization;
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
-        if(idOrganization == Search.NOTFOUND.getValue() || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
-            result = organizationImpl.modifyLinkedOrganization(project.getOrganization());
-        }else{
-            project.getOrganization().setIdLinkedOrganization(idOrganization);
-        }
-        
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
         idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
-        if(idResponsibleProject == Search.NOTFOUND.getValue() || idResponsibleProject == project.getResponsible().getIdResponsible()) {
-            result = responsibleImpl.modifyResponsibleProject(project.getResponsible());
-        }else{
-            project.getResponsible().setIdResponsible(idResponsibleProject);
-        }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
         if(idLapse== Search.NOTFOUND.getValue()){
@@ -296,7 +306,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setString(6, project.getMethodology());
             sentenceProject.setString(7, project.getResources());
             sentenceProject.setString(8, project.getStatus());
-            sentenceProject.setString(9, project.getActivities());
+            sentenceProject.setString(9, project.getActivitiesAndFunctions());
             sentenceProject.setString(10, project.getResponsabilities());
             sentenceProject.setInt(11, project.getDuration());
             sentenceProject.setInt(12, project.getQuantityPractitioner());
@@ -306,7 +316,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(16, project.getStaffNumberCoordinator());
             sentenceProject.setInt(17,idLapse);
             sentenceProject.executeUpdate();
-            result = "The project was successfully updated";
+            result = true;
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -322,15 +332,15 @@ public class ProjectDAOImpl implements IProjectDAO {
      * @return The message if the project request was made
      */
     @Override
-    public String requestProject (String enrollment, int idProject) {
-        String message=null;
+    public boolean requestProject (String enrollment, int idProject) {
+        boolean result = false;
         try{  
             connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("insert into Request values(?,?,'active')");
             sentenceProject.setString(1, enrollment);
             sentenceProject.setInt(2, idProject);
             sentenceProject.executeUpdate();
-            message = "The project is request correctly";
+            result = true;
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
@@ -338,7 +348,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 connexion.closeConnection();
             }
         }
-        return message;
+        return result;
     }
 
     /**
@@ -348,10 +358,10 @@ public class ProjectDAOImpl implements IProjectDAO {
      * @return The message if the project assignment was made
      */
     @Override
-    public String assignProject (String enrollment, int idProject) {
+    public boolean assignProject (String enrollment, int idProject) {
         String status=null;
         int quiantityPractitioner= Search.NOTFOUND.getValue();
-        String message=null;
+        boolean result = false;
         try{  
             connection = connexion.getConnection();
             String queryProject = "select status,quiantityPractitioner from Project where idProject=?";
@@ -362,7 +372,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 status= results.getString("status");
                 quiantityPractitioner = results.getInt("quiantityPractitioner");
             }
-            if(status !="not available"){
+            if(status !="not available" || status != "no places"){
                 PreparedStatement sentencePractitioner = connection.prepareStatement("update Practitioner set idProject=? where enrollment=?");
                 sentencePractitioner.setInt(1, idProject);
                 sentencePractitioner.setString(2, enrollment);
@@ -371,13 +381,11 @@ public class ProjectDAOImpl implements IProjectDAO {
                 
                 if(quiantityPractitioner == Search.NOTFOUND.getValue()){
                     PreparedStatement sentenceProject = connection.prepareStatement("update Project set status=? where idProject=?");
-                    sentenceProject.setString(1, "not available");
+                    sentenceProject.setString(1, "no places");
                     sentenceProject.setInt(2, idProject);
                     sentenceProject.executeUpdate();
                 }
-                message = "The practitioner was assigned correctly";
-            }else{
-                message = "The project is not available to assign";
+                result= true;
             }
         }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -386,7 +394,110 @@ public class ProjectDAOImpl implements IProjectDAO {
                 connexion.closeConnection();
             }
         }
-        return message;
+        return result;
+    }
+
+    @Override
+    public int getIdProject (String nameProject){
+        int idProject = Search.NOTFOUND.getValue();
+        try{
+            connection = connexion.getConnection();
+            String queryAllProject = "select idProject from Project where nameProject=?";
+            PreparedStatement sentence = connection.prepareStatement(queryAllProject);
+            sentence.setString(1, nameProject);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idProject = results.getInt("idProject");
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idProject;
+    }
+
+    @Override
+    public boolean thereAreProjectAvailable (){
+        boolean areProject = false;
+        try {
+            connection = connexion.getConnection();
+            String queryAreProjectAvailable = "select nameProject from Project inner join Status on " +
+                    "Project.idStatus = Status.idStatus where status =?";
+            PreparedStatement sentence = connection.prepareStatement(queryAreProjectAvailable);
+            sentence.setString(1, "available");
+            results= sentence.executeQuery();
+            while (results.next()) {
+                areProject = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return areProject;
+    }
+
+    @Override
+    public boolean thereAreProject(){
+        boolean areProject = false;
+        try {
+            connection = connexion.getConnection();
+            String queryAreProject = "select nameProject from Project";
+            PreparedStatement sentence = connection.prepareStatement(queryAreProject);
+            results= sentence.executeQuery();
+            while (results.next()) {
+                areProject = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return areProject;
+    }
+
+    @Override
+    public boolean thereAreProjectAvailableNotAssing() {
+        boolean areAssingProject = false;
+        int idProject;
+        try {
+            connection = connexion.getConnection();
+            String queryAllProjectAvailable = "select idProject,nameProject from Project inner join Status on " +
+                    "Project.idStatus = Status.idStatus where status=?";
+            PreparedStatement sentenceAllProjectAvailable = connection.prepareStatement(queryAllProjectAvailable);
+            sentenceAllProjectAvailable.setString(1, "available");
+            results= sentenceAllProjectAvailable.executeQuery();
+            while(results.next() && !areAssingProject){
+                idProject = results.getInt("idProject");
+                String queryAssingProject = "select enrollment from Practitioner,Project where Practitioner.idProject = Project.idProject " +
+                        "AND Project.idProject =?";
+                PreparedStatement sentenceAssingProject = connection.prepareStatement(queryAssingProject);
+                sentenceAssingProject.setInt(1, idProject);
+                ResultSet resultAssingProject;
+                resultAssingProject = sentenceAssingProject.executeQuery();
+                if(resultAssingProject.next()) {
+                    String queryPractitionerActive = "select enrollment from Practitioner,Project,User_Status,Status where Practitioner.idProject = Project.idProject " +
+                            "AND Practitioner.idUser = User_Status.idUser AND Status.idStatus = User_Status.idStatus " +
+                            "AND status=? AND Project.idProject =?";
+                    PreparedStatement sentencePractitionerActive = connection.prepareStatement(queryPractitionerActive);
+                    sentencePractitionerActive.setString(1,"Active");
+                    sentencePractitionerActive.setInt(2, idProject);
+                    ResultSet resultPractitionerActive;
+                    resultPractitionerActive = sentencePractitionerActive.executeQuery();
+                    if(!resultPractitionerActive.next()){
+                        areAssingProject=true;
+                    }
+                }else{
+                    areAssingProject=true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return areAssingProject;
     }
 
 }

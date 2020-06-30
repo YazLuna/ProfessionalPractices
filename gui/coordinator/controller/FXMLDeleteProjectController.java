@@ -1,19 +1,18 @@
 package gui.coordinator.controller;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import domain.SchedulingActivities;
+import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import java.net.URL;
+
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import domain.Project;
 
 /**
@@ -21,138 +20,119 @@ import domain.Project;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class FXMLDeleteProjectController implements Initializable {
+public class FXMLDeleteProjectController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnBehind;
     @FXML private Button btnDeleteProject;
     @FXML private Button btnCancelProject;
-    @FXML private Button btnBehind;
-    private static Project project;
-    @FXML private TextField tfNameOrganization;
-    @FXML private TextField tfDirectUsers;
-    @FXML private TextField tfIndirectUsers;
-    @FXML private TextField tfEmailOrganization;
-    @FXML private TextField tfPhoneOrganization;
-    @FXML private TextField tfAdressOrganization;
-    @FXML private TextField tfNameResponsible;
-    @FXML private TextField tfLastNameResponsible;
-    @FXML private TextField tfEmailResponsible;
-    @FXML private TextField tfNameProject;
-    @FXML private TextField tfMethodology;
-    @FXML private TextField tfDuration;
-    @FXML private TextField tfQuiantityPractitioners;
-    @FXML private TextField tfCity;
-    @FXML private TextField tfLapse;
-    @FXML private TextField tfSector;
-    @FXML private TextField tfCharge;
-    @FXML private TextField tfState;
-    @FXML private TextArea taDescription;
-    @FXML private TextArea taObjectiveGeneral;
-    @FXML private TextArea taObjectiveInmediate;
-    @FXML private TextArea taObjectiveMediate;
-    @FXML private TextArea taResource;
-    @FXML private TextArea taActivities;
-    @FXML private TextArea taResponsabilities;
+    @FXML private Text txtName;
+    @FXML private Text txtDescription;
+    @FXML private Text txtObjectiveGeneral;
+    @FXML private Text txtObjectiveImmediate;
+    @FXML private Text txtObjectiveMediate;
+    @FXML private Text txtMethodology;
+    @FXML private Text txtResource;
+    @FXML private Text txtActivitiesAndFunctions;
+    @FXML private Text txtResponsabilities;
+    @FXML private Text txtDaysAndHours;
+    @FXML private Text txtLinkedOrganization;
+    @FXML private Text txtResponsibleProject;
+    @FXML private Text txtMonth;
+    @FXML private Text txtActivity;
+    @FXML private Label lbDuration;
+    @FXML private Label lbQuiantityPractitioners;
+    @FXML private Label lbLapse;
+    @FXML private GridPane gpActivity;
+    private static String nameProject;
+    private Project project;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        startProject();
-        btnDeleteProject.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                String message;
-                message = project.deleteProject();
-                Alert alertDataProject = new Alert(Alert.AlertType.NONE);
-                alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
-                alertDataProject.setHeaderText(message);
-                alertDataProject.setTitle("Information");
-                alertDataProject.showAndWait();
-                Stage stagePrincipal = (Stage) btnDeleteProject.getScene().getWindow();
-                stagePrincipal.close();
-                Stage stage = new Stage();
-                stage.setResizable(false);
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    stage.setScene(new Scene(root1));
-                } catch (Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-                stage.show();
-            }
-        });
-
-        btnCancelProject.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Alert cancel = new Alert(Alert.AlertType.NONE);
-                cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-                cancel.setHeaderText("Do you want to cancel?");
-                cancel.setTitle("Cancel");
-                Optional<ButtonType> action = cancel.showAndWait();
-                if (action.get() == ButtonType.OK) {
-                    Stage stagePrincipal = (Stage) btnCancelProject.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
-                    Stage stage = new Stage();
-                    try {
-                        Parent root1 = (Parent) fxmlLoader.load();
-                        stage.setScene(new Scene(root1));
-                    } catch (Exception e) {
-                        Logger logger = Logger.getLogger(getClass().getName());
-                        logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                    }
-                    stage.setResizable(false);
-                    stage.show();
-                }
-            }
-        });
-
-        btnBehind.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Stage stagePrincipal = (Stage) btnBehind.getScene().getWindow();
-                stagePrincipal.close();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseProject.fxml"));
-                Stage stage = new Stage();
-                try {
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    stage.setScene(new Scene(root1));
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-                stage.setResizable(false);
-                stage.show();
-            }
-        });
+        startComponent();
     }
 
-    public void setProject (Project project){
-        this.project = project;
+    public void behind () {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLListProject.fxml",btnBehind);
     }
 
-    public void startProject () {
-        tfNameOrganization.setText(project.getOrganization().getName());
-        tfDirectUsers.setText(String.valueOf(project.getOrganization().getDirectUsers()));
-        tfIndirectUsers.setText(String.valueOf(project.getOrganization().getIndirectUsers()));
-        tfEmailOrganization.setText(project.getOrganization().getEmail());
-        tfPhoneOrganization.setText(project.getOrganization().getPhoneNumber());
-        tfAdressOrganization.setText(project.getOrganization().getAddress());
-        tfNameResponsible.setText(project.getResponsible().getName());
-        tfLastNameResponsible.setText(project.getResponsible().getLastName());
-        tfEmailResponsible.setText(project.getResponsible().getEmail());
-        tfNameProject.setText(project.getNameProject());
-        tfMethodology.setText(project.getMethodology());
-        tfDuration.setText(String.valueOf(project.getDuration()));
-        tfQuiantityPractitioners.setText(String.valueOf(project.getQuantityPractitioner()));
-        tfCity.setText(project.getOrganization().getCity());
-        tfLapse.setText(project.getLapse());
-        tfSector.setText(project.getOrganization().getSector());
-        tfCharge.setText(project.getResponsible().getCharge());
-        tfState.setText(project.getOrganization().getState());
-        taDescription.setText(project.getDescription());
-        taObjectiveGeneral.setText(project.getObjectiveGeneral());
-        taObjectiveInmediate.setText(project.getObjectiveInmediate());
-        taObjectiveMediate.setText(project.getObjectiveMediate());
-        taResource.setText(project.getResources());
-        taActivities.setText(project.getActivities());
-        taResponsabilities.setText(project.getResponsabilities());
+
+    public void assignProject (String nameProject){
+        this.nameProject = nameProject;
+    }
+
+    public void startComponent () {
+        project = new Project();
+        project.setNameProject(nameProject);
+        project = project.getProject(nameProject);
+        txtName.setText(project.getNameProject());
+        txtDescription.setText(project.getDescription());
+        txtObjectiveGeneral.setText(project.getObjectiveGeneral());
+        txtObjectiveImmediate.setText(project.getObjectiveInmediate());
+        txtObjectiveMediate.setText(project.getObjectiveMediate());
+        txtMethodology.setText(project.getMethodology());
+        txtResource.setText(project.getResources());
+        txtActivitiesAndFunctions.setText(project.getActivitiesAndFunctions());
+        txtResponsabilities.setText(project.getResponsabilities());
+        txtDaysAndHours.setText(project.getDaysHours());
+        txtLinkedOrganization.setText(project.getOrganization().getName());
+        String fullName = project.getResponsible().getName()+" "+project.getResponsible().getLastName();
+        txtResponsibleProject.setText(fullName);
+        List<SchedulingActivities> schedulingActivities = project.getSchedulingActivitiesProject();
+        txtMonth.setText(schedulingActivities.get(0).getMonth());
+        txtActivity.setText(schedulingActivities.get(0).getActivity());
+        lbDuration.setText(String.valueOf(project.getDuration()));
+        lbQuiantityPractitioners.setText(String.valueOf(project.getQuantityPractitioner()));
+        lbLapse.setText(project.getLapse());
+
+        for(int indexScheduling=1; indexScheduling<schedulingActivities.size();indexScheduling++){
+            Label lbMonth = new Label();
+            lbMonth.setText("Mes:  ");
+            Label lbActivity = new Label();
+            lbActivity.setText("Actividad:  ");
+            Text txtActivity = new Text();
+            Text txtMonth = new Text();
+            lbMonth.autosize();
+            lbActivity.autosize();
+            lbMonth.getStyleClass().add("details");
+            lbActivity.getStyleClass().add("details");
+            txtActivity.getStyleClass().add("Text");
+            txtActivity.setWrappingWidth(241);
+            txtMonth.getStyleClass().add("Text");
+            txtMonth.setText(schedulingActivities.get(indexScheduling).getMonth());
+            txtActivity.setText(schedulingActivities.get(indexScheduling).getActivity());
+            gpActivity.add(lbMonth, 0, indexScheduling);
+            gpActivity.add(txtMonth, 1, indexScheduling);
+            gpActivity.add(lbActivity, 2, indexScheduling);
+            gpActivity.add(txtActivity, 3, indexScheduling);
+        }
+
+    }
+
+    public void delete (){
+        ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
+        ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, "¿Seguro desea eliminar el Proyecto?", YES, NO);
+        cancel.setTitle("Confirmación Eliminar");
+        Optional<ButtonType> action = cancel.showAndWait();
+        if (action.orElse(NO) == YES) {
+            boolean isDeleteProject;
+            isDeleteProject = project.deleteProject();
+            if (!isDeleteProject) {
+                generateError("El proyecto no pudo eliminarse");
+                openWindowGeneral("/gui/coordinator/fxml/FXMLListProject.fxml", btnDeleteProject);
+            } else {
+                generateInformation("El proyecto se eliminó exitosamente");
+                boolean areProject;
+                areProject = project.thereAreProjectAvailableNotAssing();
+                if (!areProject) {
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnDeleteProject);
+                } else {
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLListProject.fxml", btnDeleteProject);
+                }
+            }
+        }
+    }
+
+    public void cancel(){
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLListProject.fxml");
     }
 }

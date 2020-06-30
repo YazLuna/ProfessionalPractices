@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import dataaccess.LinkedOrganizationDAOImpl;
 
@@ -110,37 +111,87 @@ public class LinkedOrganization{
 
     public List<String> listState () {
         LinkedOrganizationDAOImpl getAllState = new LinkedOrganizationDAOImpl();
-        return getAllState.getAllState();
+        List<String> listState = getAllState.getAllState();
+        return listState;
     }
 
     public List<String> listCity () {
-        LinkedOrganizationDAOImpl listCity = new LinkedOrganizationDAOImpl();
-        return listCity.getAllCity();
+        LinkedOrganizationDAOImpl getAllCity = new LinkedOrganizationDAOImpl();
+        List<String> listCity = getAllCity.getAllCity();
+        return listCity;
     }
 
     public List<String> listSector () {
         LinkedOrganizationDAOImpl getAllSector = new LinkedOrganizationDAOImpl();
-        return getAllSector.getAllSector();
+        List<String> listSector = getAllSector.getAllSector();
+        return listSector;
     }
 
-    public String addLinkedOrganization () {
-        String result;
-        LinkedOrganizationDAOImpl addOrganization = new LinkedOrganizationDAOImpl();
-        if(addOrganization.searchIdLinkedOrganization(name,email,phoneNumber) == Search.NOTFOUND.getValue()){
-            result = addOrganization.addLinkedOrganization(this);
-        } else {
-            result = "Existe una organizacion vinculada con el mismo nombre, correo o telefono registrado";
+    public boolean searchLinkedOrganization () {
+        int idLinkegOrganizationFound;
+        boolean isFoundLinkedOrganization;
+        LinkedOrganizationDAOImpl seachOrganization = new LinkedOrganizationDAOImpl();
+        idLinkegOrganizationFound = seachOrganization.searchIdLinkedOrganization(name,email,phoneNumber);
+        if(idLinkegOrganizationFound != Search.NOTFOUND.getValue()){
+            isFoundLinkedOrganization = true;
+        }else{
+            isFoundLinkedOrganization = false;
         }
-        return result;
+        return isFoundLinkedOrganization;
+    }
+
+    public boolean addLinkedOrganization () {
+        boolean isAddLinkedOrganization;
+        LinkedOrganizationDAOImpl addOrganization = new LinkedOrganizationDAOImpl();
+        isAddLinkedOrganization = addOrganization.addLinkedOrganization(this);
+        return isAddLinkedOrganization;
+    }
+
+    public List<LinkedOrganization> listOrganizationAvailable() {
+        LinkedOrganizationDAOImpl getAllOrganization = new LinkedOrganizationDAOImpl();
+        List<LinkedOrganization> listLinkedOrganization =  getAllOrganization.getAllLinkedOrganizationAvailable();
+        return listLinkedOrganization;
+    }
+
+    public List<LinkedOrganization> listOrganizationAvailableNotAssing() {
+        LinkedOrganizationDAOImpl getAllOrganization = new LinkedOrganizationDAOImpl();
+        List<LinkedOrganization> listLinkedOrganization =  getAllOrganization.getAllLinkedOrganizationAvailableNotAssing();
+        return listLinkedOrganization;
     }
 
     public List<LinkedOrganization> listOrganization () {
         LinkedOrganizationDAOImpl getAllOrganization = new LinkedOrganizationDAOImpl();
-        return getAllOrganization.getAllLinkedOrganization();
+        List<LinkedOrganization> listLinkedOrganization = getAllOrganization.getAllLinkedOrganization();
+        return listLinkedOrganization;
     }
 
     public LinkedOrganization getOrganization () {
         LinkedOrganizationDAOImpl getOrganization = new LinkedOrganizationDAOImpl();
-        return getOrganization.getLinkedOrganization(name);
+        LinkedOrganization organization = getOrganization.getLinkedOrganization(name);
+        return organization;
+    }
+
+    public boolean deleteOrganization () {
+        LinkedOrganizationDAOImpl deleteOrganization = new LinkedOrganizationDAOImpl();
+        boolean isDeleteOrganization = deleteOrganization.deleteLinkedOrganization(idLinkedOrganization);
+        return isDeleteOrganization;
+    }
+
+    public boolean thereAreLinkedOrganization () {
+        LinkedOrganizationDAOImpl areLinkedOrganization = new LinkedOrganizationDAOImpl();
+        boolean thereAreOrganization = areLinkedOrganization.thereAreLinkedOrganization();
+        return thereAreOrganization;
+    }
+
+    public boolean thereAreLinkedOrganizationAvailable () {
+        LinkedOrganizationDAOImpl areLinkedOrganizationAvailable = new LinkedOrganizationDAOImpl();
+        boolean thereAreOrganizationAvailable = areLinkedOrganizationAvailable.thereAreLinkedOrganizationAvailable();
+        return thereAreOrganizationAvailable;
+    }
+
+    public boolean thereAreLinkedOrganizationAvailableNotAssing () {
+        LinkedOrganizationDAOImpl areLinkedOrganizationAvailable = new LinkedOrganizationDAOImpl();
+        boolean thereAreOrganizationAvailable = areLinkedOrganizationAvailable.thereAreLinkedOrganizationAvailableNotAssing();
+        return thereAreOrganizationAvailable;
     }
 }

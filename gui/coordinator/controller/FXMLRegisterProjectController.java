@@ -1,10 +1,10 @@
 package gui.coordinator.controller;
 
+import domain.SchedulingActivities;
 import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,17 +13,19 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import java.io.IOException;
+import javafx.stage.Modality;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
 import java.util.List;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 import domain.Project;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import logic.ValidateProject;
-import org.w3c.dom.Text;
+
 
 /**
  * class FXMLRegisterProjectController
@@ -34,10 +36,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     @FXML private Button btnBehind;
     @FXML private Button btnRegisterProject;
     @FXML private Button btnCancelProject;
-    @FXML private Button btnAddActivity;
-    @FXML private Button btnDeleteActivity;
-    @FXML private Button btnChooseLinkedOrganization;
-    @FXML private Button btnChooseResponsibleProject;
     @FXML private TextField tfNameProject;
     @FXML private TextField tfMethodology;
     @FXML private TextField tfDuration;
@@ -45,20 +43,23 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     @FXML private TextField tfDaysAndHours;
     @FXML private TextField tfLinkedOrganization;
     @FXML private TextField tfResponsibleProject;
-    @FXML private ComboBox cbLapse;
+    @FXML private TextField tfActivityScheduling;
+    @FXML private ComboBox cbMonthScheduling;
     @FXML private TextArea taDescription;
     @FXML private TextArea taObjectiveGeneral;
     @FXML private TextArea taObjectiveInmediate;
     @FXML private TextArea taObjectiveMediate;
     @FXML private TextArea taResource;
-    @FXML private TextArea taActivities;
+    @FXML private TextArea taActivitiesAndFunctions;
     @FXML private TextArea taResponsabilities;
     @FXML private GridPane gpActivity;
-    private  static String nameLinkedOrganization;
+    private static int StaffNumberCoordinator;
     private List<String> allLapse;
+    private List<String> allMonth;
     private Project project;
+    private SchedulingActivities schedulingActivities;
     private ValidateProject validateProject;
-    private int positionGrindActivity=0;
+    private int positionGrindActivity=1;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,11 +73,11 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void cancelProject () {
-        generateCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
 
     public void registerProject() {
-        String message;
+        boolean message;
         if(!validateDataProject()) {
             Alert alertDataProject = new Alert(Alert.AlertType.NONE);
             alertDataProject.setAlertType(Alert.AlertType.WARNING);
@@ -88,8 +89,8 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
             message = project.registerProject();
             Alert alertDataProject = new Alert(Alert.AlertType.NONE);
             alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
-            alertDataProject.setHeaderText(message);
-            alertDataProject.setTitle("Information");
+            //alertDataProject.setHeaderText(message);
+            //alertDataProject.setTitle("Information");
             alertDataProject.show();
         }
     }
@@ -106,9 +107,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         limitTextField(tfQuiantityPractitioners,1);
         prohibitWordTextField(tfQuiantityPractitioners);
 
-        limitTextField(cbLapse.getEditor(),30);
-        prohibitSpacesTextField(cbLapse.getEditor());
-
         limitTextArea(taDescription,255);
         prohibitSpacesTextArea(taDescription);
 
@@ -124,20 +122,24 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         limitTextArea(taResource,255);
         prohibitSpacesTextArea(taResource);
 
-        limitTextArea(taActivities,255);
-        prohibitSpacesTextArea(taActivities);
+        limitTextArea(taActivitiesAndFunctions,255);
+        prohibitSpacesTextArea(taActivitiesAndFunctions);
 
         limitTextArea(taResponsabilities,255);
         prohibitSpacesTextArea(taResponsabilities);
 
         limitTextField(tfDaysAndHours,150);
         prohibitSpacesTextField(tfDaysAndHours);
+
+        limitTextField(tfActivityScheduling,100);
+        prohibitSpacesTextField(tfActivityScheduling);
+        prohibitNumberAllowSpecialCharTextField(tfActivityScheduling);
     }
 
     public void startComboBox () {
-        project = new Project();
-        allLapse = project.listLapse();
-        cbLapse.getItems().addAll(allLapse);
+        schedulingActivities = new SchedulingActivities();
+        allMonth = schedulingActivities.listMonth();
+        cbMonthScheduling.getItems().addAll(allMonth);
     }
 
     public void getDataProject () {
@@ -148,57 +150,62 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         project.setObjectiveMediate(validateProject.deleteSpace(taObjectiveMediate.getText()));
         project.setMethodology(validateProject.deleteSpace(tfMethodology.getText()));
         project.setResources(validateProject.deleteSpace(taResource.getText()));
-        project.setActivities(validateProject.deleteSpace(taActivities.getText()));
+        project.setActivitiesAndFunctions(validateProject.deleteSpace(taActivitiesAndFunctions.getText()));
         project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
-        project.setLapse(validateProject.deleteSpace(cbLapse.getEditor().getText()));
-        project.setStaffNumberCoordinator(8);
+        project.setStaffNumberCoordinator(StaffNumberCoordinator);
         int duration = Integer.parseInt(tfDuration.getText());
         project.setDuration(duration);
         int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
         project.setQuantityPractitioner(quiantityPractitioner);
     }
 
-    public void assignLinkedOrganization (String nameLinkedOrganization){
-        this.nameLinkedOrganization = nameLinkedOrganization;
-    }
-
-    public void assignResponsibleProject (String responsibleProject){
-        tfResponsibleProject.setText(responsibleProject);
-    }
-
     public void addActivity () {
-        Label lMes = new Label();
-        lMes.setText("Mes:  ");
-        Label lActivity = new Label();
-        lActivity.setText("Actividad:  ");
-        TextField tfActivity = new TextField();
-        TextField tfMes = new TextField();
-        lMes.autosize();
-        lActivity.autosize();
-        tfActivity.autosize();
-        tfMes.autosize();
-        lMes.getStyleClass().add("details");
-        tfMes.getStyleClass().add("details");
-        lActivity.getStyleClass().add("details");
-        tfActivity.getStyleClass().add("details");
-        prohibitSpacesTextField(tfMes);
-        prohibitNumberTextField(tfMes);
-        prohibitSpacesTextField(tfActivity);
-        prohibitNumberTextField(tfActivity);
-        gpActivity.add(lMes,0,positionGrindActivity);
-        gpActivity.add(tfMes,1,positionGrindActivity);
-        gpActivity.add(lActivity,2,positionGrindActivity);
-        gpActivity.add(tfActivity,3,positionGrindActivity);
-        positionGrindActivity++;
+        if(positionGrindActivity<7) {
+            Label lbMonth = new Label();
+            lbMonth.setText("Mes:  ");
+            Label lbActivity = new Label();
+            lbActivity.setText("Actividad:  ");
+            TextField tfActivity = new TextField();
+            ComboBox cbMonth = new ComboBox();
+            lbMonth.autosize();
+            lbActivity.autosize();
+            tfActivity.setMaxWidth(173);
+            cbMonth.setPrefWidth(150);
+            lbMonth.getStyleClass().add("details");
+            cbMonth.getEditor().getStyleClass().add("details");
+            lbActivity.getStyleClass().add("details");
+            tfActivity.getStyleClass().add("details");
+            prohibitSpacesTextField(tfActivity);
+            prohibitNumberTextField(tfActivity);
+            cbMonth.getItems().addAll(allMonth);
+            gpActivity.add(lbMonth, 0, positionGrindActivity);
+            gpActivity.add(cbMonth, 1, positionGrindActivity);
+            gpActivity.add(lbActivity, 2, positionGrindActivity);
+            gpActivity.add(tfActivity, 3, positionGrindActivity);
+            positionGrindActivity++;
+        }else{
+            generateInformation("Sólo se permite seis regitros de actividades");
+        }
     }
 
     public void deleteActivity () {
-        positionGrindActivity--;
+        if(positionGrindActivity>1){
+            positionGrindActivity--;
+            //gpActivity.getRowConstraints().remove(0,positionGrindActivity);
+            //gpActivity.getRowConstraints().remove(positionGrindActivity);
+            //gpActivity.getChildren().removeIf(node -> GridPane.getRowIndex(node) == positionGrindActivity);
+            /*gpActivity.getChildren().remove(1,positionGrindActivity);
+            gpActivity.getChildren().remove(1,positionGrindActivity);
+            gpActivity.getChildren().remove(2,positionGrindActivity);
+            gpActivity.getChildren().remove(3,positionGrindActivity);*/
+            //gpActivity.getRowConstraints().remove(positionGrindActivity);
+
+        }else{
+            generateInformation("Registre al menos una actividad");
+        }
     }
 
     public void chooseResponsibleProject () {
-        FXMLChooseResponsibleProjectController chooseResponsibleProject = new FXMLChooseResponsibleProjectController();
-        chooseResponsibleProject.controllerSection("register");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseResponsibleProject.fxml"));
         Stage stage = new Stage();
         try {
@@ -208,13 +215,15 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
-        stage.setResizable(false);
-        stage.show();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        FXMLChooseResponsibleProjectController chooseResponsibleProject = new FXMLChooseResponsibleProjectController();
+        chooseResponsibleProject.controllerSection("register");
+        String nameResponsible = chooseResponsibleProject.nameResponsible();
+        tfResponsibleProject.setText(nameResponsible);
     }
 
     public void chooseLinkedOrganization () {
-        FXMLChooseLinkedOrganizationController chooseLinkedOrganization = new FXMLChooseLinkedOrganizationController();
-        chooseLinkedOrganization.controllerSection("register");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseLinkedOrganization.fxml"));
         Stage stage = new Stage();
         try {
@@ -224,8 +233,12 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
-        stage.setResizable(false);
-        stage.show();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        FXMLChooseLinkedOrganizationController chooseLinkedOrganization = new FXMLChooseLinkedOrganizationController();
+        chooseLinkedOrganization.controllerSection("register");
+        String nameLinkedOrganization = chooseLinkedOrganization.nameLinkedOrganization();
+        tfLinkedOrganization.setText(nameLinkedOrganization);
     }
 
     public boolean validateDataProject (){
@@ -275,23 +288,17 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         }else {
             taResource.getStyleClass().remove("error");
         }
-        if(!validateProject.validateText(taActivities.getText())){
-            taActivities.getStyleClass().add("error");
+        if(!validateProject.validateText(taActivitiesAndFunctions.getText())){
+            taActivitiesAndFunctions.getStyleClass().add("error");
             result= false;
         }else {
-            taActivities.getStyleClass().remove("error");
+            taActivitiesAndFunctions.getStyleClass().remove("error");
         }
         if(!validateProject.validateText(taResponsabilities.getText())){
             taResponsabilities.getStyleClass().add("error");
             result= false;
         }else {
             taResponsabilities.getStyleClass().remove("error");
-        }
-        if(!validateProject.validateLapse(cbLapse.getEditor().getText())){
-            cbLapse.getStyleClass().add("error");
-            result= false;
-        }else {
-            cbLapse.getStyleClass().remove("error");
         }
         if(!validateProject.validateNotEmpty(tfDuration.getText())){
             tfDuration.getStyleClass().add("error");
