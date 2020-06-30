@@ -1,6 +1,7 @@
 package gui.coordinator.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -12,7 +13,7 @@ import domain.LinkedOrganization;
 import gui.FXMLGeneralController;
 import logic.ValidateLinkedOrganization;
 
-public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralController {
+public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnBehind;
     @FXML private Button btnCancel;
     @FXML private Button btnRegister;
@@ -41,7 +42,7 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
     public void cancel () {
-        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
     public void startComponent (){
         limitTextField(tfNameOrganization,100);
@@ -89,17 +90,26 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
 
     public void register () {
         organization = new LinkedOrganization();
-        String message;
-        if(!validateDataResponsible()) {
+        boolean isValidDataLinkedOrganization;
+        isValidDataLinkedOrganization = validateDataLinkedOrganization();
+        if(!isValidDataLinkedOrganization) {
             generateAlert("Ingresar datos válidos");
         }else{
             organization = getDataOrganization();
-            message = organization.addLinkedOrganization();
-            if(message.equals("La organizacion vinculada se registro exitosamente")){
-                generateInformation(message);
-                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
-            } else {
-                generateError(message);
+            boolean isFoundLinkedOrganization;
+            isFoundLinkedOrganization = organization.searchLinkedOrganization();
+            if(!isFoundLinkedOrganization){
+                boolean isRegisterLinkedOrganization;
+                isRegisterLinkedOrganization = organization.addLinkedOrganization();
+                if(!isRegisterLinkedOrganization){
+                    generateError("La organizacion vinculada no pudo registrarse");
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+                } else {
+                    generateInformation("La organizacion vinculada se registro exitosamente");
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+                }
+            }else {
+                generateError("Existe una organizacion vinculada con el mismo nombre, correo o telefono registrado");
             }
         }
     }
@@ -119,85 +129,94 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         return organization;
     }
 
-    public boolean validateDataResponsible (){
+    public boolean validateDataLinkedOrganization(){
         validateDataOrganization = new ValidateLinkedOrganization();
         boolean isValidDataOrganization = true;
 
+        boolean isValidNameOrganization = validateDataOrganization.validateName(tfNameOrganization.getText());
         tfNameOrganization.getStyleClass().remove("error");
         tfNameOrganization.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateName(tfNameOrganization.getText())){
+        if(!isValidNameOrganization){
             tfNameOrganization.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             tfNameOrganization.getStyleClass().add("ok");
         }
 
+        boolean isValidDirectUsers = validateDataOrganization.validateUsersOrganization(tfDirectUsers.getText());
         tfDirectUsers.getStyleClass().remove("error");
         tfDirectUsers.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateUsersOrganization(tfDirectUsers.getText())){
+        if(!isValidDirectUsers){
             tfDirectUsers.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             tfDirectUsers.getStyleClass().add("ok");
         }
 
+        boolean isValidIndirectUser = validateDataOrganization.validateUsersOrganization(tfIndirectUsers.getText());
         tfIndirectUsers.getStyleClass().remove("error");
         tfIndirectUsers.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateUsersOrganization(tfIndirectUsers.getText())){
+        if(!isValidIndirectUser){
             tfIndirectUsers.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             tfIndirectUsers.getStyleClass().add("ok");
         }
 
+        boolean isValidPhoneNumber = validateDataOrganization.validatePhoneNumber(tfPhoneNumber.getText());
         tfPhoneNumber.getStyleClass().remove("error");
         tfPhoneNumber.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validatePhoneNumber(tfPhoneNumber.getText())){
+        if(!isValidPhoneNumber){
             tfPhoneNumber.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             tfPhoneNumber.getStyleClass().add("ok");
         }
 
+        boolean isValidAdress = validateDataOrganization.validateAddress(tfAddress.getText());
         tfAddress.getStyleClass().remove("error");
         tfAddress.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateAddress(tfAddress.getText())){
+        if(!isValidAdress){
             tfAddress.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             tfAddress.getStyleClass().add("ok");
         }
 
+        boolean isValidCity = validateDataOrganization.validateComboBox(cbCity.getEditor().getText());
         cbCity.getStyleClass().remove("error");
         cbCity.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateComboBox(cbCity.getEditor().getText())){
+        if(!isValidCity){
             cbCity.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             cbCity.getStyleClass().add("ok");
         }
 
+        boolean isValidSector = validateDataOrganization.validateComboBox(cbSector.getEditor().getText());
         cbSector.getStyleClass().remove("error");
         cbSector.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateComboBox(cbSector.getEditor().getText())){
+        if(!isValidSector){
             cbSector.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             cbSector.getStyleClass().add("ok");
         }
 
+        boolean isValidState = validateDataOrganization.validateComboBox(cbState.getEditor().getText());
         cbState.getStyleClass().remove("error");
         cbState.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateComboBox(cbState.getEditor().getText())){
+        if(!isValidState){
             cbState.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {
             cbState.getStyleClass().add("ok");
         }
 
+        boolean isValidEmailOrganization = validateDataOrganization.validateEmail(tfEmailOrganization.getText());
         tfEmailOrganization.getStyleClass().remove("error");
         tfEmailOrganization.getStyleClass().remove("ok");
-        if(!validateDataOrganization.validateEmail(tfEmailOrganization.getText())){
+        if(!isValidEmailOrganization){
             tfEmailOrganization.getStyleClass().add("error");
             isValidDataOrganization = false;
         }else {

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<AnchorPane prefHeight="405.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLListResponsibleProjectController">
+   <stylesheets>
+      <URL value="@../../fxmlregister.css" />
+   </stylesheets>
+      <Pane prefHeight="90.0" prefWidth="598.0" style="-fx-background-color: #053d01;">
+            <Label layoutX="132.0" layoutY="28.0" text="Responsables del Proyecto" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="22.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnLogOut" layoutX="489.0" layoutY="16.0" mnemonicParsing="false" onAction="#logOut" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
+               <font>
+                  <Font name="Arial Bold" size="12.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="37.0" fitWidth="36.0" layoutX="462.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/logout.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="27.0" layoutY="17.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behind" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+               <graphic>
+                  <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+      </Pane>
+      <TableView fx:id="tvResponsibleProject" layoutX="56.0" layoutY="124.0" prefHeight="200.0" prefWidth="489.0" />
+</AnchorPane>

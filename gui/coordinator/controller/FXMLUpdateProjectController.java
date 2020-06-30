@@ -52,7 +52,6 @@ public class FXMLUpdateProjectController implements Initializable {
         behind();
         update();
         startProject();
-        startComboBox();
     }
 
     public void cancel (){
@@ -94,10 +93,10 @@ public class FXMLUpdateProjectController implements Initializable {
                     alertDataProject.showAndWait();
                 }else{
                     getDataProject();
-                    message = project.actualizationProject();
+                    //message = project.modifyProject();
                     Alert alertDataProject = new Alert(Alert.AlertType.NONE);
                     alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
-                    alertDataProject.setHeaderText(message);
+                    //alertDataProject.setHeaderText(message);
                     alertDataProject.setTitle("Information");
                     alertDataProject.showAndWait();
                 }
@@ -113,7 +112,7 @@ public class FXMLUpdateProjectController implements Initializable {
         project.setObjectiveMediate(validateProject.deleteSpace(taObjectiveMediate.getText()));
         project.setMethodology(validateProject.deleteSpace(tfMethodology.getText()));
         project.setResources(validateProject.deleteSpace(taResource.getText()));
-        project.setActivities(validateProject.deleteSpace(taActivities.getText()));
+        project.setActivitiesAndFunctions(validateProject.deleteSpace(taActivities.getText()));
         project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
         project.setLapse(validateProject.deleteSpace(cbLapse.getEditor().getText()));
         project.setStaffNumberCoordinator(8);
@@ -153,15 +152,11 @@ public class FXMLUpdateProjectController implements Initializable {
         taObjectiveInmediate.setText(project.getObjectiveInmediate());
         taObjectiveMediate.setText(project.getObjectiveMediate());
         taResource.setText(project.getResources());
-        taActivities.setText(project.getActivities());
+        taActivities.setText(project.getActivitiesAndFunctions());
         taResponsabilities.setText(project.getResponsabilities());
         cbLapse.getEditor().setText(project.getLapse());
     }
 
-    public void startComboBox () {
-        allLapse= project.listLapse();
-        cbLapse.getItems().addAll(allLapse);
-    }
 
     public void setProject (Project project){
         this.project = project;

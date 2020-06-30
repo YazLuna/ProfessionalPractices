@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -21,13 +22,7 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextArea;
+
 import org.apache.commons.codec.binary.Hex;
 import gui.administrator.controller.FXMLRegisterCoordinatorController;
 
@@ -73,6 +68,22 @@ public class FXMLGeneralController implements Initializable {
         }
     }
 
+    public void openWindowGeneral(String fxml, TableView tableView) {
+        try {
+            Stage stagePrincipal = (Stage) tableView.getScene().getWindow();
+            stagePrincipal.close();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root1 = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create new Window.", e);
+        }
+    }
+
 
     public void generateAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
@@ -87,7 +98,7 @@ public class FXMLGeneralController implements Initializable {
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setHeaderText(message);
         alert.setTitle("Error");
-        alert.show();
+        alert.showAndWait();
     }
 
     public boolean generateConfirmation(String message) {
@@ -108,10 +119,10 @@ public class FXMLGeneralController implements Initializable {
         alert.setAlertType(Alert.AlertType.INFORMATION);
         alert.setHeaderText(message);
         alert.setTitle("Información");
-        alert.show();
+        alert.showAndWait();
     }
 
-    public void generateCancel(String message, Button btnCancel, String fxml) {
+    public void generateConfirmationCancel(String message, Button btnCancel, String fxml) {
         ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
         ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, message, YES, NO);
@@ -121,6 +132,7 @@ public class FXMLGeneralController implements Initializable {
             openWindowGeneral(fxml, btnCancel);
         }
     }
+
 
     public static void limitTextField(TextField textField, int limit) {
         UnaryOperator<TextFormatter.Change> textLimitFilter = change -> {

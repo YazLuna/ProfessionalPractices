@@ -1,5 +1,7 @@
 package gui.coordinator.controller;
 
+import domain.ResponsibleProject;
+import gui.FXMLGeneralController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,147 +27,72 @@ import logic.ValidateProject;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class FXMLUpdateResponsibleProjectController implements Initializable {
-    @FXML private Button btnUpdate;
+public class FXMLUpdateResponsibleProjectController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnCancel;
+    @FXML private Button btnModify;
     @FXML private Button btnBehind;
-    @FXML private TextField tfName;
-    @FXML private TextField tfLastName;
-    @FXML private TextField tfEmail;
+    @FXML private TextField tfNameResponsible;
+    @FXML private TextField tfLastNameResponsible;
+    @FXML private TextField tfEmailResponsible;
     @FXML private ComboBox cbCharge;
-    private List<String> allCharge = new ArrayList<>();
-    private ValidateDataPerson validateDataPerson = new ValidateDataPerson();
-    private ValidateProject validateProject = new ValidateProject();
-    private static Project project;
+    private static String emailResponsibleProject;
+    private List<String> allCharge;
+    private ResponsibleProject responsible;
+    private ValidateDataPerson validateDataPerson;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cancel();
-        behind();
-        update();
-        startResponsible();
+        startComponent();
         startComboBox();
+        startDataComponent();
     }
 
-    public void setProject (Project project){
-        this.project = project;
+    public void behind() {
+        openWindowGeneral("/gui/coordinator/fxml/FXMLListResponsibleProject.fxml", btnBehind);
     }
 
-    public void cancel (){
-        btnCancel.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Alert cancel = new Alert(Alert.AlertType.NONE);
-                cancel.setAlertType(Alert.AlertType.CONFIRMATION);
-                cancel.setHeaderText("Do you want to cancel?");
-                cancel.setTitle("Cancel");
-                Optional<ButtonType> action = cancel.showAndWait();
-                if (action.get() == ButtonType.OK) {
-                    Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
-                    stagePrincipal.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseSection.fxml"));
-                    Stage stage = new Stage();
-                    try {
-                        Parent root1 = (Parent) fxmlLoader.load();
-                        stage.setScene(new Scene(root1));
-                    } catch (Exception e) {
-                        Logger logger = Logger.getLogger(getClass().getName());
-                        logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                    }
-                    stage.setResizable(false);
-                    stage.show();
-                }
-            }
-        });
+    public void cancel() {
+        generateConfirmationCancel("¿Seguro desea cancelar?", btnCancel, "/gui/coordinator/fxml/FXMLListResponsibleProject.fxml");
     }
 
-    public void update () {
-        btnUpdate.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                String message;
-                if(!validateResponsible()) {
-                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
-                    alertDataProject.setAlertType(Alert.AlertType.WARNING);
-                    alertDataProject.setHeaderText("Enter correct data in the red fields");
-                    alertDataProject.setTitle("Warning");
-                    alertDataProject.showAndWait();
-                }else{
-                    getDataResponsible();
-                    message = project.actualizationProject();
-                    Alert alertDataProject = new Alert(Alert.AlertType.NONE);
-                    alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
-                    alertDataProject.setHeaderText(message);
-                    alertDataProject.setTitle("Information");
-                    alertDataProject.showAndWait();
-                }
-            }
-        });
+    public void assignEmailResponsible (String emailResponsibleProject){
+        this.emailResponsibleProject = emailResponsibleProject;
     }
 
-    public void getDataResponsible () {
-        project.getResponsible().setName(validateProject.deleteSpace(tfName.getText()));
-        project.getResponsible().setLastName(validateProject.deleteSpace(tfLastName.getText()));
-        project.getResponsible().setEmail(tfEmail.getText());
-        project.getResponsible().setCharge(validateProject.deleteSpace(cbCharge.getEditor().getText()));
+    public void startDataComponent () {
+        responsible = new ResponsibleProject();
+        responsible.setEmail(emailResponsibleProject);
+        responsible = responsible.getResponsible();
+        tfNameResponsible.setText(responsible.getName());
+        tfLastNameResponsible.setText(responsible.getLastName());
+        tfEmailResponsible.setText(responsible.getEmail());
+        cbCharge.getEditor().setText(responsible.getCharge());
     }
 
-    public void behind (){
-        btnBehind.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Stage stagePrincipal = (Stage) btnBehind.getScene().getWindow();
-                stagePrincipal.close();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseSection.fxml"));
-                Stage stage = new Stage();
-                try {
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    stage.setScene(new Scene(root1));
-                } catch(Exception e) {
-                    Logger logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                }
-                stage.setResizable(false);
-                stage.show();
-            }
-        });
+    public void startComponent() {
+        limitTextField(tfEmailResponsible, 50);
+        prohibitSpacesTextField(tfEmailResponsible);
+
+        limitTextField(tfNameResponsible, 50);
+        prohibitNumberTextField(tfNameResponsible);
+
+        limitTextField(tfLastNameResponsible, 50);
+        prohibitNumberTextField(tfLastNameResponsible);
+
+        limitTextField(cbCharge.getEditor(), 70);
+        prohibitNumberTextField(cbCharge.getEditor());
     }
 
-    public void startResponsible (){
-        tfName.setText(project.getResponsible().getName());
-        tfLastName.setText(project.getResponsible().getLastName());
-        tfEmail.setText(project.getResponsible().getEmail());
-        cbCharge.getEditor().setText(project.getResponsible().getCharge());
-    }
-
-    public void startComboBox () {
-        allCharge = project.getResponsible().listCharge();
+    public void startComboBox() {
+        responsible = new ResponsibleProject();
+        allCharge = new ArrayList<>();
+        allCharge = responsible.listCharge();
         cbCharge.getItems().addAll(allCharge);
     }
 
-    public boolean validateResponsible (){
-        boolean result = true;
-        if(!validateDataPerson.validateName(tfName.getText())){
-            tfName.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfName.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateLastName(tfLastName.getText())){
-            tfLastName.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfLastName.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateEmail(tfEmail.getText())){
-            tfEmail.getStyleClass().add("error");
-            result= false;
-        }else {
-            tfEmail.getStyleClass().remove("error");
-        }
-        if(!validateDataPerson.validateCharge(cbCharge.getEditor().getText())){
-            cbCharge.getStyleClass().add("error");
-            result= false;
-        }else {
-            cbCharge.getStyleClass().remove("error");
-        }
-        return result;
+    public void modify() {
+
     }
 }
+
+
