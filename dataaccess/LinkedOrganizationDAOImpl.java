@@ -35,24 +35,26 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The Linked Organization list
      */
     @Override
-    public List<String> getAllLinkedOrganization () {
-        List<String> linkedOrganizations = new ArrayList<>();
+    public List<LinkedOrganization> getAllLinkedOrganization () {
+        List<LinkedOrganization> linkedOrganizations = new ArrayList<>();
         try{
             connection = connexion.getConnection();
             consultation  = connection.createStatement();
             results = consultation.executeQuery("select name,email from LinkedOrganization");
             while(results.next()){
-                linkedOrganizations.add(results.getString("name"));
-                linkedOrganizations.add(results.getString("email"));
+                LinkedOrganization linkedOrganization = new LinkedOrganization();
+                linkedOrganization.setName(results.getString("name"));
+                linkedOrganization.setEmail(results.getString("email"));
+                linkedOrganizations.add(linkedOrganization);
             }
         }catch (SQLException ex){
             Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
-        
         return linkedOrganizations;
     }
+
 
     /**
      * Method to get the Linked Organization of the Project
@@ -60,7 +62,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return The Linked Organization of the searched idOrganization
      */
     @Override
-    public LinkedOrganization getLinkedOrganization (int idOrganization) {
+    public LinkedOrganization getIdLinkedOrganization (int idOrganization) {
         LinkedOrganization linkedOrganization = null;
         try{
             connection = connexion.getConnection();
@@ -88,6 +90,34 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         return linkedOrganization;
     }
 
+    @Override
+    public LinkedOrganization getLinkedOrganization (String nameOrganization) {
+        LinkedOrganization linkedOrganization = null;
+        try{
+            connection = connexion.getConnection();
+            String queryLikendOrganization = "select * from LinkedOrganization inner join City on LinkedOrganization.idCity = City.idCity inner join " +
+                    "State on LinkedOrganization.idState = State.idState inner join Sector on LinkedOrganization.idSector = Sector.idSector where name =?";
+            PreparedStatement sentence = connection.prepareStatement(queryLikendOrganization);
+            sentence.setString(1,nameOrganization);
+            results= sentence.executeQuery();
+            while(results.next()){
+                linkedOrganization = new LinkedOrganization();
+                linkedOrganization.setIdLinkedOrganization(results.getInt("idLinkedOrganization"));
+                linkedOrganization.setName(results.getString("name"));
+                linkedOrganization.setDirectUsers(results.getString("directUsers"));
+                linkedOrganization.setIndirectUsers(results.getString("indirectUsers"));
+                linkedOrganization.setEmail(results.getString("email"));
+                linkedOrganization.setPhoneNumber(results.getString("phoneNumber"));
+                linkedOrganization.setAddress(results.getString("address"));
+                linkedOrganization.setCity(results.getString("City.nameCity"));
+                linkedOrganization.setState(results.getString("State.nameState"));
+                linkedOrganization.setSector(results.getString("Sector.nameSector"));
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return linkedOrganization;
+    }
     /**
      * Method to add a Linked Organization
      * @param organization The data of the Linked Organization

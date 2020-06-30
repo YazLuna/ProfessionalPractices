@@ -63,7 +63,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setLapse(results.getString("lapse"));
                 project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
-                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
+                project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
             }
@@ -103,7 +103,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setLapse(results.getString("lapse"));
                 project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
-                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));
+                project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
                 projects.add(project);
             }
@@ -148,7 +148,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setLapse(results.getString("lapse"));
                 project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
                 project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
-                project.setOrganization(implementOrganization.getLinkedOrganization(results.getInt("idLinkedOrganization")));      
+                project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
                 project.setResponsible(implementResponsible.getResponsibleProject(results.getInt("idResponsibleProject")));
             }
         }catch (SQLException ex){
@@ -173,7 +173,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(), project.getOrganization().getPhoneNumber());
-        if(idOrganization == 0) {
+        if(idOrganization == Search.NOTFOUND.getValue()) {
             result = organizationImpl.addLinkedOrganization(project.getOrganization());
             idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
         }
@@ -185,7 +185,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
-        if(idLapse == 0) {
+        if(idLapse == Search.NOTFOUND.getValue()) {
             lapse.addLapse(project.getLapse());
             idLapse=lapse.searchLapse(project.getLapse());
         }
@@ -262,7 +262,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idLapse;
         LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
         idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
-        if(idOrganization == 0 || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
+        if(idOrganization == Search.NOTFOUND.getValue() || idOrganization == project.getOrganization().getIdLinkedOrganization()) {
             result = organizationImpl.modifyLinkedOrganization(project.getOrganization());
         }else{
             project.getOrganization().setIdLinkedOrganization(idOrganization);
@@ -270,14 +270,14 @@ public class ProjectDAOImpl implements IProjectDAO {
         
         ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
         idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
-        if(idResponsibleProject == 0 || idResponsibleProject == project.getResponsible().getIdResponsible()) {
+        if(idResponsibleProject == Search.NOTFOUND.getValue() || idResponsibleProject == project.getResponsible().getIdResponsible()) {
             result = responsibleImpl.modifyResponsibleProject(project.getResponsible());
         }else{
             project.getResponsible().setIdResponsible(idResponsibleProject);
         }
         LapseDAOImpl lapse = new LapseDAOImpl();
         idLapse = lapse.searchLapse(project.getLapse());
-        if(idLapse==0){
+        if(idLapse== Search.NOTFOUND.getValue()){
             lapse.addLapse(project.getLapse());
             idLapse=lapse.searchLapse(project.getLapse());
         }
@@ -350,7 +350,7 @@ public class ProjectDAOImpl implements IProjectDAO {
     @Override
     public String assignProject (String enrollment, int idProject) {
         String status=null;
-        int quiantityPractitioner=0;
+        int quiantityPractitioner= Search.NOTFOUND.getValue();
         String message=null;
         try{  
             connection = connexion.getConnection();
@@ -369,7 +369,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 sentencePractitioner.executeUpdate();
                 quiantityPractitioner--;
                 
-                if(quiantityPractitioner == 0){
+                if(quiantityPractitioner == Search.NOTFOUND.getValue()){
                     PreparedStatement sentenceProject = connection.prepareStatement("update Project set status=? where idProject=?");
                     sentenceProject.setString(1, "not available");
                     sentenceProject.setInt(2, idProject);

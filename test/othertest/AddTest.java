@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.apache.commons.codec.binary.Hex;
+//import org.apache.commons.codec.binary.Hex;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,7 +70,7 @@ public class AddTest {
         Assert.assertTrue(result);
     }
 
-    @Test
+   /* @Test
     public void testEncryption() throws NoSuchAlgorithmException {
         MessageDigest md = null;
         String password = "Wigettaz4BTS";
@@ -78,9 +78,9 @@ public class AddTest {
         md.update(password.getBytes());
         byte[] mb = md.digest();
         System.out.println(Hex.encodeHex(mb));
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void password (){
         String password = "yaz";
             String passwordEncrypt= null;
@@ -97,7 +97,7 @@ public class AddTest {
             }
 
 
-    }
+    }*/
 
     @Test
     public void month(){

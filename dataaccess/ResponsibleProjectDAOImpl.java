@@ -136,16 +136,18 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     @Override
-    public List<String> getAllResponsible() {
-        List<String> responsibles = new ArrayList<>();
+    public List<ResponsibleProject> getAllResponsible() {
+        List<ResponsibleProject> responsibles = new ArrayList<>();
         try {
             connection = connexion.getConnection();
             consultation = connection.createStatement();
             results = consultation.executeQuery("select name,lastName,email from ResponsibleProject");
             while(results.next()){
-                responsibles.add(results.getString("name"));
-                responsibles.add(results.getString("lastName"));
-                responsibles.add(results.getString("email"));
+                ResponsibleProject responsibleProject = new ResponsibleProject();
+                responsibleProject.setName(results.getString("name"));
+                responsibleProject.setLastName(results.getString("lastName"));
+                responsibleProject.setEmail(results.getString("email"));
+                responsibles.add(responsibleProject);
             }
         }catch (SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -186,20 +188,20 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      * @return The charge was successfully registered
      */
     public String addCharge (String name) {
-        String result = "El Cargo no se pudo registrar";
+        String resultAddCharge = "El Cargo no se pudo registrar";
         String queryCharge = "insert into Charge (nameCharge) values (?)";
         try{
             connection = connexion.getConnection();
             PreparedStatement sentenceCharge = connection.prepareStatement(queryCharge);
             sentenceCharge.setString(1,name);
             sentenceCharge.executeUpdate();
-            result = "El cargo se registro con exito";
+            resultAddCharge = "El cargo se registro con exito";
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
-        return result;
+        return resultAddCharge;
     }
 
     /**

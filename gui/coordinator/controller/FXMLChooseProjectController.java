@@ -47,8 +47,7 @@ public class FXMLChooseProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //apPanel.setMaxHeight(gpPanel.getHeight()+300);
-        //spSpace.setFitToHeight(apPanel.get);
+
         getProjects();
         btnBehind.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -126,21 +125,6 @@ public class FXMLChooseProjectController implements Initializable {
                         stage.show();
                     }else{
                         if(controller.equals("update")) {
-                            FXMLChooseSectionController update = new FXMLChooseSectionController();
-                            update.setProject(project);
-                            Stage stagePrincipal = (Stage) nameProject.getScene().getWindow();
-                            stagePrincipal.close();
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/coordinator/fxml/FXMLChooseSection.fxml"));
-                            Stage stage = new Stage();
-                            try {
-                                Parent root1 = (Parent) fxmlLoader.load();
-                                stage.setScene(new Scene(root1));
-                            } catch(Exception e) {
-                                Logger logger = Logger.getLogger(getClass().getName());
-                                logger.log(Level.SEVERE, "Failed to create new Window.", e);
-                            }
-                            stage.setResizable(false);
-                            stage.show();
                         }
                     }
                 }

@@ -31,3 +31,17 @@
     -fx-font-size: 11pt;
     -fx-font-family: "Arial";
 }
+.table-view{
+    -fx-font-size: 11pt;
+    -fx-font-family: "Arial";
+}
+.text-field.details{
+    -fx-font-size: 11pt;
+    -fx-font-family: "Arial";
+    -fx-halignment: left;
+}
+.label.details{
+    -fx-font-size: 11pt;
+    -fx-font-family: "Arial";
+    -fx-halignment: right;
+}

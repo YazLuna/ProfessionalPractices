@@ -8,12 +8,12 @@ public class LinkedOrganization{
     private String email;
     private String phoneNumber;
     private String address;
-    private String city;
-    private String state;
-    private String sector;
     private String directUsers;
     private String indirectUsers;
     private String status;
+    private String city;
+    private String state;
+    private String sector;
     private int idLinkedOrganization;
     
     public LinkedOrganization () {
@@ -134,9 +134,13 @@ public class LinkedOrganization{
         return result;
     }
 
-    public List<String> listOrganization () {
+    public List<LinkedOrganization> listOrganization () {
         LinkedOrganizationDAOImpl getAllOrganization = new LinkedOrganizationDAOImpl();
         return getAllOrganization.getAllLinkedOrganization();
     }
-    
+
+    public LinkedOrganization getOrganization () {
+        LinkedOrganizationDAOImpl getOrganization = new LinkedOrganizationDAOImpl();
+        return getOrganization.getLinkedOrganization(name);
+    }
 }
