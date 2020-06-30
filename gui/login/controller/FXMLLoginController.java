@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import gui.coordinator.controller.FXMLMenuCoordinatorController;
+import gui.teacher.controller.FXMLMenuTeacherController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -92,18 +95,10 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
                     break;
             }
         }else{
-            ButtonType COORDINATOR = new ButtonType("Coordinador", ButtonBar.ButtonData.OK_DONE);
-            ButtonType TEACHER = new ButtonType("Profesor", ButtonBar.ButtonData.OK_DONE);
-            Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, "En que academico quieres iniciar sesión", COORDINATOR, TEACHER);
-            cancel.setTitle("Seleccione uno");
-            Optional<ButtonType> action = cancel.showAndWait();
-            if (action.orElse(COORDINATOR) == COORDINATOR) {
-                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnLogin);
-            }else{
-                if(action.orElse(TEACHER) == TEACHER){
-                    openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml",btnLogin);
-                }
-            }
+            FXMLMenuCoordinatorController.isTeacher = true;
+            FXMLMenuTeacherController.isCoordinator = true;
+            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnLogin);
+
         }
     }
 
