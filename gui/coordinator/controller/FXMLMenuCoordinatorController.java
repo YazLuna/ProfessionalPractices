@@ -1,5 +1,7 @@
 package gui.coordinator.controller;
 
+import gui.teacher.controller.FXMLMenuTeacherController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,6 +17,7 @@ import domain.Practitioner;
  */
 
 public class FXMLMenuCoordinatorController extends FXMLGeneralController implements Initializable {
+    @FXML private Button btnChangeRole;
     @FXML private Button btnRegisterGroup;
     @FXML private Button btnUpdateGroup;
     @FXML private Button btnAssignProject;
@@ -32,10 +35,13 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     @FXML private Button btnDeleteProject;
     @FXML private Button btnUpdatePractitioner;
     @FXML private Button btnUpdateProject;
+    public static boolean isTeacher;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        if(isTeacher){
+            btnChangeRole.setVisible(true);
+        }
     }
 
     public void logOut() {
@@ -138,5 +144,10 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
         openWindowGeneral("/gui/coordinator/fxml/FXMLDelete" +
                 "" +
                 "ResponsibleProject.fxml",btnUpdateResponsible);
+    }
+
+    public void changeRole() {
+        FXMLMenuTeacherController.isCoordinator = true;
+        openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml",btnChangeRole);
     }
 }

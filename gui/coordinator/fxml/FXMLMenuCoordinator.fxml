@@ -26,16 +26,23 @@
             <Font name="System Bold" size="11.0"/>
          </font>
       </Label>
-      <Button fx:id="btnLogOut" layoutX="641.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut"
+      <Button fx:id="btnLogOut" layoutX="641.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOut"
               prefHeight="27.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" text="Cerarr Sesión">
          <font>
             <Font name="Arial Bold" size="12.0"/>
          </font>
       </Button>
-      <ImageView fitHeight="42.0" fitWidth="45.0" layoutX="604.0" layoutY="24.0" pickOnBounds="true"
+      <ImageView fitHeight="42.0" fitWidth="45.0" layoutX="604.0" layoutY="17.0" pickOnBounds="true"
                  preserveRatio="true">
          <Image url="@../../images/LogOut.png"/>
       </ImageView>
+      <Button fx:id="btnChangeRole" layoutX="615.0" layoutY="54.0" mnemonicParsing="false" onAction="#changeRole"
+              prefHeight="27.0" prefWidth="126.0" style="-fx-background-color: #ffffff;" text="Menú Profesor"
+              visible="false">
+         <font>
+            <Font name="Arial Bold" size="12.0"/>
+         </font>
+      </Button>
    </Pane>
    <Pane layoutX="14.0" layoutY="97.0" prefHeight="357.0" prefWidth="357.0" style="-fx-border-color: GREEN;">
       <Button fx:id="btnRegisterPractitioner" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="27.0"
@@ -137,15 +144,11 @@
       </Button>
       <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="226.0" layoutY="143.0" mouseTransparent="true"
                  pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/List.png"/>
-         </image>
+         <Image url="@../../images/List.png"/>
       </ImageView>
       <ImageView fitHeight="60.0" fitWidth="100.0" layoutX="58.0" layoutY="143.0" mouseTransparent="true"
                  pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/Update.png"/>
-         </image>
+         <Image url="@../../images/Update.png"/>
       </ImageView>
       <ImageView fitHeight="70.0" fitWidth="100.0" layoutX="226.0" layoutY="36.0" mouseTransparent="true"
                  pickOnBounds="true" preserveRatio="true">
@@ -248,9 +251,9 @@
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
-      <Button fx:id="btnRegisterResponsible" alignment="BOTTOM_CENTER" layoutX="18.0" layoutY="30.0" mnemonicParsing="false"
-              onAction="#registerReponsible" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #7ae69f;"
-              text="Registrar" textAlignment="RIGHT" textFill="WHITE">
+      <Button fx:id="btnRegisterResponsible" alignment="BOTTOM_CENTER" layoutX="18.0" layoutY="30.0"
+              mnemonicParsing="false" onAction="#registerReponsible" prefHeight="100.0" prefWidth="100.0"
+              style="-fx-background-color: #7ae69f;" text="Registrar" textAlignment="RIGHT" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>

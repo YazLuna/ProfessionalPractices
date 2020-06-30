@@ -6,38 +6,31 @@ import javafx.scene.control.Button;
 import java.net.URL;
 import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
+import gui.coordinator.controller.FXMLMenuCoordinatorController;
 
 /**
- * DAO User
+ * FXMLMenuTeacherController
  * @author Yazmin
- * @version 19/05/2020
+ * @version 29/06/2020
  */
 
 public class FXMLMenuTeacherController extends FXMLGeneralController implements Initializable {
-    @FXML private Button btnGenerateActivity;
-    @FXML private Button btnListActivity;
-    @FXML private Button btnUpdateActivity;
-    @FXML private Button btnDeleteActivity;
+    @FXML private Button btnChangeRole;
+    public static boolean isCoordinator;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
-
-    public void deleteActivity() {
-    }
-
-    public void updateActivity() {
-    }
-
-    public void generateActivity() {
-        openWindowGeneral("/gui/teacher/fxml/FXMLGenerateActivity.fxml",btnGenerateActivity);
-    }
-
-    public void listActivity() {
+        if(isCoordinator){
+            btnChangeRole.setVisible(true);
+        }
     }
 
     public void logOut() {
         logOutGeneral();
+    }
+
+    public void changeRole() {
+        FXMLMenuCoordinatorController.isTeacher = true;
+        openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnChangeRole);
     }
 }
