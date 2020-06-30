@@ -1,7 +1,7 @@
 package gui.coordinator.controller;
 
-import domain.LinkedOrganization;
 import gui.FXMLGeneralController;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,17 +23,17 @@ public class FXMLChooseResponsibleProjectController extends FXMLGeneralControlle
     @FXML private Button btnCancel;
     @FXML private TableView tvResponsibleProject;
     private static String controllerSection;
-    private ResponsibleProject responsibleProject;
     private List<ResponsibleProject> allResponsibleProject;
+    private static String answerNameResponsible;
 
     public void initialize(URL url, ResourceBundle rb) {
         startTableOrganizations();
     }
 
     public void startTableOrganizations() {
-        this.responsibleProject = new ResponsibleProject();
+        ResponsibleProject responsibleProject = new ResponsibleProject();
         allResponsibleProject = new ArrayList<>();
-        allResponsibleProject = this.responsibleProject.listResponsibleProject();
+        allResponsibleProject = responsibleProject.listResponsibleProject();
         TableColumn<ResponsibleProject, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<ResponsibleProject, String>("name"));
         TableColumn<ResponsibleProject, String> lastName = new TableColumn<>("Apellido");
@@ -41,8 +41,8 @@ public class FXMLChooseResponsibleProjectController extends FXMLGeneralControlle
         TableColumn<ResponsibleProject, String> email = new TableColumn<>("Correo Electrónico");
         email.setCellValueFactory(new PropertyValueFactory<ResponsibleProject, String>("email"));
         tvResponsibleProject.getColumns().addAll(name, lastName, email);
-        ObservableList<ResponsibleProject> responsibleProject = FXCollections.observableArrayList(allResponsibleProject);
-        tvResponsibleProject.setItems(responsibleProject);
+        ObservableList<ResponsibleProject> responsiblesProject = FXCollections.observableArrayList(allResponsibleProject);
+        tvResponsibleProject.setItems(responsiblesProject);
         tvResponsibleProject.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     }
@@ -52,22 +52,28 @@ public class FXMLChooseResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void cancel () {
-        Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
-        stagePrincipal.close();
+        Stage stage = (Stage) btnAccept.getScene().getWindow();
+        stage.close();
     }
 
     public void accept () {
-        responsibleProject = (ResponsibleProject) tvResponsibleProject.getSelectionModel().getSelectedItem();
-        if(responsibleProject!=null){
+        ResponsibleProject responsible = new ResponsibleProject();
+        ReadOnlyObjectProperty<ResponsibleProject> responsibleProjectSelect;
+        responsibleProjectSelect =  tvResponsibleProject.getSelectionModel().selectedItemProperty();
+        responsible = responsibleProjectSelect.getValue();
+        if(tvResponsibleProject.getSelectionModel().getSelectedItem() !=null){
             if(controllerSection != "register") {
-                FXMLUpdateProjectController updateProject = new FXMLUpdateProjectController();
-                //updateProject.assignLinkedOrganization(organization.getName());
+                answerNameResponsible = responsible.getName()+" "+responsible.getLastName();
             }else {
-                FXMLRegisterProjectController registerProject = new FXMLRegisterProjectController();
-                registerProject.assignResponsibleProject(responsibleProject.getName());
+                answerNameResponsible = responsible.getName()+" "+responsible.getLastName();
             }
-            Stage stagePrincipal = (Stage) btnAccept.getScene().getWindow();
-            stagePrincipal.close();
+            Stage stage = (Stage) btnAccept.getScene().getWindow();
+            stage.close();
+        }else{
+            generateInformation("Elige un Responsable del proyecto");
         }
+    }
+    public static String nameResponsible(){
+        return answerNameResponsible;
     }
 }

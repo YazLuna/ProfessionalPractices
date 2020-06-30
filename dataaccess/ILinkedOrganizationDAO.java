@@ -10,9 +10,15 @@ import domain.LinkedOrganization;
  */
 public interface ILinkedOrganizationDAO {
     public List<LinkedOrganization> getAllLinkedOrganization ();
+    public List<LinkedOrganization> getAllLinkedOrganizationAvailable ();
+    public List<LinkedOrganization> getAllLinkedOrganizationAvailableNotAssing();
     public LinkedOrganization getLinkedOrganization (String nameOrganization);
     public LinkedOrganization getIdLinkedOrganization (int idOrganization);
     public int searchIdLinkedOrganization (String name, String email, String phoneNumber);
-    public String addLinkedOrganization (LinkedOrganization organization);
-    public String modifyLinkedOrganization (LinkedOrganization organization);
+    public boolean addLinkedOrganization (LinkedOrganization organization);
+    public boolean modifyLinkedOrganization (LinkedOrganization organization);
+    public boolean deleteLinkedOrganization (int idLinkedOrganization);
+    public boolean thereAreLinkedOrganizationAvailable ();
+    public boolean thereAreLinkedOrganizationAvailableNotAssing();
+    public boolean thereAreLinkedOrganization ();
 }

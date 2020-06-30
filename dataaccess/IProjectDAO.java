@@ -11,12 +11,16 @@ import domain.Project;
  */
 public interface IProjectDAO {
     public List<Project> getAllProjects ();
-    public Project getProject (String nameProject);
     public List<Project> getAllProjectsAvailable ();
-    public String actualizationProject (Project project);
-    public String updateProject (Project project);
-    public String deleteProject (Project project);
-    public String requestProject (String enrollment, int idProject);
-    public String assignProject (String enrollment, int idProject);
-    
+    public List<Project> getAllProjectsAvailableNotAssing ();
+    public Project getProject (String nameProject);
+    public boolean actualizationProject (Project project);
+    public boolean addProject (Project project);
+    public boolean deleteProject (String name);
+    public boolean requestProject (String enrollment, int idProject);
+    public boolean assignProject (String enrollment, int idProject);
+    public int getIdProject (String name);
+    public boolean thereAreProjectAvailable();
+    public boolean thereAreProject();
+    public boolean thereAreProjectAvailableNotAssing();
 }

@@ -3,6 +3,7 @@ package domain;
 import dataaccess.LinkedOrganizationDAOImpl;
 import dataaccess.ProjectDAOImpl;
 import dataaccess.LapseDAOImpl;
+
 import java.util.List;
 
 public class Project {
@@ -13,19 +14,23 @@ public class Project {
     private String objectiveMediate;
     private String methodology;
     private String resources;
-    private String status;
-    private String activities;
+    private String activitiesAndFunctions;
     private String responsabilities;
+    private String daysHours;
     private String lapse;
+    private String status;
     private int staffNumberCoordinator;
     private int duration;
     private int quantityPractitioner;
+    private int placesAvailable;
     private int idProject;
     private LinkedOrganization organization;
     private ResponsibleProject responsible;
+    private List<SchedulingActivities> schedulingActivitiesProject;
     
     public Project(){
-        this.status="available"; 
+        this.placesAvailable = this.quantityPractitioner;
+        this.status="available";
     }
     
     public String getNameProject () {
@@ -84,12 +89,12 @@ public class Project {
         this.resources = resources;
     }
     
-    public String getActivities () {
-        return activities;
+    public String getActivitiesAndFunctions() {
+        return activitiesAndFunctions;
     }
     
-    public void setActivities (String activities) {
-        this.activities = activities;
+    public void setActivitiesAndFunctions(String activitiesAndFunctions) {
+        this.activitiesAndFunctions = activitiesAndFunctions;
     }
     
     public String getResponsabilities () {
@@ -100,12 +105,12 @@ public class Project {
         this.responsabilities = responsabilities;
     }
 
-    public int getStaffNumberCoordinator () {
-        return staffNumberCoordinator;
+    public void setDaysHours (String daysHours) {
+        this.daysHours = daysHours;
     }
 
-    public void setStaffNumberCoordinator (int staffNumberCoordinator) {
-        this.staffNumberCoordinator = staffNumberCoordinator;
+    public String getDaysHours () {
+        return daysHours;
     }
 
     public String getLapse () {
@@ -123,6 +128,14 @@ public class Project {
     public void setStatus (String status){
         this.status=status;
     }
+
+    public int getStaffNumberCoordinator () {
+        return staffNumberCoordinator;
+    }
+
+    public void setStaffNumberCoordinator (int staffNumberCoordinator) {
+        this.staffNumberCoordinator = staffNumberCoordinator;
+    }
             
     public int getDuration () {
         return duration;
@@ -139,7 +152,15 @@ public class Project {
     public void setQuantityPractitioner (int quantityPractitioner) {
         this.quantityPractitioner = quantityPractitioner;
     }
-    
+
+    public void setPlacesAvailable (int placesAvailable) {
+        this.placesAvailable = placesAvailable;
+    }
+
+    public int getPlacesAvailable () {
+        return placesAvailable;
+    }
+
     public int getIdProject () {
      return idProject;   
     }
@@ -164,60 +185,68 @@ public class Project {
         this.responsible = responsible;
     }
 
-    public String registerProject () {
-        String result;
-        Project projectExit = new Project();
-        ProjectDAOImpl registerProject = new ProjectDAOImpl();
-        projectExit = registerProject.getProject(this.getNameProject());
-        if(projectExit !=null){
-            result = "There is a project with the same registered name";
-        }else{
-            result = registerProject.updateProject(this);
+    public void setSchedulingActivitiesProject (List<SchedulingActivities> schedulingActivitiesProject) {
+        this.schedulingActivitiesProject = schedulingActivitiesProject;
+    }
+
+    public List<SchedulingActivities> getSchedulingActivitiesProject () {
+        return schedulingActivitiesProject;
+    }
+
+    public boolean searchProject () {
+        int idProject;
+        boolean isFoundProject = false;
+        ProjectDAOImpl searchProject = new ProjectDAOImpl();
+        idProject = searchProject.getIdProject(nameProject);
+        if(idProject != Search.NOTFOUND.getValue()){
+            isFoundProject = true;
         }
+        return isFoundProject;
+    }
+
+    public boolean registerProject () {
+        ProjectDAOImpl registerProject = new ProjectDAOImpl();
+        boolean result = registerProject.addProject(this);
         return result;
     }
 
     public List<Project> listProjects () {
-        String result;
-        ProjectDAOImpl registerProject = new ProjectDAOImpl();
-        return registerProject.getAllProjects();
-    }
-    public List<Project> listProjectsAvailable () {
-        String result;
-        ProjectDAOImpl registerProject = new ProjectDAOImpl();
-        return registerProject.getAllProjectsAvailable();
+        ProjectDAOImpl getAllProject = new ProjectDAOImpl();
+        List<Project> listProject = getAllProject.getAllProjects();
+        return listProject;
     }
 
-    public String actualizationProject () {
-        String result;
+    public List<Project> listProjectsAvailableNotAssing() {
+        ProjectDAOImpl getAllProjectAvailable = new ProjectDAOImpl();
+        List<Project> listProjectAvailable = getAllProjectAvailable.getAllProjectsAvailableNotAssing();
+        return listProjectAvailable;
+    }
+
+    public boolean modifyProject () {
+        boolean result;
         Project projectExit = new Project();
         ProjectDAOImpl actualizationProject = new ProjectDAOImpl();
         projectExit = actualizationProject.getProject(this.getNameProject());
         result = actualizationProject.actualizationProject(this);
-        if(projectExit.getNameProject() != null && this.idProject!= projectExit.getIdProject()){
-            result = "There is a project with the same registered name";
-        }else{
-            result = actualizationProject.actualizationProject(this);
-        }
         return result;
     }
 
-    public String requestProject (String enrollment) {
-        String result;
+    public boolean requestProject (String enrollment) {
+        boolean result;
         ProjectDAOImpl request = new ProjectDAOImpl();
         result = request.requestProject(enrollment,this.idProject);
         return result;
     }
 
-    public String deleteProject () {
-        String result;
+    public boolean deleteProject () {
+        boolean result;
         ProjectDAOImpl delete = new ProjectDAOImpl();
-        result = delete.deleteProject(this);
+        result = delete.deleteProject(nameProject);
         return result;
     }
 
-    public String assingProject (String enrollment) {
-        String result;
+    public boolean assingProject (String enrollment) {
+        boolean result;
         ProjectDAOImpl assing = new ProjectDAOImpl();
         result = assing.assignProject(enrollment, this.idProject);
         return result;
@@ -225,11 +254,20 @@ public class Project {
 
     public Project getProject (String name) {
         ProjectDAOImpl getProject = new ProjectDAOImpl();
-        return getProject.getProject(name);
+        Project project = getProject.getProject(name);
+        return project;
     }
 
-    public List<String> listLapse () {
-        LapseDAOImpl listLapse= new LapseDAOImpl();
-        return listLapse.getAllLapse();
+    public boolean thereAreProject () {
+        ProjectDAOImpl projectDAO = new ProjectDAOImpl();
+        boolean thereAreProject = projectDAO.thereAreProject();
+        return thereAreProject;
     }
+
+    public boolean thereAreProjectAvailableNotAssing() {
+        ProjectDAOImpl projectDAO = new ProjectDAOImpl();
+        boolean thereAreProjectAvailable = projectDAO.thereAreProjectAvailableNotAssing();
+        return thereAreProjectAvailable;
+    }
+
 }

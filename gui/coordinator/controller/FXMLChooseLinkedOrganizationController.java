@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javax.swing.event.ChangeListener;
 import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,16 +23,16 @@ public class FXMLChooseLinkedOrganizationController extends FXMLGeneralControlle
     @FXML private Button btnCancel;
     @FXML private TableView<LinkedOrganization> tvLinkedOrganizations;
     private static String controllerSection;
-    private LinkedOrganization organization;
+    private static String answerNameOrganization;
     private List<LinkedOrganization> allLinkedOrganization;
 
     public void initialize(URL url, ResourceBundle rb) {
         startTableOrganizations();
     }
     public void startTableOrganizations() {
-        organization = new LinkedOrganization();
+        LinkedOrganization organization = new LinkedOrganization();
         allLinkedOrganization = new ArrayList<>();
-        allLinkedOrganization = organization.listOrganization();
+        allLinkedOrganization = organization.listOrganizationAvailable();
         TableColumn<LinkedOrganization, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<LinkedOrganization, String>("name"));
         TableColumn<LinkedOrganization, String> email = new TableColumn<>("Correo Electrónico");
@@ -55,21 +54,22 @@ public class FXMLChooseLinkedOrganizationController extends FXMLGeneralControlle
     }
 
     public void accept () {
-        organization = new LinkedOrganization();
+        LinkedOrganization organization = new LinkedOrganization();
         ReadOnlyObjectProperty<LinkedOrganization> organizationSelect;
         organizationSelect =  tvLinkedOrganizations.getSelectionModel().selectedItemProperty();
         organization = organizationSelect.getValue();
         if(tvLinkedOrganizations.getSelectionModel().getSelectedItem() != null) {
-            if(controllerSection != "register") {
-                FXMLUpdateProjectController updateProject = new FXMLUpdateProjectController();
-                //updateProject.assignLinkedOrganization(rganizationSelect.getName());
-            }else {
-                FXMLRegisterProjectController registerProject = new FXMLRegisterProjectController();
-                registerProject.assignLinkedOrganization(organization.getName());
-            }
+            answerNameOrganization = organization.getName();
             Stage stagePrincipal = (Stage) btnAccept.getScene().getWindow();
             stagePrincipal.close();
+            Stage stage = (Stage) btnAccept.getScene().getWindow();
+            stage.close();
+        }else{
+            generateInformation("Elige una Organización vinculada");
         }
+    }
+    public static String nameLinkedOrganization(){
+        return answerNameOrganization;
     }
 
 }

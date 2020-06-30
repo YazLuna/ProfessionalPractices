@@ -9,7 +9,7 @@ import org.junit.Test;
 public class UpdateTestProject {
     @Test
     public void testActualizationProject(){
-        String result;
+        boolean result;
         Project project = new Project();
         LinkedOrganization organization = new LinkedOrganization();
         ResponsibleProject responsible = new ResponsibleProject();
@@ -23,7 +23,7 @@ public class UpdateTestProject {
         project.setResources("Modelo Conceptual de la Base de Datos");
         project.setLapse("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(2);
-        project.setActivities("Documentación de las decisiones de disenio que se han tomado");
+        project.setActivitiesAndFunctions("Documentación de las decisiones de disenio que se han tomado");
         project.setResponsabilities("Diagrama Entidad-Relación para describir el modelo logico de la Base de Datos");
         project.setDuration(3);
         project.setQuantityPractitioner(3);
@@ -40,13 +40,13 @@ public class UpdateTestProject {
         responsible.setEmail("jar_12@outlook.com");
         responsible.setCharge("Gerente");
         project.setResponsible(responsible);
-        result = project.actualizationProject();
-        Assert.assertEquals("The project was successfully updated",result);
+        result = project.modifyProject();
+        Assert.assertEquals(true,result);
     }
 
     @Test
     public void testActualizationProjectError(){
-        String result;
+        boolean result;
         Project project = new Project();
         LinkedOrganization organization = new LinkedOrganization();
         ResponsibleProject responsible = new ResponsibleProject();
@@ -59,7 +59,7 @@ public class UpdateTestProject {
         project.setResources("Modelo Conceptual de la Base de Datos");
         project.setLapse("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(2);
-        project.setActivities("Documentación de las decisiones de disenio que se han tomado");
+        project.setActivitiesAndFunctions("Documentación de las decisiones de disenio que se han tomado");
         project.setResponsabilities("Diagrama Entidad-Relación para describir el modelo logico de la Base de Datos");
         project.setDuration(3);
         project.setQuantityPractitioner(3);
@@ -76,7 +76,7 @@ public class UpdateTestProject {
         responsible.setEmail("jar_12@outlook.com");
         responsible.setCharge("Gerente");
         project.setResponsible(responsible);
-        result = project.actualizationProject();
-        Assert.assertEquals("The project was successfully updated",result);
+        result = project.modifyProject();
+        Assert.assertEquals(true,result);
     }
 }

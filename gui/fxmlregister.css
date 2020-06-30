@@ -38,10 +38,15 @@
 .text-field.details{
     -fx-font-size: 11pt;
     -fx-font-family: "Arial";
-    -fx-halignment: left;
 }
+
 .label.details{
     -fx-font-size: 11pt;
     -fx-font-family: "Arial";
-    -fx-halignment: right;
+}
+
+.Text{
+    -fx-font-size: 11pt;
+    -fx-font-family: "Arial";
+    -fx-text-alignment: justify;
 }

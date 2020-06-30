@@ -15,10 +15,8 @@
    <stylesheets>
       <URL value="@../../fxmlregister.css" />
    </stylesheets>
-   <children>
       <TableView fx:id="tvLinkedOrganizations" layoutX="52.0" layoutY="133.0" prefHeight="200.0" prefWidth="489.0" />
       <Pane prefHeight="84.0" prefWidth="598.0" style="-fx-background-color: #053d01;">
-         <children>
             <Label layoutX="141.0" layoutY="29.0" text="Organizaciones Vinculadas" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="22.0" />
@@ -31,10 +29,9 @@
             </Button>
             <ImageView fitHeight="37.0" fitWidth="36.0" layoutX="467.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../images/LogOut.png" />
+                  <Image url="@../../images/logout.png" />
                </image>
             </ImageView>
-         </children>
       </Pane>
       <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behind" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
          <graphic>
@@ -45,5 +42,4 @@
             </ImageView>
          </graphic>
       </Button>
-   </children>
 </AnchorPane>
