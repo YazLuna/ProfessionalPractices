@@ -25,7 +25,7 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         isPractitioner = validateAddUser.validateEnrollment(userName.toUpperCase());
         if(isPractitioner){
             tfUser.setVisible(false);
-            lbUser.setText("Nombre de usuario: "+userName);
+            lbUser.setText("Nombre de usuario: "+ userName);
             tfUser.setText(userName);
         }
         limitTextField(tfUser,50);
@@ -42,13 +42,13 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
             String passwordNew = encryptPassword(tfPassword.getText());
             String userNameNew= tfUser.getText();
             LoginAccountDAOImpl login = new LoginAccountDAOImpl();
-            boolean updateWin= false;
+            boolean updateSuccessful;
             if(isPractitioner){
-                updateWin = login.updateLoginAccountPractitioner(userName,password,passwordNew);
+                updateSuccessful = login.updateLoginAccountPractitioner(userName,password,passwordNew);
             } else {
-                updateWin= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
+                updateSuccessful= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
             }
-            if(updateWin){
+            if(updateSuccessful){
                 logOutGeneral();
                 generateInformation("Cambios guardados correctamente");
             }else{

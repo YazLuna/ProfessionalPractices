@@ -41,7 +41,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     }
 
     public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
     }
 
     public void loadProfilePicture() {
