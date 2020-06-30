@@ -15,6 +15,8 @@ public interface IUserMethodDAO {
     int searchStaffNumberCoordinator(int staffNumberSearch)  ;
     int searchStaffNumberTeacher(int staffNumberSearch) ;
     int searchIdUserStatus(String status);
-    boolean validateUser(String email, String alternateEmail, String phone, String userName);
+    boolean validateUserAdd(String email, String alternateEmail, String phone, String userName);
     int searchStaffNumber(int staffNumberSearch) ;
+    boolean validateUserUpdate(String email, String alternateEmail, String phone) ;
+    void addRelations(String email, String alternateEmail, String phone, String status, String userType);
 }

@@ -51,8 +51,8 @@ public class Coordinator extends User{
 
     public boolean updateCoordinator(int staffNumberCoordinator) {
         CoordinatorDAOImpl updateCoordinator = new CoordinatorDAOImpl();
-        boolean result = updateCoordinator.updateCoordinator(staffNumberCoordinator, this);
-        return result;
+        //boolean result = updateCoordinator.updateCoordinator(staffNumberCoordinator, this);
+        return true;
     }
 
      public boolean deleteCoordinator(String status, String dischargeDate) {

@@ -29,7 +29,7 @@ public class FXMLListPractitionerController extends FXMLGeneralController {
 
     private void colocateListPractitioners() {
         Practitioner Practitioner = new Practitioner();
-        List<Practitioner> PractitionerList=Practitioner.getInformationPractitioner();
+        List<Practitioner> PractitionerList = Practitioner.getInformationPractitioner();
         enrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));

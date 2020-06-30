@@ -54,7 +54,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             , String userType, String status, int gender, String userName, File image) {
         boolean validate;
         boolean resultSet = false;
-        validate = validateUser(email, alternateEmail, phone,userName);
+        validate = validateUserAdd(email, alternateEmail, phone,userName);
         if(validate){
             try {
                 connection = connexion.getConnection();
@@ -74,7 +74,9 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
                     preparedStatement.setBinaryStream(7,null);
                 }
                 preparedStatement.executeUpdate();
-                addRelations(email,alternateEmail,phone,status,userType,userName,password);
+                addRelations(email,alternateEmail,phone,status,userType);
+                int idUserAdd = searchIdUser(email,alternateEmail,phone);
+                createLoginAccount(userName,password,idUserAdd);
                 resultSet = true;
             } catch (SQLException | FileNotFoundException ex) {
                 Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,8 +150,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public boolean validateUser(String email, String alternateEmail, String phone, String userName) {
-        boolean resultSet = false;
+    public boolean validateUserAdd(String email, String alternateEmail, String phone, String userName) {
+        boolean result = false;
         boolean emailSearch = searchEmail(email);
         if(!emailSearch){
             boolean alternateEmailSearch = searchAlternateEmail(alternateEmail);
@@ -158,12 +160,28 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
                 if(!phoneSearch){
                     boolean userNameSearch = searchUserName(userName);
                     if(!userNameSearch){
-                        resultSet = true;
+                        result = true;
                     }
                 }
             }
         }
-        return resultSet;
+        return result;
+    }
+
+    @Override
+    public boolean validateUserUpdate(String email, String alternateEmail, String phone) {
+        boolean result = false;
+        boolean emailSearch = searchEmail(email);
+        if(!emailSearch){
+            boolean alternateEmailSearch = searchAlternateEmail(alternateEmail);
+            if(!alternateEmailSearch){
+                boolean phoneSearch = searchPhone(phone);
+                if(!phoneSearch){
+                    result = true;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -173,6 +191,24 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
            staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
        }
        return staffNumber;
+    }
+
+    @Override
+    public void addRelations(String email, String alternateEmail, String phone, String status, String userType) {
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        int idUserAdd = searchIdUser(email,alternateEmail,phone);
+        int idUserStatusSearch = statusDAO.searchIdStatus(status);
+        if(idUserStatusSearch == Search.NOTFOUND.getValue() ){
+            statusDAO.addStatus(status);
+            idUserStatusSearch = statusDAO.searchIdStatus(status);
+        }
+        int idUserTypeSearch = searchIdUserType(userType);
+        if(idUserTypeSearch== Search.NOTFOUND.getValue()){
+            addUserType(userType);
+            idUserTypeSearch = searchIdUserType(userType);
+        }
+        addUserUserStatus(idUserAdd, idUserStatusSearch);
+        addUserUserType(idUserAdd, idUserTypeSearch);
     }
 
     private boolean searchAlternateEmail(String alternateEmail)  {
@@ -230,24 +266,6 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             connexion.closeConnection();
         }
         return search;
-    }
-
-    private void addRelations(String email, String alternateEmail, String phone, String status, String userType, String userName, String password) {
-        StatusDAOImpl statusDAO = new StatusDAOImpl();
-        int idUserAdd = searchIdUser(email,alternateEmail,phone);
-        int idUserStatusSearch = statusDAO.searchIdStatus(status);
-        if(idUserStatusSearch == Search.NOTFOUND.getValue() ){
-            statusDAO.addStatus(status);
-            idUserStatusSearch = statusDAO.searchIdStatus(status);
-        }
-        int idUserTypeSearch = searchIdUserType(userType);
-        if(idUserTypeSearch== Search.NOTFOUND.getValue()){
-            addUserType(userType);
-            idUserTypeSearch = searchIdUserType(userType);
-        }
-        addUserUserStatus(idUserAdd, idUserStatusSearch);
-        addUserUserType(idUserAdd, idUserTypeSearch);
-        createLoginAccount(userName,password,idUserAdd);
     }
 
     private void addUserUserType(int idUserAdd, int idUserTypeSearch) {

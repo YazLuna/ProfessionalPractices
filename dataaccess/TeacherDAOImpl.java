@@ -66,7 +66,7 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
         boolean result = false;
         int staffNumberFound = searchStaffNumber(teacherEdit.getStaffNumber());
         if(staffNumberFound == Search.NOTFOUND.getValue() ){
-            boolean validate = validateUser(teacherEdit.getEmail(),teacherEdit.getAlternateEmail(),
+            boolean validate = validateUserAdd(teacherEdit.getEmail(),teacherEdit.getAlternateEmail(),
                     teacherEdit.getPhone(),teacherEdit.getUserName());
             if(validate){
                 try {

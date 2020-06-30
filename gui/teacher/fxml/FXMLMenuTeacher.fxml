@@ -37,6 +37,13 @@
                  preserveRatio="true">
          <Image url="@../../images/LogOut.png"/>
       </ImageView>
+      <Button fx:id="btnChangeRole" layoutX="615.0" layoutY="63.0" mnemonicParsing="false" onAction="#changeRole"
+              prefHeight="27.0" prefWidth="134.0" style="-fx-background-color: #ffffff;" text="Menú Coordinador"
+              visible="false">
+         <font>
+            <Font name="Arial Bold" size="12.0"/>
+         </font>
+      </Button>
    </Pane>
    <Pane layoutX="180.0" layoutY="143.0" prefHeight="300.0" prefWidth="357.0" style="-fx-border-color: GREEN;">
       <Button fx:id="btnGenerateActivity" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="60.0"

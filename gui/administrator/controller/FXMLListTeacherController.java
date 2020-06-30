@@ -29,7 +29,7 @@ public class FXMLListTeacherController extends FXMLGeneralController {
 
     private void colocateListTeachers() {
         Teacher teacher = new Teacher();
-        List<Teacher> teacherList=teacher.getInformationAllTeacher();
+        List<Teacher> teacherList = teacher.getInformationAllTeacher();
         staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
