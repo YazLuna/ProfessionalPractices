@@ -2,17 +2,17 @@ package gui.login.controller;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
-
-import gui.coordinator.controller.FXMLMenuCoordinatorController;
-import gui.teacher.controller.FXMLMenuTeacherController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import logic.ValidateAddUser;
 import dataaccess.LoginAccountDAOImpl;
 import gui.FXMLGeneralController;
+import gui.coordinator.controller.FXMLMenuCoordinatorController;
+import gui.teacher.controller.FXMLMenuTeacherController;
 
 /**
  * FXMLLoginController
@@ -24,6 +24,7 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
     @FXML private Button btnLogin;
     @FXML private TextField tfUser;
     @FXML private PasswordField pfPassword;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         limitTextField(tfUser,50);

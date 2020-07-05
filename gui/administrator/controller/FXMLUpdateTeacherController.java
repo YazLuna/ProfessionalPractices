@@ -43,7 +43,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
     }
 
     public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
+        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
     }
 
     public void loadProfilePicture() {

@@ -43,7 +43,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     }
 
     public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
     }
 
     public void loadProfilePicture() {
