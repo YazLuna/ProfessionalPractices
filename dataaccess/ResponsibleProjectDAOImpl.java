@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.lang.reflect.Method;
 import domain.ResponsibleProject;
 import domain.Search;
 
@@ -134,22 +134,58 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      */
     @Override
     public boolean modifyResponsibleProject (ResponsibleProject responsibleEdit,List<String>DatesUpdate) {
-        int idCharge;
-        boolean isvalidResponsible = false;
         boolean result = false;
-        if (result) {
-            String datesUpdate="";
-            List<String> Change = new ArrayList<>();
-            Change.add("get");
-            for (int indexDatesUpdate = 0; indexDatesUpdate < DatesUpdate.size(); indexDatesUpdate++) {
-                if (indexDatesUpdate == DatesUpdate.size() - 1) {
-                    datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate) + "= ?";
-                } else {
-                    datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate) + "= ?,";
-                }
-                Change.add("get" + DatesUpdate.get(indexDatesUpdate));
-            }
+        int idCharge;
+        idCharge= searchIdCharge(responsibleEdit.getCharge());
+        if(idCharge == Search.NOTFOUND.getValue()){
+            addCharge(responsibleEdit.getCharge());
+            idCharge = searchIdCharge(responsibleEdit.getCharge());
         }
+        String datesUpdate= DatesUpdate.get(0)+ "= ?, ";
+        List<String> Change = new ArrayList<>();
+        Change.add("get"+DatesUpdate.get(0));
+        for (int indexDatesUpdate = 1; indexDatesUpdate < DatesUpdate.size(); indexDatesUpdate++) {
+            if (indexDatesUpdate == DatesUpdate.size() - 1) {
+                datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate) + "= ?";
+            } else {
+                datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate) + "= ?,";
+            }
+            Change.add("get" + DatesUpdate.get(indexDatesUpdate));
+        }
+
+        String sentence = "UPDATE ResponsibleProject set "+datesUpdate+ " where idResponsibleProject = "+ responsibleEdit.getIdResponsible();
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sentence);
+            Class classResponsible = responsibleEdit.getClass();
+            for(int indexPreparedStatement = 1 ; indexPreparedStatement <= DatesUpdate.size(); indexPreparedStatement++){
+                Method methodResponsible;
+                boolean isString = true;
+                /*try {
+                    methodCoordinator = classCoordinator.getMethod(Change.get(indexPreparedStatement - 1));
+                    String isWord = (String) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
+                } catch (ClassCastException e) {
+                    isString = false;
+                    //Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+                }
+                if(isString){
+                    methodCoordinator = classCoordinator.getMethod(Change.get(indexPreparedStatement - 1));
+                    String word = (String) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
+                    preparedStatement.setString(indexPreparedStatement,word);
+                } else{
+                    methodCoordinator = classCoordinator.getMethod(Change.get(indexPreparedStatement - 1));
+                    int integer = (int) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
+                    preparedStatement.setInt(indexPreparedStatement, integer);
+                }*/
+            }
+            preparedStatement.executeUpdate();
+            result = true;
+        } catch (SQLException | NoSuchMethodException | IllegalAccessException /*| InvocationTargetException*/ ex) {
+            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+
         /*idCharge = searchIdCharge(responsible.getCharge());
         if(idCharge == Search.NOTFOUND.getValue()){
             addCharge(responsible.getCharge());

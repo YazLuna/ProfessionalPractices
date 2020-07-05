@@ -45,7 +45,7 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
 
     public void cancel() {
         FXMLUpdateDeletePractitionerListController.action = "Update";
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml");
+        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml");
     }
 
     public void loadProfilePicture() {
