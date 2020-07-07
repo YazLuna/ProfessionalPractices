@@ -1,6 +1,8 @@
 package gui.coordinator.controller;
 
 import domain.*;
+import gui.teacher.controller.FXMLMenuTeacherController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -188,5 +190,10 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
             listResponsibleProjectController.controllerSection("delete");
             openWindowGeneral("/gui/coordinator/fxml/FXMLListResponsibleProject.fxml", btnDeleteResponsible);
         }
+    }
+
+    public void changeRole() {
+        FXMLMenuTeacherController.isCoordinator = true;
+        openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml",btnChangeRole);
     }
 }

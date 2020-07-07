@@ -31,11 +31,13 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
         List<String> type = new ArrayList<>();
         try {
             connection = connexion.getConnection();
-            String queryUserType = "Select type from UserType,LoginAccount,User_UserType where User_UserType.idUserType=UserType.idUserType AND" +
-                    " User_UserType.idUser=LoginAccount.idUser AND LoginAccount.userName=? AND LoginAccount.password=?";
+            String queryUserType = "SELECT type FROM UserType,LoginAccount,User_UserType,User_Status,Status WHERE User_UserType.idUserType=UserType.idUserType AND" +
+                    " User_UserType.idUser=LoginAccount.idUser AND User_Status.idUser = LoginAccount.idUser AND User_Status.idStatus = Status.idStatus AND " +
+                    "Status.status = ? AND User_Status.idUserType = User_UserType.idUserType AND LoginAccount.userName = ? AND LoginAccount.password = ?";
             sentence = connection.prepareStatement(queryUserType);
-            sentence.setString(1, user);
-            sentence.setString(2,password);
+            sentence.setString(1, "Active");
+            sentence.setString(2, user);
+            sentence.setString(3,password);
             result = sentence.executeQuery();
             while (result.next()) {
                 type.add(result.getString("type"));
@@ -78,8 +80,8 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
         boolean search = false;
         try {
             connection = connexion.getConnection();
-            String querySearchLoginAccount = "Select userName, password, status from LoginAccount, Status where LoginAccount.userName=? AND " +
-                            "LoginAccount.password=? AND Status.status=?";
+            String querySearchLoginAccount = "SELECT userName, password, status FROM LoginAccount INNER JOIN Status WHERE" +
+                    " userName = ? AND password = ? AND status =?";
             sentence = connection.prepareStatement(querySearchLoginAccount);
             sentence.setString(1, userName);
             sentence.setString(2, password);
@@ -99,9 +101,9 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
     @Override
     public boolean updateLoginAccount(String userNamePrevious, String passwordPrevious, String passwordNew, String userNameNew){
         boolean update = false;
-        boolean userExist = searchUserName(userNameNew);
+        boolean validUserName = validateUserName(userNameNew);
         try {
-            if(!userExist){
+            if(validUserName){
                 connection = connexion.getConnection();
                 String queryUpdateLoginAccount=
                         "update LoginAccount SET userName=?, password=?, firstLogin=? where userName=? AND password=? ";
@@ -145,8 +147,8 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
     }
 
     @Override
-    public boolean searchUserName(String userName){
-        boolean search = false;
+    public boolean validateUserName(String userName){
+        boolean search = true;
         try {
             connection = connexion.getConnection();
             String queryUserName = "Select userName from LoginAccount where userName=?";
@@ -154,7 +156,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
             sentence.setString(1, userName);
             result = sentence.executeQuery();
             while (result.next()) {
-                search = true;
+                search = false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -162,5 +164,26 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
             connexion.closeConnection();
         }
         return search;
+    }
+
+    @Override
+    public boolean createLoginAccount(String userName, String password, int idUser) {
+        boolean result = false;
+        try {
+            connection = connexion.getConnection();
+            String queryCreateLoginAccount = "INSERT INTO LoginAccount (userName,password,idUser,firstLogin)  VALUES (?,?,?,?)";
+            sentence = connection.prepareStatement(queryCreateLoginAccount);
+            sentence.setString(1, userName);
+            sentence.setString(2, password);
+            sentence.setInt(3, idUser);
+            sentence.setInt(4,Search.NOTFOUND.getValue());
+            sentence.executeUpdate();
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connexion.closeConnection();
+        }
+        return result;
     }
 }

@@ -1,8 +1,5 @@
 package dataaccess;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,61 +47,65 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
-            , String userType, String status, int gender, String userName, File image) {
-        boolean validate;
-        boolean resultSet = false;
-        validate = validateUserAdd(email, alternateEmail, phone,userName);
-        if(validate){
-            try {
-                connection = connexion.getConnection();
-                String queryAddUser = "INSERT INTO User  (name, lastName, gender, email,  alternateEmail" +
-                        ", phone, profilePicture)  VALUES (?,?, ?, ?, ?,?,?)";
-                preparedStatement = connection.prepareStatement(queryAddUser);
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, lastName);
-                preparedStatement.setInt(3, gender);
-                preparedStatement.setString(4, email);
-                preparedStatement.setString(5, alternateEmail);
-                preparedStatement.setString(6, phone);
-                if(image != null){
-                    FileInputStream convertImage = new FileInputStream (image);
-                    preparedStatement.setBinaryStream(7,convertImage,image.length());
-                }else{
-                    preparedStatement.setBinaryStream(7,null);
-                }
-                preparedStatement.executeUpdate();
-                addRelations(email,alternateEmail,phone,status,userType);
-                int idUserAdd = searchIdUser(email,alternateEmail,phone);
-                createLoginAccount(userName,password,idUserAdd);
-                resultSet = true;
-            } catch (SQLException | FileNotFoundException ex) {
-                Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                connexion.closeConnection();
-            }
-        }
-        return resultSet;
-    }
-
-    @Override
-    public int searchIdUserStatus(String status) {
-        int idUserStatus = Search.NOTFOUND.getValue();
+    public boolean searchUserAcademic(String name, String lastName, String email, String alternateEmail, String phone, int gender) {
+        boolean search = false;
         try {
             connection = connexion.getConnection();
-            String querySearchIdUserStatus = "Select idStatus from Status where status =?";
-            preparedStatement = connection.prepareStatement(querySearchIdUserStatus);
-            preparedStatement.setString(1, status);
+            String querySearchUser = "SELECT idUser FROM User WHERE name =? AND lastName =? AND email =? AND alternateEmail =? AND phone =? AND gender =?";
+            preparedStatement = connection.prepareStatement(querySearchUser);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, email);
+            preparedStatement.setString(4, alternateEmail);
+            preparedStatement.setString(5, phone);
+            preparedStatement.setInt(6, gender);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                idUserStatus = resultSet.getInt("idStatus");
+                search = true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             connexion.closeConnection();
         }
-        return idUserStatus;
+        return search;
+    }
+
+    @Override
+    public boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
+            , String userType, String status, int gender, String userName) {
+        boolean result = false;
+        try {
+            connection = connexion.getConnection();
+            String queryAddUser = "INSERT INTO User  (name, lastName, gender, email,  alternateEmail" +
+                    ", phone)  VALUES (?,?, ?, ?,?,?)";
+            preparedStatement = connection.prepareStatement(queryAddUser);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setInt(3, gender);
+            preparedStatement.setString(4, email);
+            preparedStatement.setString(5, alternateEmail);
+            preparedStatement.setString(6, phone);
+            preparedStatement.executeUpdate();
+            int idUserAdd = searchIdUser(email,alternateEmail,phone);
+            addRelations(idUserAdd, status, userType);
+            LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
+            result = loginAccountDAO.createLoginAccount(userName,password,idUserAdd);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName) {
+        boolean valid = validateUserAdd(email, alternateEmail, phone, userName);
+        if(valid){
+            valid = staffNumberValidateTwoAcademics(staffNumber);
+        }
+        return valid;
     }
 
     @Override
@@ -149,19 +150,59 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return staffNumber;
     }
 
+
     @Override
-    public boolean validateUserAdd(String email, String alternateEmail, String phone, String userName) {
+    public boolean staffNumberTeacherValidate(int staffNumberSearch)  {
+        boolean valid = true;
+        try {
+            connection = connexion.getConnection();
+            String querySearchStaffNumber =
+                    "Select staffNumber from Teacher where staffNumber=?";
+            preparedStatement = connection.prepareStatement(querySearchStaffNumber);
+            preparedStatement.setInt(1, staffNumberSearch);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                valid = false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connexion.closeConnection();
+        }
+        return valid;
+    }
+
+    @Override
+    public boolean staffNumberCoordinatorValidate(int staffNumberSearch)  {
+        boolean valid = true;
+        try {
+            connection = connexion.getConnection();
+            String querySearchStaffNumber =
+                    "Select staffNumber from Coordinator where staffNumber=?";
+            preparedStatement = connection.prepareStatement(querySearchStaffNumber);
+            preparedStatement.setInt(1, staffNumberSearch);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                valid = false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            connexion.closeConnection();
+        }
+        return valid;
+    }
+
+    @Override
+    public boolean validateUser(String email, String alternateEmail, String phone) {
         boolean result = false;
-        boolean emailSearch = searchEmail(email);
-        if(!emailSearch){
-            boolean alternateEmailSearch = searchAlternateEmail(alternateEmail);
-            if(!alternateEmailSearch){
-                boolean phoneSearch = searchPhone(phone);
-                if(!phoneSearch){
-                    boolean userNameSearch = searchUserName(userName);
-                    if(!userNameSearch){
-                        result = true;
-                    }
+        boolean emailSearch = emailValid(email);
+        if(emailSearch){
+            boolean alternateEmailSearch = alternateEmailValid(alternateEmail);
+            if(alternateEmailSearch){
+                boolean phoneValid = phoneValid(phone);
+                if(phoneValid){
+                    result = true;
                 }
             }
         }
@@ -169,13 +210,36 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
+    public boolean validateUserAdd(String email, String alternateEmail, String phone, String userName) {
+        boolean valid = validateUser (email, alternateEmail, phone);
+        if(valid){
+            LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
+            valid = loginAccountDAO.validateUserName(userName);
+        }
+        return valid;
+    }
+
+    @Override
+    public boolean staffNumberValidateTwoAcademics(int staffNumberSearch) {
+        boolean valid = false;
+        int staffNumber = searchStaffNumberTeacher(staffNumberSearch);
+        if(staffNumber == Search.NOTFOUND.getValue() ){
+            staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
+        }
+        if (staffNumber == Search.NOTFOUND.getValue()){
+            valid = true;
+        }
+        return valid;
+    }
+
+    @Override
     public boolean validateUserUpdate(String email, String alternateEmail, String phone) {
         boolean result = false;
-        boolean emailSearch = searchEmail(email);
-        if(!emailSearch){
-            boolean alternateEmailSearch = searchAlternateEmail(alternateEmail);
-            if(!alternateEmailSearch){
-                boolean phoneSearch = searchPhone(phone);
+        boolean emailValid = emailValid(email);
+        if(emailValid){
+            boolean alternateEmailValid = alternateEmailValid(alternateEmail);
+            if(alternateEmailValid){
+                boolean phoneSearch = phoneValid(phone);
                 if(!phoneSearch){
                     result = true;
                 }
@@ -185,7 +249,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public int searchStaffNumber(int staffNumberSearch) {
+    public int searchStaffNumberTwoAcademics(int staffNumberSearch) {
        int staffNumber = searchStaffNumberTeacher(staffNumberSearch);
        if(staffNumber == Search.NOTFOUND.getValue() ){
            staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
@@ -194,25 +258,29 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public void addRelations(String email, String alternateEmail, String phone, String status, String userType) {
+    public boolean staffNumberTwoAcademicsValidate(int staffNumberSearch) {
+        boolean resultValidate = false;
+        boolean valid = staffNumberCoordinatorValidate(staffNumberSearch);
+        if(valid) {
+            valid = staffNumberTeacherValidate(staffNumberSearch);
+            if(valid){
+                resultValidate = true;
+            }
+        }
+        return resultValidate;
+    }
+
+    @Override
+    public void addRelations(int idUserAdd, String status, String userType) {
         StatusDAOImpl statusDAO = new StatusDAOImpl();
-        int idUserAdd = searchIdUser(email,alternateEmail,phone);
         int idUserStatusSearch = statusDAO.searchIdStatus(status);
-        if(idUserStatusSearch == Search.NOTFOUND.getValue() ){
-            statusDAO.addStatus(status);
-            idUserStatusSearch = statusDAO.searchIdStatus(status);
-        }
         int idUserTypeSearch = searchIdUserType(userType);
-        if(idUserTypeSearch== Search.NOTFOUND.getValue()){
-            addUserType(userType);
-            idUserTypeSearch = searchIdUserType(userType);
-        }
-        addUserUserStatus(idUserAdd, idUserStatusSearch);
+        addUserUserStatus(idUserAdd, idUserStatusSearch,idUserTypeSearch);
         addUserUserType(idUserAdd, idUserTypeSearch);
     }
 
-    private boolean searchAlternateEmail(String alternateEmail)  {
-        boolean search = false;
+    private boolean alternateEmailValid(String alternateEmail)  {
+        boolean search = true;
         try {
             connection = connexion.getConnection();
             String querySearchAlternateEmail = "Select alternateEmail from User where alternateEmail =?";
@@ -220,7 +288,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             preparedStatement.setString(1, alternateEmail);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                search = true;
+                search = false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,8 +298,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return search;
     }
 
-    private boolean searchPhone(String phone) {
-        boolean search = false;
+    private boolean phoneValid(String phone) {
+        boolean search = true;
         try {
             connection = connexion.getConnection();
             String querySearchPhone = "Select phone from User where phone =?";
@@ -239,7 +307,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             preparedStatement.setString(1, phone);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                search = true;
+                search = false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -249,8 +317,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return search;
     }
 
-    private boolean searchEmail(String email)  {
-        boolean search = false;
+    private boolean emailValid(String email)  {
+        boolean search = true;
         try {
             connection = connexion.getConnection();
             String querySearchEmail = "Select email from User where email =?";
@@ -258,7 +326,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                search = true;
+                search = false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -283,13 +351,14 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         }
     }
 
-    private void addUserUserStatus(int idUserAdd, int idUserStatus){
+    private void addUserUserStatus(int idUserAdd, int idUserStatus, int idUserType){
         try {
             connection = connexion.getConnection();
-            String queryAddUserUserStatus = "INSERT INTO User_Status (idUser, idStatus)  VALUES (?,?)";
+            String queryAddUserUserStatus = "INSERT INTO User_Status (idUser, idStatus, idUserType)  VALUES (?,?,?)";
             preparedStatement = connection.prepareStatement(queryAddUserUserStatus);
             preparedStatement.setInt(1, idUserAdd);
             preparedStatement.setInt(2, idUserStatus);
+            preparedStatement.setInt(3, idUserType);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -298,38 +367,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         }
     }
 
-    private void createLoginAccount(String userName, String password, int idUser) {
-        try {
-            connection = connexion.getConnection();
-            String queryCreateLoginAccount = "INSERT INTO LoginAccount (userName,password,idUser,firstLogin)  VALUES (?,?,?,?)";
-            preparedStatement = connection.prepareStatement(queryCreateLoginAccount);
-            preparedStatement.setString(1, userName);
-            preparedStatement.setString(2, password);
-            preparedStatement.setInt(3, idUser);
-            preparedStatement.setInt(4,Search.NOTFOUND.getValue());
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
-            connexion.closeConnection();
-        }
-    }
-
-    private void addUserType(String userType)  {
-        try {
-            connection = connexion.getConnection();
-            String queryAddUserType = "INSERT INTO UserType (type)  VALUES (?)";
-            preparedStatement = connection.prepareStatement(queryAddUserType);
-            preparedStatement.setString(1, userType);
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
-            connexion.closeConnection();
-        }
-    }
-
-    private int searchIdUserType(String userType) {
+    @Override
+    public int searchIdUserType(String userType) {
         int idUserType = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
@@ -346,25 +385,6 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
             connexion.closeConnection();
         }
         return idUserType;
-    }
-
-    private boolean searchUserName (String userNameSearch) {
-        boolean search = false;
-        try {
-            connection = connexion.getConnection();
-            String querySearchUserName = "Select userName from LoginAccount where userName=?";
-            preparedStatement = connection.prepareStatement(querySearchUserName);
-            preparedStatement.setString(1, userNameSearch);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                search = true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
-            connexion.closeConnection();
-        }
-        return search;
     }
 
 }

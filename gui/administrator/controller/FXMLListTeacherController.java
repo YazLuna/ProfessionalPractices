@@ -11,15 +11,21 @@ import java.util.ResourceBundle;
 import domain.Teacher;
 import gui.FXMLGeneralController;
 
+/**
+ * FXMLListTeacherController
+ * @author Yazmin
+ * @version 05/07/2020
+ */
+
 public class FXMLListTeacherController extends FXMLGeneralController {
-    public TableView<Teacher> tableTeachers;
-    public TableColumn<Teacher, Integer> staffNumber;
-    public TableColumn<Teacher, String> name;
-    public TableColumn<Teacher, String> lastName;
-    public TableColumn<Teacher, String> email;
-    public TableColumn<Teacher, String> alternateEmail;
-    public TableColumn<Teacher, String> phone;
-    public TableColumn<Teacher, String> status;
+    public TableView<Teacher> tvTeachers;
+    public TableColumn<Teacher, Integer> tcStaffNumber;
+    public TableColumn<Teacher, String> tcName;
+    public TableColumn<Teacher, String> tcLastName;
+    public TableColumn<Teacher, String> tcEmail;
+    public TableColumn<Teacher, String> tcAlternateEmail;
+    public TableColumn<Teacher, String> tcPhone;
+    public TableColumn<Teacher, String> tcStatus;
     @FXML private Button btnCancel;
 
     @Override
@@ -30,14 +36,14 @@ public class FXMLListTeacherController extends FXMLGeneralController {
     private void colocateListTeachers() {
         Teacher teacher = new Teacher();
         List<Teacher> teacherList = teacher.getInformationAllTeacher();
-        staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        email.setCellValueFactory(new PropertyValueFactory<>("email"));
-        alternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
-        phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
-        tableTeachers.getItems().setAll(teacherList);
+        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+        tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        tvTeachers.getItems().setAll(teacherList);
     }
 
     public void cancel() {

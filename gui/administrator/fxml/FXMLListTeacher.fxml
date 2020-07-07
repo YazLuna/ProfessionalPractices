@@ -35,15 +35,15 @@
             </font>
         </Button>
     </Pane>
-    <TableView fx:id="tableTeachers" layoutX="15.0" layoutY="89.0" prefHeight="292.0" prefWidth="795.0">
+    <TableView fx:id="tvTeachers" layoutX="15.0" layoutY="89.0" prefHeight="292.0" prefWidth="795.0">
         <columns>
-            <TableColumn fx:id="staffNumber" prefWidth="76.0" text="No. Personal"/>
-            <TableColumn fx:id="name" prefWidth="110.0" text="Nombres"/>
-            <TableColumn fx:id="lastName" prefWidth="127.0" text="Apellidos"/>
-            <TableColumn fx:id="email" prefWidth="152.0" text="Correo"/>
-            <TableColumn fx:id="alternateEmail" prefWidth="152.0" text="Correo Alterno"/>
-            <TableColumn fx:id="phone" prefWidth="94.0" text="Teléfono"/>
-         <TableColumn fx:id="status" prefWidth="83.0" text="Estatus"/>
+            <TableColumn fx:id="tcStaffNumber" prefWidth="76.0" text="No. Personal"/>
+            <TableColumn fx:id="tcName" prefWidth="110.0" text="Nombres"/>
+            <TableColumn fx:id="tcLastName" prefWidth="127.0" text="Apellidos"/>
+            <TableColumn fx:id="tcEmail" prefWidth="152.0" text="Correo"/>
+            <TableColumn fx:id="tcAlternateEmail" prefWidth="152.0" text="Correo Alterno"/>
+            <TableColumn fx:id="tcPhone" prefWidth="94.0" text="Teléfono"/>
+         <TableColumn fx:id="tcStatus" prefWidth="83.0" text="Estatus"/>
         </columns>
     </TableView>
 </AnchorPane>

@@ -15,10 +15,10 @@ import domain.Teacher;
 import gui.FXMLGeneralController;
 
 public class FXMLDeleteTeacherListController extends FXMLGeneralController implements Initializable {
-    public TableView<Teacher> tableTeachers;
-    public TableColumn<Teacher, Integer> staffNumber;
-    public TableColumn<Teacher, String> name;
-    public TableColumn<Teacher, String> lastName;
+    public TableView<Teacher> tvTeachers;
+    public TableColumn<Teacher, Integer> tcStaffNumber;
+    public TableColumn<Teacher, String> tcName;
+    public TableColumn<Teacher, String> tcLastName;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
 
@@ -30,10 +30,10 @@ public class FXMLDeleteTeacherListController extends FXMLGeneralController imple
     private void colocateListTeachers() {
         Teacher teacher = new Teacher();
         List<Teacher> teacherList=teacher.getAllTeacherActive();
-        staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tableTeachers.getItems().setAll(teacherList);
+        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tvTeachers.getItems().setAll(teacherList);
     }
 
     public void cancel() {
@@ -45,7 +45,7 @@ public class FXMLDeleteTeacherListController extends FXMLGeneralController imple
     }
 
     public void delete() {
-        Teacher teacherSelected = tableTeachers.getSelectionModel().getSelectedItem();
+        Teacher teacherSelected = tvTeachers.getSelectionModel().getSelectedItem();
         if(teacherSelected == null){
             generateAlert("Por favor seleccione algún profesor");
         }else{
@@ -58,7 +58,7 @@ public class FXMLDeleteTeacherListController extends FXMLGeneralController imple
                     openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
                     generateInformation("El profesor se ha eliminado exitosamente");
                 }else{
-                    generateError("No se puede eliminar al coordinador");
+                    generateError("No se pudo conectar con la base de datos. Intente mas tarde");
                 }
             }
         }

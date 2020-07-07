@@ -54,11 +54,17 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         if(validate){
             Teacher teacher = new Teacher();
             createObjectTeacher(teacher);
-            boolean registerComplete = teacher.addTeacher();
-            if(registerComplete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
-                generateInformation("Registro Exitoso");
-            }else{
+            boolean validUserTeacher = teacher.validateUserAdd(teacher.getEmail(), teacher.getAlternateEmail(),
+                    teacher.getPhone(), teacher.getUserName());
+            if (validUserTeacher) {
+                boolean registerComplete = teacher.addTeacher();
+                if(registerComplete){
+                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
+                    generateInformation("Registro Exitoso");
+                }else{
+                    generateError("Este profesor ya esta registrado o error en la base de datos");
+                }
+            } else {
                 generateError("Este profesor ya esta registrado");
             }
         }

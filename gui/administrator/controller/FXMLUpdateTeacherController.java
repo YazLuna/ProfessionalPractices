@@ -6,14 +6,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import logic.ValidateAddUser;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import domain.Search;
 import domain.Teacher;
 import domain.Gender;
 import gui.FXMLGeneralController;
+import logic.ValidateAddUser;
 
 public class FXMLUpdateTeacherController extends FXMLGeneralController implements Initializable  {
     public ImageView imgProfilePicture;
@@ -31,6 +33,8 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
     private File imgFile;
     public static int staffNumber;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
+    Teacher teacher = new Teacher();
+    List<String> datesUpdate = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -43,7 +47,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
     }
 
     public void cancel() {
-        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
+        generateConfirmationCancel("¿Deseas cancelar?",btnCancel, "/gui/administrator/fxml/FXMLUpdateTeacherList.fxml");
     }
 
     public void loadProfilePicture() {
@@ -58,16 +62,15 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
         if(validate){
             boolean confirm = generateConfirmation("¿Seguro que desea modificar el Coordinador?");
             if(confirm){
-                Teacher teacher = new Teacher();
-                createObjectTeacher(teacher);
-            /*registerComplete = Teacher.addTeacher();
-            if(registerComplete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
-                generateInformation("Registro Exitoso");
-            }else{
-                generateError("Este coordinador ya esta registrado");
-            }*/
-                System.out.println("Ya es válido");
+                Teacher teacherNew = new Teacher();
+                createObjectTeacher(teacherNew);
+                registerComplete = teacherNew.updateTeacher(staffNumber, datesUpdate);
+                if(registerComplete){
+                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
+                    generateInformation("Modifiación Exitoso");
+                }else{
+                    generateError("Este coordinador ya esta registrado");
+                }
             }
         }
     }
@@ -82,7 +85,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
     }
 
     private void colocateTeacher() {
-        Teacher teacher = new Teacher();
+        teacher = new Teacher();
         teacher = teacher.getTeacherSelected(staffNumber);
         tfName.setText(teacher.getName());
         tfLastName.setText(teacher.getLastName());
@@ -100,7 +103,6 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
             //imgProfilePicture.setImage(imageGeneric);
             //imgTeacher.setImage(Teacher.getProfilePicture());
         }
-
 
         int activeCoordinator = teacher.activeTeacher();
         if(teacher.getStatus().equalsIgnoreCase("Inactive") && activeCoordinator <= Search.FOUND.getValue()){
@@ -178,21 +180,44 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
         return validation;
     }
 
-    private void createObjectTeacher(Teacher teacher) {
-        teacher.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
-        teacher.setName(validateAddUser.deleteSpace(tfName.getText()));
-        teacher.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
-        teacher.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
-        teacher.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
-        teacher.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
+    private void createObjectTeacher(Teacher teacherNew) {
+        if(teacher.getStaffNumber() != Integer.parseInt(tfStaffNumber.getText())) {
+            teacherNew.setStaffNumber(Integer.parseInt(tfStaffNumber.getText()));
+            datesUpdate.add("StaffNumber");
+        }
+        if(!teacher.getName().equalsIgnoreCase(tfName.getText())) {
+            teacherNew.setName(tfName.getText());
+            datesUpdate.add("Name");
+        }
+        if(!teacher.getLastName().equalsIgnoreCase(tfLastName.getText())) {
+            teacherNew.setLastName(tfLastName.getText());
+            datesUpdate.add("LastName");
+        }
+        if(!teacher.getEmail().equalsIgnoreCase(tfEmail.getText())) {
+            teacherNew.setEmail(tfEmail.getText());
+            datesUpdate.add("Email");
+        }
+        if(!teacher.getAlternateEmail().equalsIgnoreCase(tfAlternateEmail.getText())) {
+            teacherNew.setAlternateEmail(tfAlternateEmail.getText());
+            datesUpdate.add("AlternateEmail");
+        }
+        if(!teacher.getPhone().equalsIgnoreCase(tfPhone.getText())) {
+            teacherNew.setPhone(tfPhone.getText());
+            datesUpdate.add("Phone");
+        }
         if(rbMale.isSelected()){
-            teacher.setGender(Gender.MALE.getGender());
+            if(teacher.getGender() != Gender.MALE.getGender()){
+                teacherNew.setGender(Gender.MALE.getGender());
+                datesUpdate.add("Gender");
+            }
         }else{
             if(rbFemale.isSelected()){
-                teacher.setGender(Gender.FEMALE.getGender());
+                if(teacher.getGender() != Gender.FEMALE.getGender()){
+                    teacherNew.setGender(Gender.FEMALE.getGender());
+                    datesUpdate.add("Gender");
+                }
             }
         }
-        teacher.setProfilePicture(imgFile);
     }
 
     public void recoverTeacher() {

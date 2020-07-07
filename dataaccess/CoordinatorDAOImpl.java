@@ -1,7 +1,5 @@
 package dataaccess;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,10 +33,11 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     @Override
     public Coordinator getCoordinator() {
         Coordinator coordinator = new Coordinator();
-        int idUserStatus = searchIdUserStatus("Active");
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        int idUserStatus = statusDAO.searchIdStatus("Active");
         try {
             connection = connexion.getConnection();
-            String queryGetCoordinator = "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,registrationDate from Coordinator, User" +
+            String queryGetCoordinator = "SELECT name,lastName,gender,email,alternateEmail,phone,profilePicture,staffNumber,registrationDate FROM Coordinator, User" +
                     ", UserType, Status, User_Status WHERE Coordinator.idUser=User.idUser AND User_Status.idUser = User.idUser AND" +
                     " UserType.type='Coordinator' AND User_Status.idStatus=?";
             preparedStatement = connection.prepareStatement(queryGetCoordinator);
@@ -149,7 +148,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
 
     private boolean validateInformationUpdate(Coordinator coordinatorEdit) {
         boolean validate = false;
-        int staffNumberFound = searchStaffNumber(coordinatorEdit.getStaffNumber());
+        int staffNumberFound = searchStaffNumberTwoAcademics(coordinatorEdit.getStaffNumber());
         if(staffNumberFound == Search.NOTFOUND.getValue() ) {
             validate = validateUserUpdate(coordinatorEdit.getEmail(), coordinatorEdit.getAlternateEmail(),
                     coordinatorEdit.getPhone());
@@ -211,21 +210,21 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         boolean activeCoordinator= coordinator.activeCoordinator();
         boolean validation= false;
         if(!activeCoordinator){
-            int searchStaffNumber = searchStaffNumber(coordinator.getStaffNumber());
+            int searchStaffNumber = searchStaffNumberTwoAcademics(coordinator.getStaffNumber());
             if(searchStaffNumber != Search.NOTFOUND.getValue()){
                 int isTeacherSearchStaffNumber = searchStaffNumberTeacher(coordinator.getStaffNumber());
                 if(isTeacherSearchStaffNumber != Search.NOTFOUND.getValue()){
-                    addRelations(coordinator.getEmail(),coordinator.getAlternateEmail(),coordinator.getPhone(),coordinator.getStatus(),coordinator.getUserType());
+                    //addRelations(coordinator.getEmail(),coordinator.getAlternateEmail(),coordinator.getPhone(),coordinator.getStatus(),coordinator.getUserType());
                     validation = true;
                 }
             }
             if(searchStaffNumber == Search.NOTFOUND.getValue()) {
-                boolean addUserValidate = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(), coordinator.getAlternateEmail(),
-                        coordinator.getPhone(), coordinator.getPassword(), coordinator.getUserType(),
-                        coordinator.getStatus(), coordinator.getGender(), coordinator.getUserName(),coordinator.getProfilePicture());
-                if(addUserValidate){
-                    validation = true;
-                }
+               // boolean addUserValidate = addUser(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail(), coordinator.getAlternateEmail(),
+                       // coordinator.getPhone(), coordinator.getPassword(), coordinator.getUserType(),
+                        //coordinator.getStatus(), coordinator.getGender(), coordinator.getUserName(),coordinator.getProfilePicture());
+                //if(addUserValidate){
+                  //  validation = true;
+                //}
             }
         }
         return validation;

@@ -48,11 +48,13 @@ public class Teacher extends User{
         return result;
     }
 
-    public boolean updateTeacher(int staffNumberTeacher) {
-        TeacherDAOImpl updateTeacher = new TeacherDAOImpl();
-        boolean result = updateTeacher.updateTeacher(staffNumberTeacher, this);
+    public boolean updateTeacher(int staffNumberOrigin, List<String>DatesUpdate) {
+        TeacherDAOImpl addTeacher = new TeacherDAOImpl();
+        boolean result = addTeacher.updateTeacher(staffNumberOrigin,this,DatesUpdate);
         return result;
     }
+
+
 
     public boolean deleteTeacher(String status, String dischargeDate, int staffNumber) {
         TeacherDAOImpl deleteTeacher = new TeacherDAOImpl();
@@ -62,7 +64,7 @@ public class Teacher extends User{
 
     public Teacher getTeacher() {
         TeacherDAOImpl getTeacher = new TeacherDAOImpl();
-        Teacher Teacher = getTeacher.getTeacherSelected(staffNumber);
+        Teacher Teacher = getTeacher.getTeacher(staffNumber);
         return Teacher;
     }
 
@@ -80,13 +82,13 @@ public class Teacher extends User{
 
     public int activeTeacher() {
         TeacherDAOImpl activeTeacher = new TeacherDAOImpl();
-        int result = activeTeacher.activeTeacher();
+        int result = activeTeacher.activeTeachers();
         return result;
     }
 
     public Teacher getTeacherSelected(int staffNumber) {
         TeacherDAOImpl getTeacher = new TeacherDAOImpl();
-        Teacher Teacher = getTeacher.getTeacherSelected(staffNumber);
+        Teacher Teacher = getTeacher.getTeacher(staffNumber);
         return Teacher;
     }
 

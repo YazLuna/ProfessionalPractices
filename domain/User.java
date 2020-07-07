@@ -1,5 +1,8 @@
 package domain;
 
+import dataaccess.TeacherDAOImpl;
+import dataaccess.UserMethodDAOImpl;
+
 import java.io.File;
 
 /**
@@ -111,6 +114,12 @@ public class User{
 
     public void setProfilePicture(File profilePicture){
         this.profilePicture = profilePicture;
+    }
+
+    public boolean validateUserAdd(String email, String alternateEmail, String phone, String userName){
+        UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
+        boolean result = userMethodDAO.validateUserAdd(email, alternateEmail, phone, userName);
+        return result;
     }
 
 }

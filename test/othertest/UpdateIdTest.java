@@ -1,10 +1,15 @@
 package test.othertest;
 
+import dataaccess.CoordinatorDAOImpl;
+import dataaccess.TeacherDAOImpl;
 import domain.Coordinator;
 import domain.Practitioner;
 import domain.Teacher;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpdateIdTest {
 
@@ -41,5 +46,31 @@ public class UpdateIdTest {
         teacher.setRegistrationDate("2020-04-29");
         //result = teacher.updateTeacher(staffNumber);
        // Assert.assertEquals(1,result);
+    }
+
+    @Test
+    public void testUpdateDinnamic() {
+        TeacherDAOImpl coordinatorDAO = new TeacherDAOImpl();
+        Teacher teacher = new Teacher();
+        int staffNumber = 2;
+        teacher.setName("Ana María");
+        teacher.setLastName("Espinosa");
+        //teacher.setGender(0);
+        //teacher.setPhone("2289123400");
+        // coordinator.setEmail("este@gmail.com");
+        //coordinator.setAlternateEmail("estebaGa@gmail.com");
+        //coordinator.setPhone("2289000024");
+        //coordinator.setPassword("esteban4j1");
+        List<String> Colums = new ArrayList<>();
+        List<String> DatesUpdate = new ArrayList<>();
+        Colums.add("Name");
+        Colums.add("LastName");
+        //Colums.add("Gender");
+        //Colums.add("Phone");
+
+
+        boolean sentence = coordinatorDAO.updateTeacher(2, teacher, Colums);
+        System.out.println(sentence);
+        Assert.assertTrue(sentence);
     }
 }

@@ -96,10 +96,11 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
                     break;
             }
         }else{
-            FXMLMenuCoordinatorController.isTeacher = true;
-            FXMLMenuTeacherController.isCoordinator = true;
-            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnLogin);
-
+            if(userTypes.size() == 2) {
+                FXMLMenuCoordinatorController.isTeacher = true;
+                FXMLMenuTeacherController.isCoordinator = true;
+                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnLogin);
+            }
         }
     }
 

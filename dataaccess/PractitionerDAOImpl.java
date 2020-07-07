@@ -146,7 +146,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             }
             boolean userAdd= addUser(practitioner.getName(),practitioner.getLastName(),practitioner.getEmail(),practitioner.getAlternateEmail()
                     ,practitioner.getPhone(),practitioner.getPassword(), practitioner.getUserType(),practitioner.getStatus()
-                    ,practitioner.getGender(),practitioner.getUserName(),practitioner.getProfilePicture());
+                    ,practitioner.getGender(),practitioner.getUserName());
             if (userAdd) {
                 int idUser = searchIdUser(practitioner.getEmail(),practitioner.getAlternateEmail(),practitioner.getPhone());
                 try{
