@@ -59,7 +59,7 @@ public class AddTest {
             boolean validateUser = teacher.validateUserAdd(teacher.getEmail(), teacher.getAlternateEmail(),
                     teacher.getPhone(), teacher.getUserName());
             if (validateUser) {
-                result = teacher.addTeacher();
+                result = teacher.addTeacher(teacher);
             }
         }
         Assert.assertTrue(result);

@@ -20,4 +20,5 @@ public interface ICoordinatorDAO {
     boolean deleteCoordinator (String status, String dischargeDate) ;
     boolean activeCoordinator()  ;
     boolean areCoordinator();
+    boolean isTeacher(Coordinator coordinator);
 }

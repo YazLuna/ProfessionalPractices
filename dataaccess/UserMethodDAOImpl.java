@@ -11,7 +11,7 @@ import domain.Search;
 /**
  * UserMethodDAOImpl
  * @author Yazmin
- * @version 05/06/2020
+ * @version 08/07/2020
  */
 
 public class UserMethodDAOImpl implements IUserMethodDAO{

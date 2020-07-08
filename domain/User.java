@@ -134,4 +134,10 @@ public class User{
         return result;
     }
 
+    public boolean validateUser(String email, String alternateEmail, String phone){
+        UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
+        boolean result = userMethodDAO.validateUser(email, alternateEmail, phone);
+        return result;
+    }
+
 }

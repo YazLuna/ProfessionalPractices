@@ -27,7 +27,7 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
 
     private void colocateListTeachers() {
         Teacher teacher = new Teacher();
-        List<Teacher> teacherList=teacher.getAllTeacher();
+        List<Teacher> teacherList=teacher.getTeachers();
         staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));

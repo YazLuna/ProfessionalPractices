@@ -27,7 +27,7 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
 
     private void colocateListCoordinators() {
         Coordinator coordinator = new Coordinator();
-        List<Coordinator> coordinatorList=coordinator.getAllCoordinator();
+        List<Coordinator> coordinatorList=coordinator.getCoordinators();
         staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));

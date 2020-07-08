@@ -193,44 +193,44 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
      * Dynamic method to modify a teacher
      * @param staffNumberOrigin from Teacher
      * @param teacherEdit Object with new information
-     * @param DatesUpdate Fields to modify
+     * @param datesUpdate Fields to modify
      * @return True if update, false if not
      */
     @Override
-    public boolean updateTeacher(int staffNumberOrigin, Teacher teacherEdit, List<String>DatesUpdate) {
+    public boolean updateTeacher(int staffNumberOrigin, Teacher teacherEdit, List<String>datesUpdate) {
         boolean result = false;
-        String datesUpdate = DatesUpdate.get(0)+ "= ?, ";
-        List<String> Change = new ArrayList<>();
-        Change.add("get"+DatesUpdate.get(0));
-        for (int indexDatesUpdate = 1 ; indexDatesUpdate < DatesUpdate.size();  indexDatesUpdate ++) {
-            if ( indexDatesUpdate == DatesUpdate.size() -1){
-                datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate)  + "= ?";
+        String datesUpdateTeacher = datesUpdate.get(0)+ "= ?, ";
+        List<String> change = new ArrayList<>();
+        change.add("get"+datesUpdate.get(0));
+        for (int indexDatesUpdate = 1 ; indexDatesUpdate < datesUpdate.size();  indexDatesUpdate ++) {
+            if ( indexDatesUpdate == datesUpdate.size() -1){
+                datesUpdateTeacher = datesUpdateTeacher + datesUpdate.get(indexDatesUpdate)  + "= ?";
             } else {
-                datesUpdate = datesUpdate + DatesUpdate.get( indexDatesUpdate)  + "= ?,";
+                datesUpdateTeacher = datesUpdateTeacher + datesUpdate.get( indexDatesUpdate)  + "= ?,";
             }
-            Change.add("get"+DatesUpdate.get( indexDatesUpdate));
+            change.add("get"+datesUpdate.get( indexDatesUpdate));
         }
-        String sentence = "UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET " +datesUpdate +
+        String sentence = "UPDATE Teacher INNER JOIN User ON Teacher.idUser = User.idUser SET " +datesUpdateTeacher +
                 " WHERE Teacher.staffNumber = "+staffNumberOrigin;
         try{
             connection = connexion.getConnection();
             preparedStatement = connection.prepareStatement(sentence);
             Class classTeacher = teacherEdit.getClass();
-            for(int indexPreparedStatement = 1 ; indexPreparedStatement <= DatesUpdate.size(); indexPreparedStatement++){
+            for(int indexPreparedStatement = 1 ; indexPreparedStatement <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodTeacher;
                 boolean isString = true;
                 try {
-                    methodTeacher = classTeacher.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodTeacher = classTeacher.getMethod(change.get(indexPreparedStatement - 1));
                     String isWord = (String) methodTeacher.invoke(teacherEdit, new Object[] {});
                 } catch (ClassCastException e) {
                     isString = false;
                 }
                 if(isString){
-                    methodTeacher = classTeacher.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodTeacher = classTeacher.getMethod(change.get(indexPreparedStatement - 1));
                     String word = (String) methodTeacher.invoke(teacherEdit, new Object[] {});
                     preparedStatement.setString(indexPreparedStatement,word);
                 } else{
-                    methodTeacher = classTeacher.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodTeacher = classTeacher.getMethod(change.get(indexPreparedStatement - 1));
                     int integer = (int) methodTeacher.invoke(teacherEdit, new Object[] {});
                     preparedStatement.setInt(indexPreparedStatement, integer);
                 }

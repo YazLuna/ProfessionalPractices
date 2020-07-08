@@ -12,12 +12,11 @@ import domain.Teacher;
 import gui.FXMLGeneralController;
 
 /**
- * FXMLListTeacherController
+ * FXMLGetTeacherListController
  * @author Yazmin
  * @version 05/07/2020
  */
-
-public class FXMLListTeacherController extends FXMLGeneralController {
+public class FXMLGetTeacherListController extends FXMLGeneralController {
     public TableView<Teacher> tvTeachers;
     public TableColumn<Teacher, Integer> tcStaffNumber;
     public TableColumn<Teacher, String> tcName;
@@ -34,8 +33,7 @@ public class FXMLListTeacherController extends FXMLGeneralController {
     }
 
     private void colocateListTeachers() {
-        Teacher teacher = new Teacher();
-        List<Teacher> teacherList = teacher.getInformationAllTeacher();
+        List<Teacher> teacherList = Teacher.getTeachersInformation();
         tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -46,11 +44,17 @@ public class FXMLListTeacherController extends FXMLGeneralController {
         tvTeachers.getItems().setAll(teacherList);
     }
 
-    public void cancel() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+    /**
+     * Method to cancel the list display
+     */
+    public void backMenu() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 }

@@ -8,11 +8,15 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import gui.FXMLGeneralController;
 import domain.Coordinator;
 import domain.Gender;
 
+/**
+ * Delete Coordinator Controller
+ * @author Yazmin
+ * @version 05/07/2020
+ */
 public class FXMLDeleteCoordinatorController extends FXMLGeneralController implements Initializable {
     @FXML private Label lbName;
     @FXML private Label lbLastName;
@@ -24,8 +28,6 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     @FXML private Label lbStaffNumber;
     @FXML private Button btnCancel;
     @FXML private Button btnDelete;
-    @FXML private ImageView imgCoordinator;
-    private Coordinator coordinator = new Coordinator();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -33,7 +35,7 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
     }
 
     private void colocateCoordinator() {
-            coordinator = coordinator.getCoordinator();
+        Coordinator coordinator = Coordinator.getCoordinator();
         lbName.setText(coordinator.getName());
         lbLastName.setText(coordinator.getLastName());
         lbEmail.setText(coordinator.getEmail());
@@ -46,30 +48,36 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
         lbPhone.setText(coordinator.getPhone());
         lbRegistrationDate.setText(coordinator.getRegistrationDate());
         lbStaffNumber.setText(String.valueOf(coordinator.getStaffNumber()));
-        if(coordinator.getProfilePicture() != null){
-            //imgCoordinator.setImage(coordinator.getProfilePicture());
-        }
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
-    public void cancel() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+    /**
+     * Method to cancel the deletion and return to the menu
+     */
+    public void backMenu() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
-    public void delete()  {
-        Date actualDate = new Date();
+    /**
+     * Method to delete the coordinator
+     */
+    public void deleteCoordinator()  {
         boolean replyConfirmation = generateConfirmation("¿Seguro que desea eliminar el coordinador?");
         if(replyConfirmation){
-            coordinator.setDischargeDate(new SimpleDateFormat("yyyy-MM-dd").format(actualDate));
-            boolean delete = coordinator.deleteCoordinator("Inactive",coordinator.getDischargeDate());
+            Date actualDate = new Date();
+            String dischargeDate = (new SimpleDateFormat("yyyy-MM-dd").format(actualDate));
+            boolean delete = Coordinator.deleteCoordinator("Inactive", dischargeDate);
             if(delete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnDelete);
-                generateInformation("El coordinador fue eliminado exitosamente");
+                generateInformation("Coordinador eliminado exitosamente");
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnDelete);
             }else{
-                generateError("No se pudo eliminar el Coordinador");
+                generateError("No hay conexión a la base de datos. Intente más tarde");
             }
         }
     }

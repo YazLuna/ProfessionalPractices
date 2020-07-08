@@ -11,8 +11,8 @@
 <?import javafx.scene.control.TableColumn?>
 
 <AnchorPane prefHeight="441.0" prefWidth="821.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.administrator.controller.FXMLListCoordinatorController">
-    <Button fx:id="btnCancel" layoutX="730.0" layoutY="394.0" mnemonicParsing="false" onAction="#cancel"
+            fx:controller="gui.administrator.controller.FXMLGetCoordinatorListController">
+    <Button fx:id="btnCancel" layoutX="730.0" layoutY="394.0" mnemonicParsing="false" onAction="#backMenu"
             style="-fx-background-color: #707070;" text="Regresar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
@@ -28,22 +28,22 @@
                    preserveRatio="true">
             <Image url="@../../images/LogOut.png"/>
         </ImageView>
-        <Button fx:id="btnLogOut" layoutX="716.0" layoutY="22.0" mnemonicParsing="false" onAction="#logOut"
+        <Button fx:id="btnLogOut" layoutX="716.0" layoutY="22.0" mnemonicParsing="false" onAction="#logOutAdministrator"
                 prefHeight="23.0" prefWidth="99.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
             <font>
                 <Font name="Arial" size="12.0"/>
             </font>
         </Button>
     </Pane>
-    <TableView fx:id="tableCoordinators" layoutX="10.0" layoutY="88.0" prefHeight="292.0" prefWidth="807.0">
+    <TableView fx:id="tvCoordinators" layoutX="10.0" layoutY="88.0" prefHeight="292.0" prefWidth="807.0">
         <columns>
-            <TableColumn fx:id="staffNumber" prefWidth="76.0" text="No. Personal"/>
-            <TableColumn fx:id="name" prefWidth="110.0" text="Nombres"/>
-            <TableColumn fx:id="lastName" prefWidth="127.0" text="Apellidos"/>
-            <TableColumn fx:id="email" prefWidth="152.0" text="Correo"/>
-            <TableColumn fx:id="alternateEmail" prefWidth="152.0" text="Correo Alterno"/>
-            <TableColumn fx:id="phone" prefWidth="94.0" text="Teléfono"/>
-         <TableColumn fx:id="status" prefWidth="95.0" text="Estatus"/>
+            <TableColumn fx:id="tcStaffNumber" prefWidth="76.0" text="No. Personal"/>
+            <TableColumn fx:id="tcName" prefWidth="110.0" text="Nombres"/>
+            <TableColumn fx:id="tcLastName" prefWidth="127.0" text="Apellidos"/>
+            <TableColumn fx:id="tcEmail" prefWidth="152.0" text="Correo"/>
+            <TableColumn fx:id="tcAlternateEmail" prefWidth="152.0" text="Correo Alterno"/>
+            <TableColumn fx:id="tcPhone" prefWidth="94.0" text="Teléfono"/>
+         <TableColumn fx:id="tcStatus" prefWidth="95.0" text="Estatus"/>
         </columns>
     </TableView>
 </AnchorPane>

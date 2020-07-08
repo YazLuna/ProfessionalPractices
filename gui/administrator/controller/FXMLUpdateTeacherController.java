@@ -64,7 +64,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
             if(confirm){
                 Teacher teacherNew = new Teacher();
                 createObjectTeacher(teacherNew);
-                registerComplete = teacherNew.updateTeacher(staffNumber, datesUpdate);
+                registerComplete = teacherNew.updateTeacher(staffNumber, teacher,datesUpdate);
                 if(registerComplete){
                     openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
                     generateInformation("Modifiación Exitoso");
@@ -86,7 +86,8 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
 
     private void colocateTeacher() {
         teacher = new Teacher();
-        teacher = teacher.getTeacherSelected(staffNumber);
+        teacher.setStaffNumber(staffNumber);
+        teacher = teacher.getTeacherSelected(teacher.getStaffNumber());
         tfName.setText(teacher.getName());
         tfLastName.setText(teacher.getLastName());
         tfEmail.setText(teacher.getEmail());
@@ -225,7 +226,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
         teacher.setStaffNumber(staffNumber);
         boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este profesor?");
         if(recoverOk){
-            boolean recoverSuccessful = teacher.recoverTeacher();
+            boolean recoverSuccessful = teacher.recoverTeacher(staffNumber);
             if(recoverSuccessful){
                 openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverTeacher);
                 generateInformation("Profesor reactivado exitosamente");

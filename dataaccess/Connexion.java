@@ -33,14 +33,11 @@ public class Connexion {
             dataBase = properties.getProperty("dataBase");
             user = properties.getProperty("user");
             password = properties.getProperty("password");
-        }catch(IOException ex)
-        {
-            System.err.println("Error accessing properties file");
-            ex.printStackTrace();
-
+        }catch(IOException ex) {
+            Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            connexion=DriverManager.getConnection (dataBase,user,password);
+            connexion=DriverManager.getConnection (dataBase, user, password);
         } catch (CommunicationsException ex){
             Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
         }

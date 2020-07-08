@@ -40,7 +40,7 @@ public class GetTest {
     public void testGetTeacher() {
         Teacher result = new Teacher();
         result.setStaffNumber(4);
-        result = result.getTeacher();
+        result = result.getTeacherSelected(result.getStaffNumber());
         Assert.assertEquals(4, result.getStaffNumber());
     }
 
@@ -48,7 +48,7 @@ public class GetTest {
     public void testGetAllTeacher() {
         List<Teacher> result = new ArrayList<>();;
         Teacher teacher = new Teacher();
-        result = teacher.getAllTeacher();
+        result = teacher.getTeachers();
         Assert.assertNotNull(result);
     }
 

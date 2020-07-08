@@ -24,7 +24,7 @@ public class RecoverTest {
         int staffNumber = 4;
         Teacher Teacher = new Teacher();
         Teacher.setStaffNumber(staffNumber);
-        result = Teacher.recoverTeacher();
+        result = Teacher.recoverTeacher(staffNumber);
         Assert.assertTrue(result);
     }
 }

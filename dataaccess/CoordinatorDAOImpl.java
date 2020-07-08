@@ -6,30 +6,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import domain.Coordinator;
-import domain.Search;
 
 /**
  * CoordinatorDAOImpl
  * @author Yazmin
  * @version 07/07/2020
  */
-
 public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinatorDAO {
     private final Connexion connexion;
     private Connection connection;
     private ResultSet resultSet;
     private PreparedStatement preparedStatement;
 
+    /**
+     * Constructor CoordinatorDAOImpl class
+     */
     public CoordinatorDAOImpl() {
         connexion = new Connexion();
     }
 
+    /**
+     * Method for adding a Coordinator
+     * @param coordinator Object to add
+     * @return true if successful false if not
+     */
     @Override
     public boolean addCoordinator(Coordinator coordinator) {
         boolean resultAdd = false;
@@ -51,6 +56,10 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
     return resultAdd;
     }
 
+    /**
+     * Method to obtain a Coordinator Active
+     * @return Coordinator Object
+     */
     @Override
     public Coordinator getCoordinator() {
         Coordinator coordinator = new Coordinator();
@@ -82,6 +91,11 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return coordinator;
     }
 
+    /**
+     * Method to obtain a coordinator according to their staffNumber
+     * @param staffNumber from coordinator
+     * @return Coordinator Object
+     */
     @Override
     public Coordinator getCoordinatorSelected(int staffNumber) {
         Coordinator coordinator = new Coordinator();
@@ -113,6 +127,10 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return coordinator;
     }
 
+    /**
+     * Method of obtaining the list of Coordinators
+     * @return Coordinators List
+     */
     @Override
     public List<Coordinator> getCoordinators() {
         List<Coordinator> coordinators = new ArrayList<>();
@@ -136,6 +154,10 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return coordinators;
     }
 
+    /**
+     * Method for obtaining information from all Coordinators
+     * @return List with complete information of Coordinators
+     */
     @Override
     public List<Coordinator> getCoordinatorsInformation() {
         List<Coordinator> coordinators = new ArrayList<>();
@@ -167,41 +189,48 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return coordinators;
     }
 
+    /**
+     * Dynamic method to modify a coordinator
+     * @param staffNumberOrigin from Coordinator
+     * @param coordinatorEdit Object with new information
+     * @param datesUpdate Fields to modify
+     * @return True if update, false if not
+     */
     @Override
-    public boolean updateCoordinator(int staffNumberOrigin, Coordinator coordinatorEdit, List<String>DatesUpdate) {
+    public boolean updateCoordinator(int staffNumberOrigin, Coordinator coordinatorEdit, List<String>datesUpdate) {
         boolean result = false;
-        String datesUpdate = DatesUpdate.get(0)+ "= ?, ";
-        List<String> Change = new ArrayList<>();
-        Change.add("get"+DatesUpdate.get(0));
-        for (int indexDatesUpdate = 1 ; indexDatesUpdate < DatesUpdate.size();  indexDatesUpdate ++) {
-            if ( indexDatesUpdate == DatesUpdate.size() -1){
-                datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate)  + "= ?";
+        String datesUpdateCoordinator = datesUpdate.get(0)+ "= ?, ";
+        List<String> change = new ArrayList<>();
+        change.add("get"+datesUpdate.get(0));
+        for (int indexDatesUpdate = 1 ; indexDatesUpdate < datesUpdate.size();  indexDatesUpdate ++) {
+            if ( indexDatesUpdate == datesUpdate.size() -1){
+                datesUpdateCoordinator = datesUpdateCoordinator + datesUpdate.get(indexDatesUpdate)  + "= ?";
             } else {
-                datesUpdate = datesUpdate + DatesUpdate.get( indexDatesUpdate)  + "= ?,";
+                datesUpdateCoordinator = datesUpdateCoordinator + datesUpdate.get( indexDatesUpdate)  + "= ?,";
             }
-            Change.add("get"+DatesUpdate.get( indexDatesUpdate));
+            change.add("get"+datesUpdate.get( indexDatesUpdate));
         }
-        String sentence = "UPDATE Coordinator INNER JOIN User ON Coordinator.idUser = User.idUser SET " +datesUpdate+
+        String sentence = "UPDATE Coordinator INNER JOIN User ON Coordinator.idUser = User.idUser SET " +datesUpdateCoordinator+
                 " WHERE Coordinator.staffNumber = " +staffNumberOrigin;
         try{
             connection = connexion.getConnection();
             preparedStatement = connection.prepareStatement(sentence);
             Class classCoordinator = coordinatorEdit.getClass();
-            for(int indexPreparedStatement = 1 ; indexPreparedStatement <= DatesUpdate.size(); indexPreparedStatement++){
+            for(int indexPreparedStatement = 1 ; indexPreparedStatement <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodCoordinator;
                 boolean isString = true;
                 try {
-                    methodCoordinator = classCoordinator.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodCoordinator = classCoordinator.getMethod(change.get(indexPreparedStatement - 1));
                     String isWord = (String) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
                 } catch (ClassCastException e) {
                     isString = false;
                 }
                 if(isString){
-                    methodCoordinator = classCoordinator.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodCoordinator = classCoordinator.getMethod(change.get(indexPreparedStatement - 1));
                     String word = (String) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
                     preparedStatement.setString(indexPreparedStatement,word);
                 } else{
-                    methodCoordinator = classCoordinator.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodCoordinator = classCoordinator.getMethod(change.get(indexPreparedStatement - 1));
                     int integer = (int) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
                     preparedStatement.setInt(indexPreparedStatement, integer);
                 }
@@ -216,6 +245,11 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return result;
     }
 
+    /**
+     * Method to recover a deleted Coordinator
+     * @param staffNumber from Coordinator
+     * @return True if recover, false if not
+     */
     @Override
     public boolean recoverCoordinator(int staffNumber) {
         boolean result = false;
@@ -242,6 +276,12 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return result;
     }
 
+    /**
+     * Method to delete a Coordinator
+     * @param status Inactive
+     * @param dischargeDate from Coordinator
+     * @return True if delete, False if not
+     */
     @Override
     public boolean deleteCoordinator(String status, String dischargeDate) {
         boolean result = false;
@@ -267,6 +307,10 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return result;
     }
 
+    /**
+     * Method to know if there is an active coordinator
+     * @return True if exists, false if not
+     */
     @Override
     public boolean activeCoordinator() {
         boolean isActive = false;
@@ -293,6 +337,10 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         return isActive;
     }
 
+    /**
+     * Method to know if there is any coordinator
+     * @return True if exists, false if not
+     */
     @Override
     public boolean areCoordinator() {
         boolean areCoordinator = false;
@@ -314,5 +362,17 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
             connexion.closeConnection();
         }
         return areCoordinator;
+    }
+
+    /**
+     * Method to know if that Coordinator is Teacher
+     * @param coordinator Object
+     * @return True if is Teacher, false if not
+     */
+    @Override
+    public boolean isTeacher(Coordinator coordinator) {
+        boolean isTeacher = searchUserAcademic(coordinator.getName(), coordinator.getLastName(), coordinator.getEmail()
+                , coordinator.getAlternateEmail(), coordinator.getPhone(), coordinator.getGender());
+        return isTeacher;
     }
 }

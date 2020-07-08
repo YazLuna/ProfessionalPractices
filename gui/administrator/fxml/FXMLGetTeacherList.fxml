@@ -11,8 +11,8 @@
 <?import javafx.scene.control.TableColumn?>
 
 <AnchorPane prefHeight="441.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.administrator.controller.FXMLListTeacherController">
-    <Button fx:id="btnCancel" layoutX="727.0" layoutY="397.0" mnemonicParsing="false" onAction="#cancel"
+            fx:controller="gui.administrator.controller.FXMLGetTeacherListController">
+    <Button fx:id="btnCancel" layoutX="727.0" layoutY="397.0" mnemonicParsing="false" onAction="#backMenu"
             style="-fx-background-color: #707070;" text="Regresar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
@@ -28,7 +28,7 @@
                    preserveRatio="true">
             <Image url="@../../images/LogOut.png"/>
         </ImageView>
-        <Button fx:id="btnLogOut" layoutX="701.0" layoutY="22.0" mnemonicParsing="false" onAction="#logOut"
+        <Button fx:id="btnLogOut" layoutX="701.0" layoutY="22.0" mnemonicParsing="false" onAction="#logOutAdministrator"
                 prefHeight="23.0" prefWidth="99.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
             <font>
                 <Font name="Arial" size="12.0"/>
