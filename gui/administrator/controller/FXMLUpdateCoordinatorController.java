@@ -15,7 +15,6 @@ import gui.FXMLGeneralController;
 import domain.Gender;
 
 public class FXMLUpdateCoordinatorController extends FXMLGeneralController implements Initializable  {
-    public ImageView imgProfilePicture;
     @FXML private Button btnRecoverCoordinator;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
@@ -27,7 +26,6 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
-    private File imgFile;
     public static int staffNumber;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
@@ -189,7 +187,6 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
                 coordinator.setGender(Gender.FEMALE.getGender());
             }
         }
-        coordinator.setProfilePicture(imgFile);
     }
 
     public void recoverCoordinator() {
@@ -197,7 +194,7 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
         coordinator.setStaffNumber(staffNumber);
         boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este coordinador?");
         if(recoverOk){
-            boolean recoverSuccessful = coordinator.recoverCoordinator();
+            boolean recoverSuccessful = coordinator.recoverCoordinator(staffNumber);
             if(recoverSuccessful){
                 openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverCoordinator);
                 generateInformation("Coordinador reactivado exitosamente");

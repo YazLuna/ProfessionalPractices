@@ -61,7 +61,7 @@ public class AddCoordinatorTest {
         coordinatorTest.setRegistrationDate("2020-04-29");
         coordinatorTest.setPassword("Wigettaz4BTS");
         coordinatorTest.setUserName("Juan25");
-        result = coordinatorTest.addCoordinator();
+        result = coordinatorTest.addCoordinator(coordinatorTest);
         Assert.assertTrue(result);
     }
 
@@ -79,7 +79,7 @@ public class AddCoordinatorTest {
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setPassword("esteban4j1");
         coordinator.setUserName("anaG");
-        result = coordinator.addCoordinator();
+        result = coordinator.addCoordinator(coordinator);
         Assert.assertFalse(result);
     }
 
@@ -87,7 +87,7 @@ public class AddCoordinatorTest {
     public void testAddEmptyCoordinator() throws SQLException {
         boolean result ;
         Coordinator coordinatorEmpty = new Coordinator();
-        result = coordinatorEmpty.addCoordinator();
+        result = coordinatorEmpty.addCoordinator(coordinatorEmpty);
         Assert.assertFalse(result);
     }
 
@@ -105,7 +105,7 @@ public class AddCoordinatorTest {
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setUserName("anna234");
         coordinator.setPassword("annita422j1");
-        result = coordinator.addCoordinator();
+        result = coordinator.addCoordinator(coordinator);
         Assert.assertFalse(result);
     }
 
@@ -123,7 +123,7 @@ public class AddCoordinatorTest {
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setUserName("Esteban23");
         coordinator.setPassword("esteban4j1");
-        result = coordinator.addCoordinator();
+        result = coordinator.addCoordinator(coordinator);
         Assert.assertFalse(result);
     }
 
@@ -141,7 +141,7 @@ public class AddCoordinatorTest {
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setUserName("Esteban23");
         coordinator.setPassword("esteban4j1");
-        result = coordinator.addCoordinator();
+        result = coordinator.addCoordinator(coordinator);
         Assert.assertFalse(result);
     }
 
@@ -159,7 +159,7 @@ public class AddCoordinatorTest {
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setUserName("Esteban23");
         coordinator.setPassword("esteban4j1");
-        result = coordinator.addCoordinator();
+        result = coordinator.addCoordinator(coordinator);
         Assert.assertFalse(result);
     }
 
@@ -177,7 +177,7 @@ public class AddCoordinatorTest {
         coordinator.setRegistrationDate("2020-05-05");
         coordinator.setUserName("Juan25");
         coordinator.setPassword("esteban4j1");
-        result = coordinator.addCoordinator();
+        result = coordinator.addCoordinator(coordinator);
         Assert.assertFalse(result);
     }
 

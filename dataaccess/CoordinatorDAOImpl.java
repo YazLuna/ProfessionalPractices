@@ -290,7 +290,7 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         int idUserType = searchIdUserType("Coordinator");
         try {
             connection = connexion.getConnection();
-            String queryDeleteCoordinator = "UPDATE Coordinator INNER JOIN User_Status SET User_Status.idStatus=?" +
+            String queryDeleteCoordinator = "UPDATE Coordinator INNER JOIN User_Status SET User_Status.idStatus =?" +
                     ", Coordinator.dischargeDate =? WHERE User_Status.idUser = Coordinator.idUser AND" +
                     " User_Status.idUserType =?";
             connection.prepareStatement(queryDeleteCoordinator);

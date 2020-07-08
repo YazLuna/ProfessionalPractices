@@ -18,7 +18,6 @@ import gui.FXMLGeneralController;
 import logic.ValidateAddUser;
 
 public class FXMLUpdateTeacherController extends FXMLGeneralController implements Initializable  {
-    public ImageView imgProfilePicture;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
     @FXML private TextField tfLastName;
@@ -30,7 +29,6 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
     @FXML private Button btnRecoverTeacher;
-    private File imgFile;
     public static int staffNumber;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
     Teacher teacher = new Teacher();
@@ -87,7 +85,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
     private void colocateTeacher() {
         teacher = new Teacher();
         teacher.setStaffNumber(staffNumber);
-        teacher = teacher.getTeacherSelected(teacher.getStaffNumber());
+        teacher = Teacher.getTeacherSelected(teacher.getStaffNumber());
         tfName.setText(teacher.getName());
         tfLastName.setText(teacher.getLastName());
         tfEmail.setText(teacher.getEmail());
@@ -99,11 +97,6 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
         }
         tfPhone.setText(teacher.getPhone());
         tfStaffNumber.setText(String.valueOf(teacher.getStaffNumber()));
-        if(teacher.getProfilePicture()!=null){
-            //imgProfilePicture = new ImageView(imageGeneric);
-            //imgProfilePicture.setImage(imageGeneric);
-            //imgTeacher.setImage(Teacher.getProfilePicture());
-        }
 
         int activeCoordinator = teacher.activeTeachers();
         if(teacher.getStatus().equalsIgnoreCase("Inactive") && activeCoordinator <= Search.FOUND.getValue()){

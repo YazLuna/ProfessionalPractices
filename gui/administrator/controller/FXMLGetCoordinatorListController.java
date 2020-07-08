@@ -17,14 +17,14 @@ import gui.FXMLGeneralController;
  * @version 05/07/2020
  */
 public class FXMLGetCoordinatorListController extends FXMLGeneralController {
-    public TableView<Coordinator> tvCoordinators;
-    public TableColumn<Coordinator, Integer> tcStaffNumber;
-    public TableColumn<Coordinator, String> tcName;
-    public TableColumn<Coordinator, String> tcLastName;
-    public TableColumn<Coordinator, String> tcEmail;
-    public TableColumn<Coordinator, String> tcAlternateEmail;
-    public TableColumn<Coordinator, String> tcPhone;
-    public TableColumn<Coordinator, String> tcStatus;
+    @FXML private TableView<Coordinator> tvCoordinators;
+    @FXML private TableColumn<Coordinator, Integer> tcStaffNumber;
+    @FXML private TableColumn<Coordinator, String> tcName;
+    @FXML private TableColumn<Coordinator, String> tcLastName;
+    @FXML private TableColumn<Coordinator, String> tcEmail;
+    @FXML private TableColumn<Coordinator, String> tcAlternateEmail;
+    @FXML private TableColumn<Coordinator, String> tcPhone;
+    @FXML private TableColumn<Coordinator, String> tcStatus;
     @FXML private Button btnCancel;
 
     @Override

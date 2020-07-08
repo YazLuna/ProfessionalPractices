@@ -17,14 +17,14 @@ import gui.FXMLGeneralController;
  * @version 05/07/2020
  */
 public class FXMLGetTeacherListController extends FXMLGeneralController {
-    public TableView<Teacher> tvTeachers;
-    public TableColumn<Teacher, Integer> tcStaffNumber;
-    public TableColumn<Teacher, String> tcName;
-    public TableColumn<Teacher, String> tcLastName;
-    public TableColumn<Teacher, String> tcEmail;
-    public TableColumn<Teacher, String> tcAlternateEmail;
-    public TableColumn<Teacher, String> tcPhone;
-    public TableColumn<Teacher, String> tcStatus;
+    @FXML private TableView<Teacher> tvTeachers;
+    @FXML private TableColumn<Teacher, Integer> tcStaffNumber;
+    @FXML private TableColumn<Teacher, String> tcName;
+    @FXML private TableColumn<Teacher, String> tcLastName;
+    @FXML private TableColumn<Teacher, String> tcEmail;
+    @FXML private TableColumn<Teacher, String> tcAlternateEmail;
+    @FXML private TableColumn<Teacher, String> tcPhone;
+    @FXML private TableColumn<Teacher, String> tcStatus;
     @FXML private Button btnCancel;
 
     @Override

@@ -56,7 +56,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         if(validate){
             Coordinator coordinator = new Coordinator();
             createObjectCoordinator(coordinator);
-            boolean registerComplete = coordinator.addCoordinator();
+            boolean registerComplete = coordinator.addCoordinator(coordinator);
             if(registerComplete){
                 openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
                 generateInformation("Registro Exitoso");
@@ -169,6 +169,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             rbMale.getStyleClass().add("error");
             rbFemale.getStyleClass().add("error");
             generateAlert("Selecciona un género");
+            rbMale.fire();
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;

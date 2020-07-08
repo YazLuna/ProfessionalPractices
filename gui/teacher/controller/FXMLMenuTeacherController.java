@@ -9,11 +9,10 @@ import gui.FXMLGeneralController;
 import gui.coordinator.controller.FXMLMenuCoordinatorController;
 
 /**
- * FXMLMenuTeacherController
+ * Menu Teacher Controller
  * @author Yazmin
  * @version 29/06/2020
  */
-
 public class FXMLMenuTeacherController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnChangeRole;
     public static boolean isCoordinator;
@@ -25,12 +24,18 @@ public class FXMLMenuTeacherController extends FXMLGeneralController implements 
         }
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutTeacher() {
         logOutGeneral();
     }
 
+    /**
+     * Method to be able to change menu in case of being Coordinator
+     */
     public void changeRole() {
         FXMLMenuCoordinatorController.isTeacher = true;
-        openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnChangeRole);
+        openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnChangeRole);
     }
 }

@@ -12,11 +12,16 @@ import java.util.ResourceBundle;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 
+/**
+ * Update Coordinator List Controller
+ * @author Yazmin
+ * @version 08/07/2020
+ */
 public class FXMLUpdateCoordinatorListController extends FXMLGeneralController implements Initializable {
-    public TableView<Coordinator> tableCoordinators;
-    public TableColumn<Coordinator, Integer> staffNumber;
-    public TableColumn<Coordinator, String> name;
-    public TableColumn<Coordinator, String> lastName;
+    @FXML private TableView<Coordinator> tvCoordinators;
+    @FXML private TableColumn<Coordinator, Integer> tcStaffNumber;
+    @FXML private TableColumn<Coordinator, String> tcName;
+    @FXML private TableColumn<Coordinator, String> tcLastName;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
 
@@ -26,29 +31,37 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
     }
 
     private void colocateListCoordinators() {
-        Coordinator coordinator = new Coordinator();
-        List<Coordinator> coordinatorList=coordinator.getCoordinators();
-        staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tableCoordinators.getItems().setAll(coordinatorList);
+        List<Coordinator> coordinatorList = Coordinator.getCoordinators();
+        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tvCoordinators.getItems().setAll(coordinatorList);
     }
 
-    public void cancel() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+    /**
+     * Method to cancel the selection and return to the menu
+     */
+    public void backMenu() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
-    public void logOut() {
+    /**
+     * Method to exit to the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
+    /**
+     * Method to choose the coordinator to modify
+     */
     public void updateCoordinator() {
-        Coordinator coordinatorSelected = tableCoordinators.getSelectionModel().getSelectedItem();
+        Coordinator coordinatorSelected = tvCoordinators.getSelectionModel().getSelectedItem();
         if(coordinatorSelected == null){
             generateAlert("Por favor seleccione algún coordinador");
         }else{
             FXMLUpdateCoordinatorController.staffNumber =coordinatorSelected.getStaffNumber();
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinator.fxml",btnUpdate);
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinator.fxml", btnUpdate);
         }
     }
 }

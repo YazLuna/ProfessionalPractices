@@ -20,10 +20,11 @@ import gui.FXMLGeneralController;
  * @version 05/07/2020
  */
 public class FXMLDeleteTeacherListController extends FXMLGeneralController implements Initializable {
-    public TableView<Teacher> tvTeachers;
-    public TableColumn<Teacher, Integer> tcStaffNumber;
-    public TableColumn<Teacher, String> tcName;
-    public TableColumn<Teacher, String> tcLastName;
+    @FXML private TableView<Teacher> tvTeachers;
+    @FXML private TableColumn<Teacher, Integer> tcStaffNumber;
+    @FXML private TableColumn<Teacher, String> tcName;
+    @FXML private TableColumn<Teacher, String> tcLastName;
+    @FXML private TableColumn<Teacher, String> tcEmail;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
 
@@ -37,6 +38,7 @@ public class FXMLDeleteTeacherListController extends FXMLGeneralController imple
         tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         tvTeachers.getItems().setAll(teacherList);
     }
 

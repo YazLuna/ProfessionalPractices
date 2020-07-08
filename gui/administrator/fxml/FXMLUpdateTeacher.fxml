@@ -18,7 +18,7 @@
       <URL value="@../../fxmlregister.css"/>
    </stylesheets>
    <Pane prefHeight="70.0" prefWidth="603.0" style="-fx-background-color: #053d01;">
-      <Label layoutX="163.0" layoutY="23.0" text="Modificar Profesor" textFill="WHITE">
+      <Label layoutX="175.0" layoutY="24.0" text="Modificar Profesor" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="24.0"/>
          </font>
@@ -34,56 +34,47 @@
          <Image url="@../../images/LogOut.png"/>
       </ImageView>
    </Pane>
-   <Label layoutX="41.0" layoutY="105.0" text="No. Personal">
+   <Label layoutX="117.0" layoutY="106.0" text="No. Personal">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label layoutX="41.0" layoutY="135.0" text="Nombres">
+   <Label layoutX="117.0" layoutY="136.0" text="Nombres">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label layoutX="41.0" layoutY="165.0" text="Apellidos">
+   <Label layoutX="117.0" layoutY="166.0" text="Apellidos">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label layoutX="41.0" layoutY="205.0" text="Género">
+   <Label layoutX="117.0" layoutY="206.0" text="Género">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label layoutX="41.0" layoutY="244.0" text="Correo">
+   <Label layoutX="117.0" layoutY="245.0" text="Correo">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label layoutX="41.0" layoutY="275.0" text="Correo Alternativo">
+   <Label layoutX="117.0" layoutY="276.0" text="Correo Alternativo">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label layoutX="41.0" layoutY="305.0" text="Teléfono">
+   <Label layoutX="117.0" layoutY="306.0" text="Teléfono">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Button layoutX="428.0" layoutY="257.0" mnemonicParsing="false" onAction="#loadProfilePicture"
-           style="-fx-background-color: #707070;" text="Subir Foto de Perfil" textFill="WHITE">
-      <font>
-         <Font name="Arial" size="14.0"/>
-      </font>
-   </Button>
-   <ImageView fx:id="imgProfilePicture" fitHeight="129.0" fitWidth="143.0" layoutX="428.0" layoutY="114.0"
-              pickOnBounds="true" preserveRatio="true">
-</ImageView>
-   <TextField fx:id="tfStaffNumber" layoutX="167.0" layoutY="100.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfName" layoutX="167.0" layoutY="130.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfLastName" layoutX="167.0" layoutY="160.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfEmail" layoutX="167.0" layoutY="239.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfAlternateEmail" layoutX="167.0" layoutY="270.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfPhone" layoutX="167.0" layoutY="300.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfStaffNumber" layoutX="271.0" layoutY="102.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfName" layoutX="271.0" layoutY="132.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfLastName" layoutX="271.0" layoutY="162.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfEmail" layoutX="271.0" layoutY="241.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfAlternateEmail" layoutX="271.0" layoutY="272.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfPhone" layoutX="271.0" layoutY="302.0" prefHeight="25.0" prefWidth="208.0"/>
    <Button fx:id="btnUpdate" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" onAction="#update"
            style="-fx-background-color: #59ad55;" text="Modificar" textFill="WHITE">
       <font>
@@ -96,7 +87,8 @@
          <Font name="Arial Bold" size="14.0"/>
       </font>
    </Button>
-   <RadioButton fx:id="rbMale" layoutX="175.0" layoutY="204.0" mnemonicParsing="false" text="Masculino"/>
-   <RadioButton fx:id="rbFemale" layoutX="288.0" layoutY="204.0" mnemonicParsing="false" text="Femenino"/>
-   <Button fx:id="btnRecoverTeacher" layoutX="410.0" layoutY="356.0" mnemonicParsing="false" onAction="#recoverTeacher" style="-fx-background-color: #707070;" text="Reactivar Profesor" textFill="WHITE" visible="false"/>
+   <RadioButton fx:id="rbMale" layoutX="279.0" layoutY="206.0" mnemonicParsing="false" text="Masculino"/>
+   <RadioButton fx:id="rbFemale" layoutX="392.0" layoutY="206.0" mnemonicParsing="false" text="Femenino"/>
+   <Button fx:id="btnRecoverTeacher" layoutX="410.0" layoutY="356.0" mnemonicParsing="false" onAction="#recoverTeacher"
+           style="-fx-background-color: #707070;" text="Reactivar Profesor" textFill="WHITE" visible="false"/>
 </AnchorPane>

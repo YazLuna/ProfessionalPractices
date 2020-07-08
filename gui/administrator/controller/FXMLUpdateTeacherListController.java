@@ -12,11 +12,16 @@ import java.util.ResourceBundle;
 import domain.Teacher;
 import gui.FXMLGeneralController;
 
+/**
+ * Update Teacher List Controller
+ * @author Yazmin
+ * @version 08/07/2020
+ */
 public class FXMLUpdateTeacherListController extends FXMLGeneralController implements Initializable {
-    public TableView<Teacher> tableTeachers;
-    public TableColumn<Teacher, Integer> staffNumber;
-    public TableColumn<Teacher, String> name;
-    public TableColumn<Teacher, String> lastName;
+    @FXML private TableView<Teacher> tvTeachers;
+    @FXML private TableColumn<Teacher, Integer> tcStaffNumber;
+    @FXML private TableColumn<Teacher, String> tcName;
+    @FXML private TableColumn<Teacher, String> tcLastName;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
 
@@ -26,29 +31,37 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
     }
 
     private void colocateListTeachers() {
-        Teacher teacher = new Teacher();
-        List<Teacher> teacherList=teacher.getTeachers();
-        staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tableTeachers.getItems().setAll(teacherList);
+        List<Teacher> teacherList = Teacher.getTeachers();
+        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tvTeachers.getItems().setAll(teacherList);
     }
 
-    public void cancel() {
+    /**
+     * Method to cancel the selection and return to the menu
+     */
+    public void backMenu() {
         openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
     }
 
-    public void logOut() {
+    /**
+     * Method to exit to the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
+    /**
+     * Method to choose the teacher to modify
+     */
     public void updateTeacher() {
-        Teacher TeacherSelected = tableTeachers.getSelectionModel().getSelectedItem();
+        Teacher TeacherSelected = tvTeachers.getSelectionModel().getSelectedItem();
         if(TeacherSelected == null){
             generateAlert("Por favor seleccione algún profesor");
         }else{
             FXMLUpdateTeacherController.staffNumber =TeacherSelected.getStaffNumber();
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacher.fxml",btnUpdate);
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacher.fxml", btnUpdate);
         }
     }
 }

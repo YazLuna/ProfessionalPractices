@@ -27,7 +27,7 @@
             <Font name="System Bold" size="11.0"/>
          </font>
       </Label>
-      <Button fx:id="btnLogOut" layoutX="640.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut"
+      <Button fx:id="btnLogOut" layoutX="640.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOutTeacher"
               prefHeight="27.0" prefWidth="109.0" style="-fx-background-color: #ffffff;" text="Cerrar Sesion">
          <font>
             <Font name="Arial Bold" size="12.0"/>
