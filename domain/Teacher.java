@@ -70,7 +70,7 @@ public class Teacher extends User{
 
     public List<Teacher> getAllTeacher() {
         TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> Teachers = getAllTeacher.getAllTeacher();
+        List<Teacher> Teachers = getAllTeacher.getTeachers();
         return Teachers;
     }
 
@@ -80,7 +80,7 @@ public class Teacher extends User{
         return result;
     }
 
-    public int activeTeacher() {
+    public int activeTeachers() {
         TeacherDAOImpl activeTeacher = new TeacherDAOImpl();
         int result = activeTeacher.activeTeachers();
         return result;
@@ -94,7 +94,7 @@ public class Teacher extends User{
 
     public List<Teacher> getInformationAllTeacher() {
         TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> Teachers = getAllTeacher.getInformationAllTeacher();
+        List<Teacher> Teachers = getAllTeacher.getTeachersInformation();
         return Teachers;
     }
 
@@ -102,5 +102,11 @@ public class Teacher extends User{
         TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
         List<Teacher> Teachers = getAllTeacher.getTeachersActive();
         return Teachers;
+    }
+
+    public boolean isCoordinator() {
+        TeacherDAOImpl isCoordinator = new TeacherDAOImpl();
+        boolean result = isCoordinator.isCoordinator(this);
+        return result;
     }
 }

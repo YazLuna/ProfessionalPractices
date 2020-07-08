@@ -122,4 +122,16 @@ public class User{
         return result;
     }
 
+    public boolean addUser(){
+        UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
+        boolean result = userMethodDAO.addUser(name, lastName, email, alternateEmail, phone, password, userType, status, gender, userName);
+        return result;
+    }
+
+    public boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
+        UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
+        boolean result = userMethodDAO.validateAcademicAdd(staffNumber, email, alternateEmail, phone, userName);
+        return result;
+    }
+
 }

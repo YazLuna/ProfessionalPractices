@@ -104,7 +104,7 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
             //imgTeacher.setImage(Teacher.getProfilePicture());
         }
 
-        int activeCoordinator = teacher.activeTeacher();
+        int activeCoordinator = teacher.activeTeachers();
         if(teacher.getStatus().equalsIgnoreCase("Inactive") && activeCoordinator <= Search.FOUND.getValue()){
             btnRecoverTeacher.setVisible(true);
         }

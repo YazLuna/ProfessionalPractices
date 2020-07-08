@@ -1,25 +1,23 @@
 package dataaccess;
 
 import java.util.List;
-
-import domain.Coordinator;
 import domain.Teacher;
 
 /**
- * Interface DAO Teacher
+ * Interface Teacher DAO
  * @author Yazmin
- * @version 06/06/2020
+ * @version 07/07/2020
  */
 
 public interface ITeacherDAO {
-    Teacher getTeacher(int staffNumber) ;
-    boolean updateTeacher(int staffNumberOrigin, Teacher coordinatorEdit
-            , List<String>DatesUpdate);
-    boolean deleteTeacher(String status, String dischargeDate,int staffNumber) ;
     boolean addTeacher (Teacher teacher) ;
-    List <Teacher> getAllTeacher();
+    Teacher getTeacher(int staffNumber) ;
+    List <Teacher> getTeachers();
     List <Teacher> getTeachersActive () ;
-    boolean recoverTeacher(Teacher Teacher) ;
-    List<Teacher> getInformationAllTeacher();
+    List<Teacher> getTeachersInformation();
+    boolean updateTeacher(int staffNumberOrigin, Teacher coordinatorEdit, List<String>DatesUpdate);
+    boolean recoverTeacher(int staffNumber) ;
+    boolean deleteTeacher(String status, String dischargeDate, int staffNumber) ;
     int activeTeachers() ;
+    boolean isCoordinator(Teacher teacher);
 }

@@ -30,6 +30,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     @FXML private Button btnRegister;
     private File imgFile;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
+    Teacher teacher = new Teacher();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -52,22 +53,31 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         removeStyle();
         boolean validate = validate();
         if(validate){
-            Teacher teacher = new Teacher();
-            createObjectTeacher(teacher);
-            boolean validUserTeacher = teacher.validateUserAdd(teacher.getEmail(), teacher.getAlternateEmail(),
-                    teacher.getPhone(), teacher.getUserName());
+            createObjectTeacher();
+            boolean validUserTeacher = userValidateNotExist();
             if (validUserTeacher) {
                 boolean registerComplete = teacher.addTeacher();
                 if(registerComplete){
                     openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
-                    generateInformation("Registro Exitoso");
+                    generateInformation("Profesor registrado exitosamente");
                 }else{
-                    generateError("Este profesor ya esta registrado o error en la base de datos");
+                    generateError("No hay conexión con la base de datos. Intente más tarde");
                 }
             } else {
-                generateError("Este profesor ya esta registrado");
+                generateInformation("Este profesor ya esta registrado");
             }
         }
+    }
+
+    private  boolean userValidateNotExist(){
+        boolean validUserTeacher = teacher.validateAcademicAdd(teacher.getStaffNumber(), teacher.getEmail(), teacher.getAlternateEmail(),
+                teacher.getPhone(), teacher.getUserName());
+        if (validUserTeacher) {
+            teacher.addUser();
+        } else {
+            validUserTeacher = teacher.isCoordinator();
+        }
+        return  validUserTeacher;
     }
 
     private void setLimitsTextFields() {
@@ -166,7 +176,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         return validation;
     }
 
-    private void createObjectTeacher(Teacher teacher) {
+    private void createObjectTeacher() {
         teacher.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
         teacher.setName(validateAddUser.deleteSpace(tfName.getText()));
         teacher.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));

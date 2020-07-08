@@ -69,7 +69,7 @@ public class Coordinator extends User{
 
     public List<Coordinator> getAllCoordinator() {
         CoordinatorDAOImpl getAllCoordinator = new CoordinatorDAOImpl();
-        List<Coordinator> coordinators = getAllCoordinator.getAllCoordinator();
+        List<Coordinator> coordinators = getAllCoordinator.getCoordinators();
         return coordinators;
     }
 
@@ -98,7 +98,7 @@ public class Coordinator extends User{
 
     public List<Coordinator> getInformationAllCoordinator() {
         CoordinatorDAOImpl getAllCoordinator = new CoordinatorDAOImpl();
-        List<Coordinator> coordinators = getAllCoordinator.getInformationAllCoordinator();
+        List<Coordinator> coordinators = getAllCoordinator.getCoordinatorsInformation();
         return coordinators;
     }
 

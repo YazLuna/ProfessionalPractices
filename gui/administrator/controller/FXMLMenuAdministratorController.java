@@ -73,7 +73,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     public void registerTeacher() {
         Teacher teacher = new Teacher();
-        int isActive = teacher.activeTeacher();
+        int isActive = teacher.activeTeachers();
         if(isActive <= Search.FOUND.getValue()){
             openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
         }else{
@@ -83,7 +83,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     public void deleteTeacher() {
         Teacher teacher = new Teacher();
-        int isActive = teacher.activeTeacher();
+        int isActive = teacher.activeTeachers();
         if(isActive != Search.NOTFOUND.getValue()){
             openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
         }else{
@@ -93,7 +93,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     public void updateTeacher() {
         Teacher teacher = new Teacher();
-        int areTeacher = teacher.activeTeacher();
+        int areTeacher = teacher.activeTeachers();
         if(areTeacher == Search.NOTFOUND.getValue()){
             generateError("No hay ningún profesor registrado");
         }else{
@@ -103,7 +103,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     public void listTeacher() {
         Teacher teacher = new Teacher();
-        int areTeacher = teacher.activeTeacher();
+        int areTeacher = teacher.activeTeachers();
         if(areTeacher == Search.NOTFOUND.getValue()){
             generateError("No hay ningún profesor registrado");
         }else{

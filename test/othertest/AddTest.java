@@ -3,7 +3,6 @@ package test.othertest;
 import dataaccess.CoordinatorDAOImpl;
 import dataaccess.StatusDAOImpl;
 import dataaccess.TeacherDAOImpl;
-import dataaccess.UserMethodDAOImpl;
 import domain.Practitioner;
 import domain.Search;
 import domain.Teacher;
@@ -54,19 +53,14 @@ public class AddTest {
         teacher.setRegistrationDate("2020-04-29");
         teacher.setPassword("d9a11bc382287cf0c7c585e7a79fdfda90cc6f9db586ef2bb6d88d81d9edb97941591" +
                 "61229ddcfabc4ec24c29dad037605a5f48a67da5ec535b6a131309812ef");
-        //Pablito123
         teacher.setUserName("pablito");
-        int isActive = teacher.activeTeacher();
-        boolean addTeacher = false;
+        int isActive = teacher.activeTeachers();
         if(isActive <= Search.FOUND.getValue()){
             boolean validateUser = teacher.validateUserAdd(teacher.getEmail(), teacher.getAlternateEmail(),
                     teacher.getPhone(), teacher.getUserName());
             if (validateUser) {
-                addTeacher= teacher.addTeacher();
+                result = teacher.addTeacher();
             }
-        }
-        if(addTeacher){
-            result = true;
         }
         Assert.assertTrue(result);
     }
