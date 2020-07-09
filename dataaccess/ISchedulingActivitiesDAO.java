@@ -13,4 +13,5 @@ import java.util.List;
 public interface ISchedulingActivitiesDAO {
     public boolean addSchedulingActivities (int idProject, SchedulingActivities schedulingActivitiesProject);
     public List<SchedulingActivities> getAllSchedulingActivities (int idProject);
+    public boolean modifySchedulingActivities(SchedulingActivities schedulingActivitiesEdit, List<String> datesUpdate);
 }

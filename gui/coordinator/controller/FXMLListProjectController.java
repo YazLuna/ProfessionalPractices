@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import dataaccess.Number;
 import domain.Project;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -21,7 +22,7 @@ import gui.FXMLGeneralController;
 
 
 /**
- * class FXMLChooseProjectController
+ * Class FXMLListProjectController
  * @author MARTHA
  * @version 08/05/2020
  */
@@ -42,7 +43,7 @@ public class FXMLListProjectController extends FXMLGeneralController implements 
         logOutGeneral();
     }
 
-    public void behind () {
+    public void behindMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
 
@@ -54,9 +55,9 @@ public class FXMLListProjectController extends FXMLGeneralController implements 
         Project project = new Project();
         allProject = new ArrayList<>();
         if(controllerSection!= "delete"){
-            allProject = project.listProjects();
+            allProject = project.getListProject();
         }else{
-            allProject = project.listProjectsAvailableNotAssing();
+            allProject = project.getListProjectAvailable();
         }
         TableColumn<Project, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<Project, String>("nameProject"));
@@ -70,7 +71,7 @@ public class FXMLListProjectController extends FXMLGeneralController implements 
         tvProject.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == Number.TWO.getNumber()) {
                     Project project;
                     ReadOnlyObjectProperty<Project> projectSelect;
                     projectSelect =  tvProject.getSelectionModel().selectedItemProperty();
@@ -87,7 +88,7 @@ public class FXMLListProjectController extends FXMLGeneralController implements 
                                 //generateInformation("No puede eliminarse un proyecto asignado");
                             //} else {
                                 FXMLDeleteProjectController projectController = new FXMLDeleteProjectController();
-                                projectController.assignProject(project.getNameProject());
+                                projectController.assignNameProject(project.getNameProject());
                                 openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteProject.fxml", tvProject);
                             //}
                         }

@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import domain.*;
+import domain.Project;
+import domain.SchedulingActivities;
+import domain.Search;
 
 
 /**
@@ -31,178 +33,36 @@ public class ProjectDAOImpl implements IProjectDAO {
         connexion= new Connexion();
     }
 
-
-    /**
-     * Method to get the Project list
-     * @return The Project list
-     */
-    @Override
-    public List<Project> getAllProjects (){
-        List<Project> projects = new ArrayList<>();
-        try{
-            connection = connexion.getConnection();
-            consultation  = connection.createStatement();
-            results = consultation.executeQuery("select nameProject from Project inner join Lapse on Project.idLapse = Lapse.idLapse");
-            while(results.next()){
-                Project project = new Project();
-                project.setNameProject(results.getString("nameProject"));
-                projects.add(project);
-            }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return projects;
-    }
-
-    @Override
-    public List<Project> getAllProjectsAvailable (){
-        List<Project> projects = new ArrayList<>();
-        try{
-            connection = connexion.getConnection();
-            String queryAllProject = "select nameProject from Project where status=?";
-            PreparedStatement sentence = connection.prepareStatement(queryAllProject);
-            sentence.setString(1, "available");
-            results= sentence.executeQuery();
-            while(results.next()){
-                Project project = new Project();
-                project.setNameProject(results.getString("nameProject"));
-                projects.add(project);
-            }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return projects;
-    }
-
-    @Override
-    public List<Project> getAllProjectsAvailableNotAssing (){
-        List<Project> projects = new ArrayList<>();
-        int idProject;
-        try{
-            connection = connexion.getConnection();
-            String queryAllProjectAvailable = "select idProject,nameProject from Project inner join Status on " +
-                    "Project.idStatus = Status.idStatus where status=?";
-            PreparedStatement sentenceAllProjectAvailable = connection.prepareStatement(queryAllProjectAvailable);
-            sentenceAllProjectAvailable.setString(1, "available");
-            results= sentenceAllProjectAvailable.executeQuery();
-            while(results.next()){
-                idProject = results.getInt("idProject");
-                String queryAssingProject = "select enrollment from Practitioner,Project where Practitioner.idProject = Project.idProject " +
-                        "AND Project.idProject =?";
-                PreparedStatement sentenceAssingProject = connection.prepareStatement(queryAssingProject);
-                sentenceAssingProject.setInt(1, idProject);
-                ResultSet resultAssingProject;
-                resultAssingProject = sentenceAssingProject.executeQuery();
-                if(resultAssingProject.next()) {
-                    String queryPractitionerActive = "select enrollment from Practitioner,Project,User_Status,Status where Practitioner.idProject = Project.idProject " +
-                            "AND Practitioner.idUser = User_Status.idUser AND Status.idStatus = User_Status.idStatus " +
-                            "AND status=? AND Project.idProject =?";
-                    PreparedStatement sentencePractitionerActive = connection.prepareStatement(queryPractitionerActive);
-                    sentencePractitionerActive.setString(1,"Active");
-                    sentencePractitionerActive.setInt(2, idProject);
-                    ResultSet resultPractitionerActive;
-                    resultPractitionerActive = sentencePractitionerActive.executeQuery();
-                    if(!resultPractitionerActive.next()){
-                        Project project = new Project();
-                        project.setNameProject(results.getString("nameProject"));
-                        projects.add(project);
-                    }
-                }else{
-                    Project project = new Project();
-                    project.setNameProject(results.getString("nameProject"));
-                    projects.add(project);
-                }
-            }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return projects;
-    }
-
-    /**
-     * Method to get the Project
-     * @param nameProject The nameProject parameter defines the name of the Project
-     * @return The Project of the searched nameProject
-     */
-    @Override
-    public Project getProject (String nameProject) {
-        Project project = null;
-        try{
-            connection = connexion.getConnection();
-            String queryProject = "select * from Project inner join Lapse on Project.idLapse = Lapse.idLapse " +
-                    "inner join Status on Project.idStatus = Status.idStatus where nameProject=?";
-            PreparedStatement sentence = connection.prepareStatement(queryProject);
-            sentence.setString(1,nameProject);
-            results = sentence.executeQuery();
-            LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
-            ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
-            SchedulingActivitiesDAOImpl implementSchedulingActivities = new SchedulingActivitiesDAOImpl();
-            while(results.next()){
-                project = new Project();
-                project.setIdProject(results.getInt("idProject"));
-                project.setNameProject(results.getString("nameProject"));
-                project.setDescription(results.getString("description"));
-                project.setObjectiveGeneral(results.getString("objectiveGeneral"));
-                project.setObjectiveInmediate(results.getString("objectiveInmediate"));
-                project.setObjectiveMediate(results.getString("objectiveMediate"));
-                project.setMethodology(results.getString("methodology"));
-                project.setResources(results.getString("resources"));
-                project.setActivitiesAndFunctions(results.getString("activities"));
-                project.setResponsabilities(results.getString("responsabilities"));
-                project.setDaysHours(results.getString("daysHours"));
-                project.setLapse(results.getString("lapse"));
-                project.setStatus(results.getString("status"));
-                project.setDuration(results.getInt("duration"));
-                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
-                project.setPlacesAvailable(results.getInt("placesAvailable"));
-                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
-                project.setOrganization(implementOrganization.getIdLinkedOrganization(results.getInt("idLinkedOrganization")));
-                project.setResponsible(implementResponsible.getIdResponsibleProject(results.getInt("idResponsibleProject")));
-                project.setSchedulingActivitiesProject(implementSchedulingActivities.getAllSchedulingActivities(project.getIdProject()));
-            }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return project;
-    }
-
     /**
      * Method to add a Project
      * @param project The data of the Project
-     * @return The message if the Project was added
+     * @return if the Project was added
      */
     @Override
     public boolean addProject (Project project) {
         boolean resultIsAddProject = false;
-        int idLapse;
-        LapseDAOImpl lapse = new LapseDAOImpl();
-        idLapse = lapse.searchLapse(project.getLapse());
-        if(idLapse == Search.NOTFOUND.getValue()) {
-            lapse.addLapse(project.getLapse());
-            idLapse=lapse.searchLapse(project.getLapse());
+        int idTerm;
+        TermDAOImpl termDAO = new TermDAOImpl();
+        idTerm = termDAO.getIdTerm(project.getTerm());
+        if(idTerm == Search.NOTFOUND.getValue()) {
+            termDAO.addTerm(project.getTerm());
+            idTerm =termDAO.getIdTerm(project.getTerm());
         }
         StatusDAOImpl status = new StatusDAOImpl();
         int idStatus = status.searchIdStatus(project.getStatus());
         ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
-        int idResponsibleProject = responsibleProjectDAO.searchIdResponsibleProject(project.getResponsible().getEmail());
+        int idResponsibleProject = responsibleProjectDAO.getIdResponsibleProject(project.getResponsible().getEmail());
         LinkedOrganizationDAOImpl organizationDAO = new LinkedOrganizationDAOImpl();
-        int idLinkedOrganization = organizationDAO.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
+        int idLinkedOrganization = organizationDAO.getIdLinkedOrganization(project.getOrganization().getName());
         int idProject = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceProject = connection.prepareStatement("insert into Project(nameProject,description,objectiveGeneral,"+
-                    "objectiveInmediate,objectiveMediate,methodology,resources,activities,"+
-                    "responsabilities,daysHours,duration,quiantityPractitioner,placesAvailable," +
-                    "idLinkedOrganization,idResponsibleProject,idStatus,"+
-                    "staffNumberCoordinator,idLapse) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement sentenceProject = connection.prepareStatement("INSERT INTO Project(nameProject,description" +
+                    ",objectiveGeneral,objectiveInmediate,objectiveMediate,methodology,resources,activitiesAndFunctions,responsabilities" +
+                    ",daysHours,duration,quiantityPractitioner,placesAvailable" +
+                    ",idLinkedOrganization,idResponsibleProject,idStatus"+
+                    ",staffNumberCoordinator,idLapse) VALUES(?,?,?,?,?,?,?" +
+                    ",?,?,?,?,?,?,?,?,?,?,?)");
             sentenceProject.setString(1, project.getNameProject());
             sentenceProject.setString(2, project.getDescription());
             sentenceProject.setString(3, project.getObjectiveGeneral());
@@ -220,7 +80,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(15,idResponsibleProject);
             sentenceProject.setInt(16,idStatus);
             sentenceProject.setInt(17,project.getStaffNumberCoordinator());
-            sentenceProject.setInt(18,idLapse);
+            sentenceProject.setInt(18, idTerm);
             sentenceProject.executeUpdate();
             idProject = getIdProject(project.getNameProject());
         }catch(SQLException ex){
@@ -242,19 +102,215 @@ public class ProjectDAOImpl implements IProjectDAO {
     }
 
     /**
+     * Method to get the Project list
+     * @return The Project list
+     */
+    @Override
+    public List<Project> getAllProjects (){
+        List<Project> projects = new ArrayList<>();
+        try{
+            connection = connexion.getConnection();
+            consultation  = connection.createStatement();
+            results = consultation.executeQuery("SELECT nameProject FROM Project INNER JOIN Term ON Project.idTerm = Term.idTerm");
+            while(results.next()){
+                Project project = new Project();
+                project.setNameProject(results.getString("nameProject"));
+                projects.add(project);
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return projects;
+    }
+
+    /**
+     * Method to get the Project available list
+     * @return The Project available list
+     */
+    @Override
+    public List<Project> getAllProjectsAvailable (){
+        List<Project> projects = new ArrayList<>();
+        try{
+            connection = connexion.getConnection();
+            String queryAllProject = "SELECT nameProject FROM Project WHERE status=?";
+            PreparedStatement sentence = connection.prepareStatement(queryAllProject);
+            sentence.setString(1, "available");
+            results= sentence.executeQuery();
+            while(results.next()){
+                Project project = new Project();
+                project.setNameProject(results.getString("nameProject"));
+                projects.add(project);
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return projects;
+    }
+
+    /**
+     * Method to get the Project
+     * @param nameProject The nameProject parameter defines the name of the Project
+     * @return The Project of the searched nameProject
+     */
+    @Override
+    public Project getProject (String nameProject) {
+        Project project = null;
+        try{
+            connection = connexion.getConnection();
+            String queryProject = "SELECT * FROM Project INNNER JOIN Term ON Project.idTerm = Term.idTerm " +
+                    "INNER JOIN Status ON Project.idStatus = Status.idStatus WHERE nameProject=?";
+            PreparedStatement sentence = connection.prepareStatement(queryProject);
+            sentence.setString(1,nameProject);
+            results = sentence.executeQuery();
+            LinkedOrganizationDAOImpl implementOrganization = new LinkedOrganizationDAOImpl();
+            ResponsibleProjectDAOImpl implementResponsible = new ResponsibleProjectDAOImpl();
+            SchedulingActivitiesDAOImpl implementSchedulingActivities = new SchedulingActivitiesDAOImpl();
+            while(results.next()){
+                project = new Project();
+                project.setIdProject(results.getInt("idProject"));
+                project.setNameProject(results.getString("nameProject"));
+                project.setDescription(results.getString("description"));
+                project.setObjectiveGeneral(results.getString("objectiveGeneral"));
+                project.setObjectiveInmediate(results.getString("objectiveInmediate"));
+                project.setObjectiveMediate(results.getString("objectiveMediate"));
+                project.setMethodology(results.getString("methodology"));
+                project.setResources(results.getString("resources"));
+                project.setActivitiesAndFunctions(results.getString("activitiesAndFunctions"));
+                project.setResponsabilities(results.getString("responsabilities"));
+                project.setDaysHours(results.getString("daysHours"));
+                project.setTerm(results.getString("term"));
+                project.setStatus(results.getString("status"));
+                project.setDuration(results.getInt("duration"));
+                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setPlacesAvailable(results.getInt("placesAvailable"));
+                project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
+                project.setOrganization(implementOrganization.getLinkedOrganizationWithId(results.getInt("idLinkedOrganization")));
+                project.setResponsible(implementResponsible.getResponsibleProjectWithId(results.getInt("idResponsibleProject")));
+                project.setSchedulingActivitiesProject(implementSchedulingActivities.getAllSchedulingActivities(project.getIdProject()));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return project;
+    }
+
+    /**
+     * Method to get id project
+     * @param nameProject defines the name of the Project
+     * @return The idProject of the Project
+     */
+    @Override
+    public int getIdProject (String nameProject){
+        int idProject = Search.NOTFOUND.getValue();
+        try{
+            connection = connexion.getConnection();
+            String queryAllProject = "SELECT idProject FROM Project WHERE nameProject=?";
+            PreparedStatement sentence = connection.prepareStatement(queryAllProject);
+            sentence.setString(1, nameProject);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idProject = results.getInt("idProject");
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idProject;
+    }
+
+    /**
+     * Method to modify the project
+     * @param projectEdit The data of the Project
+     * @param datesUpdate The fields to be modified
+     * @return if the Project was modify
+     */
+    @Override
+    public boolean modifyProject(Project projectEdit, List<String> datesUpdate) {
+        int idResponsibleProject;
+        int idLinkedOrganization;
+        boolean isModifyProject = false;
+        String sentenceDatesUpdate="";
+        List<String> Change = new ArrayList<>();
+        for (int indexDatesUpdate = Number.ZERO.getNumber(); indexDatesUpdate < datesUpdate.size(); indexDatesUpdate++) {
+            if (indexDatesUpdate == datesUpdate.size() - 1) {
+                if(datesUpdate.get(indexDatesUpdate).equals("LinkedOrganization")) {
+                    sentenceDatesUpdate = sentenceDatesUpdate + "idLinkedOrganization = ?";
+                }else {
+                    if(datesUpdate.get(indexDatesUpdate).equals("ResponsibleProject")) {
+                        sentenceDatesUpdate = sentenceDatesUpdate + "idResponsibleProject = ?";
+                    }else {
+                        sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?";
+                    }
+                }
+            } else {
+                if(datesUpdate.get(indexDatesUpdate).equals("LinkedOrganization")) {
+                    sentenceDatesUpdate = sentenceDatesUpdate + "idLinkedOrganization = ?,";
+                }else {
+                    if(datesUpdate.get(indexDatesUpdate).equals("ResponsibleProject")) {
+                        sentenceDatesUpdate = sentenceDatesUpdate + "idResponsibleProject = ?,";
+                    }else {
+                        sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?,";
+                    }
+                }
+            }
+            Change.add("get" + datesUpdate.get(indexDatesUpdate));
+        }
+        String sentence = "UPDATE Project SET "+sentenceDatesUpdate+ " WHERE idProject " +
+                "= "+ projectEdit.getIdProject();
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sentence);
+            Class classProject = projectEdit.getClass();
+            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+                    <= datesUpdate.size(); indexPreparedStatement++){
+                Method methodProject;
+                if(Change.get(indexPreparedStatement - 1).equals("getLinkedOrganization")){
+                    LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+                    idLinkedOrganization= linkedOrganizationDAO.getIdLinkedOrganization(projectEdit.getOrganization().getName());
+                        preparedStatement.setInt(indexPreparedStatement, idLinkedOrganization);
+                } else{
+                    if(Change.get(indexPreparedStatement - 1).equals("getResponsibleProject")) {
+                        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
+                        idResponsibleProject = responsibleProjectDAO.getIdResponsibleProject(projectEdit.getResponsible().getEmail());
+                        preparedStatement.setInt(indexPreparedStatement, idResponsibleProject);
+                    }else {
+                        methodProject = classProject.getMethod(Change.get(indexPreparedStatement - 1));
+                        String word = (String) methodProject.invoke(projectEdit, new Object[]{});
+                        preparedStatement.setString(indexPreparedStatement, word);
+                    }
+                }
+            }
+            preparedStatement.executeUpdate();
+            isModifyProject = true;
+        } catch (SQLException | ReflectiveOperationException ex) {
+            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return isModifyProject;
+    }
+
+    /**
      * Method to delete a Project
      * @param nameProject The name of the Project
-     * @return The message if the Project was deleted
+     * @return if the Project was deleted
      */
     @Override
     public boolean deleteProject (String nameProject) {
         boolean resultDeleteProject= false;
         int idStatus = Search.NOTFOUND.getValue();
         StatusDAOImpl statusDAO = new StatusDAOImpl();
-        idStatus = statusDAO.searchIdStatus("not available");
+        idStatus = statusDAO.searchIdStatus("cancel");
         try{
             connection = connexion.getConnection();
-            String queryDeleteProject = "update Project set idStatus=? where nameProject =?";
+            String queryDeleteProject = "UPDATE Project SET idStatus=? WHERE nameProject =?";
             PreparedStatement sentence = connection.prepareStatement(queryDeleteProject);
             sentence.setInt(1, idStatus);
             sentence.setString(2, nameProject);
@@ -271,159 +327,41 @@ public class ProjectDAOImpl implements IProjectDAO {
     }
 
     /**
-     * Update method of the Project
-     * @param project The data of the Project
-     * @return The message if the Project was updated
+     * Method to validate if there is another project  with the same name
+     * @param nameProject defines the name of the project
+     * @return if the project exists
      */
     @Override
-    public boolean actualizationProject (Project project) {
-        boolean result = false;
-        int idResponsibleProject;
-        int idOrganization;
-        int idLapse;
-        LinkedOrganizationDAOImpl organizationImpl = new LinkedOrganizationDAOImpl();
-        idOrganization = organizationImpl.searchIdLinkedOrganization(project.getOrganization().getName(),project.getOrganization().getEmail(),project.getOrganization().getPhoneNumber());
-        ResponsibleProjectDAOImpl responsibleImpl = new ResponsibleProjectDAOImpl();
-        idResponsibleProject = responsibleImpl.searchIdResponsibleProject(project.getResponsible().getEmail());
-        LapseDAOImpl lapse = new LapseDAOImpl();
-        idLapse = lapse.searchLapse(project.getLapse());
-        if(idLapse== Search.NOTFOUND.getValue()){
-            lapse.addLapse(project.getLapse());
-            idLapse=lapse.searchLapse(project.getLapse());
-        }
+    public boolean validateRepeatProject (String nameProject) {
+        boolean isRepeatProject = false;
         try{
             connection = connexion.getConnection();
-            String queryProject = "update Project set nameProject=?, description=?, objectiveGeneral=?,"+
-                    " objectiveInmediate=?, objectiveMediate=?, methodology=?, resources=?,"
-                    + " status=?, activities=?, responsabilities=?, duration=?, quiantityPractitioner=?,"+
-                    " idLinkedOrganization=?, idResponsibleProject=?, staffNumberCoordinator=?, idLapse=?  where idProject=?";
-            PreparedStatement sentenceProject = connection.prepareStatement(queryProject);
-            sentenceProject.setString(1, project.getNameProject());
-            sentenceProject.setString(2, project.getDescription());
-            sentenceProject.setString(3, project.getObjectiveGeneral());
-            sentenceProject.setString(4, project.getObjectiveInmediate());
-            sentenceProject.setString(5, project.getObjectiveMediate());
-            sentenceProject.setString(6, project.getMethodology());
-            sentenceProject.setString(7, project.getResources());
-            sentenceProject.setString(8, project.getStatus());
-            sentenceProject.setString(9, project.getActivitiesAndFunctions());
-            sentenceProject.setString(10, project.getResponsabilities());
-            sentenceProject.setInt(11, project.getDuration());
-            sentenceProject.setInt(12, project.getQuantityPractitioner());
-            sentenceProject.setInt(13, project.getOrganization().getIdLinkedOrganization());
-            sentenceProject.setInt(14, project.getResponsible().getIdResponsible());
-            sentenceProject.setInt(15, project.getIdProject());
-            sentenceProject.setInt(16, project.getStaffNumberCoordinator());
-            sentenceProject.setInt(17,idLapse);
-            sentenceProject.executeUpdate();
-            result = true;
-        }catch(SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-            return result;
-        }
-    }
-
-    /**
-     * Method to make a request for a project
-     * @param enrollment The enrollment parameter defines the enrollment of the Practitioner
-     * @param idProject The idProject parameter defines the id of the Project
-     * @return The message if the project request was made
-     */
-    @Override
-    public boolean requestProject (String enrollment, int idProject) {
-        boolean result = false;
-        try{  
-            connection = connexion.getConnection();
-            PreparedStatement sentenceProject = connection.prepareStatement("insert into Request values(?,?,'active')");
-            sentenceProject.setString(1, enrollment);
-            sentenceProject.setInt(2, idProject);
-            sentenceProject.executeUpdate();
-            result = true;
-        }catch(SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Method for assigning a project
-     * @param enrollment The enrollment parameter defines the enrollment of the Practitioner
-     * @param idProject The idProject parameter defines the id of the Project
-     * @return The message if the project assignment was made
-     */
-    @Override
-    public boolean assignProject (String enrollment, int idProject) {
-        String status=null;
-        int quiantityPractitioner= Search.NOTFOUND.getValue();
-        boolean result = false;
-        try{  
-            connection = connexion.getConnection();
-            String queryProject = "select status,quiantityPractitioner from Project where idProject=?";
-            PreparedStatement sentence = connection.prepareStatement(queryProject);
-            sentence.setInt(1,idProject);
-            results = sentence.executeQuery();
-            while(results.next()){
-                status= results.getString("status");
-                quiantityPractitioner = results.getInt("quiantityPractitioner");
-            }
-            if(status !="not available" || status != "no places"){
-                PreparedStatement sentencePractitioner = connection.prepareStatement("update Practitioner set idProject=? where enrollment=?");
-                sentencePractitioner.setInt(1, idProject);
-                sentencePractitioner.setString(2, enrollment);
-                sentencePractitioner.executeUpdate();
-                quiantityPractitioner--;
-                
-                if(quiantityPractitioner == Search.NOTFOUND.getValue()){
-                    PreparedStatement sentenceProject = connection.prepareStatement("update Project set status=? where idProject=?");
-                    sentenceProject.setString(1, "no places");
-                    sentenceProject.setInt(2, idProject);
-                    sentenceProject.executeUpdate();
-                }
-                result= true;
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            if(connexion!=null){
-                connexion.closeConnection();
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public int getIdProject (String nameProject){
-        int idProject = Search.NOTFOUND.getValue();
-        try{
-            connection = connexion.getConnection();
-            String queryAllProject = "select idProject from Project where nameProject=?";
-            PreparedStatement sentence = connection.prepareStatement(queryAllProject);
-            sentence.setString(1, nameProject);
+            String queryResponsible= "SELECT idProject FROM Project WHERE nameProject=?";
+            PreparedStatement sentence =connection.prepareStatement(queryResponsible);
+            sentence.setString(1,nameProject);
             results= sentence.executeQuery();
-            while(results.next()){
-                idProject = results.getInt("idProject");
+            if(results.next()){
+                isRepeatProject = true;
             }
-        }catch (SQLException ex){
+        }catch(SQLException ex){
             Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
         }
-        return idProject;
+        return isRepeatProject;
     }
 
+    /**
+     * Method to know if there are project available
+     * @return if there are project available
+     */
     @Override
     public boolean thereAreProjectAvailable (){
         boolean areProject = false;
         try {
             connection = connexion.getConnection();
-            String queryAreProjectAvailable = "select nameProject from Project inner join Status on " +
-                    "Project.idStatus = Status.idStatus where status =?";
+            String queryAreProjectAvailable = "SELECT nameProject FROM Project INNER JOIN Status " +
+                    "ON Project.idStatus = Status.idStatus WHERE status =?";
             PreparedStatement sentence = connection.prepareStatement(queryAreProjectAvailable);
             sentence.setString(1, "available");
             results= sentence.executeQuery();
@@ -438,12 +376,16 @@ public class ProjectDAOImpl implements IProjectDAO {
         return areProject;
     }
 
+    /**
+     * Method to know if there are project
+     * @return if there are project
+     */
     @Override
     public boolean thereAreProject(){
         boolean areProject = false;
         try {
             connection = connexion.getConnection();
-            String queryAreProject = "select nameProject from Project";
+            String queryAreProject = "SELECT nameProject FROM Project";
             PreparedStatement sentence = connection.prepareStatement(queryAreProject);
             results= sentence.executeQuery();
             while (results.next()) {
@@ -457,47 +399,5 @@ public class ProjectDAOImpl implements IProjectDAO {
         return areProject;
     }
 
-    @Override
-    public boolean thereAreProjectAvailableNotAssing() {
-        boolean areAssingProject = false;
-        int idProject;
-        try {
-            connection = connexion.getConnection();
-            String queryAllProjectAvailable = "select idProject,nameProject from Project inner join Status on " +
-                    "Project.idStatus = Status.idStatus where status=?";
-            PreparedStatement sentenceAllProjectAvailable = connection.prepareStatement(queryAllProjectAvailable);
-            sentenceAllProjectAvailable.setString(1, "available");
-            results= sentenceAllProjectAvailable.executeQuery();
-            while(results.next() && !areAssingProject){
-                idProject = results.getInt("idProject");
-                String queryAssingProject = "select enrollment from Practitioner,Project where Practitioner.idProject = Project.idProject " +
-                        "AND Project.idProject =?";
-                PreparedStatement sentenceAssingProject = connection.prepareStatement(queryAssingProject);
-                sentenceAssingProject.setInt(1, idProject);
-                ResultSet resultAssingProject;
-                resultAssingProject = sentenceAssingProject.executeQuery();
-                if(resultAssingProject.next()) {
-                    String queryPractitionerActive = "select enrollment from Practitioner,Project,User_Status,Status where Practitioner.idProject = Project.idProject " +
-                            "AND Practitioner.idUser = User_Status.idUser AND Status.idStatus = User_Status.idStatus " +
-                            "AND status=? AND Project.idProject =?";
-                    PreparedStatement sentencePractitionerActive = connection.prepareStatement(queryPractitionerActive);
-                    sentencePractitionerActive.setString(1,"Active");
-                    sentencePractitionerActive.setInt(2, idProject);
-                    ResultSet resultPractitionerActive;
-                    resultPractitionerActive = sentencePractitionerActive.executeQuery();
-                    if(!resultPractitionerActive.next()){
-                        areAssingProject=true;
-                    }
-                }else{
-                    areAssingProject=true;
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            connexion.closeConnection();
-        }
-        return areAssingProject;
-    }
 
 }

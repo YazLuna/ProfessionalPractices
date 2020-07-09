@@ -83,13 +83,30 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void registerProject() {
-        openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterProject.fxml",btnRegisterProject);
+        ResponsibleProject responsibleProject = new ResponsibleProject();
+        boolean areResponsibleProject = responsibleProject.thereAreResponsibleProjectAvailable();
+        LinkedOrganization linkedOrganization = new LinkedOrganization();
+        boolean areLinkedOrganization = linkedOrganization.thereAreLinkedOrganizationAvailable();
+        if(areLinkedOrganization && areResponsibleProject){
+            openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterProject.fxml", btnRegisterProject);
+        }else {
+            if(areResponsibleProject && !areLinkedOrganization) {
+                generateInformation("No hay alguna Organización vinculada disponible");
+            }else{
+                if(!areResponsibleProject && areLinkedOrganization){
+                    generateInformation("No hay algún Responsable del proyecto disponible");
+                }else{
+                    generateInformation("No hay Responsable del proyecto ni Organización vinculada disponibles");
+                }
+            }
+        }
+
     }
 
     public void deleteProject() {
         Project project = new Project();
         boolean areProjectAvailable;
-        areProjectAvailable = project.thereAreProjectAvailableNotAssing();
+        areProjectAvailable = project.thereAreProjectAvailable();
         if(!areProjectAvailable) {
             generateInformation("No hay algún Proyecto disponible");
         } else{
@@ -125,7 +142,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     public void deleteLinkedOrganization() {
         LinkedOrganization organization = new LinkedOrganization();
         boolean areLinkedOrganization;
-        areLinkedOrganization = organization.thereAreLinkedOrganizationAvailableNotAssing();
+        areLinkedOrganization = organization.thereAreLinkedOrganizationAvailableNotAssign();
         if(!areLinkedOrganization) {
             generateInformation("No hay alguna Organizacion vinculada disponible");
         }else {
@@ -184,5 +201,9 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
             listResponsibleProjectController.controllerSection("delete");
             openWindowGeneral("/gui/coordinator/fxml/FXMLListResponsibleProject.fxml", btnDeleteResponsible);
         }
+    }
+
+    public void changeRole () {
+
     }
 }

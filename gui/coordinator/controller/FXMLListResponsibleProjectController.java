@@ -1,7 +1,6 @@
 package gui.coordinator.controller;
 
-import dataaccess.IResponsibleProjectDAO;
-import domain.LinkedOrganization;
+import dataaccess.Number;
 import domain.ResponsibleProject;
 import gui.FXMLGeneralController;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -20,6 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Class FXMLListResponsibleProjectController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLListResponsibleProjectController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnBehind;
     @FXML private TableView<ResponsibleProject> tvResponsibleProject;
@@ -35,9 +39,9 @@ public class FXMLListResponsibleProjectController extends FXMLGeneralController 
         ResponsibleProject responsible = new ResponsibleProject();
         allResponsibleProject = new ArrayList<>();
         if(controllerSection!= "delete"){
-            allResponsibleProject = responsible.listResponsibleProject();
+            allResponsibleProject = responsible.getListResponsibleProject();
         }else{
-            allResponsibleProject = responsible.listResponsibleProjectAvailableNotAssing();
+            allResponsibleProject = responsible.getListResponsibleProjectAvailableNotAssign();
         }
         TableColumn<ResponsibleProject, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<ResponsibleProject, String>("name"));
@@ -55,7 +59,7 @@ public class FXMLListResponsibleProjectController extends FXMLGeneralController 
         logOutGeneral();
     }
 
-    public void behind () {
+    public void behindMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
 
@@ -67,7 +71,7 @@ public class FXMLListResponsibleProjectController extends FXMLGeneralController 
         tvResponsibleProject.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == Number.TWO.getNumber()) {
                     ResponsibleProject responsible = new ResponsibleProject();
                     ReadOnlyObjectProperty<ResponsibleProject> responsibleProjectSelect;
                     responsibleProjectSelect =  tvResponsibleProject.getSelectionModel().selectedItemProperty();

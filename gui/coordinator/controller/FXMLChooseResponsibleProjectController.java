@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import domain.ResponsibleProject;
 
+/**
+ * Class FXMLChooseResponsibleProjectController
+ * @author MARTHA
+ * @version 01/06/2020
+ */
 public class FXMLChooseResponsibleProjectController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnAccept;
     @FXML private Button btnCancel;
@@ -25,15 +30,16 @@ public class FXMLChooseResponsibleProjectController extends FXMLGeneralControlle
     private static String controllerSection;
     private List<ResponsibleProject> allResponsibleProject;
     private static String answerNameResponsible;
+    private static  String answerEmailResponsible;
 
     public void initialize(URL url, ResourceBundle rb) {
-        startTableOrganizations();
+        startTableResponsiblesProject();
     }
 
-    public void startTableOrganizations() {
+    public void startTableResponsiblesProject() {
         ResponsibleProject responsibleProject = new ResponsibleProject();
         allResponsibleProject = new ArrayList<>();
-        allResponsibleProject = responsibleProject.listResponsibleProject();
+        allResponsibleProject = responsibleProject.getListResponsibleProjectAvailable();
         TableColumn<ResponsibleProject, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<ResponsibleProject, String>("name"));
         TableColumn<ResponsibleProject, String> lastName = new TableColumn<>("Apellido");
@@ -51,29 +57,30 @@ public class FXMLChooseResponsibleProjectController extends FXMLGeneralControlle
         this.controllerSection = controllerSection;
     }
 
-    public void cancel () {
+    public void backRegisterProject() {
         Stage stage = (Stage) btnAccept.getScene().getWindow();
         stage.close();
     }
 
-    public void accept () {
+    public void chooseResponsibleProject() {
         ResponsibleProject responsible = new ResponsibleProject();
         ReadOnlyObjectProperty<ResponsibleProject> responsibleProjectSelect;
         responsibleProjectSelect =  tvResponsibleProject.getSelectionModel().selectedItemProperty();
         responsible = responsibleProjectSelect.getValue();
         if(tvResponsibleProject.getSelectionModel().getSelectedItem() !=null){
-            if(controllerSection != "register") {
-                answerNameResponsible = responsible.getName()+" "+responsible.getLastName();
-            }else {
-                answerNameResponsible = responsible.getName()+" "+responsible.getLastName();
-            }
+            answerNameResponsible = responsible.getName()+" "+responsible.getLastName();
+            answerEmailResponsible = responsible.getEmail();
             Stage stage = (Stage) btnAccept.getScene().getWindow();
             stage.close();
         }else{
             generateInformation("Elige un Responsable del proyecto");
         }
     }
-    public static String nameResponsible(){
+    public static String getNameResponsibleProject(){
         return answerNameResponsible;
+    }
+
+    public static String getEmailResponsibleProject(){
+        return answerEmailResponsible;
     }
 }

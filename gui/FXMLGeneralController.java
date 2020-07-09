@@ -1,5 +1,6 @@
 package gui;
 
+import dataaccess.Number;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
@@ -122,7 +125,7 @@ public class FXMLGeneralController implements Initializable {
         alert.showAndWait();
     }
 
-    public void generateConfirmationCancel(String message, Button btnCancel, String fxml) {
+    public void generateCancel(String message, Button btnCancel, String fxml) {
         ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
         ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, message, YES, NO);
@@ -178,6 +181,22 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
+    public static void prohibitWordTextFieldAllowSpecialChar(TextField textField) {
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (newValue.matches("^,")) {
+                    textField.setText(newValue.replaceAll("[,]", ""));
+                }else{
+                    if (!newValue.matches("\\d*_,_\\s")) {
+                        textField.setText(newValue.replaceAll("[^\\d_,_\\s]", ""));
+                    }
+                }
+            }
+        });
+    }
+
     public static void prohibitNumberTextField(TextField textField) {
         textField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -208,6 +227,19 @@ public class FXMLGeneralController implements Initializable {
                 }
             }
         });
+    }
+
+    public String createTerm () {
+        Date date = new Date();
+        String month = new SimpleDateFormat("MM").format(date);
+        String year = new SimpleDateFormat("yyyy").format(date);
+        String term;
+        if(Integer.parseInt(month) > Number.ONE.getNumber() && Integer.parseInt(month) <= Number.SEVEN.getNumber()){
+            term = "FEBRERO-JULIO "+year;
+        } else{
+            term = "AGOSTO-ENERO "+year+ " " +(Integer.parseInt(year)+1);
+        }
+        return term;
     }
 
     public static void prohibitSpacesTextField(TextField textField) {

@@ -28,7 +28,7 @@
                      <children>
                         <FlowPane alignment="CENTER_LEFT" hgap="135.0" prefWidth="615.0" style="-fx-background-color: #053d01;">
                            <children>
-                              <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behind" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+                              <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behindListProject" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
                                  <graphic>
                                     <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -279,12 +279,12 @@
                         </GridPane>
                         <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0">
                            <children>
-                              <Button fx:id="btnDeleteProject" mnemonicParsing="false" onAction="#delete" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Eliminar" textFill="#f5f5f5">
+                              <Button fx:id="btnDeleteProject" mnemonicParsing="false" onAction="#deleteProject" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Eliminar" textFill="#f5f5f5">
                                  <font>
                                     <Font name="Arial" size="17.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="btnCancelProject" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+                              <Button fx:id="btnCancelProject" mnemonicParsing="false" onAction="#backListProject" prefHeight="38.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
                                  <font>
                                     <Font name="Arial" size="17.0" />
                                  </font>

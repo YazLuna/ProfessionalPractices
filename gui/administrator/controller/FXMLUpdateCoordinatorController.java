@@ -42,7 +42,7 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
     }
 
     public void cancel() {
-        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml");
+        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml");
     }
 
     public void loadProfilePicture() {
