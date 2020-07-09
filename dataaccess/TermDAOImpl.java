@@ -9,10 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Search;
 
+
 /**
  * Implementation of the ITermDAO
  * @author MARTHA
- * @version 08/05/2020
+ * @version 09/07/2020
  */
 public class TermDAOImpl implements ITermDAO {
     private final Connexion connexion;
