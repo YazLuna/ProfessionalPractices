@@ -1,15 +1,13 @@
 dataaccess
-demo
 domain
 gui
 gui.administrator.controller
 gui.coordinator.controller
-gui.login
+gui.login.controller
 gui.practitioner.controller
-gui.teacher
+gui.teacher.controller
 logic
 telegram
-test
 test.othertest
 test.testadministrator
 test.testproject
