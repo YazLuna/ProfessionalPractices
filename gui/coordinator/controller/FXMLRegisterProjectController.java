@@ -1,10 +1,10 @@
 package gui.coordinator.controller;
 
-import domain.SchedulingActivities;
-import gui.FXMLGeneralController;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,7 +16,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,7 +25,10 @@ import java.util.logging.Logger;
 import java.io.IOException;
 import domain.Project;
 import logic.ValidateProject;
-
+import dataaccess.Month;
+import dataaccess.Number;
+import domain.SchedulingActivities;
+import gui.FXMLGeneralController;
 
 /**
  * class FXMLRegisterProjectController
@@ -53,8 +56,10 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     @FXML private TextArea taActivitiesAndFunctions;
     @FXML private TextArea taResponsabilities;
     @FXML private GridPane gpActivity;
+    @FXML private Label lbTerm;
+    private String emailResponsible;
+    private String nameLinkedOrganization ;
     private static int StaffNumberCoordinator;
-    private List<String> allLapse;
     private List<String> allMonth;
     private Project project;
     private SchedulingActivities schedulingActivities;
@@ -63,18 +68,19 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        startTextField();
+        limitComponentProject();
         startComboBox();
 
     }
 
-    public void behind () {
+    public void behindMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
 
-    public void cancelProject () {
-        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+    public void backMenu() {
+        generateCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
+
 
     public void registerProject() {
         boolean message;
@@ -86,22 +92,21 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
             alertDataProject.show();
         }else{
             getDataProject();
-            message = project.registerProject();
+            message = project.registerProject(project);
             Alert alertDataProject = new Alert(Alert.AlertType.NONE);
             alertDataProject.setAlertType(Alert.AlertType.INFORMATION);
-            //alertDataProject.setHeaderText(message);
-            //alertDataProject.setTitle("Information");
             alertDataProject.show();
         }
     }
-    public void startTextField (){
+
+    public void limitComponentProject(){
         limitTextField(tfNameProject,50);
         prohibitNumberTextField(tfNameProject);
 
         limitTextField(tfMethodology,100);
         prohibitNumberTextField(tfMethodology);
 
-        limitTextField(tfDuration,2);
+        limitTextField(tfDuration,3);
         prohibitWordTextField(tfDuration);
 
         limitTextField(tfQuiantityPractitioners,1);
@@ -134,11 +139,26 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         limitTextField(tfActivityScheduling,100);
         prohibitSpacesTextField(tfActivityScheduling);
         prohibitNumberAllowSpecialCharTextField(tfActivityScheduling);
+
+        String term = createTerm();
+        lbTerm.setText(term);
     }
 
     public void startComboBox () {
         schedulingActivities = new SchedulingActivities();
-        allMonth = schedulingActivities.listMonth();
+        allMonth = new ArrayList<>();
+        allMonth.add(Month.JANUARY.getMonth());
+        allMonth.add(Month.FEBRUARY.getMonth());
+        allMonth.add(Month.MARCH.getMonth());
+        allMonth.add(Month.APRIL.getMonth());
+        allMonth.add(Month.MAY.getMonth());
+        allMonth.add(Month.JUNE.getMonth());
+        allMonth.add(Month.JULY.getMonth());
+        allMonth.add(Month.AUGUST.getMonth());
+        allMonth.add(Month.SEPTEMBER.getMonth());
+        allMonth.add(Month.OCTOBER.getMonth());
+        allMonth.add(Month.NOVEMBER.getMonth());
+        allMonth.add(Month.DECEMBER.getMonth());
         cbMonthScheduling.getItems().addAll(allMonth);
     }
 
@@ -152,6 +172,9 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         project.setResources(validateProject.deleteSpace(taResource.getText()));
         project.setActivitiesAndFunctions(validateProject.deleteSpace(taActivitiesAndFunctions.getText()));
         project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
+        project.getOrganization().setName(nameLinkedOrganization);
+        project.getResponsible().setEmail(emailResponsible);
+        project.setTerm(lbTerm.getText());
         project.setStaffNumberCoordinator(StaffNumberCoordinator);
         int duration = Integer.parseInt(tfDuration.getText());
         project.setDuration(duration);
@@ -160,7 +183,7 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void addActivity () {
-        if(positionGrindActivity<7) {
+        if(positionGrindActivity<Number.SEVEN.getNumber()) {
             Label lbMonth = new Label();
             lbMonth.setText("Mes:  ");
             Label lbActivity = new Label();
@@ -188,10 +211,29 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         }
     }
 
+    public Node getNodeByRowColumnIndex (final int row, final int column) {
+        Node result = null; ObservableList childrens = gpActivity.getChildren();
+        for (Object node : childrens) {
+            if(gpActivity.getRowIndex((Node) node) == row && gpActivity.getColumnIndex((Node) node) == column) {
+                result = (Node) node; break;
+            }
+        }
+        return result;
+    }
     public void deleteActivity () {
-        if(positionGrindActivity>1){
+        if(positionGrindActivity>Number.ONE.getNumber()){
+            gpActivity.add(null, 0, positionGrindActivity);
+            gpActivity.add(null, 1, positionGrindActivity);
+            gpActivity.add(null, 2, positionGrindActivity);
+            gpActivity.add(null, 3, positionGrindActivity);
+
             positionGrindActivity--;
-            //gpActivity.getRowConstraints().remove(0,positionGrindActivity);
+            gpActivity.getRowConstraints().remove(positionGrindActivity);
+            /*Node deleteNodeOne =getNodeByRowColumnIndex(positionGrindActivity,);
+            Node deleteNodeTwo =getNodeByRowColumnIndex(positionGrindActivity,1);
+            Node deleteNodeThree =getNodeByRowColumnIndex(positionGrindActivity,2);
+            Node deleteNodeFour =getNodeByRowColumnIndex(positionGrindActivity,3);
+            gpActivity.getChildren().removeAll(deleteNodeOne,deleteNodeTwo,deleteNodeThree,deleteNodeFour);
             //gpActivity.getRowConstraints().remove(positionGrindActivity);
             //gpActivity.getChildren().removeIf(node -> GridPane.getRowIndex(node) == positionGrindActivity);
             /*gpActivity.getChildren().remove(1,positionGrindActivity);
@@ -199,6 +241,10 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
             gpActivity.getChildren().remove(2,positionGrindActivity);
             gpActivity.getChildren().remove(3,positionGrindActivity);*/
             //gpActivity.getRowConstraints().remove(positionGrindActivity);
+            //gpActivity.getChildren().removeIf(node -> GridPane.getRowIndex(node) == positionGrindActivity);
+            /*while(gpActivity.getRowConstraints().size() > 0){
+                gpActivity.getRowConstraints().remove(0);
+            }*/
 
         }else{
             generateInformation("Registre al menos una actividad");
@@ -219,7 +265,8 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         stage.showAndWait();
         FXMLChooseResponsibleProjectController chooseResponsibleProject = new FXMLChooseResponsibleProjectController();
         chooseResponsibleProject.controllerSection("register");
-        String nameResponsible = chooseResponsibleProject.nameResponsible();
+        String nameResponsible = chooseResponsibleProject.getNameResponsibleProject();
+        emailResponsible = chooseResponsibleProject.getEmailResponsibleProject();
         tfResponsibleProject.setText(nameResponsible);
     }
 
@@ -237,7 +284,7 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         stage.showAndWait();
         FXMLChooseLinkedOrganizationController chooseLinkedOrganization = new FXMLChooseLinkedOrganizationController();
         chooseLinkedOrganization.controllerSection("register");
-        String nameLinkedOrganization = chooseLinkedOrganization.nameLinkedOrganization();
+        nameLinkedOrganization = chooseLinkedOrganization.getNameLinkedOrganization();
         tfLinkedOrganization.setText(nameLinkedOrganization);
     }
 

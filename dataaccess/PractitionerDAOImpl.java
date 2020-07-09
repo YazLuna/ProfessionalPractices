@@ -138,11 +138,11 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
         boolean resultAdd = false;
         boolean enrollment = searchEnrollment(practitioner.getEnrollment());
         if (!enrollment){
-            LapseDAOImpl lapseDAO = new LapseDAOImpl();
-            int idLapse = lapseDAO.searchLapse(practitioner.getPeriod());
+            TermDAOImpl lapseDAO = new TermDAOImpl();
+            int idLapse = lapseDAO.getIdTerm(practitioner.getPeriod());
             if(idLapse == Search.NOTFOUND.getValue()){
-                lapseDAO.addLapse(practitioner.getPeriod());
-                idLapse = lapseDAO.searchLapse(practitioner.getPeriod());
+                lapseDAO.addTerm(practitioner.getPeriod());
+                idLapse = lapseDAO.getIdTerm(practitioner.getPeriod());
             }
             boolean userAdd= addUser(practitioner.getName(),practitioner.getLastName(),practitioner.getEmail(),practitioner.getAlternateEmail()
                     ,practitioner.getPhone(),practitioner.getPassword(), practitioner.getUserType(),practitioner.getStatus()

@@ -33,12 +33,12 @@
       <TableView fx:id="tvResponsibleProject" layoutX="56.0" layoutY="116.0" prefHeight="200.0" prefWidth="489.0" />
       <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0" layoutX="101.0" layoutY="358.0">
          <children>
-            <Button fx:id="btnAccept" mnemonicParsing="false" onAction="#accept" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Aceptar" textFill="#f5f5f5">
+            <Button fx:id="btnAccept" mnemonicParsing="false" onAction="#chooseResponsibleProject" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Aceptar" textFill="#f5f5f5">
                <font>
                   <Font name="Arial" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#backRegisterProject" prefHeight="38.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
                <font>
                   <Font name="Arial" size="17.0" />
                </font>

@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-
+/**
+ * Class FXMLChooseLinkedOrganizationController
+ * @author MARTHA
+ * @version 01/06/2020
+ */
 public class FXMLChooseLinkedOrganizationController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnAccept;
     @FXML private Button btnCancel;
@@ -29,10 +33,11 @@ public class FXMLChooseLinkedOrganizationController extends FXMLGeneralControlle
     public void initialize(URL url, ResourceBundle rb) {
         startTableOrganizations();
     }
+
     public void startTableOrganizations() {
         LinkedOrganization organization = new LinkedOrganization();
         allLinkedOrganization = new ArrayList<>();
-        allLinkedOrganization = organization.listOrganizationAvailable();
+        allLinkedOrganization = organization.getListOrganizationAvailable();
         TableColumn<LinkedOrganization, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<LinkedOrganization, String>("name"));
         TableColumn<LinkedOrganization, String> email = new TableColumn<>("Correo Electrónico");
@@ -48,12 +53,12 @@ public class FXMLChooseLinkedOrganizationController extends FXMLGeneralControlle
         this.controllerSection = controllerSection;
     }
 
-    public void cancel () {
+    public void backRegisterProject() {
         Stage stagePrincipal = (Stage) btnCancel.getScene().getWindow();
         stagePrincipal.close();
     }
 
-    public void accept () {
+    public void chooseLinkedOrganization() {
         LinkedOrganization organization = new LinkedOrganization();
         ReadOnlyObjectProperty<LinkedOrganization> organizationSelect;
         organizationSelect =  tvLinkedOrganizations.getSelectionModel().selectedItemProperty();
@@ -68,7 +73,7 @@ public class FXMLChooseLinkedOrganizationController extends FXMLGeneralControlle
             generateInformation("Elige una Organización vinculada");
         }
     }
-    public static String nameLinkedOrganization(){
+    public static String getNameLinkedOrganization(){
         return answerNameOrganization;
     }
 

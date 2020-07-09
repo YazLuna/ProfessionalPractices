@@ -18,13 +18,11 @@ public class ValidateLinkedOrganization extends ValidateGeneral{
     public boolean validateName (String name) {
         boolean isValidName;
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{9,100}");
+                .compile("[A-Za-z]{6,100}");
         Matcher mather = pattern.matcher(name);
         isValidName = mather.find();
         return isValidName;
     }
-
-
 
     /**
      * Method to validate address of Linked Organization

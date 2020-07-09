@@ -1,8 +1,13 @@
 package domain;
 
-import dataaccess.SchedulingActivitiesDAOImpl;
 import java.util.List;
+import dataaccess.SchedulingActivitiesDAOImpl;
 
+/**
+ * Class Scheduling Activities
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class SchedulingActivities {
         private String activity;
         private String month;
@@ -32,9 +37,17 @@ public class SchedulingActivities {
             return idSchedulingActivities;
         }
 
-        public List<String> listMonth () {
-            SchedulingActivitiesDAOImpl getAllMonth= new SchedulingActivitiesDAOImpl();
-            List<String> listMonth = getAllMonth.getAllMonth();
-            return listMonth;
+        /**
+         * Method for modify the SchedulingActivities
+         * @param schedulingActivitiesEdit define the data of the SchedulingActivities
+         * @param datesUpdate the fields to modify
+         * @return if the SchedulingActivities was modify
+         */
+        public static boolean modifySchedulingActivities (SchedulingActivities schedulingActivitiesEdit, List<String> datesUpdate){
+            boolean isModifySchedulingActivities;
+            SchedulingActivitiesDAOImpl schedulingActivitiesDAO = new SchedulingActivitiesDAOImpl();
+            isModifySchedulingActivities = schedulingActivitiesDAO.modifySchedulingActivities(schedulingActivitiesEdit, datesUpdate);
+            return isModifySchedulingActivities;
         }
+
 }
