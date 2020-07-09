@@ -16,8 +16,35 @@ public class ValidateAddUser extends ValidateGeneral {
 
     public boolean validateNameUser (String name) {
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{3,30}");
+                .compile("[A-Za-z]{2,30}");
         Matcher mather = pattern.matcher(name);
+        boolean result = mather.find();
+        return result;
+    }
+
+    public String createCorrectProperName (String name) {
+        String[] splitName = name.split("");
+        for (int index = 0; index < splitName.length; index++) {
+            if(index == 0 || splitName[index-1].equals(" ")) {
+                splitName[index] = splitName[index].toUpperCase();
+            }
+        }
+        String correctName = String.join("", splitName);
+        return correctName;
+    }
+
+    public boolean validateUserName (String word) {
+        Pattern pattern = Pattern
+                .compile("[_A-Za-z0-9]{10,50}");
+        Matcher mather = pattern.matcher(word);
+        boolean result = mather.find();
+        return result;
+    }
+
+    public boolean validatePassword (String word) {
+        Pattern pattern = Pattern
+                .compile("[_A-Za-z0-9]{10,20}");
+        Matcher mather = pattern.matcher(word);
         boolean result = mather.find();
         return result;
     }

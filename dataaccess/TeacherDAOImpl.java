@@ -134,7 +134,7 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
             connection = connexion.getConnection();
             String queryTeacherActive = "SELECT name, lastName, staffNumber, email FROM Teacher, User, User_Status WHERE Teacher.idUser =" +
                     " User.idUser AND User_Status.idStatus =? AND User_Status.idUser = User.idUser AND idUserType =?";
-            preparedStatement =connection.prepareStatement(queryTeacherActive);
+            preparedStatement = connection.prepareStatement(queryTeacherActive);
             preparedStatement.setInt(1,idUserStatus);
             preparedStatement.setInt(2,idUserType);
             resultSet = preparedStatement.executeQuery();
@@ -260,7 +260,7 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
             connection = connexion.getConnection();
             String queryRecoverTeacher = "UPDATE Teacher INNER JOIN User_Status SET User_Status.idStatus =?, Teacher.dischargeDate =? WHERE" +
                     " User_Status.idUser = Teacher.idUser AND Teacher.staffNumber =? AND User_Status.idUserType =?";
-            connection.prepareStatement(queryRecoverTeacher);
+            preparedStatement = connection.prepareStatement(queryRecoverTeacher);
             preparedStatement.setInt(1, idUserStatus);
             preparedStatement.setString(2, null);
             preparedStatement.setInt(3, staffNumber);
@@ -292,7 +292,7 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
             connection = connexion.getConnection();
             String queryDeleteTeacher = "UPDATE Teacher INNER JOIN User_Status SET User_Status.idStatus =?, Teacher.dischargeDate =? WHERE" +
                     " User_Status.idUser = Teacher.idUser AND Teacher.staffNumber =? AND User_Status.idUserType =?";
-            connection.prepareStatement(queryDeleteTeacher);
+            preparedStatement = connection.prepareStatement(queryDeleteTeacher);
             preparedStatement.setInt(1, idUserStatus);
             preparedStatement.setString(2, dischargeDate);
             preparedStatement.setInt(3,staffNumber);
@@ -329,6 +329,31 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 isActive++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            connexion.closeConnection();
+        }
+        return isActive;
+    }
+
+    /**
+     * Method to know if are teachers
+     * @return Number of active teachers
+     */
+    @Override
+    public boolean areTeachers() {
+        boolean isActive = false;
+        try {
+            connection = connexion.getConnection();
+            String queryActiveTeacher = "SELECT staffNumber FROM Teacher, UserType, User_UserType WHERE UserType.type=? AND" +
+                    " User_UserType.idUser = Teacher.idUser AND User_UserType.idUserType = UserType.idUserType";
+            preparedStatement = connection.prepareStatement(queryActiveTeacher);
+            preparedStatement.setString(1, "Teacher");
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                isActive = true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);

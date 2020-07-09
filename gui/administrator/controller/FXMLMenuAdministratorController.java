@@ -93,11 +93,11 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
      * Method that calls the list of teachers and validates preconditions
      */
     public void getTeacherList() {
-        int areTeacher = Teacher.activeTeachers();
-        if(areTeacher == Search.NOTFOUND.getValue()){
-            generateError("No hay ningún profesor registrado");
-        }else{
+        boolean areTeacher = Teacher.areTeachers();
+        if(areTeacher){
             openWindowGeneral("/gui/administrator/fxml/FXMLGetTeacherList.fxml", btnListTeacher);
+        }else{
+            generateError("No hay ningún profesor registrado");
         }
     }
 
@@ -105,11 +105,11 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
      * Method that calls to update teacher and validates preconditions
      */
     public void updateTeacher() {
-        int areTeacher = Teacher.activeTeachers();
-        if(areTeacher == Search.NOTFOUND.getValue()){
-            generateError("No hay ningún profesor registrado");
-        }else{
+        boolean areTeacher = Teacher.areTeachers();
+        if(areTeacher){
             openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
+        }else{
+            generateError("No hay ningún profesor registrado");
         }
     }
 

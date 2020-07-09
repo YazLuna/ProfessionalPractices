@@ -5,8 +5,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,8 +219,8 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
         if(recoverOk){
             boolean recoverSuccessful = teacher.recoverTeacher(staffNumber);
             if(recoverSuccessful){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverTeacher);
                 generateInformation("Profesor reactivado exitosamente");
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverTeacher);
             }else{
                 generateError("No se puedo reactivar el Profesor");
             }

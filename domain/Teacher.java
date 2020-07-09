@@ -142,6 +142,16 @@ public class Teacher extends User{
     }
 
     /**
+     * Method that calls the TeacherDAO to know if exist teachers
+     * @return True if are teacher, false if not
+     */
+    public static boolean areTeachers() {
+        TeacherDAOImpl areTeacher = new TeacherDAOImpl();
+        boolean result = areTeacher.areTeachers();
+        return result;
+    }
+
+    /**
      * Method that calls the TeacherDAO to know if that teacher is coordinator
      * @param teacher Object
      * @return True if is Coordinator, false if not
