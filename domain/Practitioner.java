@@ -11,7 +11,8 @@ import dataaccess.PractitionerDAOImpl;
 
 public class  Practitioner extends User{
     private String enrollment;
-    private String period;
+    private String term;
+    private int credits;
     
     public Practitioner() {
         setUserType("Practitioner");
@@ -25,17 +26,31 @@ public class  Practitioner extends User{
         this.enrollment = enrollment;
     }
     
-    public String getPeriod () {
-        return period;
+    public String getTerm() {
+        return term;
     }
     
-    public void setPeriod (String period){
-        this.period = period;
+    public void setTerm(String term){
+        this.term = term;
     }
 
-    public boolean addPractitioner(){
+    public int getCredits () {
+        return credits;
+    }
+
+    public void setCredits (int credits) {
+        this.credits = credits;
+    }
+
+    public static boolean addPractitioner(Practitioner practitioner){
         PractitionerDAOImpl addPractitioner = new PractitionerDAOImpl();
-        boolean result = addPractitioner.addPractitioner(this);
+        boolean result = addPractitioner.addPractitioner(practitioner);
+        return result;
+    }
+
+    public static boolean validPractitionerAdd(Practitioner practitioner){
+        PractitionerDAOImpl addPractitioner = new PractitionerDAOImpl();
+        boolean result = addPractitioner.validPractitionerAdd(practitioner);
         return result;
     }
 
@@ -65,7 +80,7 @@ public class  Practitioner extends User{
 
     public List<Practitioner> getAllPractitioner(){
         PractitionerDAOImpl getAllPractitioner = new PractitionerDAOImpl();
-        List<Practitioner> practitioners = getAllPractitioner.getAllPractitioner();
+        List<Practitioner> practitioners = getAllPractitioner.getPractitioners();
         return practitioners;
     }
 
@@ -77,7 +92,7 @@ public class  Practitioner extends User{
 
     public List<Practitioner> getInformationPractitioner(){
         PractitionerDAOImpl getAllPractitioner = new PractitionerDAOImpl();
-        List<Practitioner> practitioners = getAllPractitioner.getInformationPractitioner();
+        List<Practitioner> practitioners = getAllPractitioner.getPractitionersInformation();
         return practitioners;
     }
 
@@ -89,7 +104,7 @@ public class  Practitioner extends User{
 
     public boolean arePractitioner () {
         PractitionerDAOImpl arePractitioner = new PractitionerDAOImpl();
-        boolean practitionerExist = arePractitioner.arePractitioner();
+        boolean practitionerExist = arePractitioner.arePractitioners();
         return practitionerExist;
     }
 }

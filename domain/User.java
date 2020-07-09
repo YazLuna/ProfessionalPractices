@@ -1,8 +1,6 @@
 package domain;
 
-import dataaccess.TeacherDAOImpl;
 import dataaccess.UserMethodDAOImpl;
-
 import java.io.File;
 
 /**
@@ -116,27 +114,33 @@ public class User{
         this.profilePicture = profilePicture;
     }
 
-    public boolean validateUserAdd(String email, String alternateEmail, String phone, String userName){
+    public static boolean validateUserAdd(String email, String alternateEmail, String phone, String userName){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
         boolean result = userMethodDAO.validateUserAdd(email, alternateEmail, phone, userName);
         return result;
     }
 
-    public boolean addUser(){
+    public static boolean addUser(User user, String userType){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.addUser(name, lastName, email, alternateEmail, phone, password, userType, status, gender, userName);
+        boolean result = userMethodDAO.addUser(user, userType);
         return result;
     }
 
-    public boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
+    public static boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
         boolean result = userMethodDAO.validateAcademicAdd(staffNumber, email, alternateEmail, phone, userName);
         return result;
     }
 
-    public boolean validateUser(String email, String alternateEmail, String phone){
+    public static boolean validateUser(String email, String alternateEmail, String phone){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
         boolean result = userMethodDAO.validateUser(email, alternateEmail, phone);
+        return result;
+    }
+
+    public static boolean validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone){
+        UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
+        boolean result = userMethodDAO.validateAcademicUpdate(staffNumber, email, alternateEmail, phone);
         return result;
     }
 

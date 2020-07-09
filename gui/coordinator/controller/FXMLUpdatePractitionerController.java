@@ -48,10 +48,6 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
         generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml");
     }
 
-    public void loadProfilePicture() {
-        loadImage();
-    }
-
     public void update(){
         boolean validate;
         boolean registerComplete;

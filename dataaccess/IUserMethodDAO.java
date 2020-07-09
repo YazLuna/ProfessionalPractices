@@ -1,6 +1,6 @@
 package dataaccess;
 
-import java.io.File;
+import domain.User;
 
 /**
  * Interface DAO User
@@ -10,13 +10,12 @@ import java.io.File;
 
 public interface IUserMethodDAO {
     int searchIdUser(String email, String alternateEmail, String phone) ;
-    boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
-            , String userType, String status, int gender, String userName) ;
+    boolean addUser(User user, String userType) ;
     int searchStaffNumberCoordinator(int staffNumberSearch)  ;
     int searchStaffNumberTeacher(int staffNumberSearch) ;
     boolean validateUser(String email, String alternateEmail, String phone);
     int searchStaffNumberTwoAcademics(int staffNumberSearch) ;
-    boolean validateUserUpdate(String email, String alternateEmail, String phone) ;
+    boolean validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone) ;
     void addRelations(int idUserAdd, String status, String userType);
     int searchIdUserType(String userType);
     boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName );

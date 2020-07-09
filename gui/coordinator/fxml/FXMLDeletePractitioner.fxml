@@ -22,7 +22,7 @@
             <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <ImageView fx:id="imgPractitioner" fitHeight="130.0" fitWidth="130.0" layoutX="235.0" layoutY="78.0"
+    <ImageView fitHeight="130.0" fitWidth="130.0" layoutX="235.0" layoutY="78.0"
                pickOnBounds="true" preserveRatio="true">
         <Image url="@../../images/User.png"/>
     </ImageView>
@@ -80,4 +80,10 @@
             </font>
         </Button>
     </Pane>
+    <Label layoutX="75.0" layoutY="338.0" text="Periodo: ">
+        <font>
+          <Font name="System Bold" size="12.0"/>
+        </font>
+    </Label>
+    <Label fx:id="lbLapse" layoutX="191.0" layoutY="347.0"/>
 </AnchorPane>

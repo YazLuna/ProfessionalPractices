@@ -1,8 +1,6 @@
 package test.othertest;
 
-import dataaccess.CoordinatorDAOImpl;
 import dataaccess.TeacherDAOImpl;
-import domain.Coordinator;
 import domain.Practitioner;
 import domain.Teacher;
 import org.junit.Assert;
@@ -26,7 +24,7 @@ public class UpdateIdTest {
         practitioner.setAlternateEmail("aleLuna@gmail.com");
         practitioner.setPhone("2281564676");
         practitioner.setEnrollment("s19012124");
-        practitioner.setPeriod("2020-2021");
+        practitioner.setTerm("2020-2021");
         result = practitioner.updatePractitioner(enrollment);
         Assert.assertEquals(1,result);
     }

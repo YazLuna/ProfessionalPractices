@@ -23,7 +23,7 @@
             <Font name="Arial Bold" size="24.0"/>
          </font>
       </Label>
-      <Button fx:id="btnLogOut" layoutX="494.0" layoutY="13.0" mnemonicParsing="false" onAction="#logOut"
+      <Button fx:id="btnLogOut" layoutX="494.0" layoutY="13.0" mnemonicParsing="false" onAction="#logOutAdministrator"
               style="-fx-background-color: WHITE;" text="Cerrar Sesión">
          <font>
             <Font name="Arial Bold" size="12.0"/>
@@ -75,13 +75,13 @@
    <TextField fx:id="tfEmail" layoutX="271.0" layoutY="241.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfAlternateEmail" layoutX="271.0" layoutY="272.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfPhone" layoutX="271.0" layoutY="302.0" prefHeight="25.0" prefWidth="208.0"/>
-   <Button fx:id="btnUpdate" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" onAction="#update"
+   <Button fx:id="btnUpdate" layoutX="188.0" layoutY="355.0" mnemonicParsing="false" onAction="#updateTeacher"
            style="-fx-background-color: #59ad55;" text="Modificar" textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="14.0"/>
       </font>
    </Button>
-   <Button fx:id="btnCancel" layoutX="302.0" layoutY="355.0" mnemonicParsing="false" onAction="#cancel"
+   <Button fx:id="btnCancel" layoutX="302.0" layoutY="355.0" mnemonicParsing="false" onAction="#backList"
            prefHeight="27.0" prefWidth="81.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="14.0"/>

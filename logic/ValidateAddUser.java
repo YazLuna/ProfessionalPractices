@@ -27,6 +27,8 @@ public class ValidateAddUser extends ValidateGeneral {
         for (int index = 0; index < splitName.length; index++) {
             if(index == 0 || splitName[index-1].equals(" ")) {
                 splitName[index] = splitName[index].toUpperCase();
+            } else {
+                splitName[index] = splitName[index].toLowerCase();
             }
         }
         String correctName = String.join("", splitName);
@@ -35,7 +37,7 @@ public class ValidateAddUser extends ValidateGeneral {
 
     public boolean validateUserName (String word) {
         Pattern pattern = Pattern
-                .compile("[_A-Za-z0-9]{10,50}");
+                .compile("[A-Za-z0-9]{10,50}");
         Matcher mather = pattern.matcher(word);
         boolean result = mather.find();
         return result;
@@ -43,7 +45,7 @@ public class ValidateAddUser extends ValidateGeneral {
 
     public boolean validatePassword (String word) {
         Pattern pattern = Pattern
-                .compile("[_A-Za-z0-9]{10,20}");
+                .compile("[A-Za-z0-9]{10,20}");
         Matcher mather = pattern.matcher(word);
         boolean result = mather.find();
         return result;
@@ -64,6 +66,14 @@ public class ValidateAddUser extends ValidateGeneral {
         Matcher mather = pattern.matcher(enrollment);
         isValidEnrollment = mather.find();
         return isValidEnrollment;
+    }
+
+    public boolean validateCreditsPractitioner (String credits) {
+        boolean validate = true;
+        if(Integer.parseInt(credits) < 250 || Integer.parseInt(credits) > 347) {
+            validate = false;
+        }
+        return validate;
     }
 
     public String deleteSpace (String works) {

@@ -4,20 +4,22 @@ import java.util.List;
 import domain.Practitioner;
 
 /**
- * IPractitionerDAAO
+ * Interface Practitioner DAO
  * @author Yazmin
- * @version 11/06/2020
+ * @version 09/07/2020
  */
 
 public interface IPractitionerDAO {
-    Practitioner getPractitioner (String enrollment) ;
-    boolean updatePractitioner (String enrollment, Practitioner practitioner);
-    boolean deletePractitioner (String enrollment, String status);
     boolean addPractitioner (Practitioner practitioner);
-    List <Practitioner> getAllPractitioner () ;
+    Practitioner getPractitioner (String enrollment) ;
+    List <Practitioner> getPractitioners();
     List <Practitioner> getPractitionersActive () ;
+    List <Practitioner> getPractitionersInformation();
+    boolean updatePractitioner (String enrollment, Practitioner practitioner);
     boolean recoverPractitioner(Practitioner practitioner);
-    List <Practitioner> getInformationPractitioner ();
+    boolean deletePractitioner (String enrollment, String status);
     boolean activePractitioner();
-    boolean arePractitioner();
+    boolean arePractitioners();
+    boolean validPractitionerAdd(Practitioner practitioner);
+    boolean validPractitionerUpdate(Practitioner practitioner);
 }

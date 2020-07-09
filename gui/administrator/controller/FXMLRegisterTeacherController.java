@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import logic.ValidateAddUser;
 import domain.Teacher;
 import domain.Gender;
+import domain.User;
 
 /**
  * Register Teacher Controller
@@ -32,7 +33,6 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnRegister;
-    private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,7 +50,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
      * Method to cancel registration and return to the menu
      */
     public void backMenu() {
-        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        generateConfirmationCancel("¿Seguro que desea cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
     }
 
     /**
@@ -77,10 +77,11 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     }
 
     private  boolean userValidateNotExist(Teacher teacher){
-        boolean validUserTeacher = teacher.validateAcademicAdd(teacher.getStaffNumber(), teacher.getEmail(), teacher.getAlternateEmail(),
+        boolean validUserTeacher = Teacher.validateAcademicAdd(teacher.getStaffNumber(), teacher.getEmail(), teacher.getAlternateEmail(),
                 teacher.getPhone(), teacher.getUserName());
         if (validUserTeacher) {
-            teacher.addUser();
+            User user = (User)teacher;
+            Teacher.addUser(user, "Teacher");
         } else {
             validUserTeacher = Teacher.isCoordinator(teacher);
         }
@@ -122,6 +123,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     }
 
     private boolean validateFields(){
+        ValidateAddUser validateAddUser = new ValidateAddUser();
         boolean validation= true;
         if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
@@ -178,7 +180,6 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
 
         if(validateAddUser.validateEmpty(tfUserName.getText()) && validateAddUser.validateUserName(tfUserName.getText())) {
             tfUserName.getStyleClass().add("ok");
-            tfUserName.setText(validateAddUser.deleteSpace(tfUserName.getText()));
         }else{
             tfUserName.getStyleClass().add("error");
             validation = false;
@@ -189,7 +190,6 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;
-
             }
         }
         return validation;
@@ -198,11 +198,11 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     private Teacher createObjectTeacher() {
         Teacher teacher = new Teacher();
         teacher.setStaffNumber(Integer.parseInt(tfStaffNumber.getText()));
-        teacher.setName(validateAddUser.deleteSpace(tfName.getText()));
-        teacher.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
-        teacher.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
-        teacher.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
-        teacher.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
+        teacher.setName(tfName.getText());
+        teacher.setLastName(tfLastName.getText());
+        teacher.setEmail(tfEmail.getText());
+        teacher.setAlternateEmail(tfAlternateEmail.getText());
+        teacher.setPhone(tfPhone.getText());
         teacher.setUserName(tfUserName.getText());
         String passwordEncryption = encryptPassword(tfPassword.getText());
         teacher.setPassword(passwordEncryption);

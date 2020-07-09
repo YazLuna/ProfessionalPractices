@@ -346,11 +346,11 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
         boolean areCoordinator = false;
         try {
             connection = connexion.getConnection();
-            String queryActiveCoordinator = "SELECT staffNumber FROM Coordinator, UserType, User_Status, User_UserType WHERE" +
+            String queryAreCoordinator = "SELECT staffNumber FROM Coordinator, UserType, User_Status, User_UserType WHERE" +
                     " User_Status.idUser = Coordinator.idUser AND UserType.type =? AND User_UserType.idUser = " +
                     "Coordinator.idUser AND User_UserType.idUserType = UserType.idUserType AND " +
                     "User_Status.idUserType = UserType.idUserType";
-            preparedStatement = connection.prepareStatement(queryActiveCoordinator);
+            preparedStatement = connection.prepareStatement(queryAreCoordinator);
             preparedStatement.setString(1, "Coordinator");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

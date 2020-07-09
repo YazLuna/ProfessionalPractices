@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Search;
+import domain.User;
 
 /**
  * UserMethodDAOImpl
@@ -72,25 +73,24 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public boolean addUser(String name, String lastName, String email, String alternateEmail, String phone, String password
-            , String userType, String status, int gender, String userName) {
+    public boolean addUser(User user, String userType) {
         boolean result = false;
         try {
             connection = connexion.getConnection();
             String queryAddUser = "INSERT INTO User  (name, lastName, gender, email,  alternateEmail" +
                     ", phone)  VALUES (?,?, ?, ?,?,?)";
             preparedStatement = connection.prepareStatement(queryAddUser);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setInt(3, gender);
-            preparedStatement.setString(4, email);
-            preparedStatement.setString(5, alternateEmail);
-            preparedStatement.setString(6, phone);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setInt(3, user.getGender());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, user.getAlternateEmail());
+            preparedStatement.setString(6, user.getPhone());
             preparedStatement.executeUpdate();
-            int idUserAdd = searchIdUser(email,alternateEmail,phone);
-            addRelations(idUserAdd, status, userType);
+            int idUserAdd = searchIdUser(user.getEmail(), user.getAlternateEmail(), user.getPhone());
+            addRelations(idUserAdd, user.getStatus(), userType);
             LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
-            result = loginAccountDAO.createLoginAccount(userName,password,idUserAdd);
+            result = loginAccountDAO.createLoginAccount(user.getUserName(),user.getPassword(),idUserAdd);
         } catch (SQLException ex) {
             Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -233,15 +233,18 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public boolean validateUserUpdate(String email, String alternateEmail, String phone) {
+    public boolean validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone) {
         boolean result = false;
         boolean emailValid = emailValid(email);
         if(emailValid){
             boolean alternateEmailValid = alternateEmailValid(alternateEmail);
             if(alternateEmailValid){
                 boolean phoneSearch = phoneValid(phone);
-                if(!phoneSearch){
-                    result = true;
+                if(phoneSearch){
+                    boolean staffNumberValid = staffNumberTwoAcademicsValidate(staffNumber);
+                    if (staffNumberValid) {
+                        result = true;
+                    }
                 }
             }
         }

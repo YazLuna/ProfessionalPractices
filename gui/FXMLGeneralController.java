@@ -234,23 +234,6 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-    public void loadImage(){
-        File imgFile;
-        fileChooser.setTitle("Buscar Imagen");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-                new FileChooser.ExtensionFilter("PNG", "*.png")
-        );
-
-        imgFile = fileChooser.showOpenDialog(null);
-
-        if (imgFile != null) {
-            Image image = new Image("file:" + imgFile.getAbsolutePath());
-            imgProfilePicture.setImage(image);
-            FXMLRegisterCoordinatorController.imgFile = imgFile;
-        }
-    }
-
   public String encryptPassword(String password){
         String passwordEncrypt= null;
         try{
