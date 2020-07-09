@@ -210,23 +210,25 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
         return result;
     }
 
+    /**
+     * Method to recover a deleted practitioner
+     * @param enrollment from Teacher
+     * @return True if recover, false if not
+     */
     @Override
-    public boolean recoverPractitioner (Practitioner practitioner) {
+    public boolean recoverPractitioner (String enrollment) {
         boolean result = false;
         StatusDAOImpl statusDao = new StatusDAOImpl();
-        int idUserStatus = statusDao.searchIdStatus(practitioner.getStatus());
-        if(idUserStatus == Search.NOTFOUND.getValue() ){
-            statusDao.addStatus(practitioner.getStatus());
-            idUserStatus = statusDao.searchIdStatus(practitioner.getStatus());
-        }
+        int idUserStatus = statusDao.searchIdStatus("Active");
+        int idUserType = searchIdUserType("Practitioner");
         try {
             connection = connexion.getConnection();
-            preparedStatement =
-                    connection.prepareStatement("UPDATE Practitioner, User, User_Status SET User_Status.idStatus=?" +
-                            " WHERE Practitioner.idUser = User.idUser AND User_Status.idUser =" +
-                            " User.idUser AND Practitioner.enrollment =? ");
+            String queryRecoverPractitioner = "UPDATE Practitioner INNER JOIN User_Status SET User_Status.idStatus =? WHERE" +
+                    " User_Status.idUser = Practitioner.idUser AND Practitioner.enrollment =? AND User_Status.idUserType =?";
+            preparedStatement = connection.prepareStatement(queryRecoverPractitioner);
             preparedStatement.setInt(1, idUserStatus);
-            preparedStatement.setString(2, practitioner.getEnrollment());
+            preparedStatement.setString(2, enrollment);
+            preparedStatement.setInt(3,idUserType);
             preparedStatement.executeUpdate();
             result = true;
         } catch(SQLException ex){

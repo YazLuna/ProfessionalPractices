@@ -16,7 +16,7 @@ public interface IPractitionerDAO {
     List <Practitioner> getPractitionersActive () ;
     List <Practitioner> getPractitionersInformation();
     boolean updatePractitioner (String enrollment, Practitioner practitioner);
-    boolean recoverPractitioner(Practitioner practitioner);
+    boolean recoverPractitioner(String enrollment);
     boolean deletePractitioner (String enrollment, String status);
     boolean activePractitioner();
     boolean arePractitioners();
