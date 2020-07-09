@@ -273,7 +273,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         boolean result = false;
         int idCharge;
         String sentenceDatesUpdate="";
-        List<String> Change = new ArrayList<>();
+        List<String> change = new ArrayList<>();
         for (int indexDatesUpdate = Number.ZERO.getNumber(); indexDatesUpdate < datesUpdate.size(); indexDatesUpdate++) {
             if (indexDatesUpdate == datesUpdate.size() - 1) {
                 if(datesUpdate.get(indexDatesUpdate).equals("Charge")) {
@@ -288,7 +288,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                     sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?,";
                 }
             }
-            Change.add("get" + datesUpdate.get(indexDatesUpdate));
+            change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
         String sentence = "UPDATE ResponsibleProject SET "+sentenceDatesUpdate+ " WHERE idResponsibleProject " +
                 "= "+ responsibleEdit.getIdResponsible();
@@ -299,7 +299,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodResponsible;
-                if(Change.get(indexPreparedStatement - 1).equals("getCharge")){
+                if(change.get(indexPreparedStatement - 1).equals("getCharge")){
                     ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
                     idCharge= chargeDAO.getIdCharge(responsibleEdit.getCharge());
                     if(idCharge == Search.NOTFOUND.getValue()){
@@ -308,7 +308,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                     }
                     preparedStatement.setInt(indexPreparedStatement, idCharge);
                 } else{
-                    methodResponsible = classResponsible.getMethod(Change.get(indexPreparedStatement - 1));
+                    methodResponsible = classResponsible.getMethod(change.get(indexPreparedStatement - 1));
                     String word = (String) methodResponsible.invoke(responsibleEdit, new Object[] {});
                     preparedStatement.setString(indexPreparedStatement,word);
                 }

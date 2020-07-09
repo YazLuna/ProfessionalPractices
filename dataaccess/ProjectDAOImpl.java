@@ -237,7 +237,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         int idLinkedOrganization;
         boolean isModifyProject = false;
         String sentenceDatesUpdate="";
-        List<String> Change = new ArrayList<>();
+        List<String> change = new ArrayList<>();
         for (int indexDatesUpdate = Number.ZERO.getNumber(); indexDatesUpdate < datesUpdate.size(); indexDatesUpdate++) {
             if (indexDatesUpdate == datesUpdate.size() - 1) {
                 if(datesUpdate.get(indexDatesUpdate).equals("LinkedOrganization")) {
@@ -260,7 +260,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                     }
                 }
             }
-            Change.add("get" + datesUpdate.get(indexDatesUpdate));
+            change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
         String sentence = "UPDATE Project SET "+sentenceDatesUpdate+ " WHERE idProject " +
                 "= "+ projectEdit.getIdProject();
@@ -271,17 +271,17 @@ public class ProjectDAOImpl implements IProjectDAO {
             for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodProject;
-                if(Change.get(indexPreparedStatement - 1).equals("getLinkedOrganization")){
+                if(change.get(indexPreparedStatement).equals("getLinkedOrganization")){
                     LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
                     idLinkedOrganization= linkedOrganizationDAO.getIdLinkedOrganization(projectEdit.getOrganization().getName());
                         preparedStatement.setInt(indexPreparedStatement, idLinkedOrganization);
                 } else{
-                    if(Change.get(indexPreparedStatement - 1).equals("getResponsibleProject")) {
+                    if(change.get(indexPreparedStatement).equals("getResponsibleProject")) {
                         ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
                         idResponsibleProject = responsibleProjectDAO.getIdResponsibleProject(projectEdit.getResponsible().getEmail());
                         preparedStatement.setInt(indexPreparedStatement, idResponsibleProject);
                     }else {
-                        methodProject = classProject.getMethod(Change.get(indexPreparedStatement - 1));
+                        methodProject = classProject.getMethod(change.get(indexPreparedStatement));
                         String word = (String) methodProject.invoke(projectEdit, new Object[]{});
                         preparedStatement.setString(indexPreparedStatement, word);
                     }
