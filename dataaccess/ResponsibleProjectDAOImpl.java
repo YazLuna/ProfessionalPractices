@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.lang.reflect.Method;
 import domain.ResponsibleProject;
 import domain.Search;
 
@@ -26,26 +26,63 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     private ResultSet results;
 
     /**
-     * Constructor for the ResponsbleProjectDAOImpl class
+     * Constructor for the ResponsibleProjectDAOImpl class
      */
     public ResponsibleProjectDAOImpl (){
         connexion = new Connexion();
     }
 
     /**
-     * Method to get the Responsible of the Project
-     * @param idResponsible The idResponsible parameter defines the id of the Responsible Project
+     * Method to add a Responsible of the project
+     * @param responsible The data of the responsible of the project
+     * @return if the responsible the of project was added
+     */
+    @Override
+    public boolean addResponsibleProject (ResponsibleProject responsible) {
+        int idStatus;
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        idStatus = statusDAO.searchIdStatus(responsible.getStatus());
+        boolean result = false;
+        int idCharge;
+        ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
+        idCharge = chargeDAO.getIdCharge(responsible.getCharge());
+        if(idCharge == Search.NOTFOUND.getValue()){
+            chargeDAO.addCharge(responsible.getCharge());
+            idCharge = chargeDAO.getIdCharge(responsible.getCharge());
+        }
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceResponsible = connection.prepareStatement("insert into ResponsibleProject(name,lastName" +
+                    ",email,idStatus,idCharge) values(?,?,?,?,?)");
+            sentenceResponsible.setString(1,responsible.getName());
+            sentenceResponsible.setString(2,responsible.getLastName());
+            sentenceResponsible.setString(3,responsible.getEmail());
+            sentenceResponsible.setInt(4, idStatus);
+            sentenceResponsible.setInt(5,idCharge);
+            sentenceResponsible.executeUpdate();
+            result = true;
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+            return result;
+        }
+    }
+
+    /**
+     * Method to obtain the responsible of the project
+     * @param idResponsible defines the id of the Responsible Project
      * @return The Responsible of the searched idResponsible
      */
     @Override
-    public ResponsibleProject getIdResponsibleProject (int idResponsible) {
-        ResponsibleProject responsible = null;     
+    public ResponsibleProject getResponsibleProjectWithId(int idResponsible) {
+        ResponsibleProject responsible = new ResponsibleProject();
         try{
             connection = connexion.getConnection();
-            String query= "Select * from ResponsibleProject inner join Charge on ResponsibleProject.idCharge " +
-                    "= Charge.idCharge inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where idResponsibleProject=?";
-            PreparedStatement sentence =connection.prepareStatement(query);
+            String queryGetResponsible = "SELECT * FROM ResponsibleProject INNER JOIN Charge ON ResponsibleProject.idCharge " +
+                    "= Charge.idCharge INNER JOIN Status ON ResponsibleProject.idStatus " +
+                    "= Status.idStatus WHERE idResponsibleProject=?";
+            PreparedStatement sentence =connection.prepareStatement(queryGetResponsible);
             sentence.setInt(1,idResponsible);
             results= sentence.executeQuery();
             while(results.next()){
@@ -65,14 +102,20 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return responsible;
     }
 
+    /**
+     * Method to obtain the responsible of the project
+     * @param email defines the email of the Responsible Project
+     * @return The Responsible of the project of the searched email
+     */
     @Override
     public ResponsibleProject getResponsibleProject (String email) {
-        ResponsibleProject responsible= null;
+        ResponsibleProject responsible= new ResponsibleProject();
         try{
             connection = connexion.getConnection();
-            String query= "Select * from ResponsibleProject inner join Charge on ResponsibleProject.idCharge = Charge.idCharge inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where email=?";
-            PreparedStatement sentence =connection.prepareStatement(query);
+            String queryGetResponsible = "SELECT * FROM ResponsibleProject INNER JOIN Charge ON ResponsibleProject.idCharge " +
+                    "= Charge.idCharge INNER JOIN Status ON ResponsibleProject.idStatus " +
+                    "= Status.idStatus WHERE email=?";
+            PreparedStatement sentence =connection.prepareStatement(queryGetResponsible);
             sentence.setString(1,email);
             results= sentence.executeQuery();
             while(results.next()){
@@ -93,99 +136,41 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     /**
-     * Method to add a Responsible of the project
-     * @param responsible The data of the responsible of the project
-     * @return The responsible the of project was added
+     * Method for finding a id responsible the of project
+     * @param email defines the email of the Responsible Project
+     * @return The idResponsibleProject of the searched email
      */
     @Override
-    public boolean addResponsibleProject (ResponsibleProject responsible) {
-        int idStatus;
-        StatusDAOImpl status = new StatusDAOImpl();
-        idStatus = status.searchIdStatus(responsible.getStatus());
-        boolean result = false;
-        int idCharge;
-        idCharge = searchIdCharge(responsible.getCharge());
-        if(idCharge == Search.NOTFOUND.getValue()){
-            addCharge(responsible.getCharge());
-            idCharge = searchIdCharge(responsible.getCharge());
-        }
+    public int getIdResponsibleProject(String email) {
+        int idResponsibleProject= Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceResponsible = connection.prepareStatement("insert into ResponsibleProject(name,lastName,email,idStatus,idCharge) values(?,?,?,?,?)");
-            sentenceResponsible.setString(1,responsible.getName());
-            sentenceResponsible.setString(2,responsible.getLastName());
-            sentenceResponsible.setString(3,responsible.getEmail());
-            sentenceResponsible.setInt(4, idStatus);
-            sentenceResponsible.setInt(5,idCharge);
-            sentenceResponsible.executeUpdate();
-            result = true;
+            String queryResponsible= "SELECT idResponsibleProject FROM ResponsibleProject WHERE email=?";
+            PreparedStatement sentence =connection.prepareStatement(queryResponsible);
+            sentence.setString(1,email);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idResponsibleProject =results.getInt("idResponsibleProject");
+            }
         }catch(SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             connexion.closeConnection();
-            return result;
         }
+        return idResponsibleProject;
     }
 
     /**
-     * Update method of the modify of the project
-     * @param responsibleEdit The data of the responsible of the project
-     * @return The person of the project was successfully modified
+     * Method for obtaining all those responsible for the project
+     * @return List of responsible of the project
      */
-    @Override
-    public boolean modifyResponsibleProject (ResponsibleProject responsibleEdit,List<String>DatesUpdate) {
-        int idCharge;
-        boolean isvalidResponsible = false;
-        boolean result = false;
-        if (result) {
-            String datesUpdate="";
-            List<String> Change = new ArrayList<>();
-            Change.add("get");
-            for (int indexDatesUpdate = 0; indexDatesUpdate < DatesUpdate.size(); indexDatesUpdate++) {
-                if (indexDatesUpdate == DatesUpdate.size() - 1) {
-                    datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate) + "= ?";
-                } else {
-                    datesUpdate = datesUpdate + DatesUpdate.get(indexDatesUpdate) + "= ?,";
-                }
-                Change.add("get" + DatesUpdate.get(indexDatesUpdate));
-            }
-        }
-        /*idCharge = searchIdCharge(responsible.getCharge());
-        if(idCharge == Search.NOTFOUND.getValue()){
-            addCharge(responsible.getCharge());
-            idCharge = searchIdCharge(responsible.getCharge());
-        }
-        String queryResponsible = "update ResponsibleProject set name=?, lastName=?, email=?, idCharge=? where idResponsibleProject=?";
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceResponsible = connection.prepareStatement(queryResponsible);
-            sentenceResponsible.setString(1, responsible.getName());
-            sentenceResponsible.setString(2, responsible.getLastName());
-            sentenceResponsible.setString(3, responsible.getEmail());
-            sentenceResponsible.setInt(4, idCharge);
-            sentenceResponsible.setInt(5, responsible.getIdResponsible());
-            sentenceResponsible.executeUpdate();
-            result = true;
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-            return  result;
-        }*/
-        return result;
-    }
-
-
-
-
-
     @Override
     public List<ResponsibleProject> getAllResponsible() {
         List<ResponsibleProject> responsibles = new ArrayList<>();
         try {
             connection = connexion.getConnection();
             consultation = connection.createStatement();
-            results = consultation.executeQuery("select name,lastName,email from ResponsibleProject");
+            results = consultation.executeQuery("SELECT name,lastName,email FROM ResponsibleProject");
             while(results.next()){
                 ResponsibleProject responsibleProject = new ResponsibleProject();
                 responsibleProject.setName(results.getString("name"));
@@ -201,23 +186,27 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return responsibles;
     }
 
+    /**
+     * Method for obtaining all those responsible for the project available
+     * @return List of responsible of the project available
+     */
     @Override
     public List<ResponsibleProject> getAllResponsibleAvailable() {
         List<ResponsibleProject> responsibles = new ArrayList<>();
-        int idResponsibleProject;
         try {
             connection = connexion.getConnection();
-            String queryAllResponsibleProject = "select idResponsibleProject,name,lastName,email from ResponsibleProject inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where status =? ";
+            String queryAllResponsibleProject = "SELECT idResponsibleProject,name,lastName,email " +
+                    "FROM ResponsibleProject INNER JOIN Status ON ResponsibleProject.idStatus " +
+                    "= Status.idStatus WHERE status =? ";
             PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAllResponsibleProject);
             sentenceAllResponsible.setString(1, "available");
             results= sentenceAllResponsible.executeQuery();
             while(results.next()){
-                        ResponsibleProject responsibleProject = new ResponsibleProject();
-                        responsibleProject.setName(results.getString("name"));
-                        responsibleProject.setLastName(results.getString("lastName"));
-                        responsibleProject.setEmail(results.getString("email"));
-                        responsibles.add(responsibleProject);
+                ResponsibleProject responsibleProject = new ResponsibleProject();
+                responsibleProject.setName(results.getString("name"));
+                responsibleProject.setLastName(results.getString("lastName"));
+                responsibleProject.setEmail(results.getString("email"));
+                responsibles.add(responsibleProject);
             }
         }catch (SQLException ex){
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -227,35 +216,30 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return responsibles;
     }
 
+    /**
+     * Method to obtaining all responsible of the project available without assigned project available
+     * @return List of responsible of the project available without assigned project available
+     */
     @Override
     public List<ResponsibleProject> getAllResponsibleAvailableNotAssing() {
         List<ResponsibleProject> responsibles = new ArrayList<>();
         int idResponsibleProject;
         try {
             connection = connexion.getConnection();
-            String queryAllResponsibleProject = "select idResponsibleProject,name,lastName,email from ResponsibleProject inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where status =? ";
+            String queryAllResponsibleProject = "SELECT idResponsibleProject,name,lastName,email FROM ResponsibleProject " +
+                    "INNER JOIN Status ON ResponsibleProject.idStatus " +
+                    "= Status.idStatus WHERE status =? ";
             PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAllResponsibleProject);
             sentenceAllResponsible.setString(1, "available");
             results= sentenceAllResponsible.executeQuery();
             while(results.next()){
                 idResponsibleProject = results.getInt("idResponsibleProject");
-                String queryAssingResponsible = "select idProject from Project,ResponsibleProject WHERE " +
-                        "ResponsibleProject.idResponsibleProject = Project.idResponsibleProject AND ResponsibleProject.idResponsibleProject=?";
-                PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingResponsible);
-                sentenceAssing.setInt(1,idResponsibleProject);
-                ResultSet resultAssing;
-                resultAssing = sentenceAssing.executeQuery();
-                if(resultAssing.next()){
-                    String queryAssingResponsibleAvailable = "select idProject from Project,ResponsibleProject,Status WHERE " +
-                            "ResponsibleProject.idResponsibleProject = Project.idResponsibleProject AND " +
-                            "Project.idStatus = Status.idStatus AND status=? AND ResponsibleProject.idResponsibleProject=?";
-                    PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingResponsibleAvailable);
-                    sentenceAssingAvailable.setString(1,"available");
-                    sentenceAssingAvailable.setInt(2,idResponsibleProject);
-                    ResultSet resultAssingAvailable;
-                    resultAssingAvailable = sentenceAssingAvailable.executeQuery();
-                    if(!resultAssingAvailable.next()) {
+                boolean isAssingnedProject;
+                isAssingnedProject = validateAssignedProject(idResponsibleProject);
+                if(isAssingnedProject){
+                    boolean isAssingnedProjectAvailable;
+                    isAssingnedProjectAvailable = validateAssignedProjectAvailable(idResponsibleProject);
+                    if(!isAssingnedProjectAvailable) {
                         ResponsibleProject responsibleProject = new ResponsibleProject();
                         responsibleProject.setName(results.getString("name"));
                         responsibleProject.setLastName(results.getString("lastName"));
@@ -279,107 +263,82 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     /**
-     * Method for finding a responsible the of project
-     * @param email The email parameter defines the email of the Responsible Project
-     * @return The idResponsibleProject of the searched email
+     * The method for modify data of the project
+     * @param responsibleEdit The data of the responsible of the project
+     * @param datesUpdate The data to modify of the Responsible of the Project
+     * @return if the responsible of the project was modified
      */
     @Override
-    public int searchIdResponsibleProject (String email) {
-        int idResponsibleProject= Search.NOTFOUND.getValue();;
+    public boolean modifyResponsibleProject (ResponsibleProject responsibleEdit,List<String> datesUpdate) {
+        boolean result = false;
+        int idCharge;
+        String sentenceDatesUpdate="";
+        List<String> Change = new ArrayList<>();
+        for (int indexDatesUpdate = Number.ZERO.getNumber(); indexDatesUpdate < datesUpdate.size(); indexDatesUpdate++) {
+            if (indexDatesUpdate == datesUpdate.size() - 1) {
+                if(datesUpdate.get(indexDatesUpdate).equals("Charge")) {
+                    sentenceDatesUpdate = sentenceDatesUpdate + "idCharge = ?";
+                }else {
+                    sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?";
+                }
+            } else {
+                if(datesUpdate.get(indexDatesUpdate).equals("Charge")) {
+                    sentenceDatesUpdate = sentenceDatesUpdate + "idCharge = ?,";
+                }else{
+                    sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?,";
+                }
+            }
+            Change.add("get" + datesUpdate.get(indexDatesUpdate));
+        }
+        String sentence = "UPDATE ResponsibleProject SET "+sentenceDatesUpdate+ " WHERE idResponsibleProject " +
+                "= "+ responsibleEdit.getIdResponsible();
         try{
             connection = connexion.getConnection();
-            String queryResponsible= "Select idResponsibleProject from ResponsibleProject where email=?";
-            PreparedStatement sentence =connection.prepareStatement(queryResponsible);
-            sentence.setString(1,email);
-            results= sentence.executeQuery();
-            while(results.next()){
-                idResponsibleProject =results.getInt("idResponsibleProject");
+            PreparedStatement preparedStatement = connection.prepareStatement(sentence);
+            Class classResponsible = responsibleEdit.getClass();
+            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+                    <= datesUpdate.size(); indexPreparedStatement++){
+                Method methodResponsible;
+                if(Change.get(indexPreparedStatement - 1).equals("getCharge")){
+                    ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
+                    idCharge= chargeDAO.getIdCharge(responsibleEdit.getCharge());
+                    if(idCharge == Search.NOTFOUND.getValue()){
+                        chargeDAO.addCharge(responsibleEdit.getCharge());
+                        idCharge = chargeDAO.getIdCharge(responsibleEdit.getCharge());
+                    }
+                    preparedStatement.setInt(indexPreparedStatement, idCharge);
+                } else{
+                    methodResponsible = classResponsible.getMethod(Change.get(indexPreparedStatement - 1));
+                    String word = (String) methodResponsible.invoke(responsibleEdit, new Object[] {});
+                    preparedStatement.setString(indexPreparedStatement,word);
+                }
             }
-        }catch(SQLException ex){
+            preparedStatement.executeUpdate();
+            result = true;
+        } catch (SQLException | ReflectiveOperationException ex) {
             Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             connexion.closeConnection();
         }
-        return idResponsibleProject;
+        return result;
     }
 
     /**
-     * Method to add a Charge
-     * @param name The name parameter defines the charge of responsible of the project
-     * @return The charge was successfully registered
+     * Method to delete a project of the project
+     * @param email defines the email of the Responsible Project
+     * @return if the responsible of the project was deleted
      */
-    public String addCharge (String name) {
-        String resultAddCharge = "El Cargo no se pudo registrar";
-        String queryCharge = "insert into Charge (nameCharge) values (?)";
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentenceCharge = connection.prepareStatement(queryCharge);
-            sentenceCharge.setString(1,name);
-            sentenceCharge.executeUpdate();
-            resultAddCharge = "El cargo se registro con exito";
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return resultAddCharge;
-    }
-
-    /**
-     * Method to search for a charge
-     * @param name The name parameter defines the charge of responsible of the project
-     * @return The idCharge of the charge searched
-     */
-    public int searchIdCharge(String name) {
-        int idCharge = Search.NOTFOUND.getValue();;
-        String queryCharge= "Select idCharge from Charge where nameCharge=?";
-        try{
-            connection = connexion.getConnection();
-            PreparedStatement sentence =connection.prepareStatement(queryCharge);
-            sentence.setString(1,name);
-            results= sentence.executeQuery();
-            while(results.next()) {
-                idCharge = results.getInt("idCharge");
-            }
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return idCharge;
-    }
-    /**
-     * Method to get the charge list
-     * @return The charge list
-     */
-    public List<String> getAllCharge() {
-        List<String> charges = new ArrayList<>();
-        try {
-            connection = connexion.getConnection();
-            consultation = connection.createStatement();
-            results = consultation.executeQuery("select nameCharge from Charge");
-            while(results.next()){
-                charges.add(results.getString("nameCharge"));
-            }
-        }catch (SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return charges;
-    }
-
     @Override
-    public boolean deleteResponsibleProject (int idResponsibleProject) {
-       boolean result= false;
-        StatusDAOImpl status = new StatusDAOImpl();
-        int idStatus = status.searchIdStatus("not available");
+    public boolean deleteResponsibleProject (String email) {
+        boolean result = false;
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        int idStatus = statusDAO.searchIdStatus("not available");
         try{
             connection = connexion.getConnection();
-            String queryDelete = "update ResponsibleProject set idStatus=? where idResponsibleProject =?";
+            String queryDelete = "UPDATE ResponsibleProject SET idStatus=? WHERE email =?";
             PreparedStatement sentence = connection.prepareStatement(queryDelete);
             sentence.setInt(1, idStatus);
-            sentence.setInt(2, idResponsibleProject);
+            sentence.setString(2, email);
             sentence.executeUpdate();
             result= true;
         }catch(SQLException ex){
@@ -392,18 +351,104 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         }
     }
 
+    /**
+     * Method to validate if there is another responsible for the project with the same email
+     * @param email defines the email of the Responsible Project
+     * @return if the responsible for the project exists
+     */
+    @Override
+    public boolean validateRepeatResponsibleProject (String email) {
+        boolean isRepeatResponsibleProject = false;
+        try{
+            connection = connexion.getConnection();
+            String queryResponsible= "SELECT idResponsibleProject FROM ResponsibleProject WHERE email=?";
+            PreparedStatement sentence =connection.prepareStatement(queryResponsible);
+            sentence.setString(1,email);
+            results= sentence.executeQuery();
+            if(results.next()){
+                isRepeatResponsibleProject = true;
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isRepeatResponsibleProject;
+    }
+
+    /**
+     * Method to validate if a responsible of the project this assigned to a project
+     * @param idResponsibleProject The id of the responsible of the project
+     * @return if the responsible of the project this assigned
+     */
+    @Override
+    public boolean validateAssignedProject(int idResponsibleProject) {
+        boolean isAssignedProject= false;
+        try {
+            connection = connexion.getConnection();
+            String queryAssingResponsible = "SELECT idProject FROM Project,ResponsibleProject WHERE ResponsibleProject.idResponsibleProject " +
+                    "= Project.idResponsibleProject AND ResponsibleProject.idResponsibleProject=?";
+            PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingResponsible);
+            sentenceAssing.setInt(1,idResponsibleProject);
+            ResultSet resultAssing;
+            resultAssing = sentenceAssing.executeQuery();
+            if(resultAssing.next()){
+                isAssignedProject= true;
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isAssignedProject;
+    }
+
+    /**
+     * Method to validate if a responsible of the project this assigned to a project available
+     * @param idResponsibleProject The id of the responsible of the project
+     * @return if the responsible of the project this assigned available
+     */
+    @Override
+    public boolean validateAssignedProjectAvailable (int idResponsibleProject) {
+        boolean isAssignedProjectAvailable= false;
+        try {
+            connection = connexion.getConnection();
+            String queryAssingResponsibleAvailable = "SELECT idProject FROM Project,ResponsibleProject" +
+                    ",Status WHERE ResponsibleProject.idResponsibleProject = Project.idResponsibleProject " +
+                    "AND Project.idStatus = Status.idStatus AND status" +
+                    "=? AND ResponsibleProject.idResponsibleProject=?";
+            PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingResponsibleAvailable);
+            sentenceAssingAvailable.setString(1,"available");
+            sentenceAssingAvailable.setInt(2,idResponsibleProject);
+            ResultSet resultAssingAvailable;
+            resultAssingAvailable = sentenceAssingAvailable.executeQuery();
+            if(!resultAssingAvailable.next()) {
+                isAssignedProjectAvailable=true;
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isAssignedProjectAvailable;
+    }
+
+    /**
+     * Method to know if there are responsible of the project available
+     * @return if there are responsible of the project available
+     */
     @Override
     public boolean thereAreResponsibleProjectAvailable (){
         boolean areResponsibleProject = false;
         try {
             connection = connexion.getConnection();
-            String queryAreResponsibleProjectAvailable = "select name from ResponsibleProject inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where status =?";
+            String queryAreResponsibleProjectAvailable = "SELECT name FROM ResponsibleProject " +
+                    "INNER JOIN Status ON ResponsibleProject.idStatus " +
+                    "= Status.idStatus where status =?";
             PreparedStatement sentence = connection.prepareStatement(queryAreResponsibleProjectAvailable);
             sentence.setString(1, "available");
             results= sentence.executeQuery();
-            while (results.next()) {
-
+            if(results.next()) {
                 areResponsibleProject = true;
             }
         } catch (SQLException ex) {
@@ -414,39 +459,32 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return areResponsibleProject;
     }
 
+    /**
+     * Method to know if there are responsible of the project available without assigned project available
+     * @return if there are responsible of the project available without assigned project available
+     */
     @Override
-    public boolean thereAreResponsibleProject(){
+    public boolean thereAreResponsibleProjectAvailableNotAssing(){
         boolean areResponsibleProject = false;
         int idResponsibleProject;
         try {
             connection = connexion.getConnection();
-            String queryAllResponsibleProject = "select idResponsibleProject,name,lastName,email from ResponsibleProject inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where status =? ";
-            PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAllResponsibleProject);
+            String queryAreResponsibleProject = "SELECT idResponsibleProject,name,lastName,email " +
+                    "FROM ResponsibleProject INNER JOIN Status ON ResponsibleProject.idStatus " +
+                    "= Status.idStatus WHERE status =? ";
+            PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAreResponsibleProject);
             sentenceAllResponsible.setString(1, "available");
             results= sentenceAllResponsible.executeQuery();
             while(results.next() && !areResponsibleProject){
                 idResponsibleProject = results.getInt("idResponsibleProject");
-                String queryAssingResponsible = "select idProject from Project,ResponsibleProject WHERE " +
-                        "ResponsibleProject.idResponsibleProject = Project.idResponsibleProject AND ResponsibleProject.idResponsibleProject=?";
-                PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingResponsible);
-                sentenceAssing.setInt(1,idResponsibleProject);
-                ResultSet resultAssing;
-                resultAssing = sentenceAssing.executeQuery();
-                if(resultAssing.next()){
-                    String queryAssingResponsibleAvailable = "select idProject from Project,ResponsibleProject,Status WHERE " +
-                            "ResponsibleProject.idResponsibleProject = Project.idResponsibleProject AND " +
-                            "Project.idStatus = Status.idStatus AND status=? AND ResponsibleProject.idResponsibleProject=?";
-                    PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingResponsibleAvailable);
-                    sentenceAssingAvailable.setString(1,"available");
-                    sentenceAssingAvailable.setInt(2,idResponsibleProject);
-                    ResultSet resultAssingAvailable;
-                    resultAssingAvailable = sentenceAssingAvailable.executeQuery();
-                    if(!resultAssingAvailable.next()) {
-                        areResponsibleProject = true;
+                boolean isAssignedProject = validateAssignedProject(idResponsibleProject);
+                if(isAssignedProject){
+                    boolean isAssignedProjectAvalable = validateAssignedProjectAvailable(idResponsibleProject);
+                    if(!isAssignedProjectAvalable){
+                        areResponsibleProject=true;
                     }
-                }else {
-                   areResponsibleProject = true;
+                }else{
+                    areResponsibleProject=true;
                 }
             }
         } catch (SQLException ex) {
@@ -457,17 +495,19 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         return areResponsibleProject;
     }
 
+    /**
+     * Method to know if there are responsible of the project
+     * @return if there are responsible of the project
+     */
     @Override
-    public boolean thereAreResponsibleProjectAvailableNotAssing(){
+    public boolean thereAreResponsibleProject(){
         boolean areResponsibleProject = false;
         try {
             connection = connexion.getConnection();
-            String queryAllResponsibleProject = "select idResponsibleProject,name,lastName,email from ResponsibleProject inner join Status on " +
-                    "ResponsibleProject.idStatus = Status.idStatus where status =? ";
-            PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAllResponsibleProject);
-            sentenceAllResponsible.setString(1, "available");
+            String queryAreResponsibleProject = "SELECT idResponsibleProject FROM ResponsibleProject";
+            PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAreResponsibleProject);
             results= sentenceAllResponsible.executeQuery();
-            while(results.next() && !areResponsibleProject){
+            if(results.next()){
                 areResponsibleProject = true;
             }
         } catch (SQLException ex) {

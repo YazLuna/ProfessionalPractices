@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * class FXMLUpdateProjectController
+ * Class FXMLUpdateProjectController
  * @author MARTHA
  * @version 08/05/2020
  */
@@ -114,7 +114,7 @@ public class FXMLUpdateProjectController implements Initializable {
         project.setResources(validateProject.deleteSpace(taResource.getText()));
         project.setActivitiesAndFunctions(validateProject.deleteSpace(taActivities.getText()));
         project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
-        project.setLapse(validateProject.deleteSpace(cbLapse.getEditor().getText()));
+        project.setTerm(validateProject.deleteSpace(cbLapse.getEditor().getText()));
         project.setStaffNumberCoordinator(8);
         int duration = Integer.parseInt(tfDuration.getText());
         project.setDuration(duration);
@@ -154,7 +154,7 @@ public class FXMLUpdateProjectController implements Initializable {
         taResource.setText(project.getResources());
         taActivities.setText(project.getActivitiesAndFunctions());
         taResponsabilities.setText(project.getResponsabilities());
-        cbLapse.getEditor().setText(project.getLapse());
+        cbLapse.getEditor().setText(project.getTerm());
     }
 
 
@@ -219,12 +219,6 @@ public class FXMLUpdateProjectController implements Initializable {
             result = false;
         } else {
             taResponsabilities.getStyleClass().remove("error");
-        }
-        if (!validateProject.validateLapse(cbLapse.getEditor().getText())) {
-            cbLapse.getStyleClass().add("error");
-            result = false;
-        } else {
-            cbLapse.getStyleClass().remove("error");
         }
         if (!validateProject.validateNotEmpty(tfDuration.getText())) {
             tfDuration.getStyleClass().add("error");

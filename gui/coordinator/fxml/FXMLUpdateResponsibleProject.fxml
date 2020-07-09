@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import java.net.URL?>
 
 <AnchorPane id="AnchorPane" prefHeight="471.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLUpdateResponsibleProjectController">
     <stylesheets>
        <URL value="@../../fxmlregister.css" />
     </stylesheets>
-   <children>
       <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0" layoutX="100.0" layoutY="373.0">
-         <children>
-            <Button fx:id="btnModify" mnemonicParsing="false" onAction="#modify" prefHeight="38.0" prefWidth="103.0" style="-fx-background-color: #59ad55;" text="Modificar" textFill="#f5f5f5">
+            <Button fx:id="btnModify" mnemonicParsing="false" onAction="#modifyResponsibleProject" prefHeight="38.0" prefWidth="103.0" style="-fx-background-color: #59ad55;" text="Modificar" textFill="#f5f5f5">
                <font>
                   <Font name="Arial" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" prefWidth="94.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#backListResponsibleProject" prefHeight="38.0" prefWidth="94.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
                <font>
                   <Font name="Arial" size="17.0" />
                </font>
             </Button>
-         </children>
          <padding>
             <Insets bottom="60.0" />
          </padding>
       </FlowPane>
       <GridPane layoutX="7.0" layoutY="153.0" vgap="15.0">
-         <children>
             <Label prefHeight="21.0" text="Nombre: *  " textAlignment="RIGHT">
                <font>
                   <Font name="Arial" size="15.0" />
@@ -69,7 +71,6 @@
                   <Font name="Arial" size="15.0" />
                </font>
             </TextField>
-         </children>
          <columnConstraints>
             <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="281.0" minWidth="0.0" prefWidth="243.0" />
             <ColumnConstraints fillWidth="false" maxWidth="375.0" minWidth="10.0" prefWidth="343.0" />
@@ -82,8 +83,7 @@
          </rowConstraints>
       </GridPane>
       <FlowPane hgap="33.0" prefHeight="91.0" prefWidth="600.0" style="-fx-background-color: #053d01;">
-         <children>
-            <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behind" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
+            <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behindListResponsibleProject" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
                <graphic>
                   <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -103,10 +103,8 @@
                   <Insets top="25.0" />
                </FlowPane.margin>
             </Label>
-         </children>
          <padding>
             <Insets bottom="30.0" />
          </padding>
       </FlowPane>
-   </children>
 </AnchorPane>

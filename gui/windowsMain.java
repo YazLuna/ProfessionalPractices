@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class windowsMain extends Application {
     @Override
     public void start(Stage stageLogin) throws  IOException {
-        Parent rootLogin = FXMLLoader.load(getClass().getResource("/gui/login/fxml/FXMLLogin.fxml"));
+        Parent rootLogin = FXMLLoader.load(getClass().getResource("/gui/Coordinator/fxml/FXMLMenuCoordinator.fxml"));
         Scene sceneLogin = new Scene(rootLogin);
         stageLogin.setScene(sceneLogin);
         stageLogin.setResizable(false);

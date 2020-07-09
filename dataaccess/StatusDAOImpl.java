@@ -8,15 +8,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Search;
 
+/**
+ * Implementation of the IStatusDAO
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class StatusDAOImpl implements IStatusDAO  {
     private final Connexion connexion;
     private Connection connection;
     private ResultSet result;
 
+    /**
+     * Constructor for the StatusDAOImpl class
+     */
     public StatusDAOImpl() {
         connexion = new Connexion();
     }
 
+    /**
+     * Method to add a Status
+     * @param status The status parameter defines the status
+     */
     @Override
     public void addStatus(String status) {
         String queryAddUserStatus = "INSERT INTO Status (status)  VALUES (?)";
@@ -26,16 +38,20 @@ public class StatusDAOImpl implements IStatusDAO  {
             sentenceAddUserStatus.setString(1, status);
             sentenceAddUserStatus.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatusDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
         }
     }
 
+    /**
+     * Method to get id of the status
+     * @param status The status parameter defines the status
+     */
     @Override
     public int searchIdStatus(String status) {
         int idUserStatus = Search.NOTFOUND.getValue();
-        String queryUserStatus = "Select idStatus from Status where status =?";
+        String queryUserStatus = "SELECT idStatus FROM Status WHERE status =?";
         try {
             connection = connexion.getConnection();
             PreparedStatement sentence = connection.prepareStatement(queryUserStatus);
@@ -45,7 +61,7 @@ public class StatusDAOImpl implements IStatusDAO  {
                 idUserStatus = result.getInt("idStatus");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatusDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             connexion.closeConnection();
         }

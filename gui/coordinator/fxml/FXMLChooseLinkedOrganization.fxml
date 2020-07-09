@@ -33,12 +33,12 @@
       </FlowPane>
       <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0" layoutX="100.0" layoutY="383.0">
          <children>
-            <Button fx:id="btnAccept" mnemonicParsing="false" onAction="#accept" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Aceptar" textFill="#f5f5f5">
+            <Button fx:id="btnAccept" mnemonicParsing="false" onAction="#chooseLinkedOrganization" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Aceptar" textFill="#f5f5f5">
                <font>
                   <Font name="Arial" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#backRegisterProject" prefHeight="38.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
                <font>
                   <Font name="Arial" size="17.0" />
                </font>

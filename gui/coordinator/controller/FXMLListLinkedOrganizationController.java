@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import dataaccess.Number;
 import domain.LinkedOrganization;
 import gui.FXMLGeneralController;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -19,6 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Class FXMLListLinkedOrganizationController
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class FXMLListLinkedOrganizationController extends FXMLGeneralController implements Initializable {
 
     @FXML private Button btnBehind;
@@ -35,9 +41,9 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
         organization = new LinkedOrganization();
         allLinkedOrganization = new ArrayList<>();
         if(controllerSection!= "delete"){
-            allLinkedOrganization = organization.listOrganization();
+            allLinkedOrganization = organization.getListOrganization();
         }else{
-            allLinkedOrganization = organization.listOrganizationAvailableNotAssing();
+            allLinkedOrganization = organization.getListOrganizationAvailableNotAssign();
         }
         TableColumn<LinkedOrganization, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<LinkedOrganization, String>("name"));
@@ -53,7 +59,7 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
         logOutGeneral();
     }
 
-    public void behind () {
+    public void behindMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
 
@@ -65,7 +71,7 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
         tvLinkedOrganizations.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == Number.TWO.getNumber()) {
                     organization = new LinkedOrganization();
                     ReadOnlyObjectProperty<LinkedOrganization> organizationSelect;
                     organizationSelect =  tvLinkedOrganizations.getSelectionModel().selectedItemProperty();
@@ -77,7 +83,7 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
                             openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateLinkedOrganization.fxml",tvLinkedOrganizations);
                         }else {
                             FXMLDeleteLinkedOrganizationController deleteLinkedOrganization = new FXMLDeleteLinkedOrganizationController();
-                            deleteLinkedOrganization.assignLinkedOrganization(organization.getName());
+                            deleteLinkedOrganization.assignNameLinkedOrganization(organization.getName());
                             openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteLinkedOrganization.fxml",tvLinkedOrganizations);
                         }
                     }

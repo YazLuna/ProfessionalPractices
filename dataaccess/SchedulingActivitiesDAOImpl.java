@@ -1,15 +1,22 @@
 package dataaccess;
 
-import domain.SchedulingActivities;
-import domain.Search;
-
-import java.awt.*;
-import java.sql.*;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import domain.SchedulingActivities;
 
+/**
+ * Implementation of the ISchedulingActivitiesDAO
+ * @author MARTHA
+ * @version 08/05/2020
+ */
 public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
     private final Connexion connexion;
     private Connection connection;
@@ -26,15 +33,13 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
     @Override
     public boolean addSchedulingActivities(int idProject, SchedulingActivities schedulingActivitiesProject) {
         boolean result = false;
-        int idMonth;
-        idMonth = getIdMonth(schedulingActivitiesProject.getMonth());
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceAddScheduling = connection.prepareStatement("insert into SchedulingActivities" +
-                    "(activity,idProject,idMonth) values(?,?,?)");
+            PreparedStatement sentenceAddScheduling = connection.prepareStatement("INSERT INTO SchedulingActivities(activity," +
+                    "month, idProject) VALUES(?,?,?)");
             sentenceAddScheduling.setString(1, schedulingActivitiesProject.getActivity());
-            sentenceAddScheduling.setInt(2, idProject);
-            sentenceAddScheduling.setInt(3, idMonth);
+            sentenceAddScheduling.setString(2, schedulingActivitiesProject.getMonth());
+            sentenceAddScheduling.setInt(3, idProject);
             sentenceAddScheduling.executeUpdate();
             result = true;
         }catch(SQLException ex){
@@ -52,8 +57,7 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
         List<SchedulingActivities>  listSchedulingActivities = new ArrayList<>();
         try {
             connection = connexion.getConnection();
-            String querySchedulingActivities = "select * from SchedulingActivities inner join Month on SchedulingActivities.idMonth = Month.idMonth" +
-                    " where idProject=?";
+            String querySchedulingActivities = "SELECT * FROM SchedulingActivities WHERE idProject=?";
             PreparedStatement sentence = connection.prepareStatement(querySchedulingActivities);
             sentence.setInt(1,idProject);
             results = sentence.executeQuery();
@@ -72,39 +76,46 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
         return listSchedulingActivities;
     }
 
-    public List<String> getAllMonth() {
-        List<String> months = new ArrayList<>();
-        try {
-            connection = connexion.getConnection();
-            consultation = connection.createStatement();
-            results = consultation.executeQuery("select month from Month");
-            while(results.next()){
-                months.add(results.getString("month"));
+    /**
+     * Method to modify the SchedulingProject
+     * @param schedulingActivitiesEdit The data of the SchedulingProject
+     * @param datesUpdate The fields to be modified
+     * @return if the SchedulingProject was modify
+     */
+    @Override
+    public boolean modifySchedulingActivities(SchedulingActivities schedulingActivitiesEdit, List<String> datesUpdate){
+        boolean isModifySchedulingActivities = false;
+        String sentenceDatesUpdate="";
+        List<String> Change = new ArrayList<>();
+        for (int indexDatesUpdate = Number.ZERO.getNumber(); indexDatesUpdate < datesUpdate.size(); indexDatesUpdate++) {
+            if (indexDatesUpdate == datesUpdate.size() - 1) {
+                sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?";
+            } else {
+                sentenceDatesUpdate = sentenceDatesUpdate + datesUpdate.get(indexDatesUpdate) + "= ?,";
             }
-        }catch (SQLException ex){
+            Change.add("get" + datesUpdate.get(indexDatesUpdate));
+        }
+        String sentence = "UPDATE SchedulingActivities SET "+sentenceDatesUpdate+ " WHERE idSchedulingActivities " +
+                "= "+ schedulingActivitiesEdit.getIdSchedulingActivities();
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sentence);
+            Class classSchedulingActivities = schedulingActivitiesEdit.getClass();
+            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+                    <= datesUpdate.size(); indexPreparedStatement++){
+                Method methodSchedulingActivities;
+                methodSchedulingActivities = classSchedulingActivities.getMethod(Change.get(indexPreparedStatement - 1));
+                String word = (String) methodSchedulingActivities.invoke(schedulingActivitiesEdit, new Object[]{});
+                preparedStatement.setString(indexPreparedStatement, word);
+            }
+            preparedStatement.executeUpdate();
+            isModifySchedulingActivities = true;
+        } catch (SQLException | ReflectiveOperationException ex) {
             Logger.getLogger(SchedulingActivitiesDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             connexion.closeConnection();
         }
-        return months;
+        return isModifySchedulingActivities;
     }
 
-    public int getIdMonth(String month) {
-        int idMonth= Search.NOTFOUND.getValue();;
-        try {
-            connection = connexion.getConnection();
-            String queryMonth = "select idMonth from Month where month =?";
-            PreparedStatement sentence = connection.prepareStatement(queryMonth);
-            sentence.setString(1,month);
-            results = sentence.executeQuery();
-            while(results.next()){
-                idMonth= results.getInt("idMonth");
-            }
-        }catch (SQLException ex){
-            Logger.getLogger(SchedulingActivitiesDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            connexion.closeConnection();
-        }
-        return idMonth;
-    }
 }
