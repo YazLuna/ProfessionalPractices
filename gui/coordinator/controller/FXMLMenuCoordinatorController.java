@@ -32,6 +32,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     @FXML private Button btnDeleteProject;
     @FXML private Button btnUpdatePractitioner;
     @FXML private Button btnUpdateProject;
+    private static boolean isTeacher;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
