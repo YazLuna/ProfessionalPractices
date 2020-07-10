@@ -1,7 +1,5 @@
 package gui.coordinator.controller;
 
-import domain.Practitioner;
-import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,12 +9,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import domain.Practitioner;
+import gui.FXMLGeneralController;
 
+/**
+ * Update Delete Practitioner List Controller
+ * @author Yazmin
+ * @version 09/07/2020
+ */
 public class FXMLUpdateDeletePractitionerListController extends FXMLGeneralController implements Initializable {
-    public TableView<Practitioner> tablePractitioner;
-    public TableColumn<Practitioner, String> enrollment;
-    public TableColumn<Practitioner, String> name;
-    public TableColumn<Practitioner, String> lastName;
+    public TableView<Practitioner> tvPractitioner;
+    public TableColumn<Practitioner, String> tcEnrollment;
+    public TableColumn<Practitioner, String> tcName;
+    public TableColumn<Practitioner, String> tcLastName;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
     @FXML private Button btnDelete;
@@ -25,42 +30,33 @@ public class FXMLUpdateDeletePractitionerListController extends FXMLGeneralContr
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if(action.equals("Update")){
-            colocateListPractitionerUpdate();
+            colocatePractitionerUpdateList();
             btnUpdate.setVisible(true);
         } else{
-            colocateListPractitionerDelete();
+            colocatePractitionerDeleteList();
             btnDelete.setVisible(true);
         }
     }
 
-    private void colocateListPractitionerUpdate() {
-        Practitioner practitioner = new Practitioner();
-        List<Practitioner> practitionerList = practitioner.getAllPractitioner();
-        enrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tablePractitioner.getItems().setAll(practitionerList);
-    }
-
-    private void colocateListPractitionerDelete() {
-        Practitioner practitioner = new Practitioner();
-        List<Practitioner> practitionerList = practitioner.getPractitionersActive();
-        enrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tablePractitioner.getItems().setAll(practitionerList);
-    }
-
-    public void cancel() {
+    /**
+     * Method to cancel and return to the menu
+     */
+    public void backMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnCancel);
     }
 
-    public void logOut() {
+    /**
+     *  Method to exit the system
+     */
+    public void logOutCoordinator() {
         logOutGeneral();
     }
 
+    /**
+     * Method that places the list of Practitioners that can be updated
+     */
     public void updatePractitioner() {
-        Practitioner practitionerSelected = tablePractitioner.getSelectionModel().getSelectedItem();
+        Practitioner practitionerSelected = tvPractitioner.getSelectionModel().getSelectedItem();
         if(practitionerSelected == null){
             generateAlert("Por favor seleccione algún practicante");
         }else{
@@ -69,8 +65,11 @@ public class FXMLUpdateDeletePractitionerListController extends FXMLGeneralContr
         }
     }
 
+    /**
+     * Method that places the list of Practitioners that can be delete
+     */
     public void deletePractitioner() {
-        Practitioner practitionerSelected = tablePractitioner.getSelectionModel().getSelectedItem();
+        Practitioner practitionerSelected = tvPractitioner.getSelectionModel().getSelectedItem();
         if(practitionerSelected == null){
             generateAlert("Por favor seleccione algún practicante");
         }else{
@@ -78,4 +77,21 @@ public class FXMLUpdateDeletePractitionerListController extends FXMLGeneralContr
             openWindowGeneral("/gui/coordinator/fxml/FXMLDeletePractitioner.fxml",btnDelete);
         }
     }
+
+    private void colocatePractitionerUpdateList() {
+        List<Practitioner> practitionerList = Practitioner.getPractitioners();
+        tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tvPractitioner.getItems().setAll(practitionerList);
+    }
+
+    private void colocatePractitionerDeleteList() {
+        List<Practitioner> practitionerList = Practitioner.getPractitionersActive();
+        tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tvPractitioner.getItems().setAll(practitionerList);
+    }
+
 }

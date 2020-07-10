@@ -2,20 +2,25 @@ package gui.administrator.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
-import javafx.scene.image.ImageView;
 import gui.FXMLGeneralController;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import logic.ValidateAddUser;
 import domain.Teacher;
 import domain.Gender;
+import domain.User;
 
+/**
+ * Register Teacher Controller
+ * @author Yazmin
+ * @version 08/07/2020
+ */
 public class FXMLRegisterTeacherController extends FXMLGeneralController implements Initializable {
-    public ImageView imgProfilePicture;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
     @FXML private TextField tfLastName;
@@ -28,40 +33,59 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnRegister;
-    private File imgFile;
-    private final ValidateAddUser validateAddUser = new ValidateAddUser();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setLimitsTextFields();
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
-    public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+    /**
+     * Method to cancel registration and return to the menu
+     */
+    public void backMenu() {
+        generateCancel("¿Seguro que desea cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
     }
 
-    public void loadProfilePicture() {
-        loadImage();
-    }
-
-    public void register() {
+    /**
+     * Method to register a teacher
+     */
+    public void registerTeacher() {
         removeStyle();
-        boolean validate = validate();
+        boolean validate = validateFields();
         if(validate){
-            Teacher teacher = new Teacher();
-            createObjectTeacher(teacher);
-            boolean registerComplete = teacher.addTeacher();
-            if(registerComplete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
-                generateInformation("Registro Exitoso");
-            }else{
-                generateError("Este profesor ya esta registrado");
+            Teacher teacher = createObjectTeacher();
+            boolean validUserTeacher = userValidateNotExist(teacher);
+            if (validUserTeacher) {
+                boolean registerComplete = Teacher.addTeacher(teacher);
+                if(registerComplete){
+                    generateInformation("Profesor registrado exitosamente");
+                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
+                }else{
+                    generateError("No hay conexión con la base de datos. Intente más tarde");
+                }
+            } else {
+                generateInformation("Este profesor ya esta registrado");
             }
         }
+    }
+
+    private  boolean userValidateNotExist(Teacher teacher){
+        boolean validUserTeacher = Teacher.validateAcademicAdd(teacher.getStaffNumber(), teacher.getEmail(), teacher.getAlternateEmail(),
+                teacher.getPhone(), teacher.getUserName());
+        if (validUserTeacher) {
+            User user = (User)teacher;
+            Teacher.addUser(user, "Teacher");
+        } else {
+            validUserTeacher = Teacher.isCoordinator(teacher);
+        }
+        return  validUserTeacher;
     }
 
     private void setLimitsTextFields() {
@@ -73,9 +97,13 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         limitTextField(tfUserName,50);
         limitTextField(tfPassword,20);
         limitTextField(tfStaffNumber,10);
+        prohibitNumberTextField(tfName);
+        prohibitNumberTextField(tfLastName);
+        prohibitWordTextField(tfStaffNumber);
+        prohibitWordTextField(tfPhone);
     }
 
-    public void removeStyle(){
+    private void removeStyle(){
         tfStaffNumber.getStyleClass().remove("ok");
         tfName.getStyleClass().remove("ok");
         tfLastName.getStyleClass().remove("ok");
@@ -84,9 +112,18 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         tfUserName.getStyleClass().remove("ok");
         tfPassword.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
+        tfStaffNumber.getStyleClass().remove("error");
+        tfName.getStyleClass().remove("error");
+        tfLastName.getStyleClass().remove("error");
+        tfEmail.getStyleClass().remove("error");
+        tfAlternateEmail.getStyleClass().remove("error");
+        tfUserName.getStyleClass().remove("error");
+        tfPassword.getStyleClass().remove("error");
+        tfPhone.getStyleClass().remove("error");
     }
 
-    public boolean validate(){
+    private boolean validateFields(){
+        ValidateAddUser validateAddUser = new ValidateAddUser();
         boolean validation= true;
         if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
@@ -97,6 +134,8 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
 
         if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateNameUser(tfName.getText()))) {
             tfName.getStyleClass().add("ok");
+            tfName.setText(validateAddUser.deleteSpace(tfName.getText()));
+            tfName.setText(validateAddUser.createCorrectProperName(tfName.getText()));
         }else{
             tfName.getStyleClass().add("error");
             validation = false;
@@ -104,6 +143,8 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
 
         if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateNameUser(tfLastName.getText()))) {
             tfLastName.getStyleClass().add("ok");
+            tfLastName.setText(validateAddUser.deleteSpace(tfLastName.getText()));
+            tfLastName.setText(validateAddUser.createCorrectProperName(tfLastName.getText()));
         }else{
             tfLastName.getStyleClass().add("error");
             validation = false;
@@ -123,21 +164,21 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhoneNumber(tfPhone.getText()))) {
+        if(validateAddUser.validateEmpty(tfPhone.getText()) && validateAddUser.validatePhoneNumber(tfPhone.getText())) {
             tfPhone.getStyleClass().add("ok");
         }else{
             tfPhone.getStyleClass().add("error");
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfPassword.getText())) {
+        if(validateAddUser.validateEmpty(tfPassword.getText()) && validateAddUser.validatePassword(tfPassword.getText())) {
             tfPassword.getStyleClass().add("ok");
         }else{
             tfPassword.getStyleClass().add("error");
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfUserName.getText())) {
+        if(validateAddUser.validateEmpty(tfUserName.getText()) && validateAddUser.validateUserName(tfUserName.getText())) {
             tfUserName.getStyleClass().add("ok");
         }else{
             tfUserName.getStyleClass().add("error");
@@ -146,27 +187,22 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
 
         if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
             validation = false;
-            rbMale.getStyleClass().add("error");
-            rbFemale.getStyleClass().add("error");
-            generateAlert("Select the gender");
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;
-                rbMale.getStyleClass().add("error");
-                rbFemale.getStyleClass().add("error");
-                generateAlert("Select only one gender");
             }
         }
         return validation;
     }
 
-    private void createObjectTeacher(Teacher teacher) {
-        teacher.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
-        teacher.setName(validateAddUser.deleteSpace(tfName.getText()));
-        teacher.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
-        teacher.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
-        teacher.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
-        teacher.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
+    private Teacher createObjectTeacher() {
+        Teacher teacher = new Teacher();
+        teacher.setStaffNumber(Integer.parseInt(tfStaffNumber.getText()));
+        teacher.setName(tfName.getText());
+        teacher.setLastName(tfLastName.getText());
+        teacher.setEmail(tfEmail.getText());
+        teacher.setAlternateEmail(tfAlternateEmail.getText());
+        teacher.setPhone(tfPhone.getText());
         teacher.setUserName(tfUserName.getText());
         String passwordEncryption = encryptPassword(tfPassword.getText());
         teacher.setPassword(passwordEncryption);
@@ -179,8 +215,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         }
         Date registerDate = new Date();
         teacher.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(registerDate));
-        teacher.setProfilePicture(imgFile);
+        return teacher;
     }
-
 
 }

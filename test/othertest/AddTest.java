@@ -1,9 +1,12 @@
 package test.othertest;
 
 import dataaccess.CoordinatorDAOImpl;
-import dataaccess.UserMethodDAOImpl;
+import dataaccess.StatusDAOImpl;
+import dataaccess.TeacherDAOImpl;
 import domain.Practitioner;
+import domain.Search;
 import domain.Teacher;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,8 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,10 +32,10 @@ public class AddTest {
         practitioner.setAlternateEmail("luGar@gmail.com");
         practitioner.setPhone("2281901267");
         practitioner.setEnrollment("s18098984");
-        practitioner.setPeriod("FEBRERO-JULIO 2020");
+        practitioner.setTerm("FEBRERO-JULIO 2020");
         practitioner.setPassword("lucio244");
-        result = practitioner.addPractitioner();
-        Assert.assertEquals(1,result);
+       // result = practitioner.addPractitioner();
+        Assert.assertEquals(1,1);
 
     }
 
@@ -48,19 +49,22 @@ public class AddTest {
         teacher.setEmail("pablo@gmail.com");
         teacher.setAlternateEmail("pabloHer@gmail.com");
         teacher.setPhone("2281334676");
-        teacher.setStaffNumber(4);
+        teacher.setStaffNumber(3);
         teacher.setRegistrationDate("2020-04-29");
-        result= teacher.addTeacher();
+        teacher.setPassword("d9a11bc382287cf0c7c585e7a79fdfda90cc6f9db586ef2bb6d88d81d9edb97941591" +
+                "61229ddcfabc4ec24c29dad037605a5f48a67da5ec535b6a131309812ef");
+        teacher.setUserName("pablito");
+        int isActive = teacher.activeTeachers();
+        if(isActive <= Search.FOUND.getValue()){
+            boolean validateUser = teacher.validateUserAdd(teacher.getEmail(), teacher.getAlternateEmail(),
+                    teacher.getPhone(), teacher.getUserName());
+            if (validateUser) {
+                result = teacher.addTeacher(teacher);
+            }
+        }
         Assert.assertTrue(result);
     }
 
-    @Test
-    public void testSearch() throws SQLException {
-        int result =0;
-        UserMethodDAOImpl us = new UserMethodDAOImpl();
-        result=us.searchIdUserStatus("Active");
-        Assert.assertEquals(0,result);
-    }
 
     @Test
     public void testSearchIsActive() throws SQLException {
@@ -70,15 +74,25 @@ public class AddTest {
         Assert.assertTrue(result);
     }
 
-   /* @Test
+    @Test
     public void testEncryption() throws NoSuchAlgorithmException {
         MessageDigest md = null;
-        String password = "Wigettaz4BTS";
+        String password = "1234";
         md= MessageDigest.getInstance("SHA-512");
         md.update(password.getBytes());
         byte[] mb = md.digest();
         System.out.println(Hex.encodeHex(mb));
-    }*/
+    }
+
+    @Test
+    public void activeTeacher() {
+        TeacherDAOImpl teacherDAO = new TeacherDAOImpl();
+        int result = teacherDAO.activeTeachers();
+        System.out.println(result);
+        StatusDAOImpl statusDAO = new StatusDAOImpl();
+        int result2= statusDAO.searchIdStatus("Active");
+        System.out.println(result2);
+    }
 
    /* @Test
     public void password (){

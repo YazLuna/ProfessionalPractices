@@ -31,8 +31,7 @@ public class TestPassword {
         Colums.add("Phone");
 
 
-        boolean sentence = coordinatorDAO.updateCoordinator(1, coordinator, "Coordinator", "User",
-                "Coordinator.idUser = User.idUser",Colums,"Coordinator.staffNumber =");
+        boolean sentence = coordinatorDAO.updateCoordinator(1, coordinator,Colums);
         System.out.println(sentence);
         Assert.assertFalse(sentence);
     }

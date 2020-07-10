@@ -1,17 +1,22 @@
 package gui.coordinator.controller;
 
-import domain.Gender;
-import domain.Practitioner;
-import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
+import domain.Gender;
+import domain.Practitioner;
+import gui.FXMLGeneralController;
 
-
+/**
+ * Delete Practitioner Controller
+ * @author Yazmin
+ * @version 09/07/2020
+ */
 public class FXMLDeletePractitionerController extends FXMLGeneralController implements Initializable {
+    @FXML private Label lbTerm;
     @FXML private Label lbName;
     @FXML private Label lbLastName;
     @FXML private Label lbGender;
@@ -22,16 +27,45 @@ public class FXMLDeletePractitionerController extends FXMLGeneralController impl
     @FXML private Button btnCancel;
     @FXML private Button btnDelete;
     public static String enrollment;
-    private Practitioner practitioner = new Practitioner();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        practitioner.setEnrollment(enrollment);
         colocatePractitioner();
     }
 
+    /**
+     * Method to exit the system
+     */
+    public void logOutCoordinator() {
+        logOutGeneral();
+    }
+
+    /**
+     * Method to cancel the deletion and return to the list
+     */
+    public void backList() {
+        FXMLUpdateDeletePractitionerListController.action = "Delete";
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnCancel);
+    }
+
+    /**
+     * Method to delete the practitioner
+     */
+    public void deletePractitioner()  {
+        boolean replyConfirmation = generateConfirmation("¿Seguro que desea eliminar el practicante?");
+        if(replyConfirmation){
+            boolean delete = Practitioner.deletePractitioner(enrollment, "Inactive");
+            if(delete){
+                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
+                generateInformation("Practicante eliminado exitosamente");
+            }else{
+                generateError("No hay conexión a la base de datos. Intente más tarde");
+            }
+        }
+    }
+
     private void colocatePractitioner() {
-        practitioner = practitioner.getPractitioner();
+        Practitioner practitioner = Practitioner.getPractitioner(enrollment);
         lbName.setText(practitioner.getName());
         lbLastName.setText(practitioner.getLastName());
         lbEmail.setText(practitioner.getEmail());
@@ -43,32 +77,6 @@ public class FXMLDeletePractitionerController extends FXMLGeneralController impl
         }
         lbPhone.setText(practitioner.getPhone());
         lbEnrollment.setText(practitioner.getEnrollment());
-        if(practitioner.getProfilePicture() != null){
-            //imgPractitioner.setImage(practitioner.getProfilePicture());
-        }
+        lbTerm.setText(practitioner.getTerm());
     }
-
-    public void logOut() {
-        logOutGeneral();
-    }
-
-    public void cancel() {
-        FXMLUpdateDeletePractitionerListController.action = "Delete";
-        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnCancel);
-    }
-
-    public void delete()  {
-        boolean replyConfirmation = generateConfirmation("¿Seguro que desea eliminar el practicante?");
-        if(replyConfirmation){
-            boolean delete = practitioner.deletePractitioner();
-            if(delete){
-                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
-                generateInformation("El practicante fue eliminado exitosamente");
-            }else{
-                generateError("No se pudo eliminar el practicante");
-            }
-        }
-    }
-  
-
 }

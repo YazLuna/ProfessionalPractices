@@ -25,55 +25,63 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
 
     }
 
-    public void logOut() {
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
+    /**
+     * Method that calls register coordinator and validates preconditions
+     */
     public void registerCoordinator() {
-        boolean isActive;
-        Coordinator coordinator = new Coordinator();
-        isActive = coordinator.activeCoordinator();
+        boolean isActive = Coordinator.activeCoordinator();
         if(!isActive){
-            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterCoordinator.fxml",btnRegisterCoordinator);
+            openWindowGeneral("/gui/administrator/fxml/FXMLRegisterCoordinator.fxml", btnRegisterCoordinator);
         }else{
             generateError("Ya existe un coordinador activo");
         }
     }
 
+    /**
+     * Method that calls the list of coordinators and validates preconditions
+     */
+    public void getCoordinatorList() {
+        boolean areCoordinator = Coordinator.areCoordinator();
+        if(areCoordinator){
+            openWindowGeneral("/gui/administrator/fxml/FXMLGetCoordinatorList.fxml", btnListCoordinator);
+        }else{
+            generateError("No hay ningún coordinador registrado");
+        }
+    }
+
+    /**
+     * Method that calls to update coordinator and validates preconditions
+     */
+    public void updateCoordinator() {
+        boolean areCoordinator = Coordinator.areCoordinator();
+        if(areCoordinator){
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml", btnUpdateCoordinator);
+        }else{
+            generateError("No hay ningún coordinador registrado");
+        }
+    }
+
+    /**
+     * Method that calls to delete coordinator and validates preconditions
+     */
     public void deleteCoordinator()  {
-        boolean isActive;
-        Coordinator coordinator = new Coordinator();
-        isActive = coordinator.activeCoordinator();
+        boolean isActive = Coordinator.activeCoordinator();
         if(isActive){
-            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteCoordinator.fxml",btnDeleteCoordinator);
+            openWindowGeneral("/gui/administrator/fxml/FXMLDeleteCoordinator.fxml", btnDeleteCoordinator);
         }else{
             generateError("No hay ningún coordinador activo");
         }
     }
 
-    public void updateCoordinator() {
-        Coordinator coordinator = new Coordinator();
-        boolean areCoordinator = coordinator.areCoordinator();
-        if(areCoordinator){
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml",btnUpdateCoordinator);
-        }else{
-            generateError("No hay ningún coordinador registrado");
-        }
-    }
-
-    public void listCoordinator() {
-        Coordinator coordinator = new Coordinator();
-        boolean areCoordinator = coordinator.areCoordinator();
-        if(areCoordinator){
-            openWindowGeneral("/gui/administrator/fxml/FXMLListCoordinator.fxml",btnListCoordinator);
-        }else{
-            generateError("No hay ningún coordinador registrado");
-        }
-    }
-
+    /**
+     * Method that calls register teacher and validates preconditions
+     */
     public void registerTeacher() {
-        Teacher teacher = new Teacher();
-        int isActive = teacher.activeTeacher();
+        int isActive = Teacher.activeTeachers();
         if(isActive <= Search.FOUND.getValue()){
             openWindowGeneral("/gui/administrator/fxml/FXMLRegisterTeacher.fxml", btnRegisterTeacher);
         }else{
@@ -81,33 +89,39 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
         }
     }
 
+    /**
+     * Method that calls the list of teachers and validates preconditions
+     */
+    public void getTeacherList() {
+        boolean areTeacher = Teacher.areTeachers();
+        if(areTeacher){
+            openWindowGeneral("/gui/administrator/fxml/FXMLGetTeacherList.fxml", btnListTeacher);
+        }else{
+            generateError("No hay ningún profesor registrado");
+        }
+    }
+
+    /**
+     * Method that calls to update teacher and validates preconditions
+     */
+    public void updateTeacher() {
+        boolean areTeacher = Teacher.areTeachers();
+        if(areTeacher){
+            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
+        }else{
+            generateError("No hay ningún profesor registrado");
+        }
+    }
+
+    /**
+     * Method that calls to delete teacher and validates preconditions
+     */
     public void deleteTeacher() {
-        Teacher teacher = new Teacher();
-        int isActive = teacher.activeTeacher();
+        int isActive = Teacher.activeTeachers();
         if(isActive != Search.NOTFOUND.getValue()){
             openWindowGeneral("/gui/administrator/fxml/FXMLDeleteTeacherList.fxml", btnDeleteTeacher);
         }else{
             generateError("No hay ningún profesor activo");
-        }
-    }
-
-    public void updateTeacher() {
-        Teacher teacher = new Teacher();
-        int areTeacher = teacher.activeTeacher();
-        if(areTeacher == Search.NOTFOUND.getValue()){
-            generateError("No hay ningún profesor registrado");
-        }else{
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacherList.fxml", btnUpdateTeacher);
-        }
-    }
-
-    public void listTeacher() {
-        Teacher teacher = new Teacher();
-        int areTeacher = teacher.activeTeacher();
-        if(areTeacher == Search.NOTFOUND.getValue()){
-            generateError("No hay ningún profesor registrado");
-        }else{
-            openWindowGeneral("/gui/administrator/fxml/FXMLListTeacher.fxml",btnListTeacher);
         }
     }
 

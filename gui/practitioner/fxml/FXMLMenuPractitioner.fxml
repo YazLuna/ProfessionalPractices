@@ -25,7 +25,7 @@
             <Font name="System Bold" size="11.0"/>
          </font>
       </Label>
-      <Button fx:id="btnLogOut" layoutX="656.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOut"
+      <Button fx:id="btnLogOut" layoutX="656.0" layoutY="27.0" mnemonicParsing="false" onAction="#logOutPractitioner"
               prefHeight="27.0" prefWidth="79.0" style="-fx-background-color: #ffffff;" text="LogOut">
          <font>
             <Font name="Arial Bold" size="12.0"/>
@@ -37,15 +37,15 @@
       </ImageView>
    </Pane>
    <Pane layoutX="8.0" layoutY="142.0" prefHeight="300.0" prefWidth="190.0" style="-fx-border-color: GREEN;">
-      <Button fx:id="btnRequestProject" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="60.0"
-              mnemonicParsing="false" onAction="#requestProject" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="60.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #7ae69f;" text="Request Project" textAlignment="RIGHT" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
-      <Button fx:id="btnMyProject" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="179.0" mnemonicParsing="false"
-              onAction="#myProject" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #6e6e6e;"
+      <Button alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="179.0" mnemonicParsing="false"
+              prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #6e6e6e;"
               text="My Project" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
@@ -73,22 +73,22 @@
             <Font name="Arial Bold" size="21.0"/>
          </font>
       </Label>
-      <Button fx:id="btnListPartialReport" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="296.0" mnemonicParsing="false"
-              onAction="#listPartialReport" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #6e6e6e;"
+      <Button alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="296.0" mnemonicParsing="false"
+              prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #6e6e6e;"
               text="List " textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
-      <Button fx:id="btnUpdatePartialReport" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="177.0"
-              mnemonicParsing="false" onAction="#updatePartialReport" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="177.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #5998f0;" text="Update" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
-      <Button fx:id="btnGeneratePartialReport" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="56.0"
-              mnemonicParsing="false" onAction="#generatePartialReport" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="56.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #7ae69f;" text="Generate" textAlignment="RIGHT" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
@@ -114,22 +114,22 @@
             <Font name="Arial Bold" size="21.0"/>
          </font>
       </Label>
-      <Button fx:id="btnListMonthlyReport" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="296.0"
-              mnemonicParsing="false" onAction="#listMonthlyReport" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="296.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #6e6e6e;" text="List" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
-      <Button fx:id="btnUpdateMonthlyReport" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="177.0"
-              mnemonicParsing="false" onAction="#updateMonthlyReport" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="177.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #5998f0;" text="Update " textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
          </font>
       </Button>
-      <Button fx:id="btnGenerateMonthlyReport" alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="56.0"
-              mnemonicParsing="false" onAction="#generateMonthlyReport" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="56.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #7ae69f;" text="Generate" textAlignment="RIGHT" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>
@@ -149,8 +149,8 @@
       </ImageView>
    </Pane>
    <Pane layoutX="597.0" layoutY="142.0" prefHeight="181.0" prefWidth="190.0" style="-fx-border-color: GREEN;">
-      <Button fx:id="btnUploadActivity" alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="56.0"
-              mnemonicParsing="false" onAction="#uploadActivity" prefHeight="100.0" prefWidth="160.0"
+      <Button alignment="BOTTOM_CENTER" layoutX="14.0" layoutY="56.0"
+              mnemonicParsing="false" prefHeight="100.0" prefWidth="160.0"
               style="-fx-background-color: #fcac65;" text="Upload Activity" textAlignment="RIGHT" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="12.0"/>

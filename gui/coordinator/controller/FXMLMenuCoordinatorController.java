@@ -1,6 +1,8 @@
 package gui.coordinator.controller;
 
 import domain.*;
+import gui.teacher.controller.FXMLMenuTeacherController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,11 +34,14 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     @FXML private Button btnDeleteProject;
     @FXML private Button btnUpdatePractitioner;
     @FXML private Button btnUpdateProject;
-    private static boolean isTeacher;
+    @FXML private Button btnChangeRole;
+    public static boolean isTeacher;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        if(isTeacher){
+            btnChangeRole.setVisible(true);
+        }
     }
 
     public void logOut() {
@@ -84,24 +89,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void registerProject() {
-        ResponsibleProject responsibleProject = new ResponsibleProject();
-        boolean areResponsibleProject = responsibleProject.thereAreResponsibleProjectAvailable();
-        LinkedOrganization linkedOrganization = new LinkedOrganization();
-        boolean areLinkedOrganization = linkedOrganization.thereAreLinkedOrganizationAvailable();
-        if(areLinkedOrganization && areResponsibleProject){
-            openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterProject.fxml", btnRegisterProject);
-        }else {
-            if(areResponsibleProject && !areLinkedOrganization) {
-                generateInformation("No hay alguna Organización vinculada disponible");
-            }else{
-                if(!areResponsibleProject && areLinkedOrganization){
-                    generateInformation("No hay algún Responsable del proyecto disponible");
-                }else{
-                    generateInformation("No hay Responsable del proyecto ni Organización vinculada disponibles");
-                }
-            }
-        }
-
+        openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterProject.fxml",btnRegisterProject);
     }
 
     public void deleteProject() {
@@ -143,7 +131,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     public void deleteLinkedOrganization() {
         LinkedOrganization organization = new LinkedOrganization();
         boolean areLinkedOrganization;
-        areLinkedOrganization = organization.thereAreLinkedOrganizationAvailableNotAssign();
+        areLinkedOrganization = organization.thereAreLinkedOrganizationAvailable();
         if(!areLinkedOrganization) {
             generateInformation("No hay alguna Organizacion vinculada disponible");
         }else {
@@ -204,7 +192,8 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
         }
     }
 
-    public void changeRole () {
-
+    public void changeRole() {
+        FXMLMenuTeacherController.isCoordinator = true;
+        openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml",btnChangeRole);
     }
 }

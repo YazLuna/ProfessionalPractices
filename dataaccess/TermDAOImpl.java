@@ -38,9 +38,9 @@ public class TermDAOImpl implements ITermDAO {
         boolean isAddTerm=false;
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceLapse = connection.prepareStatement("INSERT INTO Term (term) VALUES (?)");
-            sentenceLapse.setString(1, term);
-            sentenceLapse.executeUpdate();
+            PreparedStatement sentenceTerm = connection.prepareStatement("INSERT INTO Term (term) VALUES (?)");
+            sentenceTerm.setString(1, term);
+            sentenceTerm.executeUpdate();
             isAddTerm=true;
         }catch(SQLException ex){
             Logger.getLogger(TermDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,15 +52,15 @@ public class TermDAOImpl implements ITermDAO {
 
     /**
      * Method to search for a term
-     * @param term The lapse parameter defines the period of the semester
-     * @return The idLapse of the searched lapse
+     * @param term The Term parameter defines the period of the semester
+     * @return The idTerm of the searched Term
      */
     public int getIdTerm(String term) {
         int idTerm = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
-            String queryLapse= "SELECT idLapse FROM Term WHERE term=?";
-            PreparedStatement sentence =connection.prepareStatement(queryLapse);
+            String queryTerm= "SELECT idTerm FROM Term WHERE term=?";
+            PreparedStatement sentence =connection.prepareStatement(queryTerm);
             sentence.setString(1, term);
             results= sentence.executeQuery();
             while(results.next()){

@@ -1,21 +1,25 @@
 package gui.administrator.controller;
 
-import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import logic.ValidateAddUser;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 import domain.Gender;
+import logic.ValidateAddUser;
 
+/**
+ * Update Coordinator Controller
+ * @author Yazmin
+ * @version 09/07/2020
+ */
 public class FXMLUpdateCoordinatorController extends FXMLGeneralController implements Initializable  {
-    public ImageView imgProfilePicture;
     @FXML private Button btnRecoverCoordinator;
     @FXML private TextField tfStaffNumber;
     @FXML private TextField tfName;
@@ -27,9 +31,9 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
-    private File imgFile;
     public static int staffNumber;
-    private final ValidateAddUser validateAddUser = new ValidateAddUser();
+    List<String> datesUpdate = new ArrayList<>();
+    Coordinator coordinatorOriginal = new Coordinator();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -37,36 +41,63 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
         colocateCoordinator();
     }
 
-    public void logOut() {
+    /**
+     * Method to exit to the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
-    public void cancel() {
-        generateCancel("¿Deseas cancelar?",btnCancel,"/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml");
+    /**
+     * Method to return to the list
+     */
+    public void backList() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinatorList.fxml", btnCancel);
     }
 
-    public void loadProfilePicture() {
-        loadImage();
-    }
-
-    public void update(){
-        boolean validate;
+    /**
+     * Method to update a Coordinator
+     */
+    public void updateCoordinator(){
         boolean registerComplete;
         removeStyle();
-        validate = validate();
-        if(validate){
-            boolean confirm = generateConfirmation("¿Seguro que desea modificar el Coordinador?");
-            if(confirm){
-                Coordinator coordinator = new Coordinator();
-                createObjectCoordinator(coordinator);
-            /*registerComplete = coordinator.addCoordinator();
-            if(registerComplete){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
-                generateInformation("Registro Exitoso");
+        boolean validateFields = validateFields();
+        if(validateFields){
+            Coordinator coordinatorNew = new Coordinator();
+            boolean areChanges = createObjectCoordinatorDifferent(coordinatorNew);
+            if (areChanges){
+                boolean validCoordinator = Coordinator.validateAcademicUpdate(coordinatorNew.getStaffNumber(), coordinatorNew.getEmail()
+                        , coordinatorNew.getAlternateEmail(), coordinatorNew.getPhone());
+                if (validCoordinator) {
+                    boolean confirmUpdate = generateConfirmation("¿Seguro que desea modificar el Coordinador?");
+                    if(confirmUpdate){
+                        registerComplete = Coordinator.updateCoordinator(staffNumber, coordinatorNew, datesUpdate);
+                        if(registerComplete){
+                            generateInformation("Coordinator modificado exitosamente");
+                            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
+                        }else{
+                            generateError("No hay conexión a la base de datos. Intente más tarde");
+                        }
+                    }
+                } else {
+                    generateInformation("Este coordinador ya está registrado");
+                }
+            }
+        }
+    }
+
+    /**
+     * Method to recover a deleted Coordinator
+     */
+    public void recoverCoordinator() {
+        boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este coordinador?");
+        if(recoverOk){
+            boolean recoverSuccessful = Coordinator.recoverCoordinator(staffNumber);
+            if(recoverSuccessful){
+                generateInformation("Coordinador reactivado exitosamente");
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverCoordinator);
             }else{
-                generateError("Este coordinador ya esta registrado");
-            }*/
-                System.out.println("Ya es válido");
+                generateError("No hay conexión con la base de datos. Intente más tarde");
             }
         }
     }
@@ -78,43 +109,48 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
         limitTextField(tfAlternateEmail,50);
         limitTextField(tfPhone,10);
         limitTextField(tfStaffNumber,10);
+        prohibitNumberTextField(tfName);
+        prohibitNumberTextField(tfLastName);
+        prohibitWordTextField(tfStaffNumber);
+        prohibitWordTextField(tfPhone);
     }
 
     private void colocateCoordinator() {
-        Coordinator coordinator = new Coordinator();
-        coordinator = coordinator.getCoordinatorSelected(staffNumber);
-        tfName.setText(coordinator.getName());
-        tfLastName.setText(coordinator.getLastName());
-        tfEmail.setText(coordinator.getEmail());
-        tfAlternateEmail.setText(coordinator.getAlternateEmail());
-        if(coordinator.getGender()== Gender.MALE.getGender()){
-            rbMale.isSelected();
+        coordinatorOriginal = Coordinator.getCoordinatorSelected(staffNumber);
+        tfName.setText(coordinatorOriginal.getName());
+        tfLastName.setText(coordinatorOriginal.getLastName());
+        tfEmail.setText(coordinatorOriginal.getEmail());
+        tfAlternateEmail.setText(coordinatorOriginal.getAlternateEmail());
+        if(coordinatorOriginal.getGender()== Gender.MALE.getGender()){
+            rbMale.fire();
         }else{
-            rbFemale.isSelected();
+            rbFemale.fire();
         }
-        tfPhone.setText(coordinator.getPhone());
-        tfStaffNumber.setText(String.valueOf(coordinator.getStaffNumber()));
-        if(coordinator.getProfilePicture()==null){
-            //imgCoordinator.setImage("/images/Add.png");
-        }else{
-            //imgCoordinator.setImage(coordinator.getProfilePicture());
-        }
-        boolean activeCoordinator = coordinator.activeCoordinator();
-        if(coordinator.getStatus().equalsIgnoreCase("Inactive") && !activeCoordinator){
+        tfPhone.setText(coordinatorOriginal.getPhone());
+        tfStaffNumber.setText(String.valueOf(coordinatorOriginal.getStaffNumber()));
+        boolean activeCoordinator = Coordinator.activeCoordinator();
+        if(coordinatorOriginal.getStatus().equalsIgnoreCase("Inactive") && !activeCoordinator){
             btnRecoverCoordinator.setVisible(true);
         }
     }
 
-    public void removeStyle(){
+    private void removeStyle(){
         tfStaffNumber.getStyleClass().remove("ok");
         tfName.getStyleClass().remove("ok");
         tfLastName.getStyleClass().remove("ok");
         tfEmail.getStyleClass().remove("ok");
         tfAlternateEmail.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
+        tfStaffNumber.getStyleClass().remove("error");
+        tfName.getStyleClass().remove("error");
+        tfLastName.getStyleClass().remove("error");
+        tfEmail.getStyleClass().remove("error");
+        tfAlternateEmail.getStyleClass().remove("error");
+        tfPhone.getStyleClass().remove("error");
     }
 
-    public boolean validate(){
+    private boolean validateFields(){
+        ValidateAddUser validateAddUser = new ValidateAddUser();
         boolean validation= true;
         if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
@@ -125,6 +161,8 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
 
         if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateNameUser(tfName.getText()))) {
             tfName.getStyleClass().add("ok");
+            tfName.setText(validateAddUser.deleteSpace(tfName.getText()));
+            tfName.setText(validateAddUser.createCorrectProperName(tfName.getText()));
         }else{
             tfName.getStyleClass().add("error");
             validation = false;
@@ -132,6 +170,8 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
 
         if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateNameUser(tfLastName.getText()))) {
             tfLastName.getStyleClass().add("ok");
+            tfLastName.setText(validateAddUser.deleteSpace(tfLastName.getText()));
+            tfLastName.setText(validateAddUser.createCorrectProperName(tfLastName.getText()));
         }else{
             tfLastName.getStyleClass().add("error");
             validation = false;
@@ -151,7 +191,7 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfPhone.getText())) && (validateAddUser.validatePhoneNumber(tfPhone.getText()))) {
+        if(validateAddUser.validateEmpty(tfPhone.getText()) && validateAddUser.validatePhoneNumber(tfPhone.getText())) {
             tfPhone.getStyleClass().add("ok");
         }else{
             tfPhone.getStyleClass().add("error");
@@ -160,50 +200,62 @@ public class FXMLUpdateCoordinatorController extends FXMLGeneralController imple
 
         if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
             validation = false;
-            rbMale.getStyleClass().add("error");
-            rbFemale.getStyleClass().add("error");
-            generateAlert("Select the gender");
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;
-                rbMale.getStyleClass().add("error");
-                rbFemale.getStyleClass().add("error");
-                generateAlert("Select only one gender");
             }
         }
-
         return validation;
     }
 
-    private void createObjectCoordinator(Coordinator coordinator) {
-        coordinator.setStaffNumber(Integer.parseInt(validateAddUser.deleteAllSpace(tfStaffNumber.getText())));
-        coordinator.setName(validateAddUser.deleteSpace(tfName.getText()));
-        coordinator.setLastName(validateAddUser.deleteSpace(tfLastName.getText()));
-        coordinator.setEmail(validateAddUser.deleteSpace(tfEmail.getText()));
-        coordinator.setAlternateEmail(validateAddUser.deleteSpace(tfAlternateEmail.getText()));
-        coordinator.setPhone(validateAddUser.deleteSpace(tfPhone.getText()));
+    private boolean createObjectCoordinatorDifferent(Coordinator coordinatorNew) {
+        boolean areChanges = false;
+        if(coordinatorOriginal.getStaffNumber() != Integer.parseInt(tfStaffNumber.getText())) {
+            coordinatorNew.setStaffNumber(Integer.parseInt(tfStaffNumber.getText()));
+            datesUpdate.add("StaffNumber");
+            areChanges = true;
+        }
+        if(!coordinatorOriginal.getName().equalsIgnoreCase(tfName.getText())) {
+            coordinatorNew.setName(tfName.getText());
+            datesUpdate.add("Name");
+            areChanges = true;
+        }
+        if(!coordinatorOriginal.getLastName().equalsIgnoreCase(tfLastName.getText())) {
+            coordinatorNew.setLastName(tfLastName.getText());
+            datesUpdate.add("LastName");
+            areChanges = true;
+        }
+        if(!coordinatorOriginal.getEmail().equalsIgnoreCase(tfEmail.getText())) {
+            coordinatorNew.setEmail(tfEmail.getText());
+            datesUpdate.add("Email");
+            areChanges = true;
+        }
+        if(!coordinatorOriginal.getAlternateEmail().equalsIgnoreCase(tfAlternateEmail.getText())) {
+            coordinatorNew.setAlternateEmail(tfAlternateEmail.getText());
+            datesUpdate.add("AlternateEmail");
+            areChanges = true;
+        }
+        if(!coordinatorOriginal.getPhone().equalsIgnoreCase(tfPhone.getText())) {
+            coordinatorNew.setPhone(tfPhone.getText());
+            datesUpdate.add("Phone");
+            areChanges = true;
+        }
         if(rbMale.isSelected()){
-            coordinator.setGender(Gender.MALE.getGender());
+            if(coordinatorOriginal.getGender() != Gender.MALE.getGender()){
+                coordinatorNew.setGender(Gender.MALE.getGender());
+                datesUpdate.add("Gender");
+                areChanges = true;
+            }
         }else{
             if(rbFemale.isSelected()){
-                coordinator.setGender(Gender.FEMALE.getGender());
+                if(coordinatorOriginal.getGender() != Gender.FEMALE.getGender()){
+                    coordinatorNew.setGender(Gender.FEMALE.getGender());
+                    datesUpdate.add("Gender");
+                    areChanges = true;
+                }
             }
         }
-        coordinator.setProfilePicture(imgFile);
+        return areChanges;
     }
 
-    public void recoverCoordinator() {
-        Coordinator coordinator = new Coordinator();
-        coordinator.setStaffNumber(staffNumber);
-        boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este coordinador?");
-        if(recoverOk){
-            boolean recoverSuccessful = coordinator.recoverCoordinator();
-            if(recoverSuccessful){
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverCoordinator);
-                generateInformation("Coordinador reactivado exitosamente");
-            }else{
-                generateError("No se puedo reactivar el Coordinador");
-            }
-        }
-    }
 }

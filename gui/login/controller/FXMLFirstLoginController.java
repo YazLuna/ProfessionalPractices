@@ -10,6 +10,11 @@ import dataaccess.LoginAccountDAOImpl;
 import gui.FXMLGeneralController;
 import logic.ValidateAddUser;
 
+/**
+ * First Login Controller
+ * @author Yazmin
+ * @version 04/07/2020
+ */
 public class FXMLFirstLoginController extends FXMLGeneralController implements Initializable {
     @FXML  private TextField tfPassword;
     @FXML  private TextField tfUser;
@@ -25,7 +30,7 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         isPractitioner = validateAddUser.validateEnrollment(userName.toUpperCase());
         if(isPractitioner){
             tfUser.setVisible(false);
-            lbUser.setText("Nombre de usuario: "+userName);
+            lbUser.setText("Nombre de usuario: "+ userName);
             tfUser.setText(userName);
         }
         limitTextField(tfUser,50);
@@ -33,6 +38,9 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         limitTextField(tfPasswordConfirm,20);
     }
 
+    /**
+     * Method to save new username and or password
+     */
     public void saveChanges() {
         removeStyle();
         boolean passwordEquals = validatePasswords();
@@ -42,15 +50,15 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
             String passwordNew = encryptPassword(tfPassword.getText());
             String userNameNew= tfUser.getText();
             LoginAccountDAOImpl login = new LoginAccountDAOImpl();
-            boolean updateWin= false;
+            boolean updateSuccessful;
             if(isPractitioner){
-                updateWin = login.updateLoginAccountPractitioner(userName,password,passwordNew);
+                updateSuccessful = login.updateLoginAccountPractitioner(userName,password,passwordNew);
             } else {
-                updateWin= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
+                updateSuccessful= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
             }
-            if(updateWin){
-                logOutGeneral();
+            if(updateSuccessful){
                 generateInformation("Cambios guardados correctamente");
+                logOutGeneral();
             }else{
                 removeStyle();
                 generateError("Nombre de usuario no disponible");
@@ -101,7 +109,6 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
             tfPassword.getStyleClass().add("error");
             validation = false;
         }
-
         if (!validateAddUser.validateEmpty(tfPasswordConfirm.getText())) {
             tfPasswordConfirm.getStyleClass().add("error");
             validation = false;
@@ -128,6 +135,9 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         return validation;
     }
 
+    /**
+     * Method to return to Login
+     */
     public void returnLogin() {
         logOutGeneral();
     }

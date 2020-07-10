@@ -14,51 +14,66 @@ import java.util.ResourceBundle;
 import domain.Teacher;
 import gui.FXMLGeneralController;
 
+/**
+ * Delete Teacher List Controller
+ * @author Yazmin
+ * @version 05/07/2020
+ */
 public class FXMLDeleteTeacherListController extends FXMLGeneralController implements Initializable {
-    public TableView<Teacher> tableTeachers;
-    public TableColumn<Teacher, Integer> staffNumber;
-    public TableColumn<Teacher, String> name;
-    public TableColumn<Teacher, String> lastName;
+    @FXML private TableView<Teacher> tvTeachers;
+    @FXML private TableColumn<Teacher, Integer> tcStaffNumber;
+    @FXML private TableColumn<Teacher, String> tcName;
+    @FXML private TableColumn<Teacher, String> tcLastName;
+    @FXML private TableColumn<Teacher, String> tcEmail;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colocateListTeachers();
+        colocateTeachers();
     }
 
-    private void colocateListTeachers() {
-        Teacher teacher = new Teacher();
-        List<Teacher> teacherList=teacher.getAllTeacherActive();
-        staffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tableTeachers.getItems().setAll(teacherList);
+    private void colocateTeachers() {
+        List<Teacher> teacherList=Teacher.getTeachersActive();
+        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tvTeachers.getItems().setAll(teacherList);
     }
 
-    public void cancel() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+    /**
+     * Method to cancel the deletion and return to the menu
+     */
+    public void backMenu() {
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutAdministrator() {
         logOutGeneral();
     }
 
-    public void delete() {
-        Teacher teacherSelected = tableTeachers.getSelectionModel().getSelectedItem();
+    /**
+     * Method to delete the teacher
+     */
+    public void deleteTeacher() {
+        Teacher teacherSelected = tvTeachers.getSelectionModel().getSelectedItem();
         if(teacherSelected == null){
             generateAlert("Por favor seleccione algún profesor");
         }else{
             boolean deleteConfirm = generateConfirmation("¿Seguro que desea eliminar este profesor?");
             if(deleteConfirm){
-                Date registerDate = new Date();
-                String dateDischarge = new SimpleDateFormat("yyyy-MM-dd").format(registerDate);
-                boolean deleteOk = teacherSelected.deleteTeacher("Inactive",dateDischarge,teacherSelected.getStaffNumber());
+                Date actualDate  = new Date();
+                String dischargeDate = new SimpleDateFormat("yyyy-MM-dd").format(actualDate);
+                boolean deleteOk = Teacher.deleteTeacher("Inactive", dischargeDate, teacherSelected.getStaffNumber());
                 if(deleteOk){
-                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
-                    generateInformation("El profesor se ha eliminado exitosamente");
+                    generateInformation("Profesor eliminado exitosamente");
+                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnUpdate);
                 }else{
-                    generateError("No se puede eliminar al coordinador");
+                    generateError("No se pudo conectar con la base de datos. Intente mas tarde");
                 }
             }
         }

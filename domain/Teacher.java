@@ -4,9 +4,9 @@ import java.util.List;
 import dataaccess.TeacherDAOImpl;
 
 /**
- * Teacher
+ * Teacher Class
  * @author Yazmin
- * @version 06/06/2020
+ * @version 06/07/2020
  */
 
 public class Teacher extends User{
@@ -42,63 +42,123 @@ public class Teacher extends User{
         this.dischargeDate = dischargeDate;
     }
 
-    public boolean addTeacher() {
+    /**
+     * method that calls the TeacherDAO to add a teacher
+     * @param teacher Object to add
+     * @return true if successful false if not
+     */
+    public static boolean addTeacher(Teacher teacher) {
         TeacherDAOImpl addTeacher = new TeacherDAOImpl();
-        boolean result = addTeacher.addTeacher(this);
+        boolean result = addTeacher.addTeacher(teacher);
         return result;
     }
 
-    public boolean updateTeacher(int staffNumberTeacher) {
-        TeacherDAOImpl updateTeacher = new TeacherDAOImpl();
-        boolean result = updateTeacher.updateTeacher(staffNumberTeacher, this);
+    /**
+     * Method that calls the TeacherDAO to get a teacher according to his personal number
+     * @param staffNumber from teacher
+     * @return Teacher Object
+     */
+    public static Teacher getTeacherSelected(int staffNumber) {
+        TeacherDAOImpl getTeacher = new TeacherDAOImpl();
+        Teacher Teacher = getTeacher.getTeacher(staffNumber);
+        return Teacher;
+    }
+
+    /**
+     * Method that calls the TeacherDAO to obtaining information from all teachers
+     * @return List with complete information of teachers
+     */
+    public static List<Teacher> getTeachersInformation() {
+        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
+        List<Teacher> Teachers = getAllTeacher.getTeachersInformation();
+        return Teachers;
+    }
+
+    /**
+     * Method that calls the TeacherDAO to obtaining the list of active teachers
+     * @return List of active teachers
+     */
+    public static List<Teacher> getTeachersActive() {
+        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
+        List<Teacher> Teachers = getAllTeacher.getTeachersActive();
+        return Teachers;
+    }
+
+    /**
+     * Method that calls the TeacherDAO to obtaining the list of teachers
+     * @return Teachers List
+     */
+    public static List<Teacher> getTeachers() {
+        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
+        List<Teacher> Teachers = getAllTeacher.getTeachers();
+        return Teachers;
+    }
+
+    /**
+     * Method that calls the TeacherDAO to modify a teacher
+     * @param staffNumberOrigin from Teacher
+     * @param teacher Object with new information
+     * @param datesUpdate Fields to modify
+     * @return True if update, false if not
+     */
+    public static boolean updateTeacher(int staffNumberOrigin, Teacher teacher, List<String>datesUpdate) {
+        TeacherDAOImpl addTeacher = new TeacherDAOImpl();
+        boolean result = addTeacher.updateTeacher(staffNumberOrigin, teacher, datesUpdate);
         return result;
     }
 
-    public boolean deleteTeacher(String status, String dischargeDate, int staffNumber) {
+    /**
+     * Method that calls the TeacherDAO to recover a deleted teacher
+     * @param staffNumber from Teacher
+     * @return True if recover, false if not
+     */
+    public static boolean recoverTeacher(int staffNumber) {
+        TeacherDAOImpl recoverTeacher = new TeacherDAOImpl();
+        boolean result = recoverTeacher.recoverTeacher(staffNumber);
+        return result;
+    }
+
+    /**
+     * Method that calls the TeacherDAO to delete a teacher
+     * @param status Inactive
+     * @param dischargeDate from Teacher
+     * @param staffNumber from Teacher
+     * @return True if delete, False if not
+     */
+    public static boolean deleteTeacher(String status, String dischargeDate, int staffNumber) {
         TeacherDAOImpl deleteTeacher = new TeacherDAOImpl();
         boolean result = deleteTeacher.deleteTeacher(status, dischargeDate,staffNumber);
         return result;
     }
 
-    public Teacher getTeacher() {
-        TeacherDAOImpl getTeacher = new TeacherDAOImpl();
-        Teacher Teacher = getTeacher.getTeacherSelected(staffNumber);
-        return Teacher;
-    }
-
-    public List<Teacher> getAllTeacher() {
-        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> Teachers = getAllTeacher.getAllTeacher();
-        return Teachers;
-    }
-
-    public boolean recoverTeacher() {
-        TeacherDAOImpl recoverTeacher = new TeacherDAOImpl();
-        boolean result = recoverTeacher.recoverTeacher(this);
-        return result;
-    }
-
-    public int activeTeacher() {
+    /**
+     * Method that calls the TeacherDAO to know the number of active teachers
+     * @return Number of active teachers
+     */
+    public static int activeTeachers() {
         TeacherDAOImpl activeTeacher = new TeacherDAOImpl();
-        int result = activeTeacher.activeTeacher();
+        int result = activeTeacher.activeTeachers();
         return result;
     }
 
-    public Teacher getTeacherSelected(int staffNumber) {
-        TeacherDAOImpl getTeacher = new TeacherDAOImpl();
-        Teacher Teacher = getTeacher.getTeacherSelected(staffNumber);
-        return Teacher;
+    /**
+     * Method that calls the TeacherDAO to know if exist teachers
+     * @return True if are teacher, false if not
+     */
+    public static boolean areTeachers() {
+        TeacherDAOImpl areTeacher = new TeacherDAOImpl();
+        boolean result = areTeacher.areTeachers();
+        return result;
     }
 
-    public List<Teacher> getInformationAllTeacher() {
-        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> Teachers = getAllTeacher.getInformationAllTeacher();
-        return Teachers;
-    }
-
-    public List<Teacher> getAllTeacherActive() {
-        TeacherDAOImpl getAllTeacher = new TeacherDAOImpl();
-        List<Teacher> Teachers = getAllTeacher.getTeachersActive();
-        return Teachers;
+    /**
+     * Method that calls the TeacherDAO to know if that teacher is coordinator
+     * @param teacher Object
+     * @return True if is Coordinator, false if not
+     */
+    public static boolean isCoordinator(Teacher teacher) {
+        TeacherDAOImpl isCoordinator = new TeacherDAOImpl();
+        boolean result = isCoordinator.isCoordinator(teacher);
+        return result;
     }
 }
