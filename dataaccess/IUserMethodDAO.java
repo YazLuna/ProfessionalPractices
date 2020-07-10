@@ -5,7 +5,7 @@ import domain.User;
 /**
  * Interface DAO User
  * @author Yazmin
- * @version 17/05/2020
+ * @version 09/07/2020
  */
 
 public interface IUserMethodDAO {

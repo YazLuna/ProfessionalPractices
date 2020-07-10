@@ -7,7 +7,7 @@ import dataaccess.ProjectDAOImpl;
 /**
  * Coordinator Class
  * @author Yazmin
- * @version 07/07/2020
+ * @version 09/07/2020
  */
 
 public class Coordinator extends User{
