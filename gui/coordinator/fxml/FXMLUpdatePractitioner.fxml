@@ -23,7 +23,7 @@
             <Font name="Arial Bold" size="24.0"/>
          </font>
       </Label>
-      <Button fx:id="btnLogOut" layoutX="494.0" layoutY="13.0" mnemonicParsing="false" onAction="#logOut"
+      <Button fx:id="btnLogOut" layoutX="494.0" layoutY="13.0" mnemonicParsing="false" onAction="#logOutCoordinator"
               style="-fx-background-color: WHITE;" text="Cerrar Sesión">
          <font>
             <Font name="Arial Bold" size="12.0"/>
@@ -81,7 +81,7 @@
          <Font name="Arial Bold" size="14.0"/>
       </font>
    </Button>
-   <Button fx:id="btnCancel" layoutX="322.0" layoutY="381.0" mnemonicParsing="false" onAction="#cancel"
+   <Button fx:id="btnCancel" layoutX="322.0" layoutY="381.0" mnemonicParsing="false" onAction="#backList"
            prefHeight="27.0" prefWidth="81.0" style="-fx-background-color: #cc2d2d;" text="Cancelar" textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="14.0"/>
@@ -102,7 +102,7 @@
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <Label fx:id="lbCredits" layoutX="129.0" layoutY="197.0" text="No. Creditos">
+   <Label layoutX="129.0" layoutY="197.0" text="No. Creditos">
       <font>
          <Font name="Arial" size="14.0"/>
       </font>

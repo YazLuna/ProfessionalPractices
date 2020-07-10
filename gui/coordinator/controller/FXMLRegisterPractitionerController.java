@@ -1,13 +1,9 @@
 package gui.coordinator.controller;
 
-import domain.User;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -16,6 +12,7 @@ import logic.ValidateAddUser;
 import domain.Gender;
 import domain.Practitioner;
 import gui.FXMLGeneralController;
+import domain.User;
 
 /**
  * Register Practitioner Controller
@@ -39,7 +36,7 @@ public class FXMLRegisterPractitionerController extends FXMLGeneralController im
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        createTerm();
+        lbTerm.setText(createTerm());
         setLimitsTextFields();
     }
 
@@ -74,7 +71,7 @@ public class FXMLRegisterPractitionerController extends FXMLGeneralController im
                 }
                 if(registerComplete){
                     generateInformation("Practicante registrado exitosamente");
-                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
                 }else{
                     generateError("No hay conexión con la base de datos. Intente más tarde");
                 }
@@ -214,19 +211,4 @@ public class FXMLRegisterPractitionerController extends FXMLGeneralController im
         practitioner.setTerm(lbTerm.getText());
         return practitioner;
     }
-
-    private void createTerm () {
-        Date date = new Date();
-        String month = new SimpleDateFormat("MM").format(date);
-        String year = new SimpleDateFormat("yyyy").format(date);
-        String term;
-        if(Integer.parseInt(month) > 1 && Integer.parseInt(month) <= 7){
-            term = "FEBRERO-JULIO "+year;
-        } else{
-            term = "AGOSTO-ENERO "+year+ " " +(Integer.parseInt(year)+1);
-        }
-        lbTerm.setText(term);
-    }
-
-
 }

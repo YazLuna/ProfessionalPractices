@@ -50,7 +50,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
      * Method to cancel registration and return to the menu
      */
     public void backMenu() {
-        generateConfirmationCancel("¿Seguro que desea cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
+        generateCancel("¿Seguro que desea cancelar?",btnCancel,"/gui/administrator/fxml/FXMLMenuAdministrator.fxml");
     }
 
     /**

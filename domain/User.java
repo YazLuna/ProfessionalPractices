@@ -1,7 +1,6 @@
 package domain;
 
 import dataaccess.UserMethodDAOImpl;
-import java.io.File;
 
 /**
  * User
@@ -20,7 +19,6 @@ public class User{
     private String password;
     private String userType;
     private String userName;
-    private File profilePicture;
 
     public User () {
         this.status= "Active";
@@ -104,14 +102,6 @@ public class User{
 
     public void setUserName(String userName){
         this.userName = userName;
-    }
-
-    public File getProfilePicture(){
-        return profilePicture;
-    }
-
-    public void setProfilePicture(File profilePicture){
-        this.profilePicture = profilePicture;
     }
 
     public static boolean validateUserAdd(String email, String alternateEmail, String phone, String userName){

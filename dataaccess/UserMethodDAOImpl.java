@@ -252,15 +252,6 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
     }
 
     @Override
-    public int searchStaffNumberTwoAcademics(int staffNumberSearch) {
-       int staffNumber = searchStaffNumberTeacher(staffNumberSearch);
-       if(staffNumber == Search.NOTFOUND.getValue() ){
-           staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
-       }
-       return staffNumber;
-    }
-
-    @Override
     public boolean staffNumberTwoAcademicsValidate(int staffNumberSearch) {
         boolean resultValidate = false;
         boolean valid = staffNumberCoordinatorValidate(staffNumberSearch);
@@ -273,8 +264,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
         return resultValidate;
     }
 
-    @Override
-    public void addRelations(int idUserAdd, String status, String userType) {
+    private void addRelations(int idUserAdd, String status, String userType) {
         StatusDAOImpl statusDAO = new StatusDAOImpl();
         int idUserStatusSearch = statusDAO.searchIdStatus(status);
         int idUserTypeSearch = searchIdUserType(userType);

@@ -10,13 +10,13 @@
 
 <AnchorPane prefHeight="443.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gui.coordinator.controller.FXMLDeletePractitionerController">
-    <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#cancel"
+    <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#backList"
             style="-fx-background-color: #707070;" text="Cancelar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <Button fx:id="btnDelete" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#delete"
+    <Button fx:id="btnDelete" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#deletePractitioner"
             style="-fx-background-color: #cc2d2d;" text="Eliminar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
@@ -73,7 +73,7 @@
                    preserveRatio="true">
             <Image url="@../../images/LogOut.png"/>
         </ImageView>
-        <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOut"
+        <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOutCoordinator"
                 prefHeight="0.0" prefWidth="92.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
             <font>
                 <Font name="Arial" size="12.0"/>
@@ -85,5 +85,5 @@
           <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
-    <Label fx:id="lbLapse" layoutX="191.0" layoutY="347.0"/>
+    <Label fx:id="lbTerm" layoutX="191.0" layoutY="347.0"/>
 </AnchorPane>

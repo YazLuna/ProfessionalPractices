@@ -95,7 +95,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     public void deleteProject() {
         Project project = new Project();
         boolean areProjectAvailable;
-        areProjectAvailable = project.thereAreProjectAvailableNotAssing();
+        areProjectAvailable = project.thereAreProjectAvailable();
         if(!areProjectAvailable) {
             generateInformation("No hay algún Proyecto disponible");
         } else{
@@ -131,7 +131,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     public void deleteLinkedOrganization() {
         LinkedOrganization organization = new LinkedOrganization();
         boolean areLinkedOrganization;
-        areLinkedOrganization = organization.thereAreLinkedOrganizationAvailableNotAssing();
+        areLinkedOrganization = organization.thereAreLinkedOrganizationAvailable();
         if(!areLinkedOrganization) {
             generateInformation("No hay alguna Organizacion vinculada disponible");
         }else {

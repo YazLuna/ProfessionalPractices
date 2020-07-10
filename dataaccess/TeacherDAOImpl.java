@@ -238,7 +238,7 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
             preparedStatement.executeUpdate();
             result = true;
         } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(CoordinatorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             connexion.closeConnection();
         }

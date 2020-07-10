@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,10 +40,10 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
     public boolean addPractitioner (Practitioner practitioner) {
         boolean resultAdd = false;
         TermDAOImpl TermDAO = new TermDAOImpl();
-        int idTerm = TermDAO.searchTerm(practitioner.getTerm());
+        int idTerm = TermDAO.getIdTerm(practitioner.getTerm());
         if(idTerm == Search.NOTFOUND.getValue()){
             TermDAO.addTerm(practitioner.getTerm());
-            idTerm = TermDAO.searchTerm(practitioner.getTerm());
+            idTerm = TermDAO.getIdTerm(practitioner.getTerm());
         }
         int idUser = searchIdUser(practitioner.getEmail(),practitioner.getAlternateEmail(),practitioner.getPhone());
         try{
@@ -73,8 +74,10 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
         Practitioner practitioner = new Practitioner ();
         try {
             connection = connexion.getConnection () ;
-            String queryGetPractitioner ="SELECT * FROM Practitioner, User," +
-                    " Term WHERE Practitioner.idUser = User.idUser AND Practitioner.idTerm = Term.idTerm AND Practitioner.enrollment = ?";
+            String queryGetPractitioner = "SELECT name, lastName, enrollment, email, alternateEmail, phone, status, term, gender FROM" +
+                    " Practitioner, User, User_Status,Status, Term WHERE Practitioner.idUser = User.idUser AND User_Status.idUser =" +
+                    " User.idUser AND User_Status.idUser = User.idUser AND Status.idStatus = User_Status.idStatus AND" +
+                    " idUserType =? AND Term.idTerm = Practitioner.idTerm AND Practitioner.enrollment =?";
             preparedStatement = connection.prepareStatement (queryGetPractitioner);
             preparedStatement.setString (1,enrollment);
             resultSet = preparedStatement.executeQuery();
@@ -158,13 +161,24 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
         return practitioners;
     }
 
+    /**
+     * Method for obtaining information from all practitioners
+     * @return List with complete information of practitioners
+     */
     @Override
     public List <Practitioner> getPractitionersInformation() {
         List<Practitioner> practitioners = new ArrayList<>();
+        int idUserType = searchIdUserType("Practitioner");
         try {
             connection = connexion.getConnection();
-            //consult = connection.createStatement();
-            //resultSet = consult.executeQuery("Select * from Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser");
+            String queryGetPractitioners = "SELECT name, lastName, enrollment, email, alternateEmail, phone, status, term FROM" +
+                    " Practitioner, User, User_Status,Status, Term WHERE Practitioner.idUser = User.idUser AND" +
+                    " User_Status.idUser = User.idUser AND User_Status.idUser = User.idUser AND" +
+                    " Status.idStatus = User_Status.idStatus AND idUserType =? AND" +
+                    " Term.idTerm = Practitioner.idTerm";
+            preparedStatement = connection.prepareStatement(queryGetPractitioners);
+            preparedStatement.setInt(1, idUserType);
+            resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 Practitioner practitioner = new Practitioner();
                 practitioner.setName(resultSet.getString("name"));
@@ -173,8 +187,8 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                 practitioner.setAlternateEmail (resultSet.getString("alternateEmail"));
                 practitioner.setPhone(resultSet.getString("phone"));
                 practitioner.setEnrollment(resultSet.getString("enrollment"));
-                //practitioner.setPeriod((resultSet.getString("Term")));
-                //practitioner.setStatus(resultSet.getString("status"));
+                practitioner.setTerm((resultSet.getString("Term")));
+                practitioner.setStatus(resultSet.getString("status"));
                 practitioners.add(practitioner);
             }
         } catch (SQLException ex) {
@@ -185,24 +199,55 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
         return practitioners;
     }
 
+    /**
+     * Dynamic method to modify a practitioner
+     * @param enrollmentOrigin from Practitioner
+     * @param practitionerEdit Object with new information
+     * @param datesUpdate Fields to modify
+     * @return True if update, false if not
+     */
     @Override
-    public boolean updatePractitioner (String enrollment, Practitioner practitionerEdit) {
+    public boolean updatePractitioner(String enrollmentOrigin, Practitioner practitionerEdit, List<String>datesUpdate) {
         boolean result = false;
-        try {
+        String datesUpdatePractitioner = datesUpdate.get(0)+ "= ?, ";
+        List<String> change = new ArrayList<>();
+        change.add("get"+datesUpdate.get(0));
+        for (int indexDatesUpdate = 1 ; indexDatesUpdate < datesUpdate.size();  indexDatesUpdate ++) {
+            if ( indexDatesUpdate == datesUpdate.size() -1){
+                datesUpdatePractitioner = datesUpdatePractitioner + datesUpdate.get(indexDatesUpdate)  + "= ?";
+            } else {
+                datesUpdatePractitioner = datesUpdatePractitioner + datesUpdate.get( indexDatesUpdate)  + "= ?,";
+            }
+            change.add("get"+datesUpdate.get( indexDatesUpdate));
+        }
+        String sentence = "UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET " +datesUpdatePractitioner+
+                " WHERE Practitioner.enrollment = " +enrollmentOrigin;
+        try{
             connection = connexion.getConnection();
-            preparedStatement = connection.prepareStatement ("UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET User.name = ?, User.lastName = ?, User.gender = ?, User.email = ?,"
-                    + " User.alternateEmail = ?, User.phone = ?, Practitioner.enrollment = ?   WHERE  Practitioner.enrollment = ?");
-            preparedStatement.setString(1, practitionerEdit.getName());
-            preparedStatement.setString(2, practitionerEdit.getLastName());
-            preparedStatement.setInt(3, practitionerEdit.getGender());
-            preparedStatement.setString(4, practitionerEdit.getEmail());
-            preparedStatement.setString(5, practitionerEdit.getAlternateEmail());
-            preparedStatement.setString(6, practitionerEdit.getPhone());
-            preparedStatement.setString(7, practitionerEdit.getEnrollment());
-            preparedStatement.setString(8, enrollment);
+            preparedStatement = connection.prepareStatement(sentence);
+            Class classPractitioner = practitionerEdit.getClass();
+            for(int indexPreparedStatement = 1 ; indexPreparedStatement <= datesUpdate.size(); indexPreparedStatement++){
+                Method methodPractitioner;
+                boolean isString = true;
+                try {
+                    methodPractitioner = classPractitioner.getMethod(change.get(indexPreparedStatement - 1));
+                    String isWord = (String) methodPractitioner.invoke(practitionerEdit, new Object[] {});
+                } catch (ClassCastException e) {
+                    isString = false;
+                }
+                if(isString){
+                    methodPractitioner = classPractitioner.getMethod(change.get(indexPreparedStatement - 1));
+                    String word = (String) methodPractitioner.invoke(practitionerEdit, new Object[] {});
+                    preparedStatement.setString(indexPreparedStatement,word);
+                } else{
+                    methodPractitioner = classPractitioner.getMethod(change.get(indexPreparedStatement - 1));
+                    int integer = (int) methodPractitioner.invoke(practitionerEdit, new Object[] {});
+                    preparedStatement.setInt(indexPreparedStatement, integer);
+                }
+            }
             preparedStatement.executeUpdate();
             result = true;
-        } catch(SQLException ex){
+        } catch (SQLException | ReflectiveOperationException ex) {
             Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             connexion.closeConnection();
