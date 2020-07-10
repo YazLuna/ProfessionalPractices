@@ -1,7 +1,6 @@
 package gui.administrator.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -13,17 +12,20 @@ import domain.Teacher;
 import gui.FXMLGeneralController;
 
 /**
- * Update Teacher List Controller
+ * FXMLGetTeacherListController
  * @author Yazmin
- * @version 08/07/2020
+ * @version 05/07/2020
  */
-public class FXMLUpdateTeacherListController extends FXMLGeneralController implements Initializable {
+public class FXMLGetTeacherListController extends FXMLGeneralController {
     @FXML private TableView<Teacher> tvTeachers;
     @FXML private TableColumn<Teacher, Integer> tcStaffNumber;
     @FXML private TableColumn<Teacher, String> tcName;
     @FXML private TableColumn<Teacher, String> tcLastName;
+    @FXML private TableColumn<Teacher, String> tcEmail;
+    @FXML private TableColumn<Teacher, String> tcAlternateEmail;
+    @FXML private TableColumn<Teacher, String> tcPhone;
+    @FXML private TableColumn<Teacher, String> tcStatus;
     @FXML private Button btnCancel;
-    @FXML private Button btnUpdate;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -31,37 +33,28 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
     }
 
     private void colocateListTeachers() {
-        List<Teacher> teacherList = Teacher.getTeachers();
+        List<Teacher> teacherList = Teacher.getTeachersInformation();
         tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+        tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         tvTeachers.getItems().setAll(teacherList);
     }
 
     /**
-     * Method to cancel the selection and return to the menu
+     * Method to cancel the list display
      */
     public void backMenu() {
-        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
     /**
-     * Method to exit to the system
+     * Method to exit the system
      */
     public void logOutAdministrator() {
         logOutGeneral();
-    }
-
-    /**
-     * Method to choose the teacher to modify
-     */
-    public void updateTeacher() {
-        Teacher TeacherSelected = tvTeachers.getSelectionModel().getSelectedItem();
-        if(TeacherSelected == null){
-            generateAlert("Por favor seleccione algún profesor");
-        }else{
-            FXMLUpdateTeacherController.staffNumber =TeacherSelected.getStaffNumber();
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacher.fxml", btnUpdate);
-        }
     }
 }

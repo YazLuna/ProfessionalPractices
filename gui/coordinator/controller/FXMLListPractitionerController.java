@@ -1,7 +1,5 @@
 package gui.coordinator.controller;
 
-import domain.Practitioner;
-import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -10,16 +8,24 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import domain.Practitioner;
+import gui.FXMLGeneralController;
 
+/**
+ * List Practitioner Controller
+ * @author Yazmin
+ * @version 09/07/2020
+ */
 public class FXMLListPractitionerController extends FXMLGeneralController {
-    public TableView<Practitioner> tablePractitioners;
-    public TableColumn<Practitioner, Integer> enrollment;
-    public TableColumn<Practitioner, String> name;
-    public TableColumn<Practitioner, String> lastName;
-    public TableColumn<Practitioner, String> email;
-    public TableColumn<Practitioner, String> alternateEmail;
-    public TableColumn<Practitioner, String> phone;
-    public TableColumn<Practitioner, String> status;
+    public TableView<Practitioner> tvPractitioners;
+    public TableColumn<Practitioner, Integer> tcEnrollment;
+    public TableColumn<Practitioner, String> tcName;
+    public TableColumn<Practitioner, String> tcLastName;
+    public TableColumn<Practitioner, String> tcEmail;
+    public TableColumn<Practitioner, String> tcAlternateEmail;
+    public TableColumn<Practitioner, String> tcPhone;
+    public TableColumn<Practitioner, String> tcStatus;
+    public TableColumn<Practitioner, String> tcTerm;
     @FXML private Button btnCancel;
 
     @Override
@@ -27,24 +33,30 @@ public class FXMLListPractitionerController extends FXMLGeneralController {
         colocateListPractitioners();
     }
 
-    private void colocateListPractitioners() {
-        Practitioner Practitioner = new Practitioner();
-        List<Practitioner> PractitionerList = Practitioner.getInformationPractitioner();
-        enrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        lastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        email.setCellValueFactory(new PropertyValueFactory<>("email"));
-        alternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
-        phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
-        tablePractitioners.getItems().setAll(PractitionerList);
-    }
-
-    public void cancel() {
+    /**
+     * Method to return to the menu
+     */
+    public void backMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnCancel);
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutCoordinator() {
         logOutGeneral();
+    }
+
+    private void colocateListPractitioners() {
+        List<Practitioner> PractitionerList = Practitioner.getInformationPractitioner();
+        tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+        tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        tcTerm.setCellValueFactory(new PropertyValueFactory<>("term"));
+        tvPractitioners.getItems().setAll(PractitionerList);
     }
 }

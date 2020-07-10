@@ -6,11 +6,10 @@ import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
 
 /**
- * FXML MenuPractitionerController
+ * Menu Practitioner Controller
  * @author Yazmin
  * @version 29/06/2020
  */
-
 public class FXMLMenuPractitionerController extends FXMLGeneralController implements Initializable {
 
     @Override
@@ -18,7 +17,10 @@ public class FXMLMenuPractitionerController extends FXMLGeneralController implem
 
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutPractitioner() {
         logOutGeneral();
     }
 

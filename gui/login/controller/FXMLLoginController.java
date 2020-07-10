@@ -13,13 +13,13 @@ import dataaccess.LoginAccountDAOImpl;
 import gui.FXMLGeneralController;
 import gui.coordinator.controller.FXMLMenuCoordinatorController;
 import gui.teacher.controller.FXMLMenuTeacherController;
+import domain.Number;
 
 /**
- * FXMLLoginController
+ * Login Controller
  * @author Yazmin
- * @version 04/06/2020
+ * @version 01/07/2020
  */
-
 public class FXMLLoginController extends FXMLGeneralController implements Initializable {
     @FXML private Button btnLogin;
     @FXML private TextField tfUser;
@@ -31,22 +31,25 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
         limitTextField(pfPassword,20);
     }
 
-    public void login() {
+    /**
+     * Method to login the system
+     */
+    public void loginSystem() {
         removeStyle();
-        boolean validate= validate();
+        boolean validate= validateInformation();
         if(validate){
             LoginAccountDAOImpl newLogin = new LoginAccountDAOImpl();
             String password= encryptPassword(pfPassword.getText());
             String user = tfUser.getText();
-            boolean isFirstLogin = newLogin.firstLogin(user,password);
+            boolean isFirstLogin = newLogin.firstLogin(user, password);
             if(isFirstLogin){
                 FXMLFirstLoginController.password= password;
                 FXMLFirstLoginController.userName= user;
-                openWindowGeneral("/gui/login/fxml/FXMLFirstLogin.fxml",btnLogin);
+                openWindowGeneral("/gui/login/fxml/FXMLFirstLogin.fxml", btnLogin);
             }else{
-                boolean searchLoginAccount = newLogin.searchLoginAccount(user,password);
+                boolean searchLoginAccount = newLogin.searchLoginAccount(user, password);
                 if(searchLoginAccount){
-                    openMenu(user,password);
+                    openMenu(user, password);
                 }else{
                     generateError("Usuario o contraseña incorrectos");
                 }
@@ -61,7 +64,7 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
         pfPassword.getStyleClass().remove("ok");
     }
 
-    private boolean validate() {
+    private boolean validateInformation() {
         boolean validation = true;
         ValidateAddUser validateAddUser = new ValidateAddUser();
         if (!validateAddUser.validateEmpty(tfUser.getText())) {
@@ -78,28 +81,29 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
 
     private void openMenu(String user, String password) {
         LoginAccountDAOImpl newLogin = new LoginAccountDAOImpl();
-        List<String> userTypes=newLogin.searchUserTypeWithLoginAccount(user,password);
-        if(userTypes.size() == 1){
-            String userType= userTypes.get(0);
+        List<String> userTypes=newLogin.searchUserTypeWithLoginAccount(user, password);
+        if(userTypes.size() == Number.ONE.getNumber()){
+            String userType= userTypes.get(Number.ZERO.getNumber());
             switch (userType){
                 case "Coordinator":
-                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnLogin);
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnLogin);
                     break;
                 case "Administrator":
-                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnLogin);
+                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnLogin);
                     break;
                 case "Teacher":
-                    openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml",btnLogin);
+                    openWindowGeneral("/gui/teacher/fxml/FXMLMenuTeacher.fxml", btnLogin);
                     break;
                 case "Practitioner":
-                    openWindowGeneral("/gui/practitioner/fxml/FXMLMenuPractitioner.fxml",btnLogin);
+                    openWindowGeneral("/gui/practitioner/fxml/FXMLMenuPractitioner.fxml", btnLogin);
                     break;
             }
         }else{
-            //FXMLMenuCoordinatorController.isTeacher = true;
-            FXMLMenuTeacherController.isCoordinator = true;
-            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnLogin);
-
+            if(userTypes.size() == Number.TWO.getNumber()) {
+                FXMLMenuCoordinatorController.isTeacher = true;
+                FXMLMenuTeacherController.isCoordinator = true;
+                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnLogin);
+            }
         }
     }
 

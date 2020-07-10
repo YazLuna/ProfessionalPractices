@@ -19,7 +19,7 @@ public class RecoverCoordinatorTest {
         Coordinator coordinator = new Coordinator();
         coordinator.setStatus("Active");
         coordinator.setStaffNumber(1);
-        result = coordinator.recoverCoordinator();
+        result = coordinator.recoverCoordinator(1);
         Assert.assertTrue(result);
     }
 
@@ -28,7 +28,7 @@ public class RecoverCoordinatorTest {
         boolean result;
         Coordinator coordinator = new Coordinator();
         coordinator.setStatus("Active");
-        result = coordinator.recoverCoordinator();
+        result = coordinator.recoverCoordinator(1);
         Assert.assertFalse(result);
     }
 
@@ -39,7 +39,7 @@ public class RecoverCoordinatorTest {
         Coordinator coordinator = new Coordinator();
         coordinator.setStaffNumber(staffNumber);
         coordinator.setStatus("Active");
-        result = coordinator.recoverCoordinator();
+        result = coordinator.recoverCoordinator(1);
         Assert.assertFalse(result);
     }
 
@@ -49,7 +49,7 @@ public class RecoverCoordinatorTest {
         int staffNumber = 1;
         Coordinator coordinator = new Coordinator();
         coordinator.setStaffNumber(staffNumber);
-        result = coordinator.recoverCoordinator();
+        result = coordinator.recoverCoordinator(1);
         Assert.assertFalse(result);
     }
 }

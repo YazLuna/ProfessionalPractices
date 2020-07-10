@@ -16,8 +16,37 @@ public class ValidateAddUser extends ValidateGeneral {
 
     public boolean validateNameUser (String name) {
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{3,30}");
+                .compile("[A-Za-z]{2,30}");
         Matcher mather = pattern.matcher(name);
+        boolean result = mather.find();
+        return result;
+    }
+
+    public String createCorrectProperName (String name) {
+        String[] splitName = name.split("");
+        for (int index = 0; index < splitName.length; index++) {
+            if(index == 0 || splitName[index-1].equals(" ")) {
+                splitName[index] = splitName[index].toUpperCase();
+            } else {
+                splitName[index] = splitName[index].toLowerCase();
+            }
+        }
+        String correctName = String.join("", splitName);
+        return correctName;
+    }
+
+    public boolean validateUserName (String word) {
+        Pattern pattern = Pattern
+                .compile("[A-Za-z0-9]{10,50}");
+        Matcher mather = pattern.matcher(word);
+        boolean result = mather.find();
+        return result;
+    }
+
+    public boolean validatePassword (String word) {
+        Pattern pattern = Pattern
+                .compile("[A-Za-z0-9]{10,20}");
+        Matcher mather = pattern.matcher(word);
         boolean result = mather.find();
         return result;
     }
@@ -37,6 +66,14 @@ public class ValidateAddUser extends ValidateGeneral {
         Matcher mather = pattern.matcher(enrollment);
         isValidEnrollment = mather.find();
         return isValidEnrollment;
+    }
+
+    public boolean validateCreditsPractitioner (String credits) {
+        boolean validate = true;
+        if(Integer.parseInt(credits) < 250 || Integer.parseInt(credits) > 347) {
+            validate = false;
+        }
+        return validate;
     }
 
     public String deleteSpace (String works) {

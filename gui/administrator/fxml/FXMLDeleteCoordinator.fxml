@@ -10,19 +10,19 @@
 
 <AnchorPane prefHeight="443.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gui.administrator.controller.FXMLDeleteCoordinatorController">
-    <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#cancel"
+    <Button fx:id="btnCancel" layoutX="323.0" layoutY="375.0" mnemonicParsing="false" onAction="#backMenu"
             style="-fx-background-color: #707070;" text="Cancelar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <Button fx:id="btnDelete" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#delete"
+    <Button fx:id="btnDelete" layoutX="226.0" layoutY="375.0" mnemonicParsing="false" onAction="#deleteCoordinator"
             style="-fx-background-color: #cc2d2d;" text="Eliminar" textFill="WHITE">
         <font>
             <Font name="Arial Bold" size="12.0"/>
         </font>
     </Button>
-    <ImageView fx:id="imgCoordinator" fitHeight="130.0" fitWidth="130.0" layoutX="235.0" layoutY="78.0"
+    <ImageView fitHeight="130.0" fitWidth="130.0" layoutX="235.0" layoutY="78.0"
                pickOnBounds="true" preserveRatio="true">
         <Image url="@../../images/User.png"/>
     </ImageView>
@@ -79,7 +79,7 @@
                    preserveRatio="true">
             <Image url="@../../images/LogOut.png"/>
         </ImageView>
-        <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOut"
+        <Button fx:id="btnLogOut" layoutX="489.0" layoutY="20.0" mnemonicParsing="false" onAction="#logOutAdministrator"
                 prefHeight="0.0" prefWidth="92.0" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
             <font>
                 <Font name="Arial" size="12.0"/>

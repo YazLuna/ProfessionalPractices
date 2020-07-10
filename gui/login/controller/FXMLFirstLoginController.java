@@ -10,6 +10,11 @@ import dataaccess.LoginAccountDAOImpl;
 import gui.FXMLGeneralController;
 import logic.ValidateAddUser;
 
+/**
+ * First Login Controller
+ * @author Yazmin
+ * @version 04/07/2020
+ */
 public class FXMLFirstLoginController extends FXMLGeneralController implements Initializable {
     @FXML  private TextField tfPassword;
     @FXML  private TextField tfUser;
@@ -33,6 +38,9 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         limitTextField(tfPasswordConfirm,20);
     }
 
+    /**
+     * Method to save new username and or password
+     */
     public void saveChanges() {
         removeStyle();
         boolean passwordEquals = validatePasswords();
@@ -49,8 +57,8 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
                 updateSuccessful= login.updateLoginAccount(userName,password,passwordNew,userNameNew);
             }
             if(updateSuccessful){
-                logOutGeneral();
                 generateInformation("Cambios guardados correctamente");
+                logOutGeneral();
             }else{
                 removeStyle();
                 generateError("Nombre de usuario no disponible");
@@ -101,7 +109,6 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
             tfPassword.getStyleClass().add("error");
             validation = false;
         }
-
         if (!validateAddUser.validateEmpty(tfPasswordConfirm.getText())) {
             tfPasswordConfirm.getStyleClass().add("error");
             validation = false;
@@ -128,6 +135,9 @@ public class FXMLFirstLoginController extends FXMLGeneralController implements I
         return validation;
     }
 
+    /**
+     * Method to return to Login
+     */
     public void returnLogin() {
         logOutGeneral();
     }

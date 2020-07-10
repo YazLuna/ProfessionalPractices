@@ -6,16 +6,21 @@ import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import logic.ValidateAddUser;
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Update Practitioner Controller
+ * @author Yazmin
+ * @version 09/07/2020
+ */
 public class FXMLUpdatePractitionerController extends FXMLGeneralController implements Initializable {
-    public ImageView imgProfilePicture;
+    @FXML private Label lbTerm;
+    @FXML private TextField tfCredits;
     @FXML private Button btnRecoverPractitioner;
     @FXML private TextField tfEnrollment;
     @FXML private TextField tfName;
@@ -27,7 +32,6 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnUpdate;
-    private File imgFile;
     public static String enrollment;
     private final ValidateAddUser validateAddUser = new ValidateAddUser();
     private Practitioner practitioner = new Practitioner();
@@ -39,17 +43,19 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
         colocatePractitioner();
     }
 
-    public void logOut() {
+    /**
+     * Method to exit the system
+     */
+    public void logOutCoordinator() {
         logOutGeneral();
     }
 
-    public void cancel() {
+    /**
+     * Method to cancel registration and return to the menu
+     */
+    public void backList() {
         FXMLUpdateDeletePractitionerListController.action = "Update";
-        generateConfirmationCancel("¿Deseas cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml");
-    }
-
-    public void loadProfilePicture() {
-        loadImage();
+        openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml", btnCancel);
     }
 
     public void update(){
@@ -83,7 +89,7 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
     }
 
     private void colocatePractitioner() {
-        practitioner = practitioner.getPractitioner();
+        //practitioner = practitioner.getPractitioner();
         tfName.setText(practitioner.getName());
         tfLastName.setText(practitioner.getLastName());
         tfEmail.setText(practitioner.getEmail());
@@ -189,14 +195,13 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
                 practitioner.setGender(Gender.FEMALE.getGender());
             }
         }
-        practitioner.setProfilePicture(imgFile);
     }
 
     public void recoverPractitioner() {
         boolean recoverOk = generateConfirmation("¿Seguro que desea reactivar este practicante?");
         if(recoverOk){
-            boolean recoverSuccessful = practitioner.recoverPractitioner();
-            if(recoverSuccessful){
+            //boolean recoverSuccessful = practitioner.recoverPractitioner();
+            if(true){
                 openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRecoverPractitioner);
                 generateInformation("Practicante reactivado exitosamente");
             }else{

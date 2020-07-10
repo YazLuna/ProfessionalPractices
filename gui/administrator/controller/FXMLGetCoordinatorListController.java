@@ -1,7 +1,6 @@
 package gui.administrator.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -13,17 +12,20 @@ import domain.Coordinator;
 import gui.FXMLGeneralController;
 
 /**
- * Update Coordinator List Controller
+ * FXMLGetCoordinatorListController
  * @author Yazmin
- * @version 08/07/2020
+ * @version 05/07/2020
  */
-public class FXMLUpdateCoordinatorListController extends FXMLGeneralController implements Initializable {
+public class FXMLGetCoordinatorListController extends FXMLGeneralController {
     @FXML private TableView<Coordinator> tvCoordinators;
     @FXML private TableColumn<Coordinator, Integer> tcStaffNumber;
     @FXML private TableColumn<Coordinator, String> tcName;
     @FXML private TableColumn<Coordinator, String> tcLastName;
+    @FXML private TableColumn<Coordinator, String> tcEmail;
+    @FXML private TableColumn<Coordinator, String> tcAlternateEmail;
+    @FXML private TableColumn<Coordinator, String> tcPhone;
+    @FXML private TableColumn<Coordinator, String> tcStatus;
     @FXML private Button btnCancel;
-    @FXML private Button btnUpdate;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -31,37 +33,28 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
     }
 
     private void colocateListCoordinators() {
-        List<Coordinator> coordinatorList = Coordinator.getCoordinators();
+        List<Coordinator> coordinatorList = Coordinator.getCoordinatorsInformation();
         tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+        tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         tvCoordinators.getItems().setAll(coordinatorList);
     }
 
     /**
-     * Method to cancel the selection and return to the menu
+     * Method to cancel the list display
      */
     public void backMenu() {
         openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
     }
 
     /**
-     * Method to exit to the system
+     * Method to exit the system
      */
     public void logOutAdministrator() {
         logOutGeneral();
-    }
-
-    /**
-     * Method to choose the coordinator to modify
-     */
-    public void updateCoordinator() {
-        Coordinator coordinatorSelected = tvCoordinators.getSelectionModel().getSelectedItem();
-        if(coordinatorSelected == null){
-            generateAlert("Por favor seleccione algún coordinador");
-        }else{
-            FXMLUpdateCoordinatorController.staffNumber =coordinatorSelected.getStaffNumber();
-            openWindowGeneral("/gui/administrator/fxml/FXMLUpdateCoordinator.fxml", btnUpdate);
-        }
     }
 }
