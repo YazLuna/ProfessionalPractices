@@ -98,13 +98,13 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
             }
             Change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
-        String sentence = "UPDATE PhoneNumber SET "+sentenceDatesUpdate+ " WHERE idLinkedOrganization " +
+        String sentence = "UPDATE PhoneNumber SET "+sentenceDatesUpdate+ " WHERE idPhoneNumber " +
                 "= "+ phoneNumberEdit.getIdPhoneNumber();
         try{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classPhone = phoneNumberEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodPhone;
                 methodPhone = classPhone.getMethod(Change.get(indexPreparedStatement - 1));

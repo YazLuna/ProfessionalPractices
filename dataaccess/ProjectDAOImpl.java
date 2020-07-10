@@ -74,7 +74,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setString(9, project.getResponsabilities());
             sentenceProject.setString(10,project.getDaysHours());
             sentenceProject.setInt(11, project.getDuration());
-            sentenceProject.setInt(12, project.getQuantityPractitioner());
+            sentenceProject.setInt(12, project.getQuiantityPractitioner());
             sentenceProject.setInt(13,project.getPlacesAvailable());
             sentenceProject.setInt(14, idLinkedOrganization);
             sentenceProject.setInt(15,idResponsibleProject);
@@ -185,7 +185,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setTerm(results.getString("term"));
                 project.setStatus(results.getString("status"));
                 project.setDuration(results.getInt("duration"));
-                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setQuiantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setPlacesAvailable(results.getInt("placesAvailable"));
                 project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
                 project.setOrganization(implementOrganization.getLinkedOrganizationWithId(results.getInt("idLinkedOrganization")));
@@ -268,22 +268,35 @@ public class ProjectDAOImpl implements IProjectDAO {
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classProject = projectEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodProject;
-                if(change.get(indexPreparedStatement).equals("getLinkedOrganization")){
+                boolean isString = true;
+                if(change.get(indexPreparedStatement-1).equals("getLinkedOrganization")){
                     LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
                     idLinkedOrganization= linkedOrganizationDAO.getIdLinkedOrganization(projectEdit.getOrganization().getName());
                         preparedStatement.setInt(indexPreparedStatement, idLinkedOrganization);
                 } else{
-                    if(change.get(indexPreparedStatement).equals("getResponsibleProject")) {
+                    if(change.get(indexPreparedStatement-1).equals("getResponsibleProject")) {
                         ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
                         idResponsibleProject = responsibleProjectDAO.getIdResponsibleProject(projectEdit.getResponsible().getEmail());
                         preparedStatement.setInt(indexPreparedStatement, idResponsibleProject);
                     }else {
-                        methodProject = classProject.getMethod(change.get(indexPreparedStatement));
-                        String word = (String) methodProject.invoke(projectEdit, new Object[]{});
-                        preparedStatement.setString(indexPreparedStatement, word);
+                        try {
+                            methodProject = classProject.getMethod(change.get(indexPreparedStatement-1));
+                            String word = (String) methodProject.invoke(projectEdit, new Object[]{});
+                        } catch (ClassCastException e) {
+                            isString = false;
+                        }
+                        if(isString){
+                            methodProject = classProject.getMethod(change.get(indexPreparedStatement-1));
+                            String word = (String) methodProject.invoke(projectEdit, new Object[]{});
+                            preparedStatement.setString(indexPreparedStatement, word);
+                        } else{
+                            methodProject = classProject.getMethod(change.get(indexPreparedStatement-1));
+                            int integer = (int) methodProject.invoke(projectEdit, new Object[]{});
+                            preparedStatement.setInt(indexPreparedStatement, integer);
+                        }
                     }
                 }
             }

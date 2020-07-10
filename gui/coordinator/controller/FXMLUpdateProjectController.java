@@ -119,7 +119,7 @@ public class FXMLUpdateProjectController implements Initializable {
         int duration = Integer.parseInt(tfDuration.getText());
         project.setDuration(duration);
         int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
-        project.setQuantityPractitioner(quiantityPractitioner);
+        project.setQuiantityPractitioner(quiantityPractitioner);
     }
 
     public void behind (){
@@ -146,7 +146,7 @@ public class FXMLUpdateProjectController implements Initializable {
         tfMethodology.setText(project.getMethodology());
         tfDuration.setText(String.valueOf(project.getDuration()));
         tfName.setText(project.getNameProject());
-        tfQuiantityPractitioners.setText(String.valueOf(project.getQuantityPractitioner()));
+        tfQuiantityPractitioners.setText(String.valueOf(project.getQuiantityPractitioner()));
         taDescription.setText(project.getDescription());
         taObjectiveGeneral.setText(project.getObjectiveGeneral());
         taObjectiveInmediate.setText(project.getObjectiveInmediate());

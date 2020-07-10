@@ -17,21 +17,27 @@ import java.util.List;
 
 public class ValidateTestProject {
     @Test
-    public void testValidateExtensions (){
-        ValidateLinkedOrganization validateLinkedOrganization = new ValidateLinkedOrganization();
-        boolean resultValid = validateLinkedOrganization.validateExtensions("15878, 5487, 2534");
-        Assert.assertTrue(resultValid);
+    public void testRepeatProject(){
+        boolean isRepeatProject;
+        Project project = new Project();
+        isRepeatProject = project.validateRepeatProject("Sistema Integral Académico");
+        Assert.assertFalse(isRepeatProject);
     }
 
     @Test
-    public void testGetProject () {
-        Project result = new Project();
-        result = result.getProject("Requerimientos de practicas profesionales");
-        System.out.println(result.getNameProject());
-        System.out.println(result.getResponsible().getName());
-        System.out.println(result.getResponsible().getLastName());
-        System.out.println(result.getOrganization().getName());
-        Assert.assertEquals("Requerimientos de practicas profesionales",result.getNameProject());
+    public void testRepeatLinkedOrganization (){
+        boolean isRepeatLinkedOganization;
+        LinkedOrganization linkedOrganization = new LinkedOrganization();
+        isRepeatLinkedOganization = linkedOrganization.validateRepeatLinkedOrganization("BANX","banx@gmail.com");
+        Assert.assertFalse(isRepeatLinkedOganization);
+    }
+
+    @Test
+    public void testRepeatResponsibleProject(){
+        boolean isRepeatResponsibleProject;
+        ResponsibleProject responsibleProject = new ResponsibleProject();
+        isRepeatResponsibleProject = responsibleProject.validateRepeatResponsibleProject("Lucia");
+        Assert.assertFalse(isRepeatResponsibleProject);
     }
 
     @Test
@@ -42,69 +48,66 @@ public class ValidateTestProject {
     }
 
     @Test
-    public void testModifyResponsibleProject () {
+    public void testThereAreProject(){
+        boolean isRepeatProject;
+        Project project = new Project();
+        isRepeatProject = project.thereAreProject();
+        Assert.assertTrue(isRepeatProject);
+    }
+
+    @Test
+    public void testThereAreProjectAvailable(){
+        boolean isRepeatProject;
+        Project project = new Project();
+        isRepeatProject = project.thereAreProjectAvailable();
+        Assert.assertTrue(isRepeatProject);
+    }
+
+    @Test
+    public void testThereAreLinkedOrganization (){
+        boolean isRepeatLinkedOganization;
+        LinkedOrganization linkedOrganization = new LinkedOrganization();
+        isRepeatLinkedOganization = linkedOrganization.thereAreLinkedOrganization();
+        Assert.assertTrue(isRepeatLinkedOganization);
+    }
+
+    @Test
+    public void testThereAreLinkedOrganizationAvailable(){
+        boolean isRepeatLinkedOganization;
+        LinkedOrganization linkedOrganization = new LinkedOrganization();
+        isRepeatLinkedOganization = linkedOrganization.thereAreLinkedOrganizationAvailable();
+        Assert.assertTrue(isRepeatLinkedOganization);
+    }
+
+    @Test
+    public void testThereAreLinkedOrganizationAvailableNotAssign(){
+        boolean isRepeatLinkedOganization;
+        LinkedOrganization linkedOrganization = new LinkedOrganization();
+        isRepeatLinkedOganization = linkedOrganization.thereAreLinkedOrganizationAvailableNotAssign();
+        Assert.assertTrue(isRepeatLinkedOganization);
+    }
+
+    @Test
+    public void testThereAreResponsibleProject(){
+        boolean isRepeatResponsibleProject;
         ResponsibleProject responsibleProject = new ResponsibleProject();
-        responsibleProject.setName("Sofia");
-        //responsibleProject.setCharge("Recursos humanos");
-        responsibleProject.setIdResponsible(19);
-        List<String> datesUpdate= new ArrayList<>();
-        datesUpdate.add("Name");
-        //datesUpdate.add("Charge");
-        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
-        boolean result = responsibleProjectDAO.modifyResponsibleProject(responsibleProject,datesUpdate);
-        Assert.assertTrue(result);
+        isRepeatResponsibleProject = responsibleProject.thereAreResponsibleProject();
+        Assert.assertTrue(isRepeatResponsibleProject);
     }
 
     @Test
-    public void testGetResponsible () {
+    public void testThereAreResponsibleProjectAvailable(){
+        boolean isRepeatResponsibleProject;
         ResponsibleProject responsibleProject = new ResponsibleProject();
-        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
-        responsibleProject = responsibleProjectDAO.getResponsibleProjectWithId(20);
-        /*System.out.println( responsibleProject.getResponsibleProject().getName());
-        System.out.println( responsibleProject.getResponsibleProject().getLastName());*/
+        isRepeatResponsibleProject = responsibleProject.thereAreResponsibleProjectAvailable();
+        Assert.assertTrue(isRepeatResponsibleProject);
     }
 
     @Test
-    public void testGetSchedulingProject () {
-        List<SchedulingActivities> schedulingActivitiesList = new ArrayList<>();
-        SchedulingActivitiesDAOImpl schedulingActivitiesDAO = new SchedulingActivitiesDAOImpl();
-        schedulingActivitiesList = schedulingActivitiesDAO.getAllSchedulingActivities(36);
-        System.out.println(schedulingActivitiesList.get(0).getActivity());
-        System.out.println(schedulingActivitiesList.get(1).getActivity());
-    }
-
-    @Test
-    public void testGetAllLinkedOrganizationAvailable () {
-        List<LinkedOrganization> organizations = new ArrayList<>();
-        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
-        organizations = linkedOrganizationDAO.getAllLinkedOrganizationAvailable();
-        for(int indexOrganization=0;indexOrganization<organizations.size();indexOrganization++){
-            System.out.println(organizations.get(indexOrganization).getName());
-        }
-    }
-
-    @Test
-    public void testGetAllResponsibleAvailable () {
-        List<ResponsibleProject> responsibles = new ArrayList<>();
-        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
-        responsibles = responsibleProjectDAO.getAllResponsibleAvailable();
-        for(int indexResponsible=0;indexResponsible<responsibles.size();indexResponsible++){
-            System.out.println(responsibles.get(indexResponsible).getName());
-        }
-    }
-
-    @Test
-    public void testGetProjectError () {
-        Project result = new Project();
-        result = result.getProject("system management TYY");
-        Assert.assertEquals("system management TTB",result.getNameProject());
-    }
-
-    @Test
-    public void testGetAllState () {
-        List<String> result = new ArrayList<>();;
-        LinkedOrganization organization = new LinkedOrganization();
-        result = organization.getListState();
-        Assert.assertNotNull(result);
+    public void testThereAreResponsibleProjectAvailableNotAssign(){
+        boolean isRepeatResponsibleProject;
+        ResponsibleProject responsibleProject = new ResponsibleProject();
+        isRepeatResponsibleProject = responsibleProject.thereAreResponsibleProjectAvailableNotAssing();
+        Assert.assertTrue(isRepeatResponsibleProject);
     }
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import logic.ValidateDataPerson;
+import logic.ValidateDataResponsible;
 
 /**
  * Class FXMLUpdateResponsibleProjectController
@@ -34,7 +34,7 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     private List<String> datesUpdate;
     private ResponsibleProject responsibleProject;
     private ResponsibleProject responsibleProjectEdit;
-    private ValidateDataPerson validateDataPerson;
+    private ValidateDataResponsible validateDataResponsible;
 
 
     @Override
@@ -135,10 +135,10 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     public void validateName(){
         tfNameResponsible.getStyleClass().remove("error");
         tfNameResponsible.getStyleClass().remove("ok");
-        boolean isValidName = validateDataPerson.validateName(tfNameResponsible.getText());
+        boolean isValidName = validateDataResponsible.validateName(tfNameResponsible.getText());
         if (isValidName) {
             tfNameResponsible.getStyleClass().add("ok");
-            responsibleProjectEdit.setName(validateDataPerson.deleteSpace(tfNameResponsible.getText()));
+            responsibleProjectEdit.setName(validateDataResponsible.deleteSpace(tfNameResponsible.getText()));
         } else {
             tfNameResponsible.getStyleClass().add("error");
             isValidDataResponsible = false;
@@ -147,12 +147,12 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void validateLastName(){
-        boolean isValidLastName = validateDataPerson.validateLastName(tfLastNameResponsible.getText());
+        boolean isValidLastName = validateDataResponsible.validateLastName(tfLastNameResponsible.getText());
         tfLastNameResponsible.getStyleClass().remove("error");
         tfLastNameResponsible.getStyleClass().remove("ok");
         if(isValidLastName){
             tfLastNameResponsible.getStyleClass().add("ok");
-            responsibleProjectEdit.setLastName(validateDataPerson.deleteSpace(tfLastNameResponsible.getText()));
+            responsibleProjectEdit.setLastName(validateDataResponsible.deleteSpace(tfLastNameResponsible.getText()));
         }else {
             tfLastNameResponsible.getStyleClass().add("error");
             isValidDataResponsible = false;
@@ -161,7 +161,7 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void validateEmail(){
-        boolean isValidEmailResponsible = validateDataPerson.validateEmail(tfEmailResponsible.getText());
+        boolean isValidEmailResponsible = validateDataResponsible.validateEmail(tfEmailResponsible.getText());
         tfEmailResponsible.getStyleClass().remove("error");
         tfEmailResponsible.getStyleClass().remove("ok");
         if(isValidEmailResponsible){
@@ -176,12 +176,12 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void validateCharge (){
-        boolean isValidCharge = validateDataPerson.validateCharge(cbCharge.getEditor().getText());
+        boolean isValidCharge = validateDataResponsible.validateCharge(cbCharge.getEditor().getText());
         cbCharge.getStyleClass().remove("error");
         cbCharge.getStyleClass().remove("ok");
         if(isValidCharge){
             cbCharge.getStyleClass().add("ok");
-            responsibleProjectEdit.setCharge(validateDataPerson.deleteSpace(cbCharge.getEditor().getText()));
+            responsibleProjectEdit.setCharge(validateDataResponsible.deleteSpace(cbCharge.getEditor().getText()));
         }else {
             cbCharge.getStyleClass().add("error");
             isValidDataResponsible = false;
@@ -190,7 +190,7 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void validateDataResponsible (){
-        validateDataPerson = new ValidateDataPerson();
+        validateDataResponsible = new ValidateDataResponsible();
         isValidDataResponsible = true;
         if(!tfNameResponsible.getText().equals(responsibleProject.getName())) {
             validateName();

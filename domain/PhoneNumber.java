@@ -56,7 +56,7 @@ public class PhoneNumber {
      * @param idLinkedOrganization define the id of the linked organization
      * @return get list oh the phone number of the linked organization
      */
-    public static List<PhoneNumber> getPhoneNumberList(int idLinkedOrganization){
+    public static List<PhoneNumber> getListPhoneNumber(int idLinkedOrganization){
         List<PhoneNumber> phoneNumbersList = new ArrayList<>();
         PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
         phoneNumbersList= phoneNumberDAO.getAllPhoneNumber(idLinkedOrganization);

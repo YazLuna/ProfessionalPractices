@@ -80,7 +80,7 @@ public class FXMLDeleteProjectController extends FXMLGeneralController implement
         txtMonth.setText(schedulingActivities.get(0).getMonth());
         txtActivity.setText(schedulingActivities.get(0).getActivity());
         lbDuration.setText(String.valueOf(project.getDuration()));
-        lbQuiantityPractitioners.setText(String.valueOf(project.getQuantityPractitioner()));
+        lbQuiantityPractitioners.setText(String.valueOf(project.getQuiantityPractitioner()));
         lbLapse.setText(project.getTerm());
 
         for(int indexScheduling=1; indexScheduling<schedulingActivities.size();indexScheduling++){

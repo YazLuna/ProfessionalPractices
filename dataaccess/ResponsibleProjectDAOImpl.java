@@ -296,7 +296,7 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classResponsible = responsibleEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodResponsible;
                 if(change.get(indexPreparedStatement - 1).equals("getCharge")){

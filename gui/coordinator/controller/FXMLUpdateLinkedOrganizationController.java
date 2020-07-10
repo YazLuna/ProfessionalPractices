@@ -77,7 +77,7 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void startDataComponentOrganization () {
         linkedOrganization = new LinkedOrganization();
-        linkedOrganization = linkedOrganization.getOrganization(nameLinkedOrganization);
+        linkedOrganization = linkedOrganization.getLinkedOrganization(nameLinkedOrganization);
         tfNameOrganization.setText(linkedOrganization.getName());
         tfUsersDirect.setText(linkedOrganization.getDirectUsers());
         tfUsersIndirect.setText(linkedOrganization.getIndirectUsers());
@@ -88,7 +88,7 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
         cbSector.getEditor().setText(linkedOrganization.getSector());
         phoneNumberOne = new PhoneNumber();
         phoneNumberTwo = new PhoneNumber();
-        phoneNumberList = phoneNumberOne.getPhoneNumberList(linkedOrganization.getIdLinkedOrganization());
+        phoneNumberList = phoneNumberOne.getListPhoneNumber(linkedOrganization.getIdLinkedOrganization());
         phoneNumberOne = phoneNumberList.get(0);
         tfPhoneNumberOne.setText(phoneNumberList.get(0).getPhoneNumber());
         tfExtensionsOne.setText(phoneNumberList.get(0).getExtensions());

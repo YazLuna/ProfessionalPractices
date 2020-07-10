@@ -335,7 +335,7 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classOganization = organizationEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodLinkedOrganization;
                 if(Change.get(indexPreparedStatement - 1).equals("getCity")){

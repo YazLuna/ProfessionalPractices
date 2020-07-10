@@ -63,7 +63,7 @@ public class AddTestProject {
                 "Trabajar de acuerdo a los estándares establecidos");
         project.setDaysHours("A acordar con el estudiante (en horario de oficina)");
         project.setDuration(200);
-        project.setQuantityPractitioner(3);
+        project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(0);
@@ -125,7 +125,7 @@ public class AddTestProject {
                 "Trabajar de acuerdo a los estándares establecidos");
         project.setDaysHours("A acordar con el estudiante (en horario de oficina)");
         project.setDuration(200);
-        project.setQuantityPractitioner(3);
+        project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(1);
@@ -186,7 +186,7 @@ public class AddTestProject {
                 "Trabajar de acuerdo a los estándares establecidos");
         project.setDaysHours("A acordar con el estudiante (en horario de oficina)");
         project.setDuration(200);
-        project.setQuantityPractitioner(3);
+        project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(0);

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
 import domain.ResponsibleProject;
-import logic.ValidateDataPerson;
+import logic.ValidateDataResponsible;
 
 /**
  * Class FXMLRegisterResponsibleProjectController
@@ -28,7 +28,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     @FXML private TextField tfEmailResponsible;
     private List<String> allCharge;
     private ResponsibleProject responsible;
-    private ValidateDataPerson validateDataPerson;
+    private ValidateDataResponsible validateDataResponsible;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,21 +90,21 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     }
 
     public ResponsibleProject getDataResponsible () {
-        validateDataPerson = new ValidateDataPerson();
+        validateDataResponsible = new ValidateDataResponsible();
         responsible = new ResponsibleProject();
-        responsible.setName(validateDataPerson.deleteSpace(tfNameResponsible.getText()));
-        responsible.setLastName(validateDataPerson.deleteSpace(tfLastNameResponsible.getText()));
+        responsible.setName(validateDataResponsible.deleteSpace(tfNameResponsible.getText()));
+        responsible.setLastName(validateDataResponsible.deleteSpace(tfLastNameResponsible.getText()));
         responsible.setEmail(tfEmailResponsible.getText());
-        responsible.setCharge(validateDataPerson.deleteSpace(cbCharge.getEditor().getText()));
+        responsible.setCharge(validateDataResponsible.deleteSpace(cbCharge.getEditor().getText()));
         return responsible;
     }
 
     public boolean validateDataResponsible (){
-        validateDataPerson = new ValidateDataPerson();
+        validateDataResponsible = new ValidateDataResponsible();
         boolean isValidDataResponsible = true;
         tfNameResponsible.getStyleClass().remove("error");
         tfNameResponsible.getStyleClass().remove("ok");
-        boolean isValidName = validateDataPerson.validateName(tfNameResponsible.getText());
+        boolean isValidName = validateDataResponsible.validateName(tfNameResponsible.getText());
         if(isValidName){
             tfNameResponsible.getStyleClass().add("ok");
         }else {
@@ -112,7 +112,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
             isValidDataResponsible = false;
         }
 
-        boolean isValidLastName = validateDataPerson.validateLastName(tfLastNameResponsible.getText());
+        boolean isValidLastName = validateDataResponsible.validateLastName(tfLastNameResponsible.getText());
         tfLastNameResponsible.getStyleClass().remove("error");
         tfLastNameResponsible.getStyleClass().remove("ok");
         if(isValidLastName){
@@ -122,7 +122,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
             isValidDataResponsible = false;
         }
 
-        boolean isValidEmailResponsible = validateDataPerson.validateEmail(tfEmailResponsible.getText());
+        boolean isValidEmailResponsible = validateDataResponsible.validateEmail(tfEmailResponsible.getText());
         tfEmailResponsible.getStyleClass().remove("error");
         tfEmailResponsible.getStyleClass().remove("ok");
         if(isValidEmailResponsible){
@@ -132,7 +132,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
             isValidDataResponsible = false;
         }
 
-        boolean isValidCharge = validateDataPerson.validateCharge(cbCharge.getEditor().getText());
+        boolean isValidCharge = validateDataResponsible.validateCharge(cbCharge.getEditor().getText());
         cbCharge.getStyleClass().remove("error");
         cbCharge.getStyleClass().remove("ok");
         if(isValidCharge){

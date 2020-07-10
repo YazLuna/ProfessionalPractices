@@ -101,7 +101,7 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classSchedulingActivities = schedulingActivitiesEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodSchedulingActivities;
                 methodSchedulingActivities = classSchedulingActivities.getMethod(Change.get(indexPreparedStatement - 1));

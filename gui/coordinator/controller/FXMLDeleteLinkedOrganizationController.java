@@ -57,7 +57,7 @@ public class FXMLDeleteLinkedOrganizationController extends FXMLGeneralControlle
 
     public void startComponentOrganization() {
         organization = new LinkedOrganization();
-        organization = organization.getOrganization(nameLinkedOrganization);
+        organization = organization.getLinkedOrganization(nameLinkedOrganization);
         txtNameOrganization.setText(organization.getName());
         lbUsersDirect.setText(organization.getDirectUsers());
         lbUsersIndirect.setText(organization.getIndirectUsers());
@@ -67,7 +67,7 @@ public class FXMLDeleteLinkedOrganizationController extends FXMLGeneralControlle
         lbCity.setText(organization.getCity());
         lbSector.setText(organization.getSector());
         PhoneNumber phoneNumber = new PhoneNumber();
-        List<PhoneNumber> phoneNumberList = phoneNumber.getPhoneNumberList(organization.getIdLinkedOrganization());
+        List<PhoneNumber> phoneNumberList = phoneNumber.getListPhoneNumber(organization.getIdLinkedOrganization());
         lbPhoneNumberOne.setText(phoneNumberList.get(0).getPhoneNumber());
         lbExtensionsOne.setText(phoneNumberList.get(0).getExtensions());
         if(phoneNumberList.size()== Number.TWO.getNumber()){
@@ -88,7 +88,7 @@ public class FXMLDeleteLinkedOrganizationController extends FXMLGeneralControlle
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.orElse(NO) == YES) {
             boolean isDeleteLinkedOrganization;
-            isDeleteLinkedOrganization = organization.deleteOrganization(organization.getName());
+            isDeleteLinkedOrganization = organization.deleteLinkedOrganization(organization.getName());
             if(!isDeleteLinkedOrganization){
                 generateError("La organización vinculada no pudo eliminarse");
                 openWindowGeneral("/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml", btnDelete);
