@@ -37,4 +37,10 @@ public class TelegramBot {
             this.message = "";
         }
     }
+
+    public static void sendToTelegram(String exception) {
+        TelegramBot telegramBot = new TelegramBot("ErroresPP");
+        telegramBot.addMessage(exception);
+        telegramBot.send();
+    }
 }

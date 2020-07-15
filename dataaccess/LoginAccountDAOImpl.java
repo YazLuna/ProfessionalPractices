@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Search;
 import exception.Exception;
+import telegram.TelegramBot;
 
 /**
  * LoginAccountDAO Implements
@@ -143,6 +144,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
             }
         } catch (SQLException ex) {
             new Exception().log(ex);
+            TelegramBot.sendToTelegram(ex.getMessage());
             Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();
