@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import domain.Search;
+import gui.administrator.controller.FXMLMenuAdministratorController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -94,9 +95,11 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
             String userType= userTypes.get(Number.ZERO.getNumber());
             switch (userType){
                 case "Coordinator":
+                    FXMLMenuCoordinatorController.staffNumber = newLogin.searchCoordinator(user, password);
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnLogin);
                     break;
                 case "Administrator":
+                    FXMLMenuAdministratorController.idUser = newLogin.searchAdministrator(user, password);
                     openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnLogin);
                     break;
                 case "Teacher":

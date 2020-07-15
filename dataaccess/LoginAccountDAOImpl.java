@@ -153,6 +153,51 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
         return search;
     }
 
+    public int searchCoordinator(String userName, String password) {
+        int search = Search.NOTFOUND.getValue();
+        try {
+            connection = connexion.getConnection();
+            String querySearchCoordinator = "SELECT staffNumber FROM LoginAccount INNER JOIN Coordinator WHERE" +
+                    " userName =? AND password =? AND LoginAccount.idUser = Coordinator.idUser";
+            sentence = connection.prepareStatement(querySearchCoordinator);
+            sentence.setString(1, userName);
+            sentence.setString(2, password);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                search = result.getInt("staffNumber");
+            }
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+        }finally {
+            connexion.closeConnection();
+        }
+        return search;
+    }
+
+    public int searchAdministrator(String userName, String password) {
+        int search = Search.NOTFOUND.getValue();
+        try {
+            connection = connexion.getConnection();
+            String querySearchAdministrator = "SELECT idUser FROM LoginAccount INNER JOIN User WHERE" +
+                    " userName =? AND password =? AND LoginAccount.idUser = User.idUser";
+            sentence = connection.prepareStatement(querySearchAdministrator);
+            sentence.setString(1, userName);
+            sentence.setString(2, password);
+            result = sentence.executeQuery();
+            while (result.next()) {
+                search = result.getInt("idUser");
+            }
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+        }finally {
+            connexion.closeConnection();
+        }
+        return search;
+    }
+
+
     /**
      * Method to modify the login account when the teacher or coordinator first login
      * @param userNamePrevious assigned when registered

@@ -36,6 +36,7 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     @FXML private Button btnUpdateProject;
     @FXML private Button btnChangeRole;
     public static boolean isTeacher;
+    public static int staffNumber;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
