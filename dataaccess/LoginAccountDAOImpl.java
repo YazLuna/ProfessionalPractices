@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Search;
 import exception.Exception;
+import javafx.concurrent.Service;
 import telegram.TelegramBot;
 
 /**
@@ -128,8 +129,8 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
      * @return True if found and false if not
      */
     @Override
-    public boolean searchLoginAccount(String userName, String password) {
-        boolean search = false;
+    public int searchLoginAccount(String userName, String password) {
+        int search = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
             String querySearchLoginAccount = "SELECT userName, password, status FROM LoginAccount INNER JOIN Status WHERE" +
@@ -140,12 +141,12 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
             sentence.setString(3,"Active");
             result = sentence.executeQuery();
             while (result.next()) {
-                search = true;
+                search = Search.FOUND.getValue();
             }
-        } catch (SQLException ex) {
-            new Exception().log(ex);
-            TelegramBot.sendToTelegram(ex.getMessage());
-            Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            search = Search.EXCEPTION.getValue();
         }finally {
             connexion.closeConnection();
         }

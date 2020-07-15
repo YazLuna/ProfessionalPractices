@@ -19,10 +19,6 @@ public class TelegramBot {
         this.group = groupId;
     }
 
-    public void setMessage(String message) {
-        this.message = message + "%0A";
-    }
-
     public void addMessage(String message) {
         this.message += message + "%0A";
     }

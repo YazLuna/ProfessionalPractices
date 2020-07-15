@@ -2,7 +2,8 @@ package domain;
 
 public enum Search {
     FOUND (1),
-    NOTFOUND (0);
+    NOTFOUND (0),
+    EXCEPTION (2);
     private final int value;
 
     Search(int value) {
