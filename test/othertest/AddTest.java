@@ -3,9 +3,7 @@ package test.othertest;
 import dataaccess.CoordinatorDAOImpl;
 import dataaccess.StatusDAOImpl;
 import dataaccess.TeacherDAOImpl;
-import domain.Practitioner;
-import domain.Search;
-import domain.Teacher;
+import domain.*;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,38 +29,86 @@ public class AddTest {
         practitioner.setEmail("lu@gmail.com");
         practitioner.setAlternateEmail("luGar@gmail.com");
         practitioner.setPhone("2281901267");
-        practitioner.setEnrollment("s18098984");
+        practitioner.setEnrollment("S18098984");
+        practitioner.setUserName("S18098984");
         practitioner.setTerm("FEBRERO-JULIO 2020");
+        practitioner.setCredits(298);
         practitioner.setPassword("lucio244");
-       // result = practitioner.addPractitioner();
-        Assert.assertEquals(1,1);
+        User user = (User)practitioner;
+        result = Practitioner.addUser(user, practitioner.getUserType());
+        result = Practitioner.addPractitioner(practitioner);
+        Assert.assertTrue(result);
+    }
 
+    @Test
+    public void testAddPractitionerNull() {
+        boolean result;
+        Practitioner practitioner = new Practitioner();
+        User user = (User)practitioner;
+        result = Practitioner.addUser(user, practitioner.getUserType());
+        result = Practitioner.addPractitioner(practitioner);
+        Assert.assertFalse(result);
     }
 
     @Test
     public void testAddTeacher() {
         boolean result = false;
         Teacher teacher = new Teacher();
-        teacher.setName("Pablo");
+        teacher.setName("Esteban");
         teacher.setLastName("Hernandez");
         teacher.setGender(1);
         teacher.setEmail("pablo@gmail.com");
         teacher.setAlternateEmail("pabloHer@gmail.com");
         teacher.setPhone("2281334676");
-        teacher.setStaffNumber(3);
+        teacher.setStaffNumber(34);
         teacher.setRegistrationDate("2020-04-29");
         teacher.setPassword("d9a11bc382287cf0c7c585e7a79fdfda90cc6f9db586ef2bb6d88d81d9edb97941591" +
                 "61229ddcfabc4ec24c29dad037605a5f48a67da5ec535b6a131309812ef");
         teacher.setUserName("pablito");
-        int isActive = teacher.activeTeachers();
-        if(isActive <= Search.FOUND.getValue()){
-            boolean validateUser = teacher.validateUserAdd(teacher.getEmail(), teacher.getAlternateEmail(),
-                    teacher.getPhone(), teacher.getUserName());
-            if (validateUser) {
-                result = teacher.addTeacher(teacher);
-            }
-        }
+        User user = (User)teacher;
+        result = Teacher.addUser(user,"Teacher");
+        result = Teacher.addTeacher(teacher);
         Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testAddTeacherNull() {
+        boolean result = false;
+        Teacher teacher = new Teacher();
+        User user = (User)teacher;
+        result = Teacher.addUser(user,"Teacher");
+        result = Teacher.addTeacher(teacher);
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void testAddCoordinator() {
+        boolean result = false;
+        Coordinator coordinator = new Coordinator();
+        coordinator.setName("Amairani");
+        coordinator.setLastName("Hernandez");
+        coordinator.setGender(0);
+        coordinator.setEmail("ama@gmail.com");
+        coordinator.setAlternateEmail("amaHer@gmail.com");
+        coordinator.setPhone("2281034676");
+        coordinator.setStaffNumber(46);
+        coordinator.setRegistrationDate("2020-04-29");
+        coordinator.setPassword("Wigetazd54");
+        coordinator.setUserName("hermandez12A");
+        User user = (User)coordinator;
+        result = Coordinator.addUser(user,"Coordinator");
+        result = Coordinator.addCoordinator(coordinator);
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testCoordinatorTeacherNull() {
+        boolean result = false;
+        Coordinator coordinator = new Coordinator();
+        User user = (User)coordinator;
+        result = Coordinator.addUser(user,"Coordinator");
+        result = Coordinator.addCoordinator(coordinator);
+        Assert.assertFalse(result);
     }
 
 

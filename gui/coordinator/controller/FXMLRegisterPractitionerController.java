@@ -64,12 +64,8 @@ public class FXMLRegisterPractitionerController extends FXMLGeneralController im
             Practitioner practitioner = createObjectPractitioner();
             boolean validUserPractitioner = Practitioner.validPractitionerAdd(practitioner);
             if (validUserPractitioner) {
-                User user = (User)practitioner;
-                boolean registerComplete = Practitioner.addUser(user, practitioner.getUserType());
-                if(registerComplete) {
-                    registerComplete = Practitioner.addPractitioner(practitioner);
-                }
-                if(registerComplete){
+                validUserPractitioner = Practitioner.addPractitioner(practitioner);
+                if(validUserPractitioner){
                     generateInformation("Practicante registrado exitosamente");
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
                 }else{
