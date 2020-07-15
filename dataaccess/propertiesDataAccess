@@ -1,3 +1,3 @@
 dataBase=jdbc:mysql://remotemysql.com:3306/inKcRiLrWw?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-user=inKcRiLrWw
+user=inKcRiLrW
 password=nte7WjTZnx

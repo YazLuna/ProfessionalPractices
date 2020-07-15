@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import domain.Search;
+import exception.Exception;
 
 /**
  * LoginAccountDAO Implements
@@ -141,6 +142,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
                 search = true;
             }
         } catch (SQLException ex) {
+            new Exception().log(ex);
             Logger.getLogger(LoginAccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
             connexion.closeConnection();

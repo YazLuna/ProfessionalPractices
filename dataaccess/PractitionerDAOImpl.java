@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.util.List;
 import domain.Practitioner;
 import domain.Search;
+import domain.User;
 
 /**
  * Practitioner DAO Implements
@@ -45,21 +46,25 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             TermDAO.addTerm(practitioner.getTerm());
             idTerm = TermDAO.getIdTerm(practitioner.getTerm());
         }
-        int idUser = searchIdUser(practitioner.getEmail(),practitioner.getAlternateEmail(),practitioner.getPhone());
-        try{
-            connection = connexion.getConnection();
-            String queryAddPractitioner = "INSERT INTO Practitioner (enrollment, idUser, idTerm, credits) VALUES (?,?,?,?)";
-            preparedStatement = connection.prepareStatement(queryAddPractitioner);
-            preparedStatement.setString(1, practitioner.getEnrollment());
-            preparedStatement.setInt(2, idUser);
-            preparedStatement.setInt(3, idTerm);
-            preparedStatement.setInt(4, practitioner.getCredits());
-            preparedStatement.executeUpdate();
-            resultAdd = true;
-        } catch(SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            connexion.closeConnection();
+        User user = (User)practitioner;
+        boolean addUser = Practitioner.addUser(user,"Practitioner");
+        if (addUser){
+            int idUser = searchIdUser(practitioner.getEmail(),practitioner.getAlternateEmail(),practitioner.getPhone());
+            try{
+                connection = connexion.getConnection();
+                String queryAddPractitioner = "INSERT INTO Practitioner (enrollment, idUser, idTerm, credits) VALUES (?,?,?,?)";
+                preparedStatement = connection.prepareStatement(queryAddPractitioner);
+                preparedStatement.setString(1, practitioner.getEnrollment());
+                preparedStatement.setInt(2, idUser);
+                preparedStatement.setInt(3, idTerm);
+                preparedStatement.setInt(4, practitioner.getCredits());
+                preparedStatement.executeUpdate();
+                resultAdd = true;
+            } catch(SQLException ex){
+                Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                connexion.closeConnection();
+            }
         }
         return resultAdd;
     }
@@ -72,6 +77,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
     @Override
     public Practitioner getPractitioner (String enrollment) {
         Practitioner practitioner = new Practitioner ();
+        int idUserType = searchIdUserType("Practitioner");
         try {
             connection = connexion.getConnection () ;
             String queryGetPractitioner = "SELECT name, lastName, enrollment, email, alternateEmail, phone, status, term, gender FROM" +
@@ -79,7 +85,8 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                     " User.idUser AND User_Status.idUser = User.idUser AND Status.idStatus = User_Status.idStatus AND" +
                     " idUserType =? AND Term.idTerm = Practitioner.idTerm AND Practitioner.enrollment =?";
             preparedStatement = connection.prepareStatement (queryGetPractitioner);
-            preparedStatement.setString (1,enrollment);
+            preparedStatement.setInt (1, idUserType);
+            preparedStatement.setString (2,enrollment);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 practitioner.setName(resultSet.getString("name"));
@@ -221,7 +228,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             change.add("get"+datesUpdate.get( indexDatesUpdate));
         }
         String sentence = "UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET " +datesUpdatePractitioner+
-                " WHERE Practitioner.enrollment = " +enrollmentOrigin;
+                " WHERE enrollment = " +enrollmentOrigin;
         try{
             connection = connexion.getConnection();
             preparedStatement = connection.prepareStatement(sentence);

@@ -64,7 +64,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
             boolean validUserCoordinator = userValidateNotExist(coordinator);
             if (validUserCoordinator) {
                 boolean registerComplete = Coordinator.addCoordinator(coordinator);
-                if(registerComplete){
+                if(registerComplete) {
                     generateInformation("Coordinador registrado exitosamente");
                     openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
                 }else{
