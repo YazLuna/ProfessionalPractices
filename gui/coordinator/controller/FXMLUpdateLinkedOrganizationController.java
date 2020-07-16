@@ -2,7 +2,6 @@
 
 package gui.coordinator.controller;
 
-import dataaccess.Number;
 import domain.LinkedOrganization;
 import domain.PhoneNumber;
 import javafx.fxml.FXML;
@@ -68,7 +67,7 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
     }
 
     public void cancel () {
-        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml");
     }
 
     public void assignLinkedOrganization (String nameLinkedOrganization){

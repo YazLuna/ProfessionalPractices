@@ -1,18 +1,14 @@
 package gui.coordinator.controller;
 
-import dataaccess.ISchedulingActivitiesDAO;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.scene.layout.GridPane;
@@ -26,7 +22,7 @@ import java.util.logging.Logger;
 import java.io.IOException;
 import domain.Project;
 import logic.ValidateProject;
-import dataaccess.Month;
+import domain.Month;
 import domain.SchedulingActivities;
 import gui.FXMLGeneralController;
 
@@ -87,11 +83,11 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void backMenu() {
-        generateCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
 
 
-    public void registerProject() {
+    /*public void registerProject() {
         isValidScheduling=true;
         boolean isValidDataResponsible = validateDataProject();
         boolean isValidDataScheduling = validateSchedulingActivities();
@@ -115,7 +111,7 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
                 generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
             }
         }
-    }
+    }*/
 
     public void limitComponentProject(){
         limitTextField(tfNameProject,50);
@@ -350,7 +346,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     public void validateDataProject (){
         validateProject = new ValidateProject();
 
-
         if(!validateProject.validateNotEmpty(tfMethodology.getText()) ||
                 !validateProject.validateMethology(tfMethodology.getText())){
             tfMethodology.getStyleClass().add("error");
@@ -400,6 +395,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         validateSchedulingActivities(tfActivitySchedulingOne,cbMonthSchedulingOne);
         validateSchedulingActivities(tfActivitySchedulingThree,cbMonthSchedulingThree);
         validateSchedulingActivities(tfActivitySchedulingFour,cbMonthSchedulingFour);
-        return isValidDataProject;
+        //return isValidDataProject;
     }
 }

@@ -56,7 +56,7 @@ public class FXMLRegisterLinkedOrganizationController extends FXMLGeneralControl
         openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnBehind);
     }
     public void backMenu() {
-        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
     public void limitComponentOrganization(){
         limitTextField(tfNameOrganization,100);

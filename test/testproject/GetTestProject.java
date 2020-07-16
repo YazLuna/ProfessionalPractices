@@ -123,7 +123,7 @@ public class GetTestProject {
     public void testGetResponsibleProject () {
         ResponsibleProject responsibleProject = new ResponsibleProject();
         responsibleProject = responsibleProject.getResponsibleProject("guruiz@uv.mx");
-        Assert.assertEquals("guruiz@uv.mx",responsibleProject.getName());
+        Assert.assertEquals("guruiz@uv.mx",responsibleProject.getEmail());
     }
 
     @Test

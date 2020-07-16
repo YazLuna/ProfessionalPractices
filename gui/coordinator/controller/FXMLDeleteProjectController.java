@@ -133,6 +133,6 @@ public class FXMLDeleteProjectController extends FXMLGeneralController implement
     }
 
     public void backListProject(){
-        generateCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLListProject.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancelProject,"/gui/coordinator/fxml/FXMLListProject.fxml");
     }
 }

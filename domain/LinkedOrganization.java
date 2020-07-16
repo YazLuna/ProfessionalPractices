@@ -1,10 +1,8 @@
 package domain;
 
 import java.util.List;
-import dataaccess.CityDAOImpl;
+
 import dataaccess.LinkedOrganizationDAOImpl;
-import dataaccess.SectorDAOImpl;
-import dataaccess.StateDAOImpl;
 
 /**
  * Class Linked organization
@@ -125,8 +123,8 @@ public class LinkedOrganization{
      * @return The list of states
      */
     public static List<String> getListState() {
-        StateDAOImpl stateDAO = new StateDAOImpl();
-        List<String> listState = stateDAO.getAllState();
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        List<String> listState = linkedOrganizationDAO.getAllState();
         return listState;
     }
 
@@ -135,8 +133,8 @@ public class LinkedOrganization{
      * @return The list of cities
      */
     public static List<String> getListCity() {
-        CityDAOImpl cityDAO = new CityDAOImpl();
-        List<String> listCity = cityDAO.getAllCity();
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        List<String> listCity = linkedOrganizationDAO.getAllCity();
         return listCity;
     }
 
@@ -145,8 +143,8 @@ public class LinkedOrganization{
      * @return The list of sectors
      */
     public static List<String> getListSector() {
-        SectorDAOImpl sectorDAO = new SectorDAOImpl();
-        List<String> listSector = sectorDAO.getAllSector();
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        List<String> listSector = linkedOrganizationDAO.getAllSector();
         return listSector;
     }
 

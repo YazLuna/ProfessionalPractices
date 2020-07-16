@@ -1,7 +1,5 @@
 package logic;
 
-import dataaccess.Number;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

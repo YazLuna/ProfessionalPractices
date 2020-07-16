@@ -72,6 +72,6 @@ public class FXMLDeleteResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void backListResponsibleProject(){
-        generateCancel("¿Seguro desea cancelar el proceso?",btnCancel,"/gui/coordinator/fxml/FXMLListResponsibleProject.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar el proceso?",btnCancel,"/gui/coordinator/fxml/FXMLListResponsibleProject.fxml");
     }
 }

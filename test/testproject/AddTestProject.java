@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 
 public class AddTestProject {
-    @After
+    /*@After
     public void deleteProject () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -27,7 +27,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testRegisterProject () {
@@ -43,7 +43,6 @@ public class AddTestProject {
                 "involucradas durante este desarrollo.\n" +
                 "Revisión y análisis de la arquitectura.\n" +
                 "Desarrollo de prototipo.");
-
         project.setObjectiveMediate("Modificación de documentación y " +
                 "Modificación de prototipos.");
         project.setMethodology("Proceso de desarrollo iterativo y Design Sprint, SCRUM");
@@ -66,7 +65,7 @@ public class AddTestProject {
         project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
-        project.setStaffNumberCoordinator(0);
+        project.setStaffNumberCoordinator(1);
         organization.setName("Dirección de Desarrollo Informático de Apoyo Académico");
         project.setOrganization(organization);
         responsible.setEmail("martha_15_7@outlook.com");
@@ -105,7 +104,6 @@ public class AddTestProject {
                 "involucradas durante este desarrollo.\n" +
                 "Revisión y análisis de la arquitectura.\n" +
                 "Desarrollo de prototipo.");
-
         project.setObjectiveMediate("Modificación de documentación y " +
                 "Modificación de prototipos.");
         project.setMethodology("Proceso de desarrollo iterativo y Design Sprint, SCRUM");
@@ -129,7 +127,7 @@ public class AddTestProject {
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(1);
-        organization.setName("Dirección de Desarrollo Informático de Apoyo Académicos");
+        organization.setName("Dirección de Desarrollo Informático de Apoyo Académico");
         project.setOrganization(organization);
         responsible.setEmail("martha_15_7@outlook.com");
         project.setResponsible(responsible);
@@ -215,7 +213,7 @@ public class AddTestProject {
     }
 
 
-    @After
+    /*@After
     public void deleteSchedulingActivities () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -227,7 +225,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddSchedulingActivities(){
@@ -241,6 +239,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddScheduligActivities);
     }
 
+
     @Test
     public void testErrorAddSchedulingActivities(){
         boolean isAddScheduligActivities;
@@ -252,7 +251,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddScheduligActivities);
     }
 
-    @After
+   /* @After
     public void deleteTerm () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -263,7 +262,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddTerm() {
@@ -283,7 +282,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddTerm);
     }
 
-    @After
+    /*@After
     public void deleteLinkedOrganization () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -294,7 +293,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddLinkedOrganization() {
@@ -329,7 +328,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddLinkedOrganization);
     }
 
-    @After
+    /*@After
     public void deleteSector () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -340,7 +339,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddSector() {
@@ -360,7 +359,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddSector);
     }
 
-    @After
+    /*@After
     public void deleteState () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -371,7 +370,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddState() {
@@ -391,7 +390,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddState);
     }
 
-    @After
+    /*@After
     public void deleteCity() {
         final Connexion connexion;
         connexion = new Connexion();
@@ -402,7 +401,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddCity() {
@@ -422,7 +421,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddCity);
     }
 
-    @After
+    /*@After
     public void deletePhoneNumber () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -433,7 +432,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddPhoneNumber() {
@@ -454,7 +453,7 @@ public class AddTestProject {
         Assert.assertTrue(isAddPhoneNumber);
     }
 
-    @After
+    /*@After
     public void deleteResponsibleProject () {
         final Connexion connexion;
         connexion = new Connexion();
@@ -465,7 +464,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testRegisterResponsibleProject() {
@@ -490,7 +489,7 @@ public class AddTestProject {
         Assert.assertTrue(isRegisterResponsibleProject);
     }
 
-    @After
+    /*@After
     public void deleteCharge() {
         final Connexion connexion;
         connexion = new Connexion();
@@ -501,7 +500,7 @@ public class AddTestProject {
         } catch (SQLException ex) {
             Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     @Test
     public void testAddCharge() {

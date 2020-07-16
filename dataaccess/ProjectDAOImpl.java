@@ -61,7 +61,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                     ",objectiveGeneral,objectiveInmediate,objectiveMediate,methodology,resources,activitiesAndFunctions,responsabilities" +
                     ",daysHours,duration,quiantityPractitioner,placesAvailable" +
                     ",idLinkedOrganization,idResponsibleProject,idStatus"+
-                    ",staffNumberCoordinator,idLapse) VALUES(?,?,?,?,?,?,?" +
+                    ",staffNumberCoordinator,idTerm) VALUES(?,?,?,?,?,?,?" +
                     ",?,?,?,?,?,?,?,?,?,?,?)");
             sentenceProject.setString(1, project.getNameProject());
             sentenceProject.setString(2, project.getDescription());
@@ -134,7 +134,8 @@ public class ProjectDAOImpl implements IProjectDAO {
         List<Project> projects = new ArrayList<>();
         try{
             connection = connexion.getConnection();
-            String queryAllProject = "SELECT nameProject FROM Project WHERE status=?";
+            String queryAllProject = "SELECT nameProject FROM Project INNER JOIN Status ON Project.idStatus " +
+                    "= Status.idStatus WHERE status=?";
             PreparedStatement sentence = connection.prepareStatement(queryAllProject);
             sentence.setString(1, "available");
             results= sentence.executeQuery();
@@ -161,7 +162,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         Project project = null;
         try{
             connection = connexion.getConnection();
-            String queryProject = "SELECT * FROM Project INNNER JOIN Term ON Project.idTerm = Term.idTerm " +
+            String queryProject = "SELECT * FROM Project INNER JOIN Term ON Project.idTerm = Term.idTerm " +
                     "INNER JOIN Status ON Project.idStatus = Status.idStatus WHERE nameProject=?";
             PreparedStatement sentence = connection.prepareStatement(queryProject);
             sentence.setString(1,nameProject);

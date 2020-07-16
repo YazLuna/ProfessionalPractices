@@ -45,10 +45,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         boolean result = false;
         int idCharge;
         ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-        idCharge = chargeDAO.getIdCharge(responsible.getCharge());
+        idCharge = getIdCharge(responsible.getCharge());
         if(idCharge == Search.NOTFOUND.getValue()){
-            chargeDAO.addCharge(responsible.getCharge());
-            idCharge = chargeDAO.getIdCharge(responsible.getCharge());
+            addCharge(responsible.getCharge());
+            idCharge = getIdCharge(responsible.getCharge());
         }
         try{
             connection = connexion.getConnection();
@@ -67,6 +67,29 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             connexion.closeConnection();
             return result;
         }
+    }
+
+    /**
+     * Method to add a Charge
+     * @param name defines the charge of responsible of the project
+     * @return if the charge was successfully add
+     */
+    @Override
+    public boolean addCharge (String name) {
+        boolean resultAddCharge = false;
+        String queryCharge = "INSERT INTO Charge (nameCharge) VALUES(?)";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceCharge = connection.prepareStatement(queryCharge);
+            sentenceCharge.setString(1,name);
+            sentenceCharge.executeUpdate();
+            resultAddCharge = true;
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return resultAddCharge;
     }
 
     /**
@@ -263,6 +286,53 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
     }
 
     /**
+     * Method to get for the id  the charge
+     * @param name The name parameter defines the charge of responsible of the project
+     * @return The idCharge of the charge searched
+     */
+    @Override
+    public int getIdCharge(String name) {
+        int idCharge = Search.NOTFOUND.getValue();;
+        String queryCharge= "SELECT idCharge FROM Charge WHERE nameCharge=?";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentence =connection.prepareStatement(queryCharge);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()) {
+                idCharge = results.getInt("idCharge");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idCharge;
+    }
+
+    /**
+     * Method to get the charge list
+     * @return The charge list
+     */
+    @Override
+    public List<String> getAllCharge() {
+        List<String> charges = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("SELECT nameCharge FROM Charge");
+            while(results.next()){
+                charges.add(results.getString("nameCharge"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return charges;
+    }
+
+    /**
      * The method for modify data of the project
      * @param responsibleEdit The data of the responsible of the project
      * @param datesUpdate The data to modify of the Responsible of the Project
@@ -301,10 +371,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 Method methodResponsible;
                 if(change.get(indexPreparedStatement - 1).equals("getCharge")){
                     ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-                    idCharge= chargeDAO.getIdCharge(responsibleEdit.getCharge());
+                    idCharge= getIdCharge(responsibleEdit.getCharge());
                     if(idCharge == Search.NOTFOUND.getValue()){
-                        chargeDAO.addCharge(responsibleEdit.getCharge());
-                        idCharge = chargeDAO.getIdCharge(responsibleEdit.getCharge());
+                        addCharge(responsibleEdit.getCharge());
+                        idCharge = getIdCharge(responsibleEdit.getCharge());
                     }
                     preparedStatement.setInt(indexPreparedStatement, idCharge);
                 } else{

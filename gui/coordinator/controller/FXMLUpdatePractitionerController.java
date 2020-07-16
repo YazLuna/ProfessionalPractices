@@ -101,14 +101,14 @@ public class FXMLUpdatePractitionerController extends FXMLGeneralController impl
         }
         tfPhone.setText(practitioner.getPhone());
         tfEnrollment.setText(practitioner.getEnrollment());
-        if(practitioner.getProfilePicture()==null){
+        /*if(practitioner.getProfilePicture()==null){
             //imgpractitioner.setImage("/images/Add.png");
         }else{
             //imgpractitioner.setImage(practitioner.getProfilePicture());
         }
         if(practitioner.getStatus().equalsIgnoreCase("Inactive")){
             btnRecoverPractitioner.setVisible(true);
-        }
+        }*/
     }
 
     public void removeStyle(){

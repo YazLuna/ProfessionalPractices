@@ -40,26 +40,23 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
     public boolean addLinkedOrganization(LinkedOrganization organization) {
         boolean result = false;
         int idState;
-        StateDAOImpl stateDAO = new StateDAOImpl();
-        idState = stateDAO.getIdState(organization.getState());
+        idState = getIdState(organization.getState());
         if(idState == Search.NOTFOUND.getValue()){
-            stateDAO.addState(organization.getState());
-            idState = stateDAO.getIdState(organization.getState());
+            addState(organization.getState());
+            idState = getIdState(organization.getState());
         }
         int idCity;
-        CityDAOImpl cityDAO = new CityDAOImpl();
-        idCity = cityDAO.getIdCity(organization.getCity());
+        idCity = getIdCity(organization.getCity());
         if(idCity == Search.NOTFOUND.getValue()){
-            cityDAO.addCity(organization.getCity());
-            idCity = cityDAO.getIdCity(organization.getCity());
+            addCity(organization.getCity());
+            idCity = getIdCity(organization.getCity());
         }
 
         int idSector;
-        SectorDAOImpl sectorDAO = new SectorDAOImpl();
-        idSector = sectorDAO.getIdSector(organization.getSector());
+        idSector = getIdSector(organization.getSector());
         if(idSector == Search.NOTFOUND.getValue()){
-            sectorDAO.addSector(organization.getSector());
-            idSector = sectorDAO.getIdSector(organization.getSector());
+            addSector(organization.getSector());
+            idSector = getIdSector(organization.getSector());
         }
         int idStatus;
         StatusDAOImpl status = new StatusDAOImpl();
@@ -87,6 +84,71 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             }
             return result;
         }
+    }
+
+    /**
+     * Method to add a City
+     * @param name The name parameter defines the city
+     * @return if the city was added
+     */
+    @Override
+    public boolean addCity(String name) {
+        boolean isAddCity = false;
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceCity = connection.prepareStatement("INSERT INTO City (nameCity) VALUES (?)");
+            sentenceCity.setString(1,name);
+            sentenceCity.executeUpdate();
+            isAddCity = true;
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isAddCity;
+    }
+
+    /**
+     * Method to add a Sector
+     * @param name The name parameter defines the sector of Linked Organization
+     * @return if the sector was added
+     */
+    public boolean addSector(String name) {
+        boolean isAddSector = false;
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceSector = connection.prepareStatement("INSERT INTO Sector (nameSector) VALUES (?)");
+            sentenceSector.setString(1,name);
+            sentenceSector.executeUpdate();
+            isAddSector = true;
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isAddSector;
+    }
+
+    /**
+     * Method to add a State
+     * @param name The name parameter defines the state of Linked Organization
+     * @return if the state was added
+     */
+    @Override
+    public boolean addState(String name) {
+        boolean isAddState = false;
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceState = connection.prepareStatement("INSERT INTO State (nameState) VALUES (?)");
+            sentenceState.setString(1,name);
+            sentenceState.executeUpdate();
+            isAddState = true;
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return isAddState;
     }
 
     /**
@@ -284,6 +346,145 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
     }
 
     /**
+     * Method to search for a city
+     * @param name The name parameter defines the city
+     * @return The idCity of the searched city
+     */
+    @Override
+    public int getIdCity(String name) {
+        int idCity = Search.NOTFOUND.getValue();
+        try{
+            connection = connexion.getConnection();
+            String queryCity= "SELECT idCity FROM City WHERE nameCity=?";
+            PreparedStatement sentence =connection.prepareStatement(queryCity);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idCity =results.getInt("idCity");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idCity;
+    }
+
+    /**
+     * Method to get the city list
+     * @return The city list
+     */
+    @Override
+    public List<String> getAllCity() {
+        List<String> cities = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("SELECT nameCity FROM City");
+            while(results.next()){
+                cities.add(results.getString("nameCity"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return cities;
+    }
+
+    /**
+     * Method to search for a sector
+     * @param name The name parameter defines the sector of linked organization
+     * @return The idSector of the searched sector
+     */
+    public int getIdSector(String name) {
+        int idSector = Search.NOTFOUND.getValue();
+        try{
+            connection = connexion.getConnection();
+            String querySector= "SELECT idSector FROM Sector WHERE nameSector=?";
+            PreparedStatement sentence =connection.prepareStatement(querySector);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idSector =results.getInt("idSector");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idSector;
+    }
+
+    /**
+     * Method to get the sector list
+     * @return The sector list
+     */
+    public List<String> getAllSector() {
+        List<String> sectors = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("SELECT nameSector FROM Sector");
+            while(results.next()){
+                sectors.add(results.getString("nameSector"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return sectors;
+    }
+
+    /**
+     * Method to search for a state
+     * @param name The name parameter defines the state of linked organization
+     * @return The idState of the searched state
+     */
+    @Override
+    public int getIdState(String name) {
+        int idState = Search.NOTFOUND.getValue();
+        try{
+            connection = connexion.getConnection();
+            String queryState= "SELECT idState FROM State WHERE nameState=?";
+            PreparedStatement sentence =connection.prepareStatement(queryState);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()){
+                idState =results.getInt("idState");
+            }
+        }catch(SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return idState;
+    }
+
+    /**
+     * Method to get the state list
+     * @return The state list
+     */
+    @Override
+    public List<String> getAllState() {
+        List<String> states = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("SELECT nameState FROM State");
+            while(results.next()){
+                states.add(results.getString("nameState"));
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            connexion.closeConnection();
+        }
+        return states;
+    }
+
+    /**
      * Update method of the Linked Organization
      * @param organizationEdit The data of the Linked Organization
      * @param datesUpdate The data to modify of the Linked Organization
@@ -339,29 +540,26 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodLinkedOrganization;
                 if(Change.get(indexPreparedStatement - 1).equals("getCity")){
-                    CityDAOImpl cityDAO = new CityDAOImpl();
-                    idCity = cityDAO.getIdCity(organizationEdit.getCity());
+                    idCity = getIdCity(organizationEdit.getCity());
                     if(idCity == Search.NOTFOUND.getValue()){
-                        cityDAO.addCity(organizationEdit.getCity());
-                        idCity = cityDAO.getIdCity(organizationEdit.getCity());
+                        addCity(organizationEdit.getCity());
+                        idCity = getIdCity(organizationEdit.getCity());
                     }
                     preparedStatement.setInt(indexPreparedStatement, idCity);
                 } else{
                     if(Change.get(indexPreparedStatement - 1).equals("getState")) {
-                        StateDAOImpl stateDAO = new StateDAOImpl();
-                        idState = stateDAO.getIdState(organizationEdit.getState());
+                        idState = getIdState(organizationEdit.getState());
                         if(idState == Search.NOTFOUND.getValue()){
-                            stateDAO.addState(organizationEdit.getState());
-                            idState = stateDAO.getIdState(organizationEdit.getState());
+                            addState(organizationEdit.getState());
+                            idState = getIdState(organizationEdit.getState());
                         }
                         preparedStatement.setInt(indexPreparedStatement, idState);
                     }else {
                         if(Change.get(indexPreparedStatement - 1).equals("getSector")) {
-                            SectorDAOImpl sectorDAO = new SectorDAOImpl();
-                            idSector = sectorDAO.getIdSector(organizationEdit.getSector());
+                            idSector = getIdSector(organizationEdit.getSector());
                             if(idSector == Search.NOTFOUND.getValue()){
-                                sectorDAO.addSector(organizationEdit.getSector());
-                                idSector = sectorDAO.getIdSector(organizationEdit.getSector());
+                                addSector(organizationEdit.getSector());
+                                idSector = getIdSector(organizationEdit.getSector());
                             }
                             preparedStatement.setInt(indexPreparedStatement, idSector);
                         } else {

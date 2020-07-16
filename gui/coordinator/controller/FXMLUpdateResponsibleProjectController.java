@@ -1,6 +1,5 @@
 package gui.coordinator.controller;
 
-import dataaccess.Number;
 import domain.ResponsibleProject;
 import gui.FXMLGeneralController;
 import javafx.fxml.FXML;
@@ -49,7 +48,7 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void backListResponsibleProject() {
-        generateCancel("¿Seguro desea cancelar?", btnCancel, "/gui/coordinator/fxml/FXMLListResponsibleProject.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?", btnCancel, "/gui/coordinator/fxml/FXMLListResponsibleProject.fxml");
     }
 
     public void assignEmailResponsible (String emailResponsibleProject){

@@ -1,6 +1,5 @@
 package gui.coordinator.controller;
 
-import dataaccess.Number;
 import domain.LinkedOrganization;
 import domain.PhoneNumber;
 import gui.FXMLGeneralController;
@@ -106,7 +105,7 @@ public class FXMLDeleteLinkedOrganizationController extends FXMLGeneralControlle
     }
 
     public void backListLinkedOrganization(){
-        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml");
     }
 
 }

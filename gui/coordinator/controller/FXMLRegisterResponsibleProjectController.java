@@ -41,7 +41,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
     }
 
     public void backMenu() {
-        generateCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
+        generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLMenuCoordinator.fxml");
     }
 
     public void limitComponentResponsibleProject(){

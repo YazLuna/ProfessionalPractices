@@ -1,6 +1,5 @@
 package gui.coordinator.controller;
 
-import dataaccess.Number;
 import domain.ResponsibleProject;
 import gui.FXMLGeneralController;
 import javafx.beans.property.ReadOnlyObjectProperty;
