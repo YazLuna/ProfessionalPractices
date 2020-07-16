@@ -19,6 +19,7 @@ public class FXMLMenuAdministratorController extends FXMLGeneralController imple
     @FXML private Button btnDeleteTeacher;
     @FXML private Button btnUpdateCoordinator;
     @FXML private Button btnUpdateTeacher;
+    public static int idUser;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

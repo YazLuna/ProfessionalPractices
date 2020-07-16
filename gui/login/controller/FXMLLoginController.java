@@ -3,6 +3,9 @@ package gui.login.controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import domain.Search;
+import gui.administrator.controller.FXMLMenuAdministratorController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -47,11 +50,17 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
                 FXMLFirstLoginController.userName= user;
                 openWindowGeneral("/gui/login/fxml/FXMLFirstLogin.fxml", btnLogin);
             }else{
-                boolean searchLoginAccount = newLogin.searchLoginAccount(user, password);
-                if(searchLoginAccount){
+                int searchLoginAccount = newLogin.searchLoginAccount(user, password);
+                if(searchLoginAccount == Search.FOUND.getValue()){
                     openMenu(user, password);
                 }else{
-                    generateError("Usuario o contraseña incorrectos");
+                    if (searchLoginAccount == Search.NOTFOUND.getValue()) {
+                        generateError("Usuario o contraseña incorrectos");
+                    } else {
+                        if (searchLoginAccount == Search.EXCEPTION.getValue()) {
+                            generateError("No hay conexión con la base de datos intente más tarde");
+                        }
+                    }
                 }
             }
         }
@@ -86,9 +95,11 @@ public class FXMLLoginController extends FXMLGeneralController implements Initia
             String userType= userTypes.get(Number.ZERO.getNumber());
             switch (userType){
                 case "Coordinator":
+                    FXMLMenuCoordinatorController.staffNumber = newLogin.searchCoordinator(user, password);
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnLogin);
                     break;
                 case "Administrator":
+                    FXMLMenuAdministratorController.idUser = newLogin.searchAdministrator(user, password);
                     openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnLogin);
                     break;
                 case "Teacher":

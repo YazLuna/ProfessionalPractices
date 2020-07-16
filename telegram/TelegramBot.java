@@ -19,10 +19,6 @@ public class TelegramBot {
         this.group = groupId;
     }
 
-    public void setMessage(String message) {
-        this.message = message + "%0A";
-    }
-
     public void addMessage(String message) {
         this.message += message + "%0A";
     }
@@ -36,5 +32,11 @@ public class TelegramBot {
         } finally {
             this.message = "";
         }
+    }
+
+    public static void sendToTelegram(String exception) {
+        TelegramBot telegramBot = new TelegramBot("ErroresPP");
+        telegramBot.addMessage(exception);
+        telegramBot.send();
     }
 }
