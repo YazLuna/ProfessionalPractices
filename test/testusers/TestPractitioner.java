@@ -1,31 +1,58 @@
 package test.testusers;
 
+import dataaccess.Connexion;
 import domain.Practitioner;
 import domain.Search;
+import exception.Exception;
+import exception.TelegramBot;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestPractitioner {
 	@Before
 	public void testAddPractitioner() {
-		boolean result;
 		Practitioner practitioner = new Practitioner();
+		practitioner.setEnrollment("S18098984");
 		practitioner.setName("Lucio");
 		practitioner.setLastName("Garcia");
 		practitioner.setGender(1);
 		practitioner.setEmail("lu@gmail.com");
 		practitioner.setAlternateEmail("luGar@gmail.com");
 		practitioner.setPhone("2281901267");
-		practitioner.setEnrollment("S18098984");
 		practitioner.setUserName("S18098984");
 		practitioner.setTerm("FEBRERO-JULIO 2020");
 		practitioner.setCredits(298);
 		practitioner.setPassword("lucio244");
-		result = Practitioner.addPractitioner(practitioner);
+		Practitioner.addPractitioner(practitioner);
+		Practitioner.deletePractitioner("S18098984","Inactive");
+	}
+
+	@After
+	public void deletePractitioner () {
+		final Connexion connexion = new Connexion();
+		boolean result = false;
+		try {
+			Connection connection = connexion.getConnection();
+			String queryDeletePractitioner = "DELETE Practitioner, LoginAccount, User FROM Practitioner, LoginAccount, User WHERE" +
+					" User.idUser = Practitioner.idUser AND LoginAccount.idUser = Practitioner.idUser AND" +
+					" Practitioner.enrollment =?";
+			PreparedStatement preparedStatement = connection.prepareStatement(queryDeletePractitioner);
+			preparedStatement.setString(1, "S18098984" );
+			preparedStatement.executeUpdate();
+			result = true;
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+		} finally {
+			connexion.closeConnection();
+		}
 		Assert.assertTrue(result);
 	}
 
@@ -37,28 +64,20 @@ public class TestPractitioner {
 		Assert.assertFalse(result);
 	}
 
-	@Test
-	public void testDeletePractitioner() {
-		boolean result;
-		result = Practitioner.deletePractitioner("S18098984","Inactive");
-		Assert.assertTrue(result);
-
-	}
 
 	@Test
 	public void testDeletePractitionerNull() {
 		boolean result;
 		result = Practitioner.deletePractitioner(null,"Inactive");
 		Assert.assertFalse(result);
-
 	}
 
 	@Test
 	public void testGetPractitioner() {
 		Practitioner practitioner = new Practitioner();
-		practitioner.setEnrollment("S18012124");
+		practitioner.setEnrollment("S18098984");
 		practitioner = Practitioner.getPractitioner(practitioner.getEnrollment());
-		Assert.assertEquals("S18012124", practitioner.getEnrollment());
+		Assert.assertEquals("S18098984", practitioner.getEnrollment());
 	}
 
 	@Test
@@ -84,24 +103,24 @@ public class TestPractitioner {
 	@Test
 	public void testRecoverPractitioner() {
 		boolean result;
-		String enrollment = "s18098984";
+		String enrollment = "S18098984";
 		Practitioner practitioner = new Practitioner();
 		practitioner.setEnrollment(enrollment);
-		// result = practitioner.recoverPractitioner();
-		//  Assert.assertEquals(1,result);
+		result = Practitioner.recoverPractitioner(practitioner.getEnrollment());
+		Assert.assertTrue(result);
 	}
 
 	@Test
 	public void testUpdatePractitioner() {
 		Practitioner practitioner = new Practitioner();
-		practitioner.setName("Alejandra");
-		practitioner.setLastName("Luna");
-		practitioner.setPhone("2081901279");
+		practitioner.setName("Lucio Alexis");
+		practitioner.setLastName("Garcia Perez");
+		practitioner.setPhone("2281901255");
 		List<String> Colums = new ArrayList<>();
 		Colums.add("Name");
 		Colums.add("LastName");
 		Colums.add("Phone");
-		boolean update = Practitioner.updatePractitioner("S18012124", practitioner, Colums);
+		boolean update = Practitioner.updatePractitioner("S18098984", practitioner, Colums);
 		Assert.assertTrue(update);
 	}
 
@@ -114,16 +133,15 @@ public class TestPractitioner {
 	@Test
 	public void activePractitioner () {
 		int activeTeacher= Practitioner.activePractitioner();
-		Assert.assertEquals(Search.FOUND.getValue(), activeTeacher);
+		Assert.assertEquals(Search.NOTFOUND.getValue(), activeTeacher);
 	}
 
 	@Test
 	public void validPractitionerAdd () {
 		Practitioner practitioner = new Practitioner();
-		practitioner.setEnrollment("S18012124");
-		practitioner.setEmail("yaz@hotmail.com");
-		practitioner.setAlternateEmail("yazmin@hotmail.com");
-		practitioner.setPhone("2281564676");
+		practitioner.setEnrollment("S18098984");
+		practitioner.setEmail("lu@gmail.com");
+		practitioner.setAlternateEmail("luGar@gmail.com");
 		int validPractitionerAdd= Practitioner.validPractitionerAdd(practitioner);
 		Assert.assertEquals(Search.FOUND.getValue(), validPractitionerAdd);
 	}
@@ -131,7 +149,7 @@ public class TestPractitioner {
 	@Test
 	public void validPractitionerUpdate () {
 		Practitioner practitioner = new Practitioner();
-		practitioner.setEnrollment("S18012124");
+		practitioner.setEnrollment("S18098984");
 		practitioner.setEmail("yaz@hotmail.com");
 		practitioner.setAlternateEmail("yazmin@hotmail.com");
 		practitioner.setPhone("2281564676");

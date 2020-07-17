@@ -1,19 +1,25 @@
 package test.testusers;
 
+import dataaccess.Connexion;
 import domain.Coordinator;
 import domain.Search;
 import domain.User;
+import exception.Exception;
+import exception.TelegramBot;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestCoordinator {
-	@Test
+	@Before
 	public void testAddCoordinator() {
-		boolean result = false;
 		Coordinator coordinator = new Coordinator();
 		coordinator.setName("Amairani");
 		coordinator.setLastName("Hernandez");
@@ -21,12 +27,34 @@ public class TestCoordinator {
 		coordinator.setEmail("ama@gmail.com");
 		coordinator.setAlternateEmail("amaHer@gmail.com");
 		coordinator.setPhone("2281034676");
-		coordinator.setStaffNumber(46);
+		coordinator.setStaffNumber(460);
 		coordinator.setRegistrationDate("2020-04-29");
 		coordinator.setPassword("Wigetazd54");
 		coordinator.setUserName("hermandez12A");
-		result = Coordinator.addUser((User)coordinator);
-		result = Coordinator.addCoordinator(coordinator);
+		Coordinator.addUser((User)coordinator);
+		Coordinator.addCoordinator(coordinator);
+		Coordinator.deleteCoordinator("Inactive","2020-07-07");
+	}
+
+	@After
+	public void deleteCoordinator () {
+		final Connexion connexion = new Connexion();
+		boolean result = false;
+		try {
+			Connection connection = connexion.getConnection();
+			String queryDeleteCoordinator = "DELETE Coordinator, LoginAccount, User FROM Coordinator, LoginAccount, User WHERE" +
+					" User.idUser = Coordinator.idUser AND LoginAccount.idUser = Coordinator.idUser AND" +
+					" Coordinator.staffNumber =?";
+			PreparedStatement preparedStatement = connection.prepareStatement(queryDeleteCoordinator);
+			preparedStatement.setInt(1, 460);
+			preparedStatement.executeUpdate();
+			result = true;
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+		} finally {
+			connexion.closeConnection();
+		}
 		Assert.assertTrue(result);
 	}
 
@@ -41,14 +69,6 @@ public class TestCoordinator {
 	}
 
 	@Test
-	public void testDeleteCoordinator() throws SQLException {
-		boolean result;
-		Coordinator coordinator = new Coordinator();
-		result = Coordinator.deleteCoordinator("Inactive","2020-07-07");
-		Assert.assertTrue(result);
-	}
-
-	@Test
 	public void testDeleteCoordinatorNull() {
 		boolean result;
 		result = Coordinator.deleteCoordinator("Inactive","2020-07-07");
@@ -57,8 +77,8 @@ public class TestCoordinator {
 
 	@Test
 	public void testGetCoordinator() {
-		Coordinator result = Coordinator.getCoordinatorSelected(1);
-		Assert.assertEquals(1, result.getStaffNumber());
+		Coordinator result = Coordinator.getCoordinatorSelected(460);
+		Assert.assertEquals(460, result.getStaffNumber());
 	}
 
 	@Test
@@ -76,7 +96,7 @@ public class TestCoordinator {
 	@Test
 	public void testGetCoordinatorActive() {
 		Coordinator result = Coordinator.getCoordinator();
-		Assert.assertNotNull(result);
+		Assert.assertEquals(0, result.getStaffNumber());
 	}
 
 	@Test
@@ -84,12 +104,10 @@ public class TestCoordinator {
 		Coordinator coordinator = new Coordinator();
 		coordinator.setName("Yaz");
 		coordinator.setLastName("Yoongi");
-		coordinator.setPhone("2281564678");
 		List<String> Colums = new ArrayList<>();
 		Colums.add("Name");
 		Colums.add("LastName");
-		Colums.add("Phone");
-		boolean update = Coordinator.updateCoordinator(1, coordinator, Colums);
+		boolean update = Coordinator.updateCoordinator(460, coordinator, Colums);
 		Assert.assertTrue(update);
 	}
 
@@ -102,7 +120,31 @@ public class TestCoordinator {
 	@Test
 	public void activeCoordinator () {
 		int activeCoordinator= Coordinator.activeCoordinator();
-		Assert.assertEquals(Search.FOUND.getValue(), activeCoordinator);
+		Assert.assertEquals(Search.NOTFOUND.getValue(), activeCoordinator);
+	}
+
+	@Test
+	public void validAcademicAdd () {
+		Coordinator coordinator = new Coordinator();
+		coordinator.setEmail("ama@gmail.com");
+		coordinator.setAlternateEmail("amaHer@gmail.com");
+		coordinator.setPhone("2281034676");
+		coordinator.setUserName("hermandez12A");
+		int validateAcademicAdd= Coordinator.validateAcademicAdd(coordinator.getStaffNumber(), coordinator.getEmail()
+				, coordinator.getAlternateEmail(), coordinator.getPhone(), coordinator.getUserName());
+		Assert.assertEquals(Search.FOUND.getValue(), validateAcademicAdd);
+	}
+
+	@Test
+	public void validAcademicUpdate () {
+		Coordinator coordinator = new Coordinator();
+		coordinator.setEmail("ama@gmail.com");
+		coordinator.setAlternateEmail("amaHer@gmail.com");
+		coordinator.setPhone("2281034676");
+		coordinator.setUserName("hermandez12A");
+		int validateAcademicAdd= Coordinator.validateAcademicUpdate(coordinator.getStaffNumber(), coordinator.getEmail()
+				, coordinator.getAlternateEmail(), coordinator.getPhone());
+		Assert.assertEquals(Search.FOUND.getValue(), validateAcademicAdd);
 	}
 
 }

@@ -70,7 +70,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 	public int validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName) {
 		int valid = validateUserAdd(email, alternateEmail, phone, userName);
 		if(valid == Search.NOTFOUND.getValue()){
-			valid = staffNumberValidateTwoAcademics(staffNumber);
+			valid = validateStaffNumberTwoAcademics(staffNumber);
 		}
 		return valid;
 	}
@@ -125,16 +125,16 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		int valid = validateUser (email, alternateEmail, phone);
 		System.out.println(valid);
 		if(valid == Search.NOTFOUND.getValue()){
-			valid = staffNumberTwoAcademicsValidate(staffNumber);
+			valid = validateStaffNumberTwoAcademic(staffNumber);
 			System.out.println(valid);
 		}
 		return valid;
 	}
 
-	protected int staffNumberTwoAcademicsValidate(int staffNumberSearch) {
-		int resultValidate = staffNumberCoordinatorValidate(staffNumberSearch);
+	protected int validateStaffNumberTwoAcademic(int staffNumberSearch) {
+		int resultValidate = validateStaffNumberCoordinator(staffNumberSearch);
 		if(resultValidate == Search.NOTFOUND.getValue()) {
-			resultValidate = staffNumberTeacherValidate(staffNumberSearch);
+			resultValidate = validateStaffNumberTeacher(staffNumberSearch);
 		}
 		return resultValidate;
 	}
@@ -205,7 +205,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return search;
 	}
 
-	protected int staffNumberTeacherValidate(int staffNumberSearch)  {
+	protected int validateStaffNumberTeacher(int staffNumberSearch)  {
 		int valid = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
@@ -227,7 +227,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return valid;
 	}
 
-	protected int staffNumberCoordinatorValidate(int staffNumberSearch)  {
+	protected int validateStaffNumberCoordinator(int staffNumberSearch)  {
 		int valid = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
@@ -249,7 +249,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return valid;
 	}
 
-	protected int staffNumberValidateTwoAcademics(int staffNumberSearch) {
+	protected int validateStaffNumberTwoAcademics(int staffNumberSearch) {
 		int staffNumber = searchStaffNumberTeacher(staffNumberSearch);
 		if(staffNumber == Search.NOTFOUND.getValue() ){
 			staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
