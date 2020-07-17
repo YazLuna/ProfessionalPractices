@@ -25,57 +25,13 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		connexion = new Connexion();
 	}
 
+	/**
+	 * Method to add a user
+	 * @param user to Add
+	 * @return true if added and false if not
+	 */
 	@Override
-	public int searchIdUser(String email, String alternateEmail, String phone) {
-		int idUser = Search.NOTFOUND.getValue();
-		try {
-			connection = connexion.getConnection();
-			String querySearchIdUser = "Select idUser from User where email=? AND alternateEmail=? AND phone=?";
-			preparedStatement = connection.prepareStatement(querySearchIdUser);
-			preparedStatement.setString(1, email);
-			preparedStatement.setString(2, alternateEmail);
-			preparedStatement.setString(3, phone);
-			resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				idUser = resultSet.getInt("idUser");
-			}
-		} catch (SQLException ex) {
-			new Exception().log(ex);
-			TelegramBot.sendToTelegram(ex.getMessage());
-		} finally {
-			connexion.closeConnection();
-		}
-		return idUser;
-	}
-
-	@Override
-	public boolean searchUserAcademic(String name, String lastName, String email, String alternateEmail, String phone, int gender) {
-		boolean search = false;
-		try {
-			connection = connexion.getConnection();
-			String querySearchUser = "SELECT idUser FROM User WHERE name =? AND lastName =? AND email =? AND alternateEmail =? AND phone =? AND gender =?";
-			preparedStatement = connection.prepareStatement(querySearchUser);
-			preparedStatement.setString(1, name);
-			preparedStatement.setString(2, lastName);
-			preparedStatement.setString(3, email);
-			preparedStatement.setString(4, alternateEmail);
-			preparedStatement.setString(5, phone);
-			preparedStatement.setInt(6, gender);
-			resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				search = true;
-			}
-		} catch (SQLException exception) {
-			new Exception().log(exception);
-			TelegramBot.sendToTelegram(exception.getMessage());
-		} finally {
-			connexion.closeConnection();
-		}
-		return search;
-	}
-
-	@Override
-	public boolean addUser(User user, String userType) {
+	public boolean addUser(User user) {
 		boolean result = false;
 		try {
 			connection = connexion.getConnection();
@@ -101,6 +57,15 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return result;
 	}
 
+	/**
+	 * Method to know if a Academic is valid
+	 * @param staffNumber from Academic
+	 * @param email from Academic
+	 * @param alternateEmail from Academic
+	 * @param phone from Academic
+	 * @param userName from Academic
+	 * @return if are a valid Academic to add
+	 */
 	@Override
 	public int validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName) {
 		int valid = validateUserAdd(email, alternateEmail, phone, userName);
@@ -110,8 +75,71 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return valid;
 	}
 
+	/**
+	 * Method to know if a user is valid
+	 * @param email from user
+	 * @param alternateEmail from user
+	 * @param phone from user
+	 * @return if are a valid user
+	 */
 	@Override
-	public int searchStaffNumberCoordinator(int staffNumberSearch) {
+	public int validateUser(String email, String alternateEmail, String phone) {
+		int valid = searchEmail(email);
+		if(valid == Search.NOTFOUND.getValue()){
+			valid = searchAlternateEmail(alternateEmail);
+			if(valid == Search.NOTFOUND.getValue()){
+				valid = searchPhone(phone);
+			}
+		}
+		return valid;
+	}
+
+	/**
+	 * Method to know if a user is valid to add
+	 * @param email from user
+	 * @param alternateEmail from user
+	 * @param phone from user
+	 * @param userName from user
+	 * @return if are a valid user to add
+	 */
+	@Override
+	public int validateUserAdd(String email, String alternateEmail, String phone, String userName) {
+		int valid = validateUser (email, alternateEmail, phone);
+		if(valid == Search.NOTFOUND.getValue()){
+			LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
+			valid = loginAccountDAO.searchUserName(userName);
+		}
+		return valid;
+	}
+
+	/**
+	 * Method to know if a Academic is valid to update
+	 * @param staffNumber from Academic
+	 * @param email from Academic
+	 * @param alternateEmail from Academic
+	 * @param phone from Academic
+	 * @return if are a valid Academic to update
+	 */
+	@Override
+	public int validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone) {
+		int valid = validateUser (email, alternateEmail, phone);
+		System.out.println(valid);
+		if(valid == Search.NOTFOUND.getValue()){
+			valid = staffNumberTwoAcademicsValidate(staffNumber);
+			System.out.println(valid);
+		}
+		return valid;
+	}
+
+	protected int staffNumberTwoAcademicsValidate(int staffNumberSearch) {
+		int resultValidate = staffNumberCoordinatorValidate(staffNumberSearch);
+		if(resultValidate == Search.NOTFOUND.getValue()) {
+			resultValidate = staffNumberTeacherValidate(staffNumberSearch);
+		}
+		return resultValidate;
+	}
+
+	protected int searchStaffNumberCoordinator(int staffNumberSearch) {
 		int staffNumber = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
@@ -131,8 +159,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return staffNumber;
 	}
 
-	@Override
-	public int searchStaffNumberTeacher(int staffNumberSearch)  {
+	protected int searchStaffNumberTeacher(int staffNumberSearch)  {
 		int staffNumber = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
@@ -153,8 +180,32 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return staffNumber;
 	}
 
-	@Override
-	public int staffNumberTeacherValidate(int staffNumberSearch)  {
+	protected boolean searchUserAcademic(String name,String lastName,String email,String alternateEmail,String phone,int gender) {
+		boolean search = false;
+		try {
+			connection = connexion.getConnection();
+			String querySearchUser = "SELECT idUser FROM User WHERE name =? AND lastName =? AND email =? AND alternateEmail =? AND phone =? AND gender =?";
+			preparedStatement = connection.prepareStatement(querySearchUser);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, lastName);
+			preparedStatement.setString(3, email);
+			preparedStatement.setString(4, alternateEmail);
+			preparedStatement.setString(5, phone);
+			preparedStatement.setInt(6, gender);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				search = true;
+			}
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+		} finally {
+			connexion.closeConnection();
+		}
+		return search;
+	}
+
+	protected int staffNumberTeacherValidate(int staffNumberSearch)  {
 		int valid = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
@@ -176,8 +227,7 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return valid;
 	}
 
-	@Override
-	public int staffNumberCoordinatorValidate(int staffNumberSearch)  {
+	protected int staffNumberCoordinatorValidate(int staffNumberSearch)  {
 		int valid = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
@@ -199,55 +249,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		return valid;
 	}
 
-	@Override
-	public int validateUser(String email, String alternateEmail, String phone) {
-		int valid = searchEmail(email);
-		if(valid == Search.NOTFOUND.getValue()){
-			valid = searchAlternateEmail(alternateEmail);
-			if(valid == Search.NOTFOUND.getValue()){
-				valid = searchPhone(phone);
-			}
-		}
-		return valid;
-	}
-
-	@Override
-	public int validateUserAdd(String email, String alternateEmail, String phone, String userName) {
-		int valid = validateUser (email, alternateEmail, phone);
-		if(valid == Search.NOTFOUND.getValue()){
-			LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
-			valid = loginAccountDAO.searchUserName(userName);
-		}
-		return valid;
-	}
-
-	@Override
-	public int staffNumberValidateTwoAcademics(int staffNumberSearch) {
+	protected int staffNumberValidateTwoAcademics(int staffNumberSearch) {
 		int staffNumber = searchStaffNumberTeacher(staffNumberSearch);
 		if(staffNumber == Search.NOTFOUND.getValue() ){
 			staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
 		}
 		return staffNumber;
-	}
-
-	@Override
-	public int validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone) {
-		int valid = validateUser (email, alternateEmail, phone);
-		System.out.println(valid);
-		if(valid == Search.NOTFOUND.getValue()){
-			valid = staffNumberTwoAcademicsValidate(staffNumber);
-			System.out.println(valid);
-		}
-		return valid;
-	}
-
-	@Override
-	public int staffNumberTwoAcademicsValidate(int staffNumberSearch) {
-		int resultValidate = staffNumberCoordinatorValidate(staffNumberSearch);
-		if(resultValidate == Search.NOTFOUND.getValue()) {
-			resultValidate = staffNumberTeacherValidate(staffNumberSearch);
-		}
-		return resultValidate;
 	}
 
 	protected void addRelations(int idUserAdd, String status, String userType) {
@@ -256,6 +263,48 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		int idUserTypeSearch = searchIdUserType(userType);
 		addUserUserStatus(idUserAdd, idUserStatusSearch,idUserTypeSearch);
 		addUserUserType(idUserAdd, idUserTypeSearch);
+	}
+
+	protected int searchIdUser(String email, String alternateEmail, String phone) {
+		int idUser = Search.NOTFOUND.getValue();
+		try {
+			connection = connexion.getConnection();
+			String querySearchIdUser = "Select idUser from User where email=? AND alternateEmail=? AND phone=?";
+			preparedStatement = connection.prepareStatement(querySearchIdUser);
+			preparedStatement.setString(1, email);
+			preparedStatement.setString(2, alternateEmail);
+			preparedStatement.setString(3, phone);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				idUser = resultSet.getInt("idUser");
+			}
+		} catch (SQLException ex) {
+			new Exception().log(ex);
+			TelegramBot.sendToTelegram(ex.getMessage());
+		} finally {
+			connexion.closeConnection();
+		}
+		return idUser;
+	}
+
+	protected int searchIdUserType(String userType) {
+		int idUserType = Search.NOTFOUND.getValue();
+		try {
+			connection = connexion.getConnection();
+			String querySearchIdUserType = "Select idUserType from UserType where type =?";
+			preparedStatement = connection.prepareStatement(querySearchIdUserType);
+			preparedStatement.setString(1, userType);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				idUserType = resultSet.getInt("idUserType");
+			}
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+		} finally {
+			connexion.closeConnection();
+		}
+		return idUserType;
 	}
 
 	private int searchAlternateEmail(String alternateEmail)  {
@@ -352,27 +401,6 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		}finally {
 			connexion.closeConnection();
 		}
-	}
-
-	@Override
-	public int searchIdUserType(String userType) {
-		int idUserType = Search.NOTFOUND.getValue();
-		try {
-			connection = connexion.getConnection();
-			String querySearchIdUserType = "Select idUserType from UserType where type =?";
-			preparedStatement = connection.prepareStatement(querySearchIdUserType);
-			preparedStatement.setString(1, userType);
-			resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				idUserType = resultSet.getInt("idUserType");
-			}
-		} catch (SQLException exception) {
-			new Exception().log(exception);
-			TelegramBot.sendToTelegram(exception.getMessage());
-		} finally {
-			connexion.closeConnection();
-		}
-		return idUserType;
 	}
 
 }

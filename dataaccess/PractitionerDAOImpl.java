@@ -46,8 +46,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             TermDAO.addTerm(practitioner.getTerm());
             idTerm = TermDAO.getIdTerm(practitioner.getTerm());
         }
-        User user = (User)practitioner;
-        boolean addUser = Practitioner.addUser(user,"Practitioner");
+        boolean addUser = Practitioner.addUser((User)practitioner);
         if (addUser){
             int idUser = searchIdUser(practitioner.getEmail(),practitioner.getAlternateEmail(),practitioner.getPhone());
             try{

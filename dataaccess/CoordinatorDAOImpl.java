@@ -233,12 +233,11 @@ public class CoordinatorDAOImpl extends UserMethodDAOImpl implements ICoordinato
 				} catch (ClassCastException classCastException) {
 					isString = false;
 				}
+				methodCoordinator = classCoordinator.getMethod(change.get(indexPreparedStatement - 1));
 				if(isString){
-					methodCoordinator = classCoordinator.getMethod(change.get(indexPreparedStatement - 1));
 					String word = (String) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
 					preparedStatement.setString(indexPreparedStatement,word);
 				} else{
-					methodCoordinator = classCoordinator.getMethod(change.get(indexPreparedStatement - 1));
 					int integer = (int) methodCoordinator.invoke(coordinatorEdit, new Object[] {});
 					preparedStatement.setInt(indexPreparedStatement, integer);
 				}

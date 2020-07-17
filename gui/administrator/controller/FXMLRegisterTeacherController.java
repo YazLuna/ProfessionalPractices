@@ -1,6 +1,6 @@
 package gui.administrator.controller;
 
-import domain.*;
+import domain.Teacher;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import java.net.URL;
@@ -11,7 +11,10 @@ import gui.FXMLGeneralController;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import domain.Gender;
 import logic.ValidateUser;
+import domain.Search;
+import domain.User;
 
 /**
  * Register Teacher Controller
@@ -86,7 +89,7 @@ public class FXMLRegisterTeacherController extends FXMLGeneralController impleme
         int validUserTeacher = Teacher.validateAcademicAdd(teacher.getStaffNumber(), teacher.getEmail(), teacher.getAlternateEmail(),
                 teacher.getPhone(), teacher.getUserName());
         if (validUserTeacher == Search.NOTFOUND.getValue()) {
-            boolean userAdd = Teacher.addUser((User)teacher, "Teacher");
+            boolean userAdd = Teacher.addUser((User)teacher);
             if (!userAdd) {
                 validUserTeacher = Search.EXCEPTION.getValue();
             }

@@ -62,7 +62,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
 	 * Method that searches if it is the first login of that account
 	 * @param userName from User
 	 * @param password from User
-	 * @return 0 if it is not your first login, 1 if it is and 2 if an exception occurred
+	 * @return 0 if it is not your first login, 1 if it is and -1 if an exception occurred
 	 */
 	@Override
 	public int firstLogin(String userName, String password) {
@@ -127,7 +127,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
 	 * Method to Search if this account exists and is active
 	 * @param userName from User
 	 * @param password from User
-	 * @return 0 if not found, 1 if found, and 2 if an exception occurred
+	 * @return 0 if not found, 1 if found, and -1 if an exception occurred
 	 */
 	@Override
 	public int searchLoginAccount(String userName, String password) {
@@ -146,7 +146,6 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
 			}
 		} catch (SQLException exception) {
 			new Exception().log(exception);
-			TelegramBot.sendToTelegram(exception.getMessage());
 			search = Search.EXCEPTION.getValue();
 		}finally {
 			connexion.closeConnection();
@@ -218,7 +217,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
 	 * @param passwordPrevious assigned when registered
 	 * @param passwordNew assigned by the user who owns the account
 	 * @param userNameNew assigned by the user who owns the account
-	 * @return 0 if the data is invalid, 1 if it was modified and 2 if an exception occurred
+	 * @return 0 if the data is invalid, 1 if it was modified and -1 if an exception occurred
 	 */
 	@Override
 	public int updateLoginAccount(String userNamePrevious, String passwordPrevious, String passwordNew, String userNameNew){
@@ -284,7 +283,7 @@ public class LoginAccountDAOImpl implements ILoginAccountDAO {
 	/**
 	 * Method that seeks that the username to be assigned is not repeated
 	 * @param userName Username to be assigned
-	 * @return 0 if not found, 1 if found, and 2 if an exception was thrown
+	 * @return 0 if not found, 1 if found, and -1 if an exception was thrown
 	 */
 	@Override
 	public int searchUserName(String userName){

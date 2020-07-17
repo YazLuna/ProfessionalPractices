@@ -6,7 +6,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Exception class
+ * @author Yazmin
+ * @version 17/07/2020
+ */
 public class Exception {
+	/**
+	 * Method to log exceptions
+	 * @param exception to log
+	 * @return true if log, false if not
+	 */
 	public boolean log(Throwable exception) {
 		boolean wrote = false;
 		try {

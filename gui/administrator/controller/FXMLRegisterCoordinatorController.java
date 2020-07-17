@@ -4,7 +4,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
-
 import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -91,7 +90,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         int validUserCoordinator = Coordinator.validateAcademicAdd(coordinator.getStaffNumber(), coordinator.getEmail()
                 , coordinator.getAlternateEmail(), coordinator.getPhone(), coordinator.getUserName());
         if (validUserCoordinator == Search.NOTFOUND.getValue()) {
-            boolean addUser = Coordinator.addUser((User)coordinator, "Coordinator");
+            boolean addUser = Coordinator.addUser((User)coordinator);
             if (!addUser) {
                 validUserCoordinator = Search.EXCEPTION.getValue();
             }
