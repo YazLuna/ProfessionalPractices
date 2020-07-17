@@ -40,7 +40,7 @@ public class FXMLDeleteProjectController extends FXMLGeneralController implement
     @FXML private Text txtActivity;
     @FXML private Label lbDuration;
     @FXML private Label lbQuiantityPractitioners;
-    @FXML private Label lbLapse;
+    @FXML private Label lbTerm;
     @FXML private GridPane gpActivity;
     private static String nameProject;
     private Project project;
@@ -60,9 +60,7 @@ public class FXMLDeleteProjectController extends FXMLGeneralController implement
     }
 
     public void startComponentProject() {
-        project = new Project();
-        project.setNameProject(nameProject);
-        project = project.getProject(nameProject);
+        project = Project.getProject(nameProject);
         txtName.setText(project.getNameProject());
         txtDescription.setText(project.getDescription());
         txtObjectiveGeneral.setText(project.getObjectiveGeneral());
@@ -81,7 +79,7 @@ public class FXMLDeleteProjectController extends FXMLGeneralController implement
         txtActivity.setText(schedulingActivities.get(0).getActivity());
         lbDuration.setText(String.valueOf(project.getDuration()));
         lbQuiantityPractitioners.setText(String.valueOf(project.getQuiantityPractitioner()));
-        lbLapse.setText(project.getTerm());
+        lbTerm.setText(project.getTerm());
 
         for(int indexScheduling=1; indexScheduling<schedulingActivities.size();indexScheduling++){
             Label lbMonth = new Label();
@@ -115,14 +113,14 @@ public class FXMLDeleteProjectController extends FXMLGeneralController implement
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.orElse(NO) == YES) {
             boolean isDeleteProject;
-            isDeleteProject = project.deleteProject(project.getNameProject());
+            isDeleteProject = Project.deleteProject(project.getNameProject());
             if (!isDeleteProject) {
                 generateError("El proyecto no pudo eliminarse");
                 openWindowGeneral("/gui/coordinator/fxml/FXMLListProject.fxml", btnDeleteProject);
             } else {
                 generateInformation("El proyecto se eliminó exitosamente");
                 boolean areProject;
-                areProject = project.thereAreProjectAvailable();
+                areProject = Project.thereAreProjectAvailable();
                 if (!areProject) {
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnDeleteProject);
                 } else {

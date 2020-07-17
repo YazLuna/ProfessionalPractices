@@ -2,6 +2,7 @@ package logic;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import domain.Number;
 
 /**
  *  Class validate General

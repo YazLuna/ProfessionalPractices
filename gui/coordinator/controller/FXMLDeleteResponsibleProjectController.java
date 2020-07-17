@@ -39,7 +39,7 @@ public class FXMLDeleteResponsibleProjectController extends FXMLGeneralControlle
 
     public void startComponentResponsibleProject() {
         responsible = new ResponsibleProject();
-        responsible = responsible.getResponsibleProject(emailResponsibleProject);
+        responsible = ResponsibleProject.getResponsibleProject(emailResponsibleProject);
         lbNameResponsible.setText(responsible.getName());
         lbLastNameResponsible.setText(responsible.getLastName());
         lbEmail.setText(responsible.getEmail());
@@ -54,14 +54,14 @@ public class FXMLDeleteResponsibleProjectController extends FXMLGeneralControlle
         Optional<ButtonType> action = cancel.showAndWait();
         if (action.orElse(NO) == YES) {
             boolean isDeleteResponsibleProject;
-            isDeleteResponsibleProject  = responsible.deleteResponsibleProject(responsible.getEmail());
+            isDeleteResponsibleProject  = ResponsibleProject.deleteResponsibleProject(responsible.getEmail());
             if(!isDeleteResponsibleProject) {
                 generateError("El responsable del proyecto no pudo eliminarse");
                 openWindowGeneral("/gui/coordinator/fxml/FXMLListResponsibleProject.fxml",btnDelete);
             }else {
                 generateInformation("El Responsable del proyecto se eliminó exitosamente");
                 boolean areResponsible;
-                areResponsible = responsible.thereAreResponsibleProjectAvailable();
+                areResponsible = ResponsibleProject.thereAreResponsibleProjectAvailable();
                 if (!areResponsible) {
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
                 } else {

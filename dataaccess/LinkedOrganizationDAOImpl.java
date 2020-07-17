@@ -8,10 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import domain.LinkedOrganization;
+import domain.Number;
+import domain.PhoneNumber;
 import domain.Search;
+import exception.Exception;
+import telegram.TelegramBot;
 
 /**
  * Implementation of the IProjectDAO
@@ -63,8 +65,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         idStatus = status.searchIdStatus(organization.getStatus());
         try{
             connection = connexion.getConnection();
-            PreparedStatement sentenceOrganization = connection.prepareStatement("INSERT INTO LinkedOrganization(name,"+
-                    "directUsers,indirectUsers,email,address,idCity,idState,idSector,idStatus) VALUES (?,?,?,?,?,?,?,?,?)");
+            PreparedStatement sentenceOrganization = connection.prepareStatement("INSERT INTO LinkedOrganization(name,directUsers"+
+                    ",indirectUsers,email,address,idCity,idState,idSector,idStatus) VALUES (?,?,?,?,?,?,?,?,?)");
             sentenceOrganization.setString(1,organization.getName());
             sentenceOrganization.setString(2,organization.getDirectUsers());
             sentenceOrganization.setString(3,organization.getIndirectUsers());
@@ -76,8 +78,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceOrganization.setInt(9,idStatus);
             sentenceOrganization.executeUpdate();
             result = true;
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             if (connexion != null) {
                 connexion.closeConnection();
@@ -100,8 +103,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceCity.setString(1,name);
             sentenceCity.executeUpdate();
             isAddCity = true;
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -121,8 +125,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceSector.setString(1,name);
             sentenceSector.executeUpdate();
             isAddSector = true;
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -143,8 +148,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentenceState.setString(1,name);
             sentenceState.executeUpdate();
             isAddState = true;
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -168,8 +174,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                 linkedOrganization.setEmail(results.getString("email"));
                 linkedOrganizations.add(linkedOrganization);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -185,8 +192,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         List<LinkedOrganization> linkedOrganizations = new ArrayList<>();
         try{
             connection = connexion.getConnection();
-            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization " +
-                    "INNER JOIN Status ON LinkedOrganization.idStatus = Status.idStatus where status =?";
+            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN" +
+                    " Status ON LinkedOrganization.idStatus = Status.idStatus where status =?";
             PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
             sentenceAllOrganization.setString(1, "available");
             results= sentenceAllOrganization.executeQuery();
@@ -197,8 +204,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                 linkedOrganizations.add(linkedOrganization);
             }
 
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -215,8 +223,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         int idLinkedOrganization;
         try{
             connection = connexion.getConnection();
-            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN Status " +
-                    "ON LinkedOrganization.idStatus = Status.idStatus WHERE status =?";
+            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN Status ON" +
+                    " LinkedOrganization.idStatus = Status.idStatus WHERE status =?";
             PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
             sentenceAllOrganization.setString(1, "available");
             results= sentenceAllOrganization.executeQuery();
@@ -240,8 +248,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                     linkedOrganizations.add(linkedOrganization);
                 }
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -258,11 +267,11 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         LinkedOrganization linkedOrganization = null;
         try{
             connection = connexion.getConnection();
-            String queryLikendOrganization = "select * FROM LinkedOrganization INNER JOIN City " +
-                    "ON LinkedOrganization.idCity = City.idCity INNER JOIN " +
-                    "State ON LinkedOrganization.idState = State.idState " +
-                    "INNER JOIN Sector ON LinkedOrganization.idSector " +
-                    "= Sector.idSector WHERE name =?";
+            String queryLikendOrganization = "select * FROM LinkedOrganization INNER JOIN City ON" +
+                    " LinkedOrganization.idCity = City.idCity INNER JOIN State ON" +
+                    " LinkedOrganization.idState = State.idState INNER JOIN" +
+                    " Sector ON LinkedOrganization.idSector =" +
+                    " Sector.idSector WHERE name =?";
             PreparedStatement sentence = connection.prepareStatement(queryLikendOrganization);
             sentence.setString(1,nameOrganization);
             results= sentence.executeQuery();
@@ -277,9 +286,11 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                 linkedOrganization.setCity(results.getString("City.nameCity"));
                 linkedOrganization.setState(results.getString("State.nameState"));
                 linkedOrganization.setSector(results.getString("Sector.nameSector"));
+                linkedOrganization.setPhoneNumbers(PhoneNumber.getListPhoneNumber(linkedOrganization.getIdLinkedOrganization()));
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
         return linkedOrganization;
     }
@@ -294,10 +305,10 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         LinkedOrganization linkedOrganization = null;
         try{
             connection = connexion.getConnection();
-            String queryLikendOrganization = "SELECT * FROM LinkedOrganization INNER JOIN City ON LinkedOrganization.idCity " +
-                    "= City.idCity INNER JOIN State ON LinkedOrganization.idState = State.idState" +
-                    " INNER JOIN Sector ON LinkedOrganization.idSector " +
-                    "= Sector.idSector WHERE idLinkedOrganization =?";
+            String queryLikendOrganization = "SELECT * FROM LinkedOrganization INNER JOIN City ON LinkedOrganization.idCity =" +
+                    " City.idCity INNER JOIN State ON LinkedOrganization.idState = State.idState INNER JOIN" +
+                    " Sector ON LinkedOrganization.idSector =" +
+                    " Sector.idSector WHERE idLinkedOrganization =?";
             PreparedStatement sentence = connection.prepareStatement(queryLikendOrganization);
             sentence.setInt(1,idOrganization);
             results= sentence.executeQuery();
@@ -308,14 +319,15 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                 linkedOrganization.setDirectUsers(results.getString("directUsers"));
                 linkedOrganization.setIndirectUsers(results.getString("indirectUsers"));
                 linkedOrganization.setEmail(results.getString("email"));
-                //linkedOrganization.setPhoneNumber(results.getString("phoneNumber"));
                 linkedOrganization.setAddress(results.getString("address"));
                 linkedOrganization.setCity(results.getString("City.nameCity"));
                 linkedOrganization.setState(results.getString("State.nameState"));
                 linkedOrganization.setSector(results.getString("Sector.nameSector"));
+                linkedOrganization.setPhoneNumbers(PhoneNumber.getListPhoneNumber(linkedOrganization.getIdLinkedOrganization()));
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
         return linkedOrganization;
     }
@@ -337,8 +349,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             if(results.next()){
                 idLinkedOrganization =results.getInt("idLinkedOrganization");
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -362,8 +375,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while(results.next()){
                 idCity =results.getInt("idCity");
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -384,8 +398,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while(results.next()){
                 cities.add(results.getString("nameCity"));
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -408,8 +423,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while(results.next()){
                 idSector =results.getInt("idSector");
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -429,8 +445,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while(results.next()){
                 sectors.add(results.getString("nameSector"));
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -454,8 +471,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while(results.next()){
                 idState =results.getInt("idState");
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -476,8 +494,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while(results.next()){
                 states.add(results.getString("nameState"));
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -530,8 +549,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             }
             Change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
-        String sentence = "UPDATE LinkedOrganization SET "+sentenceDatesUpdate+ " WHERE idLinkedOrganization " +
-                "= "+ organizationEdit.getIdLinkedOrganization();
+        String sentence = "UPDATE LinkedOrganization SET "+sentenceDatesUpdate+ " WHERE idLinkedOrganization =" +
+                organizationEdit.getIdLinkedOrganization();
         try{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
@@ -572,8 +591,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             }
             preparedStatement.executeUpdate();
             result = true;
-        } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ReflectiveOperationException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -598,14 +618,15 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setString(2, name);
             sentence.executeUpdate();
             result= true;
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
             }
-            return result;
         }
+        return result;
     }
 
     /**
@@ -618,9 +639,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         boolean isAssignedProject= false;
         try{
             connection = connexion.getConnection();
-            String queryAssingOrganization = "SELECT idProject FROM Project,LinkedOrganization " +
-                    "WHERE LinkedOrganization.idLinkedOrganization=Project.idLinkedOrganization" +
-                    " AND LinkedOrganization.idLinkedOrganization=?";
+            String queryAssingOrganization = "SELECT idProject FROM Project,LinkedOrganization WHERE" +
+                    " LinkedOrganization.idLinkedOrganization=Project.idLinkedOrganization AND" +
+                    " LinkedOrganization.idLinkedOrganization=?";
             PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingOrganization);
             sentenceAssing.setInt(1,idLinkedOrganization);
             ResultSet resultAssing;
@@ -628,8 +649,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             if(resultAssing.next()){
                 isAssignedProject= true;
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -646,10 +668,10 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         boolean isAssignedProjectAvailable= false;
         try{
             connection = connexion.getConnection();
-            String queryAssingOrganizationAvailable  = "SELECT idProject FROM Project,LinkedOrganization,Status " +
-                    "WHERE LinkedOrganization.idLinkedOrganization = Project.idLinkedOrganization " +
-                    "AND Project.idStatus = Status.idStatus AND status=? " +
-                    "AND LinkedOrganization.idLinkedOrganization=?";
+            String queryAssingOrganizationAvailable  = "SELECT idProject FROM Project,LinkedOrganization,Status WHERE" +
+                    " LinkedOrganization.idLinkedOrganization = Project.idLinkedOrganization AND" +
+                    " Project.idStatus = Status.idStatus AND status=? AND" +
+                    " LinkedOrganization.idLinkedOrganization=?";
             PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingOrganizationAvailable);
             sentenceAssingAvailable.setString(1,"available");
             sentenceAssingAvailable.setInt(2,idLinkedOrganization);
@@ -658,8 +680,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             if(!resultAssingAvailable.next()) {
                 isAssignedProjectAvailable= true;
             }
-        }catch (SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -673,8 +696,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
      * @return if the linked organization exists
      */
     @Override
-    public boolean validateRepeatLinkedOrganization(String name, String email) {
-        boolean isRepeatLinkedOrganization = false;
+    public int validateRepeatLinkedOrganization(String name, String email) {
+        int isRepeatLinkedOrganization = Search.NOTFOUND.getValue();
         String queryOrganization= "SELECT idLinkedOrganization FROM LinkedOrganization WHERE name=? OR email=?";
         try{
             connection = connexion.getConnection();
@@ -683,10 +706,12 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             sentence.setString(2,email);
             results= sentence.executeQuery();
             if(results.next()){
-                isRepeatLinkedOrganization=true;
+                isRepeatLinkedOrganization= Search.FOUND.getValue();
             }
-        }catch(SQLException ex){
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            isRepeatLinkedOrganization = Search.EXCEPTION.getValue();
         }finally{
             connexion.closeConnection();
         }
@@ -703,8 +728,8 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         int idLinkedOrganization;
         try {
             connection = connexion.getConnection();
-            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN Status " +
-                    "ON LinkedOrganization.idStatus = Status.idStatus WHERE status =?";
+            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN Status ON" +
+                    " LinkedOrganization.idStatus = Status.idStatus WHERE status =?";
             PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
             sentenceAllOrganization.setString(1, "available");
             results= sentenceAllOrganization.executeQuery();
@@ -720,8 +745,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
                     areLinkedOrganization = true;
                 }
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -743,8 +769,9 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
             while (results.next()) {
                 areLinkedOrganization = true;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -760,16 +787,17 @@ public class LinkedOrganizationDAOImpl implements ILinkedOrganizationDAO{
         boolean areLinkedOrganization = false;
         try {
             connection = connexion.getConnection();
-            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN Status " +
-                    "ON LinkedOrganization.idStatus = Status.idStatus WHERE status =?";
+            String queryAllLikendOrganization = "SELECT idLinkedOrganization,name,email FROM LinkedOrganization INNER JOIN Status ON" +
+                    " LinkedOrganization.idStatus = Status.idStatus WHERE status =?";
             PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllLikendOrganization);
             sentenceAllOrganization.setString(1, "available");
             results= sentenceAllOrganization.executeQuery();
             while(results.next() && !areLinkedOrganization){
                 areLinkedOrganization = true;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }

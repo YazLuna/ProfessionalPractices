@@ -1,7 +1,5 @@
 package gui.coordinator.controller;
 
-import domain.ResponsibleProject;
-import gui.FXMLGeneralController;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import domain.Number;
+import domain.ResponsibleProject;
+import gui.FXMLGeneralController;
 
 /**
  * Class FXMLListResponsibleProjectController
@@ -35,12 +36,11 @@ public class FXMLListResponsibleProjectController extends FXMLGeneralController 
     }
 
     public void startTableResponsibles() {
-        ResponsibleProject responsible = new ResponsibleProject();
         allResponsibleProject = new ArrayList<>();
         if(controllerSection!= "delete"){
-            allResponsibleProject = responsible.getListResponsibleProject();
+            allResponsibleProject = ResponsibleProject.getListResponsibleProject();
         }else{
-            allResponsibleProject = responsible.getListResponsibleProjectAvailableNotAssign();
+            allResponsibleProject = ResponsibleProject.getListResponsibleProjectAvailableNotAssign();
         }
         TableColumn<ResponsibleProject, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<ResponsibleProject, String>("name"));

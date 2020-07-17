@@ -11,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -23,7 +22,7 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import domain.Number;
 import org.apache.commons.codec.binary.Hex;
 
 public class FXMLGeneralController implements Initializable {

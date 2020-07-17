@@ -1,5 +1,9 @@
 package gui.coordinator.controller;
 
+import domain.*;
+import domain.Number;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,10 +24,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.IOException;
-import domain.Project;
+
 import logic.ValidateProject;
-import domain.Month;
-import domain.SchedulingActivities;
 import gui.FXMLGeneralController;
 
 /**
@@ -57,7 +59,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     @FXML private TextArea taResource;
     @FXML private TextArea taActivitiesAndFunctions;
     @FXML private TextArea taResponsabilities;
-    @FXML private GridPane gpActivity;
     @FXML private Label lbTerm;
     private boolean isValidScheduling;
     private boolean isValidDataProject;
@@ -69,7 +70,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     private Project project;
     private SchedulingActivities schedulingActivities;
     private ValidateProject validateProject;
-    private int positionGrindActivity=1;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -87,31 +87,34 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
 
-    /*public void registerProject() {
-        isValidScheduling=true;
-        boolean isValidDataResponsible = validateDataProject();
-        boolean isValidDataScheduling = validateSchedulingActivities();
-        if(!isValidDataResponsible || !isValidDataScheduling) {
-            generateAlert("Ingresar datos válidos");
-        }else{
-            Project = getDataProject();
-            boolean isValidateRepeatResponsibleProject;
-            isValidateRepeatResponsibleProject = responsible.validateRepeatResponsibleProject(responsible.getEmail());
-            if(!isValidateRepeatResponsibleProject){
-                boolean isRegisterResponsibleProject;
-                isRegisterResponsibleProject = responsible.registerResponsibleProject(responsible);
-                if(isRegisterResponsibleProject){
-                    generateInformation("El responsable del proyecto se registro exitosamente");
-                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+    public void registerProject() {
+        validateDataProject();
+        if(isValidDataProject  && isValidScheduling) {
+            int isValidateRepeatProject;
+            getDataProject();
+            isValidateRepeatProject = Project.validateRepeatProject(project.getNameProject());
+            if(isValidateRepeatProject == Search.NOTFOUND.getValue()){
+                boolean isRegisterProject;
+                isRegisterProject = Project.registerProject(project);
+                if(isRegisterProject){
+                    generateInformation("El proyecto se registro exitosamente");
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegisterProject);
                 } else {
-                    generateError("El responsable del proyecto no pudo registrarse");
-                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
+                    generateError("El proyecto no pudo registrarse");
+                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegisterProject);
                 }
             }else  {
-                generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
+                if(isValidateRepeatProject == Search.FOUND.getValue()) {
+                    generateError("Existe un proyecto con el mismo nombre registrado");
+                }else {
+                    generateError("No se puso obtener la información de la base de datos");
+                }
             }
+        }else {
+            generateAlert("Ingresar datos válidos");
+            schedulingActivitiesList.clear();
         }
-    }*/
+    }
 
     public void limitComponentProject(){
         limitTextField(tfNameProject,50);
@@ -126,61 +129,66 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         limitTextField(tfQuiantityPractitioners,1);
         prohibitWordTextField(tfQuiantityPractitioners);
 
-        limitTextArea(taDescription,255);
+        limitTextArea(taDescription,300);
         prohibitSpacesTextArea(taDescription);
 
-        limitTextArea(taObjectiveGeneral,255);
+        limitTextArea(taObjectiveGeneral,300);
         prohibitSpacesTextArea(taObjectiveGeneral);
 
-        limitTextArea(taObjectiveInmediate,255);
+        limitTextArea(taObjectiveInmediate,300);
         prohibitSpacesTextArea(taObjectiveInmediate);
 
-        limitTextArea(taObjectiveMediate,255);
+        limitTextArea(taObjectiveMediate,300);
         prohibitSpacesTextArea(taObjectiveMediate);
 
-        limitTextArea(taResource,255);
+        limitTextArea(taResource,300);
         prohibitSpacesTextArea(taResource);
 
-        limitTextArea(taActivitiesAndFunctions,255);
+        limitTextArea(taActivitiesAndFunctions,300);
         prohibitSpacesTextArea(taActivitiesAndFunctions);
 
-        limitTextArea(taResponsabilities,255);
+        limitTextArea(taResponsabilities,300);
         prohibitSpacesTextArea(taResponsabilities);
 
         limitTextField(tfDaysAndHours,150);
         prohibitSpacesTextField(tfDaysAndHours);
 
-        limitTextField(tfActivitySchedulingOne,255);
+        limitTextField(tfActivitySchedulingOne,300);
         prohibitSpacesTextField(tfActivitySchedulingOne);
         prohibitNumberAllowSpecialCharTextField(tfActivitySchedulingOne);
 
-        limitTextField(tfActivitySchedulingTwo,255);
+        limitTextField(tfActivitySchedulingTwo,300);
         prohibitSpacesTextField(tfActivitySchedulingTwo);
         prohibitNumberAllowSpecialCharTextField(tfActivitySchedulingTwo);
 
-        limitTextField(tfActivitySchedulingThree,255);
+        limitTextField(tfActivitySchedulingThree,300);
         prohibitSpacesTextField(tfActivitySchedulingThree);
         prohibitNumberAllowSpecialCharTextField(tfActivitySchedulingThree);
 
-        limitTextField(tfActivitySchedulingFour,255);
+        limitTextField(tfActivitySchedulingFour,300);
         prohibitSpacesTextField(tfActivitySchedulingFour);
         prohibitNumberAllowSpecialCharTextField(tfActivitySchedulingFour);
 
+        cbMonthSchedulingOne.setValue(Month.NOTMONTH.getMonth());
+        cbMonthSchedulingTwo.setValue(Month.NOTMONTH.getMonth());
+        cbMonthSchedulingThree.setValue(Month.NOTMONTH.getMonth());
+        cbMonthSchedulingFour.setValue(Month.NOTMONTH.getMonth());
         String term = createTerm();
         lbTerm.setText(term);
     }
 
     public void startComboBox () {
         schedulingActivities = new SchedulingActivities();
-        addMonth();
+        createListMonth();
         cbMonthSchedulingOne.getItems().addAll(allMonth);
         cbMonthSchedulingTwo.getItems().addAll(allMonth);
         cbMonthSchedulingThree.getItems().addAll(allMonth);
         cbMonthSchedulingFour.getItems().addAll(allMonth);
     }
 
-    public void addMonth () {
+    public void createListMonth() {
         allMonth = new ArrayList<>();
+        allMonth.add(Month.NOTMONTH.getMonth());
         allMonth.add(Month.JANUARY.getMonth());
         allMonth.add(Month.FEBRUARY.getMonth());
         allMonth.add(Month.MARCH.getMonth());
@@ -206,20 +214,24 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         project.setResources(validateProject.deleteSpace(taResource.getText()));
         project.setActivitiesAndFunctions(validateProject.deleteSpace(taActivitiesAndFunctions.getText()));
         project.setResponsabilities(validateProject.deleteSpace(taResponsabilities.getText()));
-        project.getOrganization().setName(nameLinkedOrganization);
-        project.getResponsible().setEmail(emailResponsible);
+        LinkedOrganization linkedOrganization = new LinkedOrganization();
+        linkedOrganization.setName(nameLinkedOrganization);
+        project.setOrganization(linkedOrganization);
+        ResponsibleProject responsibleProject = new ResponsibleProject();
+        responsibleProject.setEmail(emailResponsible);
+        project.setResponsible(responsibleProject);
         project.setTerm(lbTerm.getText());
         project.setStaffNumberCoordinator(StaffNumberCoordinator);
         int duration = Integer.parseInt(tfDuration.getText());
         project.setDuration(duration);
         int quiantityPractitioner = Integer.parseInt(tfQuiantityPractitioners.getText());
         project.setQuiantityPractitioner(quiantityPractitioner);
-
+        project.setSchedulingActivitiesProject(schedulingActivitiesList);
     }
 
-    public void getSchedulingActivities (TextField tfActivity, TextField tfMonth){
+    public void getSchedulingActivities (TextField tfActivity, String month){
         SchedulingActivities schedulingActivities = new SchedulingActivities();
-        schedulingActivities.setMonth(tfMonth.getText());
+        schedulingActivities.setMonth(month);
         schedulingActivities.setActivity(validateProject.deleteSpace(tfActivity.getText()));
         schedulingActivitiesList.add(schedulingActivities);
     }
@@ -261,21 +273,53 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         tfLinkedOrganization.setText(nameLinkedOrganization);
     }
 
-    public void validateSchedulingActivities (TextField tfActivitySchedulingTwo, ComboBox cbMonthSchedulingTwo){
-        if(!tfActivitySchedulingTwo.getText().trim().isEmpty() && !cbMonthSchedulingTwo.getEditor().getText().trim().isEmpty()){
-            if(validateProject.validateTextArea(tfActivitySchedulingTwo.getText()))  {
-                tfActivitySchedulingTwo.getStyleClass().remove("error");
-                getSchedulingActivities(tfActivitySchedulingTwo,cbMonthSchedulingTwo.getEditor());
+    public void validateSchedulingActivitiesOne (){
+        if(tfActivitySchedulingOne.getText().length() !=Number.ZERO.getNumber() &&
+                !cbMonthSchedulingOne.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())){
+            boolean isValidAcitvity = validateProject.validateTextArea(tfActivitySchedulingOne.getText());
+            if(isValidAcitvity)  {
+                tfActivitySchedulingOne.getStyleClass().add("ok");
+                cbMonthSchedulingOne.getStyleClass().add("ok");
+                getSchedulingActivities(tfActivitySchedulingOne,cbMonthSchedulingOne.getSelectionModel().getSelectedItem().toString());
+            }else{
+                tfActivitySchedulingOne.getStyleClass().add("error");
+                isValidScheduling= false;
+            }
+        }else{
+            if(tfActivitySchedulingOne.getText().length()!=Number.ZERO.getNumber() &&
+                    cbMonthSchedulingOne.getEditor().getText().equals(Month.NOTMONTH.getMonth())) {
+                cbMonthSchedulingOne.getStyleClass().add("error");
+                isValidScheduling= false;
+            }else{
+                if(tfActivitySchedulingOne.getText().length()==Number.ZERO.getNumber() &&
+                        !cbMonthSchedulingOne.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())) {
+                    tfActivitySchedulingOne.getStyleClass().add("error");
+                    isValidScheduling = false;
+                }
+            }
+        }
+    }
+
+    public void validateSchedulingActivitiesTwo (){
+        if(tfActivitySchedulingTwo.getText().length() !=Number.ZERO.getNumber() &&
+                !cbMonthSchedulingTwo.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())){
+            boolean isValidAcitvity = validateProject.validateTextArea(tfActivitySchedulingTwo.getText());
+            if(isValidAcitvity)  {
+                tfActivitySchedulingTwo.getStyleClass().add("ok");
+                cbMonthSchedulingTwo.getStyleClass().add("ok");
+                getSchedulingActivities(tfActivitySchedulingTwo,cbMonthSchedulingTwo.getSelectionModel().getSelectedItem().toString());
             }else{
                 tfActivitySchedulingTwo.getStyleClass().add("error");
                 isValidScheduling= false;
             }
         }else{
-            if(!tfActivitySchedulingTwo.getText().trim().isEmpty() && cbMonthSchedulingTwo.getEditor().getText().trim().isEmpty()) {
+            if(tfActivitySchedulingTwo.getText().length()!=Number.ZERO.getNumber() &&
+                    cbMonthSchedulingTwo.getEditor().getText().equals(Month.NOTMONTH.getMonth())) {
                 cbMonthSchedulingTwo.getStyleClass().add("error");
                 isValidScheduling= false;
             }else{
-                if(tfActivitySchedulingTwo.getText().trim().isEmpty() && !cbMonthSchedulingTwo.getEditor().getText().trim().isEmpty()) {
+                if(tfActivitySchedulingTwo.getText().length()==Number.ZERO.getNumber() &&
+                        !cbMonthSchedulingTwo.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())) {
                     tfActivitySchedulingTwo.getStyleClass().add("error");
                     isValidScheduling = false;
                 }
@@ -283,9 +327,61 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         }
     }
 
+    public void validateSchedulingActivitiesThree (){
+        if(tfActivitySchedulingThree.getText().length() !=Number.ZERO.getNumber() &&
+                !cbMonthSchedulingThree.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())){
+            boolean isValidAcitvity = validateProject.validateTextArea(tfActivitySchedulingThree.getText());
+            if(isValidAcitvity)  {
+                tfActivitySchedulingThree.getStyleClass().add("ok");
+                cbMonthSchedulingThree.getStyleClass().add("ok");
+                getSchedulingActivities(tfActivitySchedulingThree,cbMonthSchedulingThree.getSelectionModel().getSelectedItem().toString());
+            }else{
+                tfActivitySchedulingThree.getStyleClass().add("error");
+                isValidScheduling= false;
+            }
+        }else{
+            if(tfActivitySchedulingThree.getText().length()!=Number.ZERO.getNumber() &&
+                    cbMonthSchedulingThree.getEditor().getText().equals(Month.NOTMONTH.getMonth())) {
+                cbMonthSchedulingThree.getStyleClass().add("error");
+                isValidScheduling= false;
+            }else{
+                if(tfActivitySchedulingThree.getText().length()==Number.ZERO.getNumber() &&
+                        !cbMonthSchedulingThree.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())) {
+                    tfActivitySchedulingThree.getStyleClass().add("error");
+                    isValidScheduling = false;
+                }
+            }
+        }
+    }
+
+    public void validateSchedulingActivitiesFour (){
+        if(tfActivitySchedulingFour.getText().length() !=Number.ZERO.getNumber() &&
+                !cbMonthSchedulingFour.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())){
+            boolean isValidAcitvity = validateProject.validateTextArea(tfActivitySchedulingFour.getText());
+            if(isValidAcitvity)  {
+                tfActivitySchedulingFour.getStyleClass().add("ok");
+                cbMonthSchedulingFour.getStyleClass().add("ok");
+                getSchedulingActivities(tfActivitySchedulingFour,cbMonthSchedulingFour.getSelectionModel().getSelectedItem().toString());
+            }else{
+                tfActivitySchedulingFour.getStyleClass().add("error");
+                isValidScheduling= false;
+            }
+        }else{
+            if(tfActivitySchedulingFour.getText().length()!=Number.ZERO.getNumber() &&
+                    cbMonthSchedulingFour.getEditor().getText().equals(Month.NOTMONTH.getMonth())) {
+                cbMonthSchedulingFour.getStyleClass().add("error");
+                isValidScheduling= false;
+            }else{
+                if(tfActivitySchedulingFour.getText().length()==Number.ZERO.getNumber() &&
+                        !cbMonthSchedulingFour.getSelectionModel().getSelectedItem().toString().equals(Month.NOTMONTH.getMonth())) {
+                    tfActivitySchedulingFour.getStyleClass().add("error");
+                    isValidScheduling = false;
+                }
+            }
+        }
+    }
+
     public void validateName (){
-        tfNameProject.getStyleClass().remove("error");
-        tfNameProject.getStyleClass().remove("ok");
         boolean isValidName = validateProject.validateName(tfNameProject.getText());
         if(isValidName)  {
             tfNameProject.getStyleClass().add("ok");
@@ -296,8 +392,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void validateDescription (){
-        taDescription.getStyleClass().remove("error");
-        taDescription.getStyleClass().remove("ok");
         boolean isValidDescription = validateProject.validateTextArea(taDescription.getText());
         if(isValidDescription){
             taDescription.getStyleClass().add("ok");
@@ -308,8 +402,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void validateObjectiveGeneral () {
-        taObjectiveGeneral.getStyleClass().remove("error");
-        taObjectiveGeneral.getStyleClass().remove("error");
         boolean isValidObjectiveGeneral = validateProject.validateTextArea(taObjectiveGeneral.getText());
         if(isValidObjectiveGeneral){
             taObjectiveGeneral.getStyleClass().add("ok");
@@ -320,8 +412,6 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void validateObjectiveInmediate () {
-        taObjectiveInmediate.getStyleClass().remove("error");
-        taObjectiveInmediate.getStyleClass().remove("ok");
         boolean isValidObjectiveInmediate = validateProject.validateTextArea(taObjectiveInmediate.getText());
         if(isValidObjectiveInmediate){
             taObjectiveInmediate.getStyleClass().add("ok");
@@ -332,9 +422,7 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
     }
 
     public void validateObjectiveMediate () {
-        taObjectiveMediate.getStyleClass().remove("error");
-        taObjectiveMediate.getStyleClass().remove("ok");
-        boolean isValidObjectiveMediate = !validateProject.validateTextArea(taObjectiveMediate.getText());
+        boolean isValidObjectiveMediate = validateProject.validateTextArea(taObjectiveMediate.getText());
         if(isValidObjectiveMediate){
             taObjectiveMediate.getStyleClass().add("ok");
         }else {
@@ -343,58 +431,178 @@ public class FXMLRegisterProjectController extends FXMLGeneralController impleme
         }
     }
 
-    public void validateDataProject (){
-        validateProject = new ValidateProject();
-
-        if(!validateProject.validateNotEmpty(tfMethodology.getText()) ||
-                !validateProject.validateMethology(tfMethodology.getText())){
+    public void validateMethodology (){
+        boolean isValidMethodology = validateProject.validateMethology(tfMethodology.getText());
+        if(isValidMethodology){
+            tfMethodology.getStyleClass().add("ok");
+        }else {
             tfMethodology.getStyleClass().add("error");
             isValidDataProject= false;
-        }else {
-            tfMethodology.getStyleClass().remove("error");
         }
-        if(!validateProject.validateTextArea(taResource.getText())){
+    }
+
+    public void validateResource (){
+        boolean isValidResource =validateProject.validateTextArea(taResource.getText());
+        if(isValidResource){
+            taResource.getStyleClass().add("ok");
+        }else {
             taResource.getStyleClass().add("error");
             isValidDataProject= false;
-        }else {
-            taResource.getStyleClass().remove("error");
         }
-        if(!validateProject.validateTextArea(taActivitiesAndFunctions.getText())){
+    }
+
+    public void validateActivitiesAndFunctions (){
+        boolean isValidActivitiesAndFunctions =validateProject.validateTextArea(taActivitiesAndFunctions.getText());
+        if(isValidActivitiesAndFunctions){
+            taActivitiesAndFunctions.getStyleClass().add("ok");
+        }else {
             taActivitiesAndFunctions.getStyleClass().add("error");
             isValidDataProject= false;
-        }else {
-            taActivitiesAndFunctions.getStyleClass().remove("error");
         }
-        if(!validateProject.validateTextArea(taResponsabilities.getText())){
+    }
+
+    public void validateResponsabilities (){
+        boolean isValidResponsabilities =validateProject.validateTextArea(taResponsabilities.getText());
+        if(isValidResponsabilities){
+            taResponsabilities.getStyleClass().add("ok");
+        }else {
             taResponsabilities.getStyleClass().add("error");
             isValidDataProject= false;
-        }else {
-            taResponsabilities.getStyleClass().remove("error");
         }
-        if(!validateProject.validateText(tfDaysAndHours.getText())){
+    }
+
+    public void validateDaysAndHours (){
+        boolean isValidDaysAndHours = validateProject.validateText(tfDaysAndHours.getText());
+        if(isValidDaysAndHours){
+            tfDaysAndHours.getStyleClass().add("ok");
+        }else {
             tfDaysAndHours.getStyleClass().add("error");
             isValidDataProject= false;
-        }else {
-            tfDaysAndHours.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfDuration.getText())){
-            int duration = Integer.parseInt(tfDuration.getText());
+    }
 
+    public void validateDuration () {
+        boolean isValidDuration = validateProject.validateNotEmpty(tfDuration.getText());
+        if(isValidDuration){
+            int duration = Integer.parseInt(tfDuration.getText());
+            isValidDuration = validateProject.validateDuration(duration);
+            if(isValidDuration){
+                tfDuration.getStyleClass().add("ok");
+            }else {
+                tfDuration.getStyleClass().add("error");
+                isValidDataProject= false;
+            }
+        }else {
             tfDuration.getStyleClass().add("error");
             isValidDataProject= false;
-        }else {
-            tfDuration.getStyleClass().remove("error");
         }
-        if(!validateProject.validateNotEmpty(tfQuiantityPractitioners.getText())){
+    }
+
+    public void validateQuiantityPractitioners (){
+        boolean isValidQuiantityPractitioners = validateProject.validateNotEmpty(tfQuiantityPractitioners.getText());
+        if(isValidQuiantityPractitioners){
+            int quiantityPractitioners = Integer.parseInt(tfQuiantityPractitioners.getText());
+            isValidQuiantityPractitioners = validateProject.validateQuiantityPractitioner(quiantityPractitioners);
+            if(isValidQuiantityPractitioners){
+                tfQuiantityPractitioners.getStyleClass().add("ok");
+            }else {
+                tfQuiantityPractitioners.getStyleClass().add("error");
+                isValidDataProject= false;
+            }
+        }else{
             tfQuiantityPractitioners.getStyleClass().add("error");
             isValidDataProject= false;
-        }else{
-            tfQuiantityPractitioners.getStyleClass().remove("error");
         }
-        validateSchedulingActivities(tfActivitySchedulingTwo,cbMonthSchedulingTwo);
-        validateSchedulingActivities(tfActivitySchedulingOne,cbMonthSchedulingOne);
-        validateSchedulingActivities(tfActivitySchedulingThree,cbMonthSchedulingThree);
-        validateSchedulingActivities(tfActivitySchedulingFour,cbMonthSchedulingFour);
-        //return isValidDataProject;
+    }
+
+    public void validateLinkedOrganization ( ){
+        if(tfLinkedOrganization.getText().trim().isEmpty()){
+            tfLinkedOrganization.getStyleClass().add("error");
+            isValidDataProject= false;
+        }else {
+            tfLinkedOrganization.getStyleClass().add("ok");
+        }
+    }
+
+    public void validateResponsibleProject ( ){
+        if(tfResponsibleProject.getText().trim().isEmpty()){
+            tfResponsibleProject.getStyleClass().add("error");
+            isValidDataProject= false;
+        }else {
+            tfResponsibleProject.getStyleClass().add("ok");
+        }
+    }
+
+    public void removeStyleClass (){
+        tfNameProject.getStyleClass().remove("error");
+        tfNameProject.getStyleClass().remove("ok");
+        taDescription.getStyleClass().remove("error");
+        taDescription.getStyleClass().remove("ok");
+        taObjectiveGeneral.getStyleClass().remove("error");
+        taObjectiveGeneral.getStyleClass().remove("ok");
+        taObjectiveInmediate.getStyleClass().remove("error");
+        taObjectiveInmediate.getStyleClass().remove("ok");
+        taObjectiveMediate.getStyleClass().remove("error");
+        taObjectiveMediate.getStyleClass().remove("ok");
+        tfMethodology.getStyleClass().remove("error");
+        tfMethodology.getStyleClass().remove("ok");
+        taResource.getStyleClass().remove("error");
+        taResource.getStyleClass().remove("ok");
+        taActivitiesAndFunctions.getStyleClass().remove("error");
+        taActivitiesAndFunctions.getStyleClass().remove("ok");
+        taResponsabilities.getStyleClass().remove("error");
+        taResponsabilities.getStyleClass().remove("ok");
+        tfDaysAndHours.getStyleClass().remove("error");
+        tfDaysAndHours.getStyleClass().remove("ok");
+        tfDuration.getStyleClass().remove("error");
+        tfDuration.getStyleClass().remove("ok");
+        tfQuiantityPractitioners.getStyleClass().remove("error");
+        tfQuiantityPractitioners.getStyleClass().remove("ok");
+        tfLinkedOrganization.getStyleClass().remove("error");
+        tfLinkedOrganization.getStyleClass().remove("ok");
+        tfResponsibleProject.getStyleClass().remove("error");
+        tfResponsibleProject.getStyleClass().remove("ok");
+
+        tfActivitySchedulingOne.getStyleClass().remove("error");
+        tfActivitySchedulingOne.getStyleClass().remove("ok");
+        tfActivitySchedulingTwo.getStyleClass().remove("error");
+        tfActivitySchedulingTwo.getStyleClass().remove("ok");
+        tfActivitySchedulingThree.getStyleClass().remove("error");
+        tfActivitySchedulingThree.getStyleClass().remove("ok");
+        tfActivitySchedulingFour.getStyleClass().remove("error");
+        tfActivitySchedulingFour.getStyleClass().remove("ok");
+        cbMonthSchedulingOne.getStyleClass().remove("error");
+        cbMonthSchedulingOne.getStyleClass().remove("ok");
+        cbMonthSchedulingTwo.getStyleClass().remove("error");
+        cbMonthSchedulingTwo.getStyleClass().remove("ok");
+        cbMonthSchedulingThree.getStyleClass().remove("error");
+        cbMonthSchedulingThree.getStyleClass().remove("ok");
+        cbMonthSchedulingFour.getStyleClass().remove("error");
+        cbMonthSchedulingFour.getStyleClass().remove("ok");
+    }
+
+    public void validateDataProject (){
+        isValidScheduling=true;
+        isValidDataProject=true;
+        validateProject = new ValidateProject();
+        removeStyleClass();
+        validateName();
+        validateDescription();
+        validateObjectiveGeneral();
+        validateObjectiveInmediate();
+        validateObjectiveMediate();
+        validateActivitiesAndFunctions();
+        validateDaysAndHours();
+        validateResource();
+        validateMethodology();
+        validateResponsabilities();
+        validateDuration();
+        validateQuiantityPractitioners();
+        validateLinkedOrganization();
+        validateResponsibleProject();
+        validateSchedulingActivitiesOne();
+        validateSchedulingActivitiesTwo();
+        validateSchedulingActivitiesThree();
+        validateSchedulingActivitiesFour();
     }
 }

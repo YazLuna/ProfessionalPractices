@@ -29,7 +29,7 @@ interface ILinkedOrganizationDAO {
     public boolean deleteLinkedOrganization (String name);
     public boolean validateAssignedProject(int idLinkedOrganization);
     public boolean validateAssignedProjectAvailable (int idLinkedOrganization);
-    public boolean validateRepeatLinkedOrganization(String name, String email);
+    public int validateRepeatLinkedOrganization(String name, String email);
     public boolean thereAreLinkedOrganizationAvailableNotAssing();
     public boolean thereAreLinkedOrganization ();
     public boolean thereAreLinkedOrganizationAvailable ();

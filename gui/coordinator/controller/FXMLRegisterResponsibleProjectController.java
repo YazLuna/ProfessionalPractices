@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -60,7 +61,7 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
 
     public void startComboBox () {
         allCharge = new ArrayList<>();
-        allCharge = responsible.getListCharge();
+        allCharge = ResponsibleProject.getListCharge();
         cbCharge.getItems().addAll(allCharge);
     }
 
@@ -71,11 +72,11 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
             generateAlert("Ingresar datos válidos");
         }else{
             responsible = getDataResponsible();
-            boolean isValidateRepeatResponsibleProject;
-            isValidateRepeatResponsibleProject = responsible.validateRepeatResponsibleProject(responsible.getEmail());
-            if(!isValidateRepeatResponsibleProject){
+            int isValidateRepeatResponsibleProject;
+            isValidateRepeatResponsibleProject = ResponsibleProject.validateRepeatResponsibleProject(responsible.getEmail());
+            if(isValidateRepeatResponsibleProject == Search.NOTFOUND.getValue()){
                 boolean isRegisterResponsibleProject;
-                isRegisterResponsibleProject = responsible.registerResponsibleProject(responsible);
+                isRegisterResponsibleProject = ResponsibleProject.registerResponsibleProject(responsible);
                 if(isRegisterResponsibleProject){
                     generateInformation("El responsable del proyecto se registro exitosamente");
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
@@ -84,7 +85,11 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
                     openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnRegister);
                 }
             }else  {
-                generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
+                if(isValidateRepeatResponsibleProject == Search.FOUND.getValue()) {
+                    generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
+                }else {
+                    generateError("No se puso obtener la información de la base de datos");
+                }
             }
         }
     }
@@ -99,11 +104,21 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         return responsible;
     }
 
+    public void removeStyleClass (){
+        tfNameResponsible.getStyleClass().remove("error");
+        tfNameResponsible.getStyleClass().remove("ok");
+        tfLastNameResponsible.getStyleClass().remove("error");
+        tfLastNameResponsible.getStyleClass().remove("ok");
+        tfEmailResponsible.getStyleClass().remove("error");
+        tfEmailResponsible.getStyleClass().remove("ok");
+        cbCharge.getStyleClass().remove("error");
+        cbCharge.getStyleClass().remove("ok");
+    }
+
     public boolean validateDataResponsible (){
         validateDataResponsible = new ValidateDataResponsible();
         boolean isValidDataResponsible = true;
-        tfNameResponsible.getStyleClass().remove("error");
-        tfNameResponsible.getStyleClass().remove("ok");
+        removeStyleClass();
         boolean isValidName = validateDataResponsible.validateName(tfNameResponsible.getText());
         if(isValidName){
             tfNameResponsible.getStyleClass().add("ok");
@@ -113,8 +128,6 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         }
 
         boolean isValidLastName = validateDataResponsible.validateLastName(tfLastNameResponsible.getText());
-        tfLastNameResponsible.getStyleClass().remove("error");
-        tfLastNameResponsible.getStyleClass().remove("ok");
         if(isValidLastName){
             tfLastNameResponsible.getStyleClass().add("ok");
         }else {
@@ -123,8 +136,6 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         }
 
         boolean isValidEmailResponsible = validateDataResponsible.validateEmail(tfEmailResponsible.getText());
-        tfEmailResponsible.getStyleClass().remove("error");
-        tfEmailResponsible.getStyleClass().remove("ok");
         if(isValidEmailResponsible){
             tfEmailResponsible.getStyleClass().add("ok");
         }else {
@@ -133,8 +144,6 @@ public class FXMLRegisterResponsibleProjectController extends FXMLGeneralControl
         }
 
         boolean isValidCharge = validateDataResponsible.validateCharge(cbCharge.getEditor().getText());
-        cbCharge.getStyleClass().remove("error");
-        cbCharge.getStyleClass().remove("ok");
         if(isValidCharge){
             cbCharge.getStyleClass().add("ok");
         }else {

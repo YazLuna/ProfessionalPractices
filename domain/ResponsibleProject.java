@@ -161,8 +161,8 @@ public class ResponsibleProject{
      * @param email define the email of the responsible of the project
      * @return if valid the responsible of the project
      */
-    public static boolean validateRepeatResponsibleProject(String email) {
-        boolean isValidateRepeatResponsibleProject;
+    public static int validateRepeatResponsibleProject(String email) {
+        int isValidateRepeatResponsibleProject;
         ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
         isValidateRepeatResponsibleProject = responsibleProjectDAO.validateRepeatResponsibleProject(email);
         return isValidateRepeatResponsibleProject;

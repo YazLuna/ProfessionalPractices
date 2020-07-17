@@ -1,16 +1,16 @@
 package gui.coordinator.controller;
 
-import domain.ResponsibleProject;
-import gui.FXMLGeneralController;
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+import domain.Number;
+import domain.ResponsibleProject;
+import gui.FXMLGeneralController;
 import logic.ValidateDataResponsible;
 
 /**
@@ -57,7 +57,7 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
 
     public void startComponentResponsibleProject() {
         responsibleProject = new ResponsibleProject();
-        responsibleProject = responsibleProject.getResponsibleProject(emailResponsibleProject);
+        responsibleProject = ResponsibleProject.getResponsibleProject(emailResponsibleProject);
         tfNameResponsible.setText(responsibleProject.getName());
         tfLastNameResponsible.setText(responsibleProject.getLastName());
         tfEmailResponsible.setText(responsibleProject.getEmail());
@@ -82,7 +82,7 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     public void startComboBox() {
         responsibleProject = new ResponsibleProject();
         allCharge = new ArrayList<>();
-        allCharge = responsibleProject.getListCharge();
+        allCharge = ResponsibleProject.getListCharge();
         cbCharge.getItems().addAll(allCharge);
     }
 
@@ -91,15 +91,15 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
         validateDataResponsible();
         if(datesUpdate.size()!= Number.ZERO.getNumber()) {
             if (isValidDataResponsible) {
-                boolean isValidateRepeatResponsibleProject = false;
+                int isValidateRepeatResponsibleProject = Search.NOTFOUND.getValue();
                 if (isEmailValidated) {
-                    isValidateRepeatResponsibleProject = responsibleProjectEdit.validateRepeatResponsibleProject(responsibleProjectEdit.getEmail());
+                    isValidateRepeatResponsibleProject = ResponsibleProject.validateRepeatResponsibleProject(responsibleProjectEdit.getEmail());
                 } else {
                     isEmailValidated = false;
                 }
-                if (!isValidateRepeatResponsibleProject) {
+                if (isValidateRepeatResponsibleProject== Search.NOTFOUND.getValue()) {
                     boolean isModifyResponsibleProject;
-                    isModifyResponsibleProject = responsibleProjectEdit.modifyResponsibleProject(responsibleProjectEdit,datesUpdate);
+                    isModifyResponsibleProject = ResponsibleProject.modifyResponsibleProject(responsibleProjectEdit,datesUpdate);
                     if (isModifyResponsibleProject) {
                         generateInformation("El responsable del proyecto se modificó con éxito");
                         openWindowGeneral("/gui/coordinator/fxml/FXMLListResponsibleProject.fxml", btnModify);
@@ -108,7 +108,11 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
                         openWindowGeneral("/gui/coordinator/fxml/FXMLListResponsibleProject.fxml", btnModify);
                     }
                 } else {
-                    generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
+                    if(isValidateRepeatResponsibleProject == Search.FOUND.getValue()) {
+                        generateError("Existe un responsable del proyecto con el mismo correo electrónico registrado");
+                    }else {
+                        generateError("No se puso obtener la información de la base de datos");
+                    }
                 }
             } else {
                 generateAlert("Ingresar datos válidos");
@@ -132,8 +136,6 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
     }
 
     public void validateName(){
-        tfNameResponsible.getStyleClass().remove("error");
-        tfNameResponsible.getStyleClass().remove("ok");
         boolean isValidName = validateDataResponsible.validateName(tfNameResponsible.getText());
         if (isValidName) {
             tfNameResponsible.getStyleClass().add("ok");
@@ -147,8 +149,6 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
 
     public void validateLastName(){
         boolean isValidLastName = validateDataResponsible.validateLastName(tfLastNameResponsible.getText());
-        tfLastNameResponsible.getStyleClass().remove("error");
-        tfLastNameResponsible.getStyleClass().remove("ok");
         if(isValidLastName){
             tfLastNameResponsible.getStyleClass().add("ok");
             responsibleProjectEdit.setLastName(validateDataResponsible.deleteSpace(tfLastNameResponsible.getText()));
@@ -161,8 +161,6 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
 
     public void validateEmail(){
         boolean isValidEmailResponsible = validateDataResponsible.validateEmail(tfEmailResponsible.getText());
-        tfEmailResponsible.getStyleClass().remove("error");
-        tfEmailResponsible.getStyleClass().remove("ok");
         if(isValidEmailResponsible){
             tfEmailResponsible.getStyleClass().add("ok");
             responsibleProjectEdit.setEmail(tfEmailResponsible.getText());
@@ -176,8 +174,6 @@ public class FXMLUpdateResponsibleProjectController extends FXMLGeneralControlle
 
     public void validateCharge (){
         boolean isValidCharge = validateDataResponsible.validateCharge(cbCharge.getEditor().getText());
-        cbCharge.getStyleClass().remove("error");
-        cbCharge.getStyleClass().remove("ok");
         if(isValidCharge){
             cbCharge.getStyleClass().add("ok");
             responsibleProjectEdit.setCharge(validateDataResponsible.deleteSpace(cbCharge.getEditor().getText()));

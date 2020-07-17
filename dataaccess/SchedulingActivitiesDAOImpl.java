@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import domain.Number;
 import domain.SchedulingActivities;
+import exception.Exception;
+import telegram.TelegramBot;
 
 /**
  * Implementation of the ISchedulingActivitiesDAO
@@ -35,15 +38,16 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
         boolean result = false;
         try {
             connection = connexion.getConnection();
-            PreparedStatement sentenceAddScheduling = connection.prepareStatement("INSERT INTO SchedulingActivities(activity," +
-                    "month, idProject) VALUES(?,?,?)");
+            PreparedStatement sentenceAddScheduling = connection.prepareStatement("INSERT INTO SchedulingActivities(activity" +
+                    ",month, idProject) VALUES(?,?,?)");
             sentenceAddScheduling.setString(1, schedulingActivitiesProject.getActivity());
             sentenceAddScheduling.setString(2, schedulingActivitiesProject.getMonth());
             sentenceAddScheduling.setInt(3, idProject);
             sentenceAddScheduling.executeUpdate();
             result = true;
-        }catch(SQLException ex){
-            Logger.getLogger(SchedulingActivitiesDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             if (connexion != null) {
                 connexion.closeConnection();
@@ -68,8 +72,9 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
                 schedulingActivities.setMonth(results.getString("month"));
                 listSchedulingActivities.add(schedulingActivities);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(SchedulingActivitiesDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -95,8 +100,8 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
             }
             Change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
-        String sentence = "UPDATE SchedulingActivities SET "+sentenceDatesUpdate+ " WHERE idSchedulingActivities " +
-                "= "+ schedulingActivitiesEdit.getIdSchedulingActivities();
+        String sentence = "UPDATE SchedulingActivities SET "+sentenceDatesUpdate+ " WHERE idSchedulingActivities = " +
+                 schedulingActivitiesEdit.getIdSchedulingActivities();
         try{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
@@ -110,12 +115,12 @@ public class SchedulingActivitiesDAOImpl implements ISchedulingActivitiesDAO {
             }
             preparedStatement.executeUpdate();
             isModifySchedulingActivities = true;
-        } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(SchedulingActivitiesDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ReflectiveOperationException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
         return isModifySchedulingActivities;
     }
-
 }

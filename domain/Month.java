@@ -14,7 +14,8 @@ public enum Month {
     SEPTEMBER ("Septiembre"),
     OCTOBER("Octubre"),
     NOVEMBER ("Noviembre"),
-    DECEMBER ("Dicembre");
+    DECEMBER ("Dicembre"),
+    NOTMONTH ("");
 
     private final String month;
 

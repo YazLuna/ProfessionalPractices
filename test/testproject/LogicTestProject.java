@@ -7,6 +7,23 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class LogicTestProject {
+
+    @Test
+    public void testValidateName (){
+        boolean isValidName;
+        ValidateDataResponsible validateDataResponsible = new ValidateDataResponsible();
+        isValidName =validateDataResponsible.validateName("Gustavo Antonio");
+        Assert.assertTrue(isValidName);
+    }
+
+    @Test
+    public void testErrorValidateName (){
+        boolean isValidName;
+        ValidateDataResponsible validateDataResponsible = new ValidateDataResponsible();
+        isValidName =validateDataResponsible.validateName("435 563455");
+        Assert.assertTrue(isValidName);
+    }
+
     @Test
     public void testValidateExtensions (){
         ValidateLinkedOrganization validateLinkedOrganization = new ValidateLinkedOrganization();
@@ -15,35 +32,19 @@ public class LogicTestProject {
     }
 
     @Test
-    public void testErrorValidateLastName (){
-        boolean isValidLastName;
-        ValidateDataResponsible validateDataResponsible = new ValidateDataResponsible();
-        isValidLastName =validateDataResponsible.validateLastName("435 563455");
-        Assert.assertTrue(isValidLastName);
-    }
-
-    @Test
-    public void testValidateLastName (){
-        boolean isValidLastName;
-        ValidateDataResponsible validateDataResponsible = new ValidateDataResponsible();
-        isValidLastName =validateDataResponsible.validateLastName("Gustavo Antonio");
-        Assert.assertTrue(isValidLastName);
-    }
-
-    @Test
     public void testValidateCharge (){
-        boolean isValidLastName;
+        boolean isValidCharge;
         ValidateDataResponsible validateDataResponsible = new ValidateDataResponsible();
-        isValidLastName =validateDataResponsible.validateLastName("Jefe de departamento de Tecnología Educativa");
-        Assert.assertTrue(isValidLastName);
+        isValidCharge =validateDataResponsible.validateCharge("Jefe de departamento de Tecnología Educativa");
+        Assert.assertTrue(isValidCharge);
     }
 
     @Test
     public void testErrorValidateCharge (){
-        boolean isValidLastName;
+        boolean isValidCharge;
         ValidateDataResponsible validateDataResponsible = new ValidateDataResponsible();
-        isValidLastName =validateDataResponsible.validateLastName("1 34      ");
-        Assert.assertTrue(isValidLastName);
+        isValidCharge =validateDataResponsible.validateCharge("1 34      ");
+        Assert.assertTrue(isValidCharge);
     }
 
     @Test
@@ -130,19 +131,19 @@ public class LogicTestProject {
     }
 
     @Test
-    public void testErrorValidateDuration (){
-        boolean isValidText;
-        ValidateProject validateProject = new ValidateProject();
-        isValidText = validateProject.validateDuration(0);
-        Assert.assertTrue(isValidText);
-    }
-
-    @Test
     public void testValidateDuration (){
         boolean isValidDuraton;
         ValidateProject validateProject = new ValidateProject();
         isValidDuraton = validateProject.validateDuration(200);
         Assert.assertTrue(isValidDuraton);
+    }
+
+    @Test
+    public void testErrorValidateDuration (){
+        boolean isValidText;
+        ValidateProject validateProject = new ValidateProject();
+        isValidText = validateProject.validateDuration(0);
+        Assert.assertTrue(isValidText);
     }
 
     @Test

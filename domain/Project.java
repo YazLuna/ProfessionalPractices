@@ -267,8 +267,8 @@ public class Project {
      * @param nameProject define the data of the project
      * @return if valid the project
      */
-    public static boolean validateRepeatProject (String nameProject) {
-        boolean isValidProject;
+    public static int validateRepeatProject (String nameProject) {
+        int isValidProject;
         ProjectDAOImpl projectDAO = new ProjectDAOImpl();
         isValidProject = projectDAO.validateRepeatProject(nameProject);
         return isValidProject;

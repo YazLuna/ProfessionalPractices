@@ -64,18 +64,6 @@ public class PhoneNumber {
     }
 
     /**
-     * Method for validate repeat phone number
-     * @param phoneNumber define the phone number
-     * @return if valid phone number
-     */
-    public static boolean validateRepeatPhoneNumber (String phoneNumber){
-        boolean isRepeatPhoneNumber;
-        PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
-        isRepeatPhoneNumber = phoneNumberDAO.validateRepeatPhoneNumber(phoneNumber);
-        return isRepeatPhoneNumber;
-    }
-
-    /**
      * Method for modify the phone number
      * @param phoneNumber define the data of the phone Number
      * @param datesUpdate the fields to modify
@@ -86,5 +74,29 @@ public class PhoneNumber {
         PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
         isModifyPhoneNumber = phoneNumberDAO.modifyPhoneNumber(phoneNumber,datesUpdate);
         return isModifyPhoneNumber;
+    }
+
+    /**
+     * Method for validate repeat phone number
+     * @param phoneNumber define the phone number
+     * @return if valid phone number
+     */
+    public static int validateRepeatPhoneNumber (String phoneNumber){
+        int isRepeatPhoneNumber;
+        PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
+        isRepeatPhoneNumber = phoneNumberDAO.validateRepeatPhoneNumber(phoneNumber);
+        return isRepeatPhoneNumber;
+    }
+
+    /**
+     * Method for validate repeat phone number
+     * @param phoneNumber define the phone number
+     * @return if valid phone number
+     */
+    public static int validateRepeatPhoneNumberExist (String phoneNumber, int idPhoneNumberOrigin){
+        int isRepeatPhoneNumber;
+        PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
+        isRepeatPhoneNumber = phoneNumberDAO.validateRepeatPhoneNumberExist(phoneNumber,idPhoneNumberOrigin);
+        return isRepeatPhoneNumber;
     }
 }

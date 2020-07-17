@@ -1,7 +1,5 @@
 package gui.coordinator.controller;
 
-import domain.LinkedOrganization;
-import gui.FXMLGeneralController;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,11 +11,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import domain.LinkedOrganization;
+import domain.Number;
+import gui.FXMLGeneralController;
 
 /**
  * Class FXMLListLinkedOrganizationController
@@ -37,12 +37,11 @@ public class FXMLListLinkedOrganizationController extends FXMLGeneralController 
         selectLinkedOrganization ();
     }
     public void startTableOrganizations() {
-        organization = new LinkedOrganization();
         allLinkedOrganization = new ArrayList<>();
         if(controllerSection!= "delete"){
-            allLinkedOrganization = organization.getListOrganization();
+            allLinkedOrganization = LinkedOrganization.getListOrganization();
         }else{
-            allLinkedOrganization = organization.getListOrganizationAvailableNotAssign();
+            allLinkedOrganization = LinkedOrganization.getListOrganizationAvailableNotAssign();
         }
         TableColumn<LinkedOrganization, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<LinkedOrganization, String>("name"));

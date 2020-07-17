@@ -22,7 +22,7 @@ interface IResponsibleProjectDAO {
     public List<String> getAllCharge();
     public boolean modifyResponsibleProject (ResponsibleProject responsibleEdit,List<String>DatesUpdate);
     public boolean deleteResponsibleProject (String email);
-    public boolean validateRepeatResponsibleProject (String email);
+    public int validateRepeatResponsibleProject (String email);
     public boolean validateAssignedProject(int idResponsibleProject);
     public boolean validateAssignedProjectAvailable (int idResponsibleProject);
     public boolean thereAreResponsibleProjectAvailable();

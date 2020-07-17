@@ -51,8 +51,10 @@ public class SchedulingActivities {
             return isModifySchedulingActivities;
         }
 
-        public static boolean addSchedulingActivities (SchedulingActivities schedulingActivitiesEdit,int idProject){
+        public static boolean addSchedulingActivities (SchedulingActivities schedulingActivities,int idProject){
             boolean isAddSchedulingActivities=false;
+            SchedulingActivitiesDAOImpl schedulingActivitiesDAO = new SchedulingActivitiesDAOImpl();
+            isAddSchedulingActivities = schedulingActivitiesDAO.addSchedulingActivities(idProject,schedulingActivities);
             return  isAddSchedulingActivities;
         }
 

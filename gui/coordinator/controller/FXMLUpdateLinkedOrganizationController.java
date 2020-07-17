@@ -1,9 +1,6 @@
-
-
 package gui.coordinator.controller;
 
-import domain.LinkedOrganization;
-import domain.PhoneNumber;
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,6 +9,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import domain.LinkedOrganization;
+import domain.Number;
+import domain.PhoneNumber;
 import gui.FXMLGeneralController;
 
 /**
@@ -59,14 +59,14 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
     public void initialize(URL url, ResourceBundle rb) {
         startDataComponentOrganization();
         startComboBox();
-        startComponent();
+        startComponentOrganization();
     }
 
-    public void behind () {
+    public void behindMenu() {
         openWindowGeneral("/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml",btnBehind);
     }
 
-    public void cancel () {
+    public void backMenu() {
         generateConfirmationCancel("¿Seguro desea cancelar?",btnCancel,"/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml");
     }
 
@@ -76,7 +76,8 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void startDataComponentOrganization () {
         linkedOrganization = new LinkedOrganization();
-        linkedOrganization = linkedOrganization.getLinkedOrganization(nameLinkedOrganization);
+        linkedOrganizationEdit = new LinkedOrganization();
+        linkedOrganization = LinkedOrganization.getLinkedOrganization(nameLinkedOrganization);
         tfNameOrganization.setText(linkedOrganization.getName());
         tfUsersDirect.setText(linkedOrganization.getDirectUsers());
         tfUsersIndirect.setText(linkedOrganization.getIndirectUsers());
@@ -87,7 +88,7 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
         cbSector.getEditor().setText(linkedOrganization.getSector());
         phoneNumberOne = new PhoneNumber();
         phoneNumberTwo = new PhoneNumber();
-        phoneNumberList = phoneNumberOne.getListPhoneNumber(linkedOrganization.getIdLinkedOrganization());
+        phoneNumberList = PhoneNumber.getListPhoneNumber(linkedOrganization.getIdLinkedOrganization());
         phoneNumberOne = phoneNumberList.get(0);
         tfPhoneNumberOne.setText(phoneNumberList.get(0).getPhoneNumber());
         tfExtensionsOne.setText(phoneNumberList.get(0).getExtensions());
@@ -95,10 +96,18 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
             tfPhoneNumberTwo.setText(phoneNumberList.get(1).getPhoneNumber());
             tfExtensionsTwo.setText(phoneNumberList.get(1).getExtensions());
             phoneNumberTwo = phoneNumberList.get(1);
+            if(phoneNumberTwo.getExtensions() ==null){
+                phoneNumberTwo.setExtensions("");
+                tfExtensionsTwo.setText("");
+            }
+        }
+        if(phoneNumberOne.getExtensions()== null){
+            phoneNumberOne.setExtensions("");
+            tfExtensionsOne.setText("");
         }
     }
 
-    public void startComponent (){
+    public void startComponentOrganization(){
         limitTextField(tfNameOrganization,100);
         prohibitNumberTextField(tfNameOrganization);
 
@@ -138,69 +147,95 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void startComboBox () {
         allCity = new ArrayList<>();
-        allCity = linkedOrganization.getListCity();
+        allCity = LinkedOrganization.getListCity();
         cbCity.getItems().addAll(allCity);
 
         allSector = new ArrayList<>();
-        allSector = linkedOrganization.getListSector();
+        allSector = LinkedOrganization.getListSector();
         cbSector.getItems().addAll(allSector);
 
         allState = new ArrayList<>();
-        allState = linkedOrganization.getListState();
+        allState = LinkedOrganization.getListState();
         cbState.getItems().addAll(allState);
     }
 
-    public void modify () {
+    public void modifyLinkedOrganization() {
         phoneNumberTwoEdit = new PhoneNumber();
         phoneNumberOneEdit = new PhoneNumber();
         datesUpdate = new ArrayList<>();
         datesUpdatePhoneNumberOne = new ArrayList<>();
         datesUpdatePhoneNumberTwo = new ArrayList<>();
-        messageRepeat = "Existe una organizacion vinculada con el mismo nombre o correo";
+        messageRepeat ="";
         validateDataLinkedOrganization();
         if(datesUpdate.size()!= Number.ZERO.getNumber() || isNewPhoneNumber ||
                 datesUpdatePhoneNumberOne.size()!= Number.ZERO.getNumber() ||
                 datesUpdatePhoneNumberTwo.size()!= Number.ZERO.getNumber()) {
-            if (!isValidDataOrganization) {
-                generateAlert(message);
-                message = "Ingresar datos válidos";
-            } else {
-            /*organization = getDataOrganization();
-            boolean isRepeatLinkedOrganization;
-            isRepeatLinkedOrganization = organization.validateRepeatLinkedOrganization();
-            boolean isValidPhoneNumber = validateRepeatPhoneNumber();
-            if(!isRepeatLinkedOrganization && !isValidPhoneNumber){
-                boolean isRegisterLinkedOrganization;
-                isRegisterLinkedOrganization = organization.addLinkedOrganization();
-                int idLinkedOrganization = organization.searchIdLinkedOrganization();
-                boolean isRegisterPhoneNumber=false;
-                if(!tfPhoneNumberTwo.getText().trim().isEmpty()){
-                    isRegisterPhoneNumber = phoneNumberTwo.addPhoneNumber(idLinkedOrganization);
-                }
-                if(!tfPhoneNumberOne.getText().trim().isEmpty()){
-                    isRegisterPhoneNumber = phoneNumberOne.addPhoneNumber(idLinkedOrganization);
-                }
-                if(isRegisterLinkedOrganization){
-                    if(isRegisterPhoneNumber) {
-                        generateInformation("La organizacion vinculada se registro exitosamente");
-                        openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnModify);
-                    }else{
-                        generateInformation("La organizacion vinculada se registro exitosamente. Pero su numero de telefono no.");
-                        openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml", btnModify);
+            if(isValidDataOrganization) {
+                int isRepeatLinkedOrganization = Number.FIVE.getNumber();
+                int isValidPhoneNumber = Number.FIVE.getNumber();
+                boolean isModifyLinkedOrganization =true;
+                boolean isModifyNumberPhone =true;
+                if (datesUpdate.size() != Number.ZERO.getNumber()) {
+                    isRepeatLinkedOrganization = LinkedOrganization.validateRepeatLinkedOrganization(linkedOrganizationEdit.getEmail(), linkedOrganizationEdit.getName());
+                    if (isRepeatLinkedOrganization == Search.NOTFOUND.getValue()) {
+                        isModifyLinkedOrganization = LinkedOrganization.modifyLinkedOrganization(linkedOrganizationEdit, datesUpdate);
+                    }else {
+                        messageRepeat = "Existe una organizacion vinculada con el mismo nombre o correo.";
                     }
-
-                } else {
-                    generateError("La organizacion vinculada no pudo registrarse");
-                    openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnModify);
+                }
+                if (datesUpdatePhoneNumberOne.size() != Number.ZERO.getNumber() ||
+                        datesUpdatePhoneNumberTwo.size() != Number.ZERO.getNumber() || isNewPhoneNumber) {
+                    isValidPhoneNumber = validateRepeatPhoneNumber();
+                    if (isValidPhoneNumber == Search.NOTFOUND.getValue()) {
+                        isModifyNumberPhone = modifyPhoneNumberComplete ();
+                    }
+                }
+                if (isRepeatLinkedOrganization == Search.FOUND.getValue() || isValidPhoneNumber == Search.FOUND.getValue()){
+                    generateError(messageRepeat);
+                }else {
+                    if(isRepeatLinkedOrganization == Search.EXCEPTION.getValue() || isValidPhoneNumber == Search.EXCEPTION.getValue()){
+                        generateError("No se puso obtener la información de la base de datos");
+                    }else {
+                        if(isModifyNumberPhone && isModifyLinkedOrganization){
+                            generateInformation("La organización vinculada se modificó con éxito");
+                            openWindowGeneral("/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml", btnModify);
+                        }else {
+                            generateError("La organización vinculada no pudo modificarse");
+                            openWindowGeneral("/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml", btnModify);
+                        }
+                    }
                 }
             }else {
-                generateError(messageRepeat);
-            }*/
+                generateAlert(message);
+                message = "Ingresar datos válidos";
             }
         }else{
             removeStyleClass();
             generateAlert("Modifique datos");
         }
+        datesUpdate.clear();
+        datesUpdatePhoneNumberTwo.clear();
+        datesUpdatePhoneNumberOne.clear();
+    }
+
+    public boolean modifyPhoneNumberComplete (){
+        boolean isModifyPhoneNumberOne = true;
+        boolean isModifyPhoneNumberTwo = true;
+        boolean isRegisterPhoneNumberTwo = true;
+        boolean isModifyPhoneNumber = true;
+        if (datesUpdatePhoneNumberOne.size() != Number.ZERO.getNumber()) {
+            isModifyPhoneNumberOne = PhoneNumber.modifyPhoneNumber(phoneNumberOneEdit, datesUpdatePhoneNumberOne);
+        }
+        if (datesUpdatePhoneNumberTwo.size() != Number.ZERO.getNumber()) {
+            isModifyPhoneNumberTwo = PhoneNumber.modifyPhoneNumber(phoneNumberTwoEdit, datesUpdatePhoneNumberTwo);
+        }
+        if (isNewPhoneNumber) {
+            isRegisterPhoneNumberTwo = PhoneNumber.addPhoneNumber(phoneNumberTwoEdit, linkedOrganization.getIdLinkedOrganization());
+        }
+        if(!isModifyPhoneNumberOne || !isModifyPhoneNumberTwo || !isRegisterPhoneNumberTwo){
+            isModifyPhoneNumber = false;
+        }
+        return isModifyPhoneNumber;
     }
 
     public void removeStyleClass (){
@@ -230,69 +265,68 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
         cbCity.getStyleClass().remove("ok");
     }
 
-    public boolean validateRepeatPhoneNumber (){
-        boolean isValidNumbers = false;
-        boolean isRepeatPhoneNumberOne = false;
-        boolean isRepeatPhoneNumberTwo = false;
-        phoneNumberOne = new PhoneNumber();
-        phoneNumberTwo = new PhoneNumber();
+    public int validateRepeatPhoneNumber (){
+        int isValidNumbers = Search.NOTFOUND.getValue();
+        int isRepeatPhoneNumberOne = Search.NOTFOUND.getValue();
+        int isRepeatPhoneNumberTwo = Search.NOTFOUND.getValue();
+        phoneNumberTwoEdit.setIdPhoneNumber(phoneNumberTwo.getIdPhoneNumber());
+        phoneNumberOneEdit.setIdPhoneNumber(phoneNumberOne.getIdPhoneNumber());
         if(!tfPhoneNumberOne.getText().trim().isEmpty() && !tfPhoneNumberTwo.getText().trim().isEmpty()) {
             if(!tfPhoneNumberOne.getText().equals(tfPhoneNumberTwo.getText())){
-                phoneNumberTwo.setPhoneNumber(tfPhoneNumberTwo.getText());
-                phoneNumberTwo.setExtensions(validateDataOrganization.deleteSpace(tfExtensionsTwo.getText()));
-                phoneNumberOne.setPhoneNumber(tfPhoneNumberOne.getText());
-                phoneNumberOne.setExtensions(validateDataOrganization.deleteSpace(tfExtensionsOne.getText()));
-                isRepeatPhoneNumberOne = phoneNumberOne.validateRepeatPhoneNumber(phoneNumberOne.getPhoneNumber());
-                isRepeatPhoneNumberTwo = phoneNumberTwo.validateRepeatPhoneNumber(phoneNumberTwo.getPhoneNumber());
-                if(isRepeatPhoneNumberOne) {
+                isRepeatPhoneNumberOne = PhoneNumber.validateRepeatPhoneNumberExist(tfPhoneNumberOne.getText(),phoneNumberOneEdit.getIdPhoneNumber());
+                isRepeatPhoneNumberTwo = PhoneNumber.validateRepeatPhoneNumberExist(tfPhoneNumberTwo.getText(),phoneNumberTwoEdit.getIdPhoneNumber());
+                if(isRepeatPhoneNumberOne == Search.FOUND.getValue()) {
                     tfPhoneNumberOne.getStyleClass().remove("ok");
                     tfPhoneNumberOne.getStyleClass().add("error");
                 }
-                if(isRepeatPhoneNumberTwo) {
+                if(isRepeatPhoneNumberTwo == Search.FOUND.getValue())  {
                     tfPhoneNumberTwo.getStyleClass().remove("ok");
                     tfPhoneNumberTwo.getStyleClass().add("error");
                 }
-                if(isRepeatPhoneNumberOne || isRepeatPhoneNumberTwo){
-                    messageRepeat = messageRepeat +". El numero de telefono ya esta registrado";
+                if(isRepeatPhoneNumberOne == Search.FOUND.getValue() || isRepeatPhoneNumberTwo == Search.FOUND.getValue()){
+                    messageRepeat = messageRepeat +" El numero de telefono ya esta registrado";
                 }
             }else {
+                isRepeatPhoneNumberOne = Search.FOUND.getValue();
+                isRepeatPhoneNumberTwo = Search.FOUND.getValue();
                 tfPhoneNumberTwo.getStyleClass().remove("ok");
                 tfPhoneNumberOne.getStyleClass().remove("ok");
-                messageRepeat = messageRepeat +". Los numeros de teléfono son identicos";
+                messageRepeat = messageRepeat +"Los numeros de teléfono son identicos";
                 tfPhoneNumberOne.getStyleClass().add("error");
                 tfPhoneNumberTwo.getStyleClass().add("error");
             }
         }else {
             if(!tfPhoneNumberOne.getText().trim().isEmpty()){
-                phoneNumberOne.setPhoneNumber(tfPhoneNumberOne.getText());
-                phoneNumberOne.setExtensions(validateDataOrganization.deleteSpace(tfExtensionsOne.getText()));
-                isRepeatPhoneNumberOne = phoneNumberOne.validateRepeatPhoneNumber(phoneNumberOne.getPhoneNumber());
-                if(isRepeatPhoneNumberOne) {
+                isRepeatPhoneNumberOne = PhoneNumber.validateRepeatPhoneNumberExist(tfPhoneNumberOne.getText(),phoneNumberOneEdit.getIdPhoneNumber());
+                if(isRepeatPhoneNumberOne == Search.FOUND.getValue()) {
                     tfPhoneNumberOne.getStyleClass().remove("ok");
                     tfPhoneNumberOne.getStyleClass().add("error");
-                    messageRepeat = messageRepeat +". El numero de telefono ya esta registrado";
+                    messageRepeat = messageRepeat +" El numero de telefono ya esta registrado";
                 }
             }else {
-                phoneNumberTwo.setPhoneNumber(tfPhoneNumberTwo.getText());
-                phoneNumberTwo.setExtensions(validateDataOrganization.deleteSpace(tfExtensionsTwo.getText()));
-                isRepeatPhoneNumberTwo = phoneNumberTwo.validateRepeatPhoneNumber(phoneNumberTwo.getPhoneNumber());
-                if(isRepeatPhoneNumberTwo) {
-                    tfPhoneNumberTwo.getStyleClass().remove("ok");
-                    tfPhoneNumberTwo.getStyleClass().add("error");
-                    messageRepeat = messageRepeat +". El numero de telefono ya esta registrado";
+                if(!tfPhoneNumberTwo.getText().trim().isEmpty()) {
+                    isRepeatPhoneNumberTwo = PhoneNumber.validateRepeatPhoneNumberExist(tfPhoneNumberTwo.getText(), phoneNumberTwoEdit.getIdPhoneNumber());
+                    if (isRepeatPhoneNumberTwo == Search.FOUND.getValue()) {
+                        tfPhoneNumberTwo.getStyleClass().remove("ok");
+                        tfPhoneNumberTwo.getStyleClass().add("error");
+                        messageRepeat = messageRepeat + " El numero de telefono ya esta registrado";
+                    }
                 }
             }
         }
-        if(isRepeatPhoneNumberOne || isRepeatPhoneNumberTwo) {
-            isValidNumbers = true;
+        if(isRepeatPhoneNumberOne == Search.EXCEPTION.getValue() || isRepeatPhoneNumberTwo == Search.EXCEPTION.getValue()) {
+            isValidNumbers = Search.EXCEPTION.getValue();
+        }else {
+            if(isRepeatPhoneNumberOne == Search.FOUND.getValue() || isRepeatPhoneNumberTwo == Search.FOUND.getValue()) {
+                isValidNumbers = Search.FOUND.getValue();
+            }
         }
         return isValidNumbers;
     }
 
+
     public void validateName () {
         boolean isValidNameOrganization = validateDataOrganization.validateName(tfNameOrganization.getText());
-        tfNameOrganization.getStyleClass().remove("error");
-        tfNameOrganization.getStyleClass().remove("ok");
         if(isValidNameOrganization){
             tfNameOrganization.getStyleClass().add("ok");
             linkedOrganizationEdit.setName(validateDataOrganization.deleteSpace(tfNameOrganization.getText()));
@@ -305,8 +339,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public  void validateDirectUsers (){
         boolean isValidDirectUsers = validateDataOrganization.validateUsersOrganization(tfUsersDirect.getText());
-        tfUsersDirect.getStyleClass().remove("error");
-        tfUsersDirect.getStyleClass().remove("ok");
         if(isValidDirectUsers){
             tfUsersDirect.getStyleClass().add("ok");
             linkedOrganizationEdit.setDirectUsers(validateDataOrganization.deleteSpace(tfUsersDirect.getText()));
@@ -319,8 +351,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public  void validateIndirectUsers () {
         boolean isValidIndirectUser = validateDataOrganization.validateUsersOrganization(tfUsersIndirect.getText());
-        tfUsersIndirect.getStyleClass().remove("error");
-        tfUsersIndirect.getStyleClass().remove("ok");
         if(isValidIndirectUser){
             tfUsersIndirect.getStyleClass().add("ok");
             linkedOrganizationEdit.setIndirectUsers(validateDataOrganization.deleteSpace(tfUsersIndirect.getText()));
@@ -387,11 +417,9 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
                 datesUpdatePhoneNumberOne.add("Extensions");
             }
         } else {
-            if(!tfExtensionsOne.getText().trim().isEmpty()){
-                isValidDataOrganization=false;
-                tfPhoneNumberOne.getStyleClass().add("error");
-                message = "Ingresar datos válidos. Ingrese un numero para la extensión";
-            }
+            isValidDataOrganization=false;
+            tfPhoneNumberOne.getStyleClass().add("error");
+            message = "Ingresar datos válidos. Ingrese un numero de telefono";
         }
         datesUpdatePhoneNumberOne.add("PhoneNumber");
     }
@@ -458,8 +486,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void validateAddress (){
         boolean isValidAdress = validateDataOrganization.validateAddress(tfAddress.getText());
-        tfAddress.getStyleClass().remove("error");
-        tfAddress.getStyleClass().remove("ok");
         if(isValidAdress){
             tfAddress.getStyleClass().add("ok");
             linkedOrganizationEdit.setAddress(validateDataOrganization.deleteSpace(tfAddress.getText()));
@@ -472,8 +498,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void validateCity () {
         boolean isValidCity = validateDataOrganization.validateComboBox(cbCity.getEditor().getText());
-        cbCity.getStyleClass().remove("error");
-        cbCity.getStyleClass().remove("ok");
         if(isValidCity){
             cbCity.getStyleClass().add("ok");
             linkedOrganizationEdit.setCity(validateDataOrganization.deleteSpace(cbCity.getEditor().getText()));
@@ -486,8 +510,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void validateSector (){
         boolean isValidSector = validateDataOrganization.validateComboBox(cbSector.getEditor().getText());
-        cbSector.getStyleClass().remove("error");
-        cbSector.getStyleClass().remove("ok");
         if(isValidSector){
             cbSector.getStyleClass().add("ok");
             linkedOrganizationEdit.setSector(validateDataOrganization.deleteSpace(cbSector.getEditor().getText()));
@@ -500,8 +522,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void validateState (){
         boolean isValidState = validateDataOrganization.validateComboBox(cbState.getEditor().getText());
-        cbState.getStyleClass().remove("error");
-        cbState.getStyleClass().remove("ok");
         if(isValidState){
             cbState.getStyleClass().add("ok");
             linkedOrganizationEdit.setState(validateDataOrganization.deleteSpace(cbState.getEditor().getText()));
@@ -514,8 +534,6 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
 
     public void validateEmail () {
         boolean isValidEmailOrganization = validateDataOrganization.validateEmail(tfEmailOrganization.getText());
-        tfEmailOrganization.getStyleClass().remove("error");
-        tfEmailOrganization.getStyleClass().remove("ok");
         if(isValidEmailOrganization){
             tfEmailOrganization.getStyleClass().add("ok");
             linkedOrganizationEdit.setEmail(validateDataOrganization.deleteSpace(tfEmailOrganization.getText()));
@@ -527,11 +545,12 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
     }
 
     public void validateDataLinkedOrganization(){
-        isNewPhoneNumber=false;
         linkedOrganizationEdit = new LinkedOrganization();
+        linkedOrganizationEdit.setIdLinkedOrganization(linkedOrganization.getIdLinkedOrganization());
         message = "Ingresar datos válidos";
         isValidDataOrganization=true;
         validateDataOrganization = new ValidateLinkedOrganization();
+        removeStyleClass();
         if(!linkedOrganization.getName().equals(tfNameOrganization.getText())) {
             validateName();
         }
@@ -556,15 +575,10 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
         if(!linkedOrganization.getState().equals(cbState.getEditor().getText())) {
             validateState();
         }
-        tfPhoneNumberTwo.getStyleClass().remove("error");
-        tfPhoneNumberTwo.getStyleClass().remove("ok");
-        tfPhoneNumberOne.getStyleClass().remove("error");
-        tfPhoneNumberOne.getStyleClass().remove("ok");
-        tfExtensionsOne.getStyleClass().remove("error");
-        tfExtensionsOne.getStyleClass().remove("ok");
-        tfExtensionsTwo.getStyleClass().remove("error");
-        tfExtensionsTwo.getStyleClass().remove("ok");
-
+        validateDataPhoneNumber();
+    }
+    public void validateDataPhoneNumber (){
+        isNewPhoneNumber=false;
         if(tfExtensionsOne.getText().trim().isEmpty() && tfExtensionsTwo.getText().trim().isEmpty() &&
                 tfPhoneNumberOne.getText().trim().isEmpty() && tfPhoneNumberTwo.getText().trim().isEmpty()){
             isValidDataOrganization=false;
@@ -572,17 +586,21 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
             tfPhoneNumberOne.getStyleClass().add("error");
         }else {
             if(!phoneNumberOne.getPhoneNumber().equals(tfPhoneNumberOne.getText())){
-                validatePhoneNumberTwo();
+                phoneNumberOneEdit.setIdPhoneNumber(phoneNumberOne.getIdPhoneNumber());
+                validatePhoneNumberOne();
             }else{
                 if(!phoneNumberOne.getExtensions().equals(tfExtensionsOne.getText())){
+                    phoneNumberOneEdit.setIdPhoneNumber(phoneNumberOne.getIdPhoneNumber());
                     validateExtensionsOne();
                 }
             }
-            if(phoneNumberList.size()>Number.ONE.getNumber()){
+            if(phoneNumberList.size()== Number.TWO.getNumber()){
                 if(!phoneNumberTwo.getPhoneNumber().equals(tfPhoneNumberTwo.getText())){
+                    phoneNumberTwoEdit.setIdPhoneNumber(phoneNumberTwo.getIdPhoneNumber());
                     validatePhoneNumberTwo();
                 }else{
                     if(!phoneNumberTwo.getExtensions().equals(tfExtensionsTwo.getText())){
+                        phoneNumberTwoEdit.setIdPhoneNumber(phoneNumberTwo.getIdPhoneNumber());
                         validateExtensionsTwo();
                     }
                 }
@@ -592,6 +610,7 @@ public class FXMLUpdateLinkedOrganizationController extends FXMLGeneralControlle
                     isNewPhoneNumber=true;
                 } else {
                     if(!tfExtensionsTwo.getText().trim().isEmpty()){
+                        isNewPhoneNumber=true;
                         isValidDataOrganization=false;
                         tfPhoneNumberTwo.getStyleClass().add("error");
                         message = "Ingresar datos válidos. Ingrese un número de teléfono para la extensión";

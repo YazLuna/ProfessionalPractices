@@ -4,10 +4,7 @@ import dataaccess.LinkedOrganizationDAOImpl;
 import dataaccess.PhoneNumberDAOImpl;
 import dataaccess.ResponsibleProjectDAOImpl;
 import dataaccess.SchedulingActivitiesDAOImpl;
-import domain.LinkedOrganization;
-import domain.Project;
-import domain.ResponsibleProject;
-import domain.SchedulingActivities;
+import domain.*;
 import logic.ValidateLinkedOrganization;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,34 +15,35 @@ import java.util.List;
 public class ValidateTestProject {
     @Test
     public void testRepeatProject(){
-        boolean isRepeatProject;
+        int isRepeatProject;
         Project project = new Project();
         isRepeatProject = project.validateRepeatProject("Sistema Integral Académico");
-        Assert.assertFalse(isRepeatProject);
+        Assert.assertEquals(Search.NOTFOUND.getValue(),isRepeatProject);
     }
 
     @Test
     public void testRepeatLinkedOrganization (){
-        boolean isRepeatLinkedOganization;
+        int isRepeatLinkedOganization;
         LinkedOrganization linkedOrganization = new LinkedOrganization();
-        isRepeatLinkedOganization = linkedOrganization.validateRepeatLinkedOrganization("BANX","banx@gmail.com");
-        Assert.assertFalse(isRepeatLinkedOganization);
+        isRepeatLinkedOganization = linkedOrganization.validateRepeatLinkedOrganization("Dirección de Desarrollo Informático de Apoyo Académico","acolunga@uv.mx");
+        Assert.assertEquals(Search.NOTFOUND.getValue(),isRepeatLinkedOganization);
     }
 
     @Test
     public void testRepeatResponsibleProject(){
-        boolean isRepeatResponsibleProject;
+        int isRepeatResponsibleProject;
         ResponsibleProject responsibleProject = new ResponsibleProject();
-        isRepeatResponsibleProject = responsibleProject.validateRepeatResponsibleProject("Lucia");
-        Assert.assertFalse(isRepeatResponsibleProject);
+        isRepeatResponsibleProject = responsibleProject.validateRepeatResponsibleProject("guruiz@uv.mx");
+        Assert.assertEquals(Search.NOTFOUND.getValue(),isRepeatResponsibleProject);
     }
 
     @Test
     public void testRepeatPhoneNumber (){
         PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
-        boolean isRepeatPhone = phoneNumberDAO.validateRepeatPhoneNumber("9711609017");
-        Assert.assertFalse(isRepeatPhone);
+        int isRepeatPhone = phoneNumberDAO.validateRepeatPhoneNumber("9711609017");
+        Assert.assertEquals(Search.NOTFOUND.getValue(),isRepeatPhone);
     }
+
 
     @Test
     public void testThereAreProject(){

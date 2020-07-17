@@ -106,6 +106,14 @@ public class LinkedOrganization{
         this.idLinkedOrganization = idLinkedOrganization;
     }
 
+    public List<PhoneNumber> getPhoneNumbers () {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers (List<PhoneNumber> phoneNumbers){
+        this.phoneNumbers = phoneNumbers;
+    }
+
     /**
      * Method for add the linked organization
      * @param linkedOrganization define the data of the linked organization
@@ -229,8 +237,8 @@ public class LinkedOrganization{
      * @param email defines the email of the linked organization
      * @return if the linked organization already exists
      */
-    public static boolean validateRepeatLinkedOrganization(String name, String email) {
-        boolean isValidRepeatLinkedOrganization;
+    public static int validateRepeatLinkedOrganization(String name, String email) {
+        int isValidRepeatLinkedOrganization;
         LinkedOrganizationDAOImpl seachOrganization = new LinkedOrganizationDAOImpl();
         isValidRepeatLinkedOrganization = seachOrganization.validateRepeatLinkedOrganization(name,email);
         return isValidRepeatLinkedOrganization;
