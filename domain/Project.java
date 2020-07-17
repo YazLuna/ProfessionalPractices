@@ -23,7 +23,7 @@ public class Project {
     private String status;
     private int staffNumberCoordinator;
     private int duration;
-    private int quantityPractitioner;
+    private int quiantityPractitioner;
     private int placesAvailable;
     private int idProject;
     private LinkedOrganization organization;
@@ -31,7 +31,7 @@ public class Project {
     private List<SchedulingActivities> schedulingActivitiesProject;
 
     public Project() {
-        this.placesAvailable = this.quantityPractitioner;
+        this.placesAvailable = this.quiantityPractitioner;
         this.status = "available";
     }
 
@@ -147,12 +147,12 @@ public class Project {
         this.duration = duration;
     }
 
-    public int getQuantityPractitioner() {
-        return quantityPractitioner;
+    public int getQuiantityPractitioner() {
+        return quiantityPractitioner;
     }
 
-    public void setQuantityPractitioner(int quantityPractitioner) {
-        this.quantityPractitioner = quantityPractitioner;
+    public void setQuiantityPractitioner(int quiantityPractitioner) {
+        this.quiantityPractitioner = quiantityPractitioner;
     }
 
     public void setPlacesAvailable(int placesAvailable) {
@@ -267,8 +267,8 @@ public class Project {
      * @param nameProject define the data of the project
      * @return if valid the project
      */
-    public static boolean validateRepeatProject (String nameProject) {
-        boolean isValidProject;
+    public static int validateRepeatProject (String nameProject) {
+        int isValidProject;
         ProjectDAOImpl projectDAO = new ProjectDAOImpl();
         isValidProject = projectDAO.validateRepeatProject(nameProject);
         return isValidProject;

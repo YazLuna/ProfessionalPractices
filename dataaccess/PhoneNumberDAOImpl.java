@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import domain.Number;
 import domain.PhoneNumber;
+import domain.Search;
+import exception.Exception;
+import telegram.TelegramBot;
 
 /**
  * Implementation of the IPhoneNumberDAO
@@ -34,7 +38,8 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
      * Method to add a phone number
      * @param phoneNumber The phoneNumber parameter defines the Phone Number
      */
-    public boolean addPhoneNumber(PhoneNumber phoneNumber, int idLinkedOrganization){
+    @Override
+    public boolean addPhoneNumber(PhoneNumber phoneNumber,int idLinkedOrganization){
         boolean isAddPhoneNumber =false;
         try{
             connection = connexion.getConnection();
@@ -44,8 +49,9 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
             sentenceState.setInt(3,idLinkedOrganization);
             sentenceState.executeUpdate();
             isAddPhoneNumber =true;
-        }catch(SQLException ex){
-            Logger.getLogger(PhoneNumberDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -56,6 +62,7 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
      * Method to get the phone number list
      * @return The phone number list
      */
+    @Override
     public List<PhoneNumber> getAllPhoneNumber(int idLinkedOrganization){
         List<PhoneNumber> phoneNumbers = new ArrayList<>();
         try {
@@ -71,8 +78,9 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
                 phoneNumber.setIdPhoneNumber(results.getInt("idPhoneNumber"));
                 phoneNumbers.add(phoneNumber);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(PhoneNumberDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -86,6 +94,7 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
      * @param datesUpdate data that is modified
      * @return if this phone is modify
      */
+    @Override
     public boolean modifyPhoneNumber (PhoneNumber phoneNumberEdit, List<String> datesUpdate){
         boolean result = false;
         String sentenceDatesUpdate="";
@@ -98,13 +107,13 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
             }
             Change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
-        String sentence = "UPDATE PhoneNumber SET "+sentenceDatesUpdate+ " WHERE idLinkedOrganization " +
+        String sentence = "UPDATE PhoneNumber SET "+sentenceDatesUpdate+ " WHERE idPhoneNumber " +
                 "= "+ phoneNumberEdit.getIdPhoneNumber();
         try{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classPhone = phoneNumberEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodPhone;
                 methodPhone = classPhone.getMethod(Change.get(indexPreparedStatement - 1));
@@ -113,8 +122,9 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
             }
             preparedStatement.executeUpdate();
             result = true;
-        } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(PhoneNumberDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ReflectiveOperationException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -126,8 +136,9 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
      * @param phoneNumber define the phone number
      * @return if this phone is registered
      */
-    public boolean validateRepeatPhoneNumber (String phoneNumber) {
-        boolean isRepeatPhoneNumber = false;
+    @Override
+    public int validateRepeatPhoneNumber (String phoneNumber) {
+        int isRepeatPhoneNumber = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
             String queryAllPhoneNumber = "SELECT idPhoneNumber FROM PhoneNumber WHERE phoneNumber =?";
@@ -135,10 +146,40 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
             sentenceAllOrganization.setString(1, phoneNumber);
             results= sentenceAllOrganization.executeQuery();
             if(results.next()){
-                isRepeatPhoneNumber = true;
+                isRepeatPhoneNumber =Search.FOUND.getValue();
             }
-        }catch (SQLException ex){
-            Logger.getLogger(PhoneNumberDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            isRepeatPhoneNumber = Search.EXCEPTION.getValue();
+        }finally{
+            connexion.closeConnection();
+        }
+        return isRepeatPhoneNumber;
+    }
+
+    /**
+     * Method to find out if the phone is registered
+     * @param phoneNumber define the phone number
+     * @return if this phone is registered
+     */
+    @Override
+    public int validateRepeatPhoneNumberExist (String phoneNumber,int idPhoneNumberOrigin) {
+        int isRepeatPhoneNumber = Search.NOTFOUND.getValue();
+        try {
+            connection = connexion.getConnection();
+            String queryAllPhoneNumber = "SELECT idPhoneNumber FROM PhoneNumber WHERE phoneNumber =? AND idPhoneNumber!=?";
+            PreparedStatement sentenceAllOrganization = connection.prepareStatement(queryAllPhoneNumber);
+            sentenceAllOrganization.setString(1, phoneNumber);
+            sentenceAllOrganization.setInt(2, idPhoneNumberOrigin);
+            results= sentenceAllOrganization.executeQuery();
+            if(results.next()){
+                isRepeatPhoneNumber =Search.FOUND.getValue();
+            }
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            isRepeatPhoneNumber = Search.EXCEPTION.getValue();
         }finally{
             connexion.closeConnection();
         }

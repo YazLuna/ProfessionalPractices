@@ -1,7 +1,5 @@
 package gui.coordinator.controller;
 
-import dataaccess.Number;
-import domain.Project;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +15,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+import domain.Number;
+import domain.Project;
 import gui.FXMLGeneralController;
 
 
@@ -52,12 +51,11 @@ public class FXMLListProjectController extends FXMLGeneralController implements 
     }
 
     public void startTableProjects() {
-        Project project = new Project();
         allProject = new ArrayList<>();
         if(controllerSection!= "delete"){
-            allProject = project.getListProject();
+            allProject = Project.getListProject();
         }else{
-            allProject = project.getListProjectAvailable();
+            allProject = Project.getListProjectAvailable();
         }
         TableColumn<Project, String> name = new TableColumn<>("Nombre");
         name.setCellValueFactory(new PropertyValueFactory<Project, String>("nameProject"));
@@ -79,18 +77,12 @@ public class FXMLListProjectController extends FXMLGeneralController implements 
                     if(tvProject.getSelectionModel().getSelectedItem() != null) {
                         if(controllerSection != "delete") {
                             FXMLUpdateProjectController projectController = new FXMLUpdateProjectController();
-                            //updateResponsible .assignEmailResponsible(responsible.getEmail());
+                            projectController.assignNameProject(project.getNameProject());
                             openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateProject.fxml",tvProject);
                         }else {
-                            //boolean areAssingProject;
-                            //areAssingProject = project.areAssingProject();
-                            //if(!areAssingProject) {
-                                //generateInformation("No puede eliminarse un proyecto asignado");
-                            //} else {
-                                FXMLDeleteProjectController projectController = new FXMLDeleteProjectController();
-                                projectController.assignNameProject(project.getNameProject());
-                                openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteProject.fxml", tvProject);
-                            //}
+                            FXMLDeleteProjectController projectController = new FXMLDeleteProjectController();
+                            projectController.assignNameProject(project.getNameProject());
+                            openWindowGeneral("/gui/coordinator/fxml/FXMLDeleteProject.fxml", tvProject);
                         }
                     }
                 }

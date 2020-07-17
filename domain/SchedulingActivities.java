@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import dataaccess.SchedulingActivitiesDAOImpl;
 
@@ -48,6 +49,18 @@ public class SchedulingActivities {
             SchedulingActivitiesDAOImpl schedulingActivitiesDAO = new SchedulingActivitiesDAOImpl();
             isModifySchedulingActivities = schedulingActivitiesDAO.modifySchedulingActivities(schedulingActivitiesEdit, datesUpdate);
             return isModifySchedulingActivities;
+        }
+
+        public static boolean addSchedulingActivities (SchedulingActivities schedulingActivities,int idProject){
+            boolean isAddSchedulingActivities=false;
+            SchedulingActivitiesDAOImpl schedulingActivitiesDAO = new SchedulingActivitiesDAOImpl();
+            isAddSchedulingActivities = schedulingActivitiesDAO.addSchedulingActivities(idProject,schedulingActivities);
+            return  isAddSchedulingActivities;
+        }
+
+        public  static List<SchedulingActivities> getListSchedulingActivities (int idProject){
+            List<SchedulingActivities> schedulingActivitiesList = new ArrayList<>();
+            return schedulingActivitiesList;
         }
 
 }

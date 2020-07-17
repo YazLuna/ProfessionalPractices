@@ -1,9 +1,8 @@
 package logic;
 
-import dataaccess.Number;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import domain.Number;
 
 /**
  *  Class validate General

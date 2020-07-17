@@ -2,7 +2,6 @@ package test.testproject;
 
 import dataaccess.*;
 import domain.*;
-import logic.ValidateLinkedOrganization;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -84,7 +83,7 @@ public class GetTestProject {
     @Test
     public void testGetLinkedOrganization () {
         LinkedOrganization linkedOrganization = new LinkedOrganization();
-        linkedOrganization = linkedOrganization.getOrganization("Dirección de Desarrollo Informático de Apoyo Académico");
+        linkedOrganization = linkedOrganization.getLinkedOrganization("Dirección de Desarrollo Informático de Apoyo Académico");
         Assert.assertEquals("Dirección de Desarrollo Informático de Apoyo Académico",linkedOrganization.getName());
     }
 
@@ -124,7 +123,7 @@ public class GetTestProject {
     public void testGetResponsibleProject () {
         ResponsibleProject responsibleProject = new ResponsibleProject();
         responsibleProject = responsibleProject.getResponsibleProject("guruiz@uv.mx");
-        Assert.assertEquals("guruiz@uv.mx",responsibleProject.getName());
+        Assert.assertEquals("guruiz@uv.mx",responsibleProject.getEmail());
     }
 
     @Test

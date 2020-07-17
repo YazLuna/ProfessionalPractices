@@ -56,23 +56,11 @@ public class PhoneNumber {
      * @param idLinkedOrganization define the id of the linked organization
      * @return get list oh the phone number of the linked organization
      */
-    public static List<PhoneNumber> getPhoneNumberList(int idLinkedOrganization){
+    public static List<PhoneNumber> getListPhoneNumber(int idLinkedOrganization){
         List<PhoneNumber> phoneNumbersList = new ArrayList<>();
         PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
         phoneNumbersList= phoneNumberDAO.getAllPhoneNumber(idLinkedOrganization);
         return phoneNumbersList;
-    }
-
-    /**
-     * Method for validate repeat phone number
-     * @param phoneNumber define the phone number
-     * @return if valid phone number
-     */
-    public static boolean validateRepeatPhoneNumber (String phoneNumber){
-        boolean isRepeatPhoneNumber;
-        PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
-        isRepeatPhoneNumber = phoneNumberDAO.validateRepeatPhoneNumber(phoneNumber);
-        return isRepeatPhoneNumber;
     }
 
     /**
@@ -86,5 +74,29 @@ public class PhoneNumber {
         PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
         isModifyPhoneNumber = phoneNumberDAO.modifyPhoneNumber(phoneNumber,datesUpdate);
         return isModifyPhoneNumber;
+    }
+
+    /**
+     * Method for validate repeat phone number
+     * @param phoneNumber define the phone number
+     * @return if valid phone number
+     */
+    public static int validateRepeatPhoneNumber (String phoneNumber){
+        int isRepeatPhoneNumber;
+        PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
+        isRepeatPhoneNumber = phoneNumberDAO.validateRepeatPhoneNumber(phoneNumber);
+        return isRepeatPhoneNumber;
+    }
+
+    /**
+     * Method for validate repeat phone number
+     * @param phoneNumber define the phone number
+     * @return if valid phone number
+     */
+    public static int validateRepeatPhoneNumberExist (String phoneNumber, int idPhoneNumberOrigin){
+        int isRepeatPhoneNumber;
+        PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
+        isRepeatPhoneNumber = phoneNumberDAO.validateRepeatPhoneNumberExist(phoneNumber,idPhoneNumberOrigin);
+        return isRepeatPhoneNumber;
     }
 }

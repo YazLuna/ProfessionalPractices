@@ -1,10 +1,8 @@
 package domain;
 
 import java.util.List;
-import dataaccess.CityDAOImpl;
+
 import dataaccess.LinkedOrganizationDAOImpl;
-import dataaccess.SectorDAOImpl;
-import dataaccess.StateDAOImpl;
 
 /**
  * Class Linked organization
@@ -108,6 +106,14 @@ public class LinkedOrganization{
         this.idLinkedOrganization = idLinkedOrganization;
     }
 
+    public List<PhoneNumber> getPhoneNumbers () {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers (List<PhoneNumber> phoneNumbers){
+        this.phoneNumbers = phoneNumbers;
+    }
+
     /**
      * Method for add the linked organization
      * @param linkedOrganization define the data of the linked organization
@@ -125,8 +131,8 @@ public class LinkedOrganization{
      * @return The list of states
      */
     public static List<String> getListState() {
-        StateDAOImpl stateDAO = new StateDAOImpl();
-        List<String> listState = stateDAO.getAllState();
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        List<String> listState = linkedOrganizationDAO.getAllState();
         return listState;
     }
 
@@ -135,8 +141,8 @@ public class LinkedOrganization{
      * @return The list of cities
      */
     public static List<String> getListCity() {
-        CityDAOImpl cityDAO = new CityDAOImpl();
-        List<String> listCity = cityDAO.getAllCity();
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        List<String> listCity = linkedOrganizationDAO.getAllCity();
         return listCity;
     }
 
@@ -145,8 +151,8 @@ public class LinkedOrganization{
      * @return The list of sectors
      */
     public static List<String> getListSector() {
-        SectorDAOImpl sectorDAO = new SectorDAOImpl();
-        List<String> listSector = sectorDAO.getAllSector();
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        List<String> listSector = linkedOrganizationDAO.getAllSector();
         return listSector;
     }
 
@@ -185,10 +191,21 @@ public class LinkedOrganization{
      * @param name defines the name of the linked organization
      * @return The data of the linked organization
      */
-    public static LinkedOrganization getOrganization (String name) {
+    public static LinkedOrganization getLinkedOrganization(String name) {
         LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
         LinkedOrganization organization = linkedOrganizationDAO.getLinkedOrganization(name);
         return organization;
+    }
+
+    /**
+     * Method to get the linked organization with the name
+     * @param name defines the name of the linked organization
+     * @return the linked organization
+     */
+    public static int searchIdLinkedOrganization(String name){
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        int idLinkedOrganization = linkedOrganizationDAO.getIdLinkedOrganization(name);
+        return idLinkedOrganization;
     }
 
     /**
@@ -197,7 +214,7 @@ public class LinkedOrganization{
      * @param datesUpdate the fields to modify
      * @return if delete the linked organization
      */
-    public static boolean modifyOrganization (LinkedOrganization linkedOrganization, List<String> datesUpdate) {
+    public static boolean modifyLinkedOrganization(LinkedOrganization linkedOrganization, List<String> datesUpdate) {
         LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
         boolean isModifyOrganization = linkedOrganizationDAO.modifyLinkedOrganization(linkedOrganization, datesUpdate);
         return isModifyOrganization;
@@ -208,7 +225,7 @@ public class LinkedOrganization{
      * @param name define name of the linked organization
      * @return if delete the linked organization
      */
-    public static boolean deleteOrganization (String name) {
+    public static boolean deleteLinkedOrganization(String name) {
         LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
         boolean isDeleteOrganization = linkedOrganizationDAO.deleteLinkedOrganization(name);
         return isDeleteOrganization;
@@ -220,8 +237,8 @@ public class LinkedOrganization{
      * @param email defines the email of the linked organization
      * @return if the linked organization already exists
      */
-    public static boolean validateRepeatLinkedOrganization(String name, String email) {
-        boolean isValidRepeatLinkedOrganization;
+    public static int validateRepeatLinkedOrganization(String name, String email) {
+        int isValidRepeatLinkedOrganization;
         LinkedOrganizationDAOImpl seachOrganization = new LinkedOrganizationDAOImpl();
         isValidRepeatLinkedOrganization = seachOrganization.validateRepeatLinkedOrganization(name,email);
         return isValidRepeatLinkedOrganization;
@@ -255,17 +272,6 @@ public class LinkedOrganization{
         LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
         boolean thereAreOrganizationAvailable = linkedOrganizationDAO.thereAreLinkedOrganizationAvailableNotAssing();
         return thereAreOrganizationAvailable;
-    }
-
-    /**
-     * Method to get the linked organization with the name
-     * @param name defines the name of the linked organization
-     * @return the linked organization
-     */
-    public static int searchIdLinkedOrganization(String name){
-        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
-        int idLinkedOrganization = linkedOrganizationDAO.getIdLinkedOrganization(name);
-        return idLinkedOrganization;
     }
 
 }

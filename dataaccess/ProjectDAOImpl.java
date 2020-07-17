@@ -10,9 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import domain.Number;
 import domain.Project;
 import domain.SchedulingActivities;
 import domain.Search;
+import exception.Exception;
+import telegram.TelegramBot;
 
 
 /**
@@ -61,7 +64,7 @@ public class ProjectDAOImpl implements IProjectDAO {
                     ",objectiveGeneral,objectiveInmediate,objectiveMediate,methodology,resources,activitiesAndFunctions,responsabilities" +
                     ",daysHours,duration,quiantityPractitioner,placesAvailable" +
                     ",idLinkedOrganization,idResponsibleProject,idStatus"+
-                    ",staffNumberCoordinator,idLapse) VALUES(?,?,?,?,?,?,?" +
+                    ",staffNumberCoordinator,idTerm) VALUES(?,?,?,?,?,?,?" +
                     ",?,?,?,?,?,?,?,?,?,?,?)");
             sentenceProject.setString(1, project.getNameProject());
             sentenceProject.setString(2, project.getDescription());
@@ -74,7 +77,7 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setString(9, project.getResponsabilities());
             sentenceProject.setString(10,project.getDaysHours());
             sentenceProject.setInt(11, project.getDuration());
-            sentenceProject.setInt(12, project.getQuantityPractitioner());
+            sentenceProject.setInt(12, project.getQuiantityPractitioner());
             sentenceProject.setInt(13,project.getPlacesAvailable());
             sentenceProject.setInt(14, idLinkedOrganization);
             sentenceProject.setInt(15,idResponsibleProject);
@@ -83,8 +86,9 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentenceProject.setInt(18, idTerm);
             sentenceProject.executeUpdate();
             idProject = getIdProject(project.getNameProject());
-        }catch(SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
@@ -92,9 +96,8 @@ public class ProjectDAOImpl implements IProjectDAO {
         }
         if(idProject!=Search.NOTFOUND.getValue()) {
             List<SchedulingActivities> listSchedulingActivities = project.getSchedulingActivitiesProject();
-            SchedulingActivitiesDAOImpl addSchedulingActivities = new SchedulingActivitiesDAOImpl();
-            for (int indexScheduling = Search.NOTFOUND.getValue(); indexScheduling<listSchedulingActivities.size(); indexScheduling++) {
-                addSchedulingActivities.addSchedulingActivities(idProject, listSchedulingActivities.get(indexScheduling));
+            for (int indexScheduling= Search.NOTFOUND.getValue();indexScheduling<listSchedulingActivities.size();indexScheduling++) {
+                SchedulingActivities.addSchedulingActivities(listSchedulingActivities.get(indexScheduling), idProject);
                 resultIsAddProject = true;
             }
         }
@@ -117,8 +120,9 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setNameProject(results.getString("nameProject"));
                 projects.add(project);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -134,7 +138,8 @@ public class ProjectDAOImpl implements IProjectDAO {
         List<Project> projects = new ArrayList<>();
         try{
             connection = connexion.getConnection();
-            String queryAllProject = "SELECT nameProject FROM Project WHERE status=?";
+            String queryAllProject = "SELECT nameProject FROM Project INNER JOIN Status ON Project.idStatus =" +
+                    " Status.idStatus WHERE status=?";
             PreparedStatement sentence = connection.prepareStatement(queryAllProject);
             sentence.setString(1, "available");
             results= sentence.executeQuery();
@@ -143,8 +148,9 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setNameProject(results.getString("nameProject"));
                 projects.add(project);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -161,8 +167,8 @@ public class ProjectDAOImpl implements IProjectDAO {
         Project project = null;
         try{
             connection = connexion.getConnection();
-            String queryProject = "SELECT * FROM Project INNNER JOIN Term ON Project.idTerm = Term.idTerm " +
-                    "INNER JOIN Status ON Project.idStatus = Status.idStatus WHERE nameProject=?";
+            String queryProject = "SELECT * FROM Project INNER JOIN Term ON Project.idTerm = Term.idTerm INNER JOIN" +
+                    " Status ON Project.idStatus = Status.idStatus WHERE nameProject=?";
             PreparedStatement sentence = connection.prepareStatement(queryProject);
             sentence.setString(1,nameProject);
             results = sentence.executeQuery();
@@ -185,15 +191,16 @@ public class ProjectDAOImpl implements IProjectDAO {
                 project.setTerm(results.getString("term"));
                 project.setStatus(results.getString("status"));
                 project.setDuration(results.getInt("duration"));
-                project.setQuantityPractitioner(results.getInt("quiantityPractitioner"));
+                project.setQuiantityPractitioner(results.getInt("quiantityPractitioner"));
                 project.setPlacesAvailable(results.getInt("placesAvailable"));
                 project.setStaffNumberCoordinator(results.getInt("staffNumberCoordinator"));
                 project.setOrganization(implementOrganization.getLinkedOrganizationWithId(results.getInt("idLinkedOrganization")));
                 project.setResponsible(implementResponsible.getResponsibleProjectWithId(results.getInt("idResponsibleProject")));
                 project.setSchedulingActivitiesProject(implementSchedulingActivities.getAllSchedulingActivities(project.getIdProject()));
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -217,8 +224,9 @@ public class ProjectDAOImpl implements IProjectDAO {
             while(results.next()){
                 idProject = results.getInt("idProject");
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -268,29 +276,43 @@ public class ProjectDAOImpl implements IProjectDAO {
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classProject = projectEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodProject;
-                if(change.get(indexPreparedStatement).equals("getLinkedOrganization")){
+                boolean isString = true;
+                if(change.get(indexPreparedStatement-1).equals("getLinkedOrganization")){
                     LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
                     idLinkedOrganization= linkedOrganizationDAO.getIdLinkedOrganization(projectEdit.getOrganization().getName());
                         preparedStatement.setInt(indexPreparedStatement, idLinkedOrganization);
                 } else{
-                    if(change.get(indexPreparedStatement).equals("getResponsibleProject")) {
+                    if(change.get(indexPreparedStatement-1).equals("getResponsibleProject")) {
                         ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
                         idResponsibleProject = responsibleProjectDAO.getIdResponsibleProject(projectEdit.getResponsible().getEmail());
                         preparedStatement.setInt(indexPreparedStatement, idResponsibleProject);
                     }else {
-                        methodProject = classProject.getMethod(change.get(indexPreparedStatement));
-                        String word = (String) methodProject.invoke(projectEdit, new Object[]{});
-                        preparedStatement.setString(indexPreparedStatement, word);
+                        try {
+                            methodProject = classProject.getMethod(change.get(indexPreparedStatement-1));
+                            String word = (String) methodProject.invoke(projectEdit, new Object[]{});
+                        } catch (ClassCastException e) {
+                            isString = false;
+                        }
+                        if(isString){
+                            methodProject = classProject.getMethod(change.get(indexPreparedStatement-1));
+                            String word = (String) methodProject.invoke(projectEdit, new Object[]{});
+                            preparedStatement.setString(indexPreparedStatement, word);
+                        } else{
+                            methodProject = classProject.getMethod(change.get(indexPreparedStatement-1));
+                            int integer = (int) methodProject.invoke(projectEdit, new Object[]{});
+                            preparedStatement.setInt(indexPreparedStatement, integer);
+                        }
                     }
                 }
             }
             preparedStatement.executeUpdate();
             isModifyProject = true;
-        } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ReflectiveOperationException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -316,14 +338,15 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentence.setString(2, nameProject);
             sentence.executeUpdate();
             resultDeleteProject= true;
-        }catch(SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
             }
-            return resultDeleteProject;
         }
+        return resultDeleteProject;
     }
 
     /**
@@ -332,8 +355,8 @@ public class ProjectDAOImpl implements IProjectDAO {
      * @return if the project exists
      */
     @Override
-    public boolean validateRepeatProject (String nameProject) {
-        boolean isRepeatProject = false;
+    public int validateRepeatProject (String nameProject) {
+        int isRepeatProject = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String queryResponsible= "SELECT idProject FROM Project WHERE nameProject=?";
@@ -341,10 +364,12 @@ public class ProjectDAOImpl implements IProjectDAO {
             sentence.setString(1,nameProject);
             results= sentence.executeQuery();
             if(results.next()){
-                isRepeatProject = true;
+                isRepeatProject = Search.FOUND.getValue();
             }
-        }catch(SQLException ex){
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            isRepeatProject = Search.EXCEPTION.getValue();
         }finally{
             connexion.closeConnection();
         }
@@ -368,8 +393,9 @@ public class ProjectDAOImpl implements IProjectDAO {
             while (results.next()) {
                 areProject = true;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -391,8 +417,9 @@ public class ProjectDAOImpl implements IProjectDAO {
             while (results.next()) {
                 areProject = true;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }

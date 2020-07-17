@@ -2,17 +2,17 @@ package test.testproject;
 
 import dataaccess.*;
 import domain.*;
+import exception.Exception;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import telegram.TelegramBot;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class AddTestProject {
@@ -24,8 +24,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM Project where nameProject =?");
             sentenceProject.setString(1, "Sistema Integral Académico");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -43,7 +44,6 @@ public class AddTestProject {
                 "involucradas durante este desarrollo.\n" +
                 "Revisión y análisis de la arquitectura.\n" +
                 "Desarrollo de prototipo.");
-
         project.setObjectiveMediate("Modificación de documentación y " +
                 "Modificación de prototipos.");
         project.setMethodology("Proceso de desarrollo iterativo y Design Sprint, SCRUM");
@@ -63,10 +63,10 @@ public class AddTestProject {
                 "Trabajar de acuerdo a los estándares establecidos");
         project.setDaysHours("A acordar con el estudiante (en horario de oficina)");
         project.setDuration(200);
-        project.setQuantityPractitioner(3);
+        project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
-        project.setStaffNumberCoordinator(0);
+        project.setStaffNumberCoordinator(11265432);
         organization.setName("Dirección de Desarrollo Informático de Apoyo Académico");
         project.setOrganization(organization);
         responsible.setEmail("martha_15_7@outlook.com");
@@ -105,7 +105,6 @@ public class AddTestProject {
                 "involucradas durante este desarrollo.\n" +
                 "Revisión y análisis de la arquitectura.\n" +
                 "Desarrollo de prototipo.");
-
         project.setObjectiveMediate("Modificación de documentación y " +
                 "Modificación de prototipos.");
         project.setMethodology("Proceso de desarrollo iterativo y Design Sprint, SCRUM");
@@ -125,11 +124,11 @@ public class AddTestProject {
                 "Trabajar de acuerdo a los estándares establecidos");
         project.setDaysHours("A acordar con el estudiante (en horario de oficina)");
         project.setDuration(200);
-        project.setQuantityPractitioner(3);
+        project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(1);
-        organization.setName("Dirección de Desarrollo Informático de Apoyo Académicos");
+        organization.setName("Dirección de Desarrollo Informático de Apoyo Académico");
         project.setOrganization(organization);
         responsible.setEmail("martha_15_7@outlook.com");
         project.setResponsible(responsible);
@@ -186,7 +185,7 @@ public class AddTestProject {
                 "Trabajar de acuerdo a los estándares establecidos");
         project.setDaysHours("A acordar con el estudiante (en horario de oficina)");
         project.setDuration(200);
-        project.setQuantityPractitioner(3);
+        project.setQuiantityPractitioner(3);
         project.setPlacesAvailable(3);
         project.setTerm("FEBRERO-JULIO 2020");
         project.setStaffNumberCoordinator(0);
@@ -224,8 +223,9 @@ public class AddTestProject {
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM SchedulingActivities WHERE idProject=? AND month=?");
             sentenceProject.setInt(1, 43);
             sentenceProject.setString(1, "Agosto");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -240,6 +240,7 @@ public class AddTestProject {
         isAddScheduligActivities = schedulingActivitiesDAO.addSchedulingActivities(43, schedulingActivities);
         Assert.assertTrue(isAddScheduligActivities);
     }
+
 
     @Test
     public void testErrorAddSchedulingActivities(){
@@ -260,8 +261,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM Lapse WHERE lapse=?");
             sentenceProject.setString(1, "AGOSTO-SEPTIEMBRE 2020");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -291,8 +293,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM LinkedOrganization WHERE name=?");
             sentenceProject.setString(1, "Dirección de Desarrollo Informático de Apoyo Académico");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -337,8 +340,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM Sector WHERE nameSector=?");
             sentenceProject.setString(1, "Educativo");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -346,8 +350,8 @@ public class AddTestProject {
     public void testAddSector() {
         boolean isAddSector;
         String sector = "Educativo";
-        SectorDAOImpl sectorDAO = new SectorDAOImpl();
-        isAddSector = sectorDAO.addSector(sector);
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        isAddSector = linkedOrganizationDAO.addSector(sector);
         Assert.assertTrue(isAddSector);
     }
 
@@ -355,8 +359,8 @@ public class AddTestProject {
     public void testErrorAddSector() {
         boolean isAddSector;
         String sector = null;
-        SectorDAOImpl sectorDAO = new SectorDAOImpl();
-        isAddSector = sectorDAO.addSector(sector);
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        isAddSector = linkedOrganizationDAO.addSector(sector);
         Assert.assertTrue(isAddSector);
     }
 
@@ -368,8 +372,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM State WHERE nameState=?");
             sentenceProject.setString(1, "Veracruz");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -377,8 +382,8 @@ public class AddTestProject {
     public void testAddState() {
         boolean isAddState;
         String state = "Veracruz";
-        StateDAOImpl stateDAO = new StateDAOImpl();
-        isAddState = stateDAO.addState(state);
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        isAddState = linkedOrganizationDAO.addState(state);
         Assert.assertTrue(isAddState);
     }
 
@@ -386,8 +391,8 @@ public class AddTestProject {
     public void testErrorAddState() {
         boolean isAddState;
         String state = null;
-        StateDAOImpl stateDAO = new StateDAOImpl();
-        isAddState = stateDAO.addState(state);
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        isAddState = linkedOrganizationDAO.addState(state);
         Assert.assertTrue(isAddState);
     }
 
@@ -399,8 +404,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM City WHERE nameCity=?");
             sentenceProject.setString(1, "Xalapa");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -408,8 +414,8 @@ public class AddTestProject {
     public void testAddCity() {
         boolean isAddCity;
         String city = "Xalapa";
-        CityDAOImpl cityDAO = new CityDAOImpl();
-        isAddCity = cityDAO.addCity(city);
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        isAddCity = linkedOrganizationDAO.addCity(city);
         Assert.assertTrue(isAddCity);
     }
 
@@ -417,8 +423,8 @@ public class AddTestProject {
     public void testErrorAddCity() {
         boolean isAddCity;
         String city = null;
-        CityDAOImpl cityDAO = new CityDAOImpl();
-        isAddCity = cityDAO.addCity(city);
+        LinkedOrganizationDAOImpl linkedOrganizationDAO = new LinkedOrganizationDAOImpl();
+        isAddCity = linkedOrganizationDAO.addCity(city);
         Assert.assertTrue(isAddCity);
     }
 
@@ -430,8 +436,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM PhoneNumber WHERE idLinkedOrganization=?");
             sentenceProject.setInt(1, 12);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -462,8 +469,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM ResponsibleProject WHERE email=?");
             sentenceProject.setString(1,"guruiz@uv.mx");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -498,8 +506,9 @@ public class AddTestProject {
             Connection connection = connexion.getConnection();
             PreparedStatement sentenceProject = connection.prepareStatement("DELETE FROM Charge WHERE nameCharge=?");
             sentenceProject.setString(1, "Jefe de departamento de Tecnología Educativa");
-        } catch (SQLException ex) {
-            Logger.getLogger(AddTestProject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }
     }
 
@@ -507,8 +516,8 @@ public class AddTestProject {
     public void testAddCharge() {
         boolean isAddCharge;
         String charge = "Jefe de departamento de Tecnología Educativa";
-        ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-        isAddCharge = chargeDAO.addCharge(charge);
+        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        isAddCharge = responsibleProjectDAO.addCharge(charge);
         Assert.assertTrue(isAddCharge);
     }
 
@@ -516,8 +525,8 @@ public class AddTestProject {
     public void testErrorAddCharge() {
         boolean isAddCharge;
         String charge = null;
-        ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-        isAddCharge = chargeDAO.addCharge(charge);
+        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        isAddCharge = responsibleProjectDAO.addCharge(charge);
         Assert.assertTrue(isAddCharge);
     }
 }
