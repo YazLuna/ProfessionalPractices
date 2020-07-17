@@ -4,6 +4,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +13,7 @@ import javafx.scene.control.TextField;
 import domain.Coordinator;
 import gui.FXMLGeneralController;
 import domain.Gender;
-import logic.ValidateAddUser;
+import logic.ValidateUser;
 import domain.User;
 
 /**
@@ -33,6 +34,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
     @FXML private RadioButton rbFemale;
     @FXML private Button btnCancel;
     @FXML private Button btnRegister;
+    public static int idAdministrator;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -61,30 +63,44 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         boolean validate = validateFields();
         if(validate){
             Coordinator coordinator = createObjectCoordinator();
-            boolean validUserCoordinator = userValidateNotExist(coordinator);
-            if (validUserCoordinator) {
+            int validUserCoordinator = userValidateNotExist(coordinator);
+            if (validUserCoordinator == Search.NOTFOUND.getValue()) {
                 boolean registerComplete = Coordinator.addCoordinator(coordinator);
                 if(registerComplete) {
                     generateInformation("Coordinador registrado exitosamente");
-                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
                 }else{
                     generateError("No hay conexión con la base de datos. Intente más tarde");
                 }
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
             } else {
-                generateInformation("Este coordinador ya esta registrado");
+                if (validUserCoordinator == Search.FOUND.getValue()) {
+                    generateInformation("Este coordinador ya está registrado");
+                } else {
+                    if (validUserCoordinator == Search.EXCEPTION.getValue()) {
+                        generateError("No hay conexión con la base de datos. Intente más tarde");
+                        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRegister);
+                    }
+                }
             }
 
         }
     }
 
-    private  boolean userValidateNotExist(Coordinator coordinator){
-        boolean validUserCoordinator = Coordinator.validateAcademicAdd(coordinator.getStaffNumber(), coordinator.getEmail()
+    private int userValidateNotExist(Coordinator coordinator){
+        int validUserCoordinator = Coordinator.validateAcademicAdd(coordinator.getStaffNumber(), coordinator.getEmail()
                 , coordinator.getAlternateEmail(), coordinator.getPhone(), coordinator.getUserName());
-        if (validUserCoordinator) {
-            User user = (User)coordinator;
-            Coordinator.addUser(user, "Coordinator");
+        if (validUserCoordinator == Search.NOTFOUND.getValue()) {
+            boolean addUser = Coordinator.addUser((User)coordinator);
+            if (!addUser) {
+                validUserCoordinator = Search.EXCEPTION.getValue();
+            }
         } else {
-            validUserCoordinator = Coordinator.isTeacher(coordinator);
+            boolean isTeacher = Coordinator.isTeacher(coordinator);
+            if (isTeacher) {
+                validUserCoordinator = Search.NOTFOUND.getValue();
+            } else{
+                validUserCoordinator = Search.EXCEPTION.getValue();
+            }
         }
         return  validUserCoordinator;
     }
@@ -113,6 +129,8 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         tfUserName.getStyleClass().remove("ok");
         tfPassword.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
+        rbMale.getStyleClass().remove("ok");
+        rbFemale.getStyleClass().remove("ok");
         tfStaffNumber.getStyleClass().remove("error");
         tfName.getStyleClass().remove("error");
         tfLastName.getStyleClass().remove("error");
@@ -121,65 +139,69 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         tfUserName.getStyleClass().remove("error");
         tfPassword.getStyleClass().remove("error");
         tfPhone.getStyleClass().remove("error");
+        rbMale.getStyleClass().remove("error");
+        rbFemale.getStyleClass().remove("error");
     }
 
     private boolean validateFields(){
-        ValidateAddUser validateAddUser = new ValidateAddUser();
+        ValidateUser validateUser = new ValidateUser();
         boolean validation= true;
-        if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
+        if((validateUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
         }else{
             tfStaffNumber.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateNameUser(tfName.getText()))) {
+        if((validateUser.validateEmpty(tfName.getText())) && (validateUser.validateNameUser(tfName.getText()))) {
             tfName.getStyleClass().add("ok");
-            tfName.setText(validateAddUser.deleteSpace(tfName.getText()));
-            tfName.setText(validateAddUser.createCorrectProperName(tfName.getText()));
+            tfName.setText(validateUser.deleteSpace(tfName.getText()));
+            tfName.setText(validateUser.createCorrectProperName(tfName.getText()));
         }else{
             tfName.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateNameUser(tfLastName.getText()))) {
+        if((validateUser.validateEmpty(tfLastName.getText())) && (validateUser.validateNameUser(tfLastName.getText()))) {
             tfLastName.getStyleClass().add("ok");
-            tfLastName.setText(validateAddUser.deleteSpace(tfLastName.getText()));
-            tfLastName.setText(validateAddUser.createCorrectProperName(tfLastName.getText()));
+            tfLastName.setText(validateUser.deleteSpace(tfLastName.getText()));
+            tfLastName.setText(validateUser.createCorrectProperName(tfLastName.getText()));
         }else{
             tfLastName.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfEmail.getText())) && (validateAddUser.validateEmail(tfEmail.getText()))) {
+        if((validateUser.validateEmpty(tfEmail.getText())) && (validateUser.validateEmail(tfEmail.getText())) &&
+                (!tfEmail.getText().equalsIgnoreCase(tfAlternateEmail.getText()))) {
             tfEmail.getStyleClass().add("ok");
         }else{
             tfEmail.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfAlternateEmail.getText())) && (validateAddUser.validateEmail(tfAlternateEmail.getText()))) {
+        if((validateUser.validateEmpty(tfAlternateEmail.getText())) && (validateUser.validateEmail(tfAlternateEmail.getText())) &&
+                (!tfEmail.getText().equalsIgnoreCase(tfAlternateEmail.getText()))) {
             tfAlternateEmail.getStyleClass().add("ok");
         }else{
             tfAlternateEmail.getStyleClass().add("error");
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfPhone.getText()) && validateAddUser.validatePhoneNumber(tfPhone.getText())) {
+        if(validateUser.validateEmpty(tfPhone.getText()) && validateUser.validatePhoneNumber(tfPhone.getText())) {
             tfPhone.getStyleClass().add("ok");
         }else{
             tfPhone.getStyleClass().add("error");
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfPassword.getText()) && validateAddUser.validatePassword(tfPassword.getText())) {
+        if(validateUser.validateEmpty(tfPassword.getText()) && validateUser.validatePassword(tfPassword.getText())) {
             tfPassword.getStyleClass().add("ok");
         }else{
             tfPassword.getStyleClass().add("error");
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfUserName.getText()) && validateAddUser.validateUserName(tfUserName.getText())) {
+        if(validateUser.validateEmpty(tfUserName.getText()) && validateUser.validateUserName(tfUserName.getText())) {
             tfUserName.getStyleClass().add("ok");
         }else{
             tfUserName.getStyleClass().add("error");
@@ -188,9 +210,16 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
 
         if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
             validation = false;
+            rbMale.getStyleClass().add("error");
+            rbFemale.getStyleClass().add("error");
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;
+                rbMale.getStyleClass().add("error");
+                rbFemale.getStyleClass().add("error");
+            } else {
+                rbMale.getStyleClass().add("ok");
+                rbFemale.getStyleClass().add("ok");
             }
         }
         return validation;
@@ -216,6 +245,7 @@ public class FXMLRegisterCoordinatorController extends FXMLGeneralController imp
         }
         Date registerDate = new Date();
         coordinator.setRegistrationDate(new SimpleDateFormat("yyyy-MM-dd").format(registerDate));
+        coordinator.setIdAdministrator(idAdministrator);
         return coordinator;
     }
 }

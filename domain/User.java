@@ -15,10 +15,10 @@ public class User{
     protected String email;
     protected String alternateEmail;
     protected String phone;
-    private String status;
-    private String password;
-    private String userType;
-    private String userName;
+    protected String status;
+    protected String password;
+    protected String userType;
+    protected String userName;
 
     public User () {
         this.status= "Active";
@@ -104,33 +104,70 @@ public class User{
         this.userName = userName;
     }
 
-    public static boolean validateUserAdd(String email, String alternateEmail, String phone, String userName){
+    /**
+     * Method to know if a user is valid to add
+     * @param email from user
+     * @param alternateEmail from user
+     * @param phone from user
+     * @param userName from user
+     * @return if are a valid user to add
+     */
+    public static int validateUserAdd(String email, String alternateEmail, String phone, String userName){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateUserAdd(email, alternateEmail, phone, userName);
+        int result = userMethodDAO.validateUserAdd(email, alternateEmail, phone, userName);
         return result;
     }
 
-    public static boolean addUser(User user, String userType){
+    /**
+     * Method to add a user
+     * @param user to Add
+     * @return true if added and false if not
+     */
+    public static boolean addUser(User user){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.addUser(user, userType);
+        boolean result = userMethodDAO.addUser(user);
         return result;
     }
 
-    public static boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
+    /**
+     * Method to know if a Academic is valid
+     * @param staffNumber from Academic
+     * @param email from Academic
+     * @param alternateEmail from Academic
+     * @param phone from Academic
+     * @param userName from Academic
+     * @return if are a valid Academic to add
+     */
+    public static int validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateAcademicAdd(staffNumber, email, alternateEmail, phone, userName);
+        int result = userMethodDAO.validateAcademicAdd(staffNumber, email, alternateEmail, phone, userName);
         return result;
     }
 
-    public static boolean validateUser(String email, String alternateEmail, String phone){
+    /**
+     * Method to know if a user is valid
+     * @param email from user
+     * @param alternateEmail from user
+     * @param phone from user
+     * @return if are a valid user
+     */
+    public static int validateUser(String email, String alternateEmail, String phone){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateUser(email, alternateEmail, phone);
+        int result = userMethodDAO.validateUser(email, alternateEmail, phone);
         return result;
     }
 
-    public static boolean validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone){
+    /**
+     * Method to know if a Academic is valid to update
+     * @param staffNumber from Academic
+     * @param email from Academic
+     * @param alternateEmail from Academic
+     * @param phone from Academic
+     * @return if are a valid Academic to update
+     */
+    public static int validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateAcademicUpdate(staffNumber, email, alternateEmail, phone);
+        int result = userMethodDAO.validateAcademicUpdate(staffNumber, email, alternateEmail, phone);
         return result;
     }
 

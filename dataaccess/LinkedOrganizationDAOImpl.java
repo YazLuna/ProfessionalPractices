@@ -13,7 +13,7 @@ import domain.Number;
 import domain.PhoneNumber;
 import domain.Search;
 import exception.Exception;
-import telegram.TelegramBot;
+import exception.TelegramBot;
 
 /**
  * Implementation of the IProjectDAO

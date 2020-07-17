@@ -11,7 +11,7 @@
 <?import javafx.scene.control.TableColumn?>
 
 <AnchorPane prefHeight="441.0" prefWidth="976.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.coordinator.controller.FXMLListPractitionerController">
+            fx:controller="gui.coordinator.controller.FXMLGetPractitionerListController">
     <Button fx:id="btnCancel" layoutX="880.0" layoutY="397.0" mnemonicParsing="false" onAction="#backMenu"
             style="-fx-background-color: #707070;" text="Regresar" textFill="WHITE">
         <font>

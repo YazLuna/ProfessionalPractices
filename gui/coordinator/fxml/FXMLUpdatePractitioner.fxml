@@ -10,6 +10,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import java.net.URL?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Tooltip?>
 
 <AnchorPane id="AnchorPane" prefHeight="443.0" prefWidth="603.0" styleClass="mainFxmlClass"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -69,13 +70,21 @@
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <TextField fx:id="tfEnrollment" layoutX="254.0" layoutY="77.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfEnrollment" layoutX="254.0" layoutY="77.0" prefHeight="25.0" prefWidth="208.0">
+      <tooltip>
+         <Tooltip text="La S debe ser mayúscula"/>
+      </tooltip>
+   </TextField>
    <TextField fx:id="tfName" layoutX="254.0" layoutY="107.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfLastName" layoutX="254.0" layoutY="137.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfEmail" layoutX="251.0" layoutY="271.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfAlternateEmail" layoutX="251.0" layoutY="302.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfAlternateEmail" layoutX="251.0" layoutY="302.0" prefHeight="25.0" prefWidth="208.0">
+      <tooltip>
+         <Tooltip text="Debe ser diferente al correo"/>
+      </tooltip>
+   </TextField>
    <TextField fx:id="tfPhone" layoutX="251.0" layoutY="332.0" prefHeight="25.0" prefWidth="208.0"/>
-   <Button fx:id="btnUpdate" layoutX="187.0" layoutY="382.0" mnemonicParsing="false" onAction="#update"
+   <Button fx:id="btnUpdate" layoutX="187.0" layoutY="382.0" mnemonicParsing="false" onAction="#updatePractitioner"
            style="-fx-background-color: #59ad55;" text="Modificar" textFill="WHITE">
       <font>
          <Font name="Arial Bold" size="14.0"/>
@@ -89,7 +98,7 @@
    </Button>
    <RadioButton fx:id="rbMale" layoutX="259.0" layoutY="236.0" mnemonicParsing="false" text="Masculino"/>
    <RadioButton fx:id="rbFemale" layoutX="372.0" layoutY="236.0" mnemonicParsing="false" text="Femenino"/>
-   <Button fx:id="btnRecoverPractitioner" layoutX="410.0" layoutY="356.0" mnemonicParsing="false"
+   <Button fx:id="btnRecoverPractitioner" layoutX="427.0" layoutY="382.0" mnemonicParsing="false"
            onAction="#recoverPractitioner" style="-fx-background-color: #707070;" text="Reactivar Practicante"
            textFill="WHITE" visible="false"/>
    <Label layoutX="133.0" layoutY="172.0" text="Periodo">
@@ -107,5 +116,9 @@
          <Font name="Arial" size="14.0"/>
       </font>
    </Label>
-   <TextField fx:id="tfCredits" layoutX="251.0" layoutY="193.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfCredits" layoutX="251.0" layoutY="193.0" prefHeight="25.0" prefWidth="208.0">
+      <tooltip>
+         <Tooltip text="Debe tener al menos el 70% de créditos"/>
+      </tooltip>
+   </TextField>
 </AnchorPane>

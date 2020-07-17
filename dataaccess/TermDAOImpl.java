@@ -5,9 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import domain.Search;
+import exception.Exception;
+import exception.TelegramBot;
 
 
 /**
@@ -42,8 +42,9 @@ public class TermDAOImpl implements ITermDAO {
             sentenceTerm.setString(1, term);
             sentenceTerm.executeUpdate();
             isAddTerm=true;
-        }catch(SQLException ex){
-            Logger.getLogger(TermDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -66,8 +67,9 @@ public class TermDAOImpl implements ITermDAO {
             while(results.next()){
                 idTerm =results.getInt("idTerm");
             }
-        }catch(SQLException ex){
-            Logger.getLogger(TermDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }

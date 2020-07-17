@@ -13,7 +13,7 @@ import domain.Search;
 import domain.Teacher;
 import domain.Gender;
 import gui.FXMLGeneralController;
-import logic.ValidateAddUser;
+import logic.ValidateUser;
 
 /**
  * Update Teacher Controller
@@ -67,21 +67,28 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
             Teacher teacherNew = new Teacher();
             boolean areChanges = createObjectTeacherDifferent(teacherNew);
             if (areChanges){
-                boolean validTeacher = Teacher.validateAcademicUpdate(teacherNew.getStaffNumber(), teacherNew.getEmail()
+                int validTeacher = Teacher.validateAcademicUpdate(teacherNew.getStaffNumber(), teacherNew.getEmail()
                         , teacherNew.getAlternateEmail(), teacherNew.getPhone());
-                if (validTeacher) {
+                if (validTeacher == Search.NOTFOUND.getValue()) {
                     boolean confirmUpdate = generateConfirmation("¿Seguro que desea modificar al Profesor?");
                     if(confirmUpdate){
                         registerComplete = Teacher.updateTeacher(staffNumber, teacherNew, datesUpdate);
                         if(registerComplete){
                             generateInformation("Profesor modificado exitosamente");
-                            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
                         }else{
                             generateError("No hay conexión a la base de datos. Intente más tarde");
                         }
+                        openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
                     }
                 } else {
-                    generateInformation("Este profesor ya está registrado");
+                    if (validTeacher == Search.FOUND.getValue()) {
+                        generateInformation("Este profesor ya está registrado");
+                    } else {
+                        if (validTeacher == Search.EXCEPTION.getValue()) {
+                            generateError("No hay conexión a la base de datos. Intente más tarde");
+                            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
+                        }
+                    }
                 }
             }
         }
@@ -96,10 +103,10 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
             boolean recoverSuccessful = Teacher.recoverTeacher(staffNumber);
             if(recoverSuccessful){
                 generateInformation("Profesor reactivado exitosamente");
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverTeacher);
             }else{
                 generateError("No hay conexión con la base de datos. Intente más tarde");
             }
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnRecoverTeacher);
         }
     }
 
@@ -118,20 +125,25 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
 
     private void colocateTeacher() {
         teacherOriginal = Teacher.getTeacherSelected(staffNumber);
-        tfName.setText(teacherOriginal.getName());
-        tfLastName.setText(teacherOriginal.getLastName());
-        tfEmail.setText(teacherOriginal.getEmail());
-        tfAlternateEmail.setText(teacherOriginal.getAlternateEmail());
-        if(teacherOriginal.getGender()== Gender.MALE.getGender()){
-            rbMale.fire();
-        }else{
-            rbFemale.fire();
-        }
-        tfPhone.setText(teacherOriginal.getPhone());
-        tfStaffNumber.setText(String.valueOf(teacherOriginal.getStaffNumber()));
-        int activeCoordinator = Teacher.activeTeachers();
-        if(teacherOriginal.getStatus().equalsIgnoreCase("Inactive") && activeCoordinator <= Search.FOUND.getValue()){
-            btnRecoverTeacher.setVisible(true);
+        if (teacherOriginal.getStaffNumber() == Search.NOTFOUND.getValue()) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnUpdate);
+        } else {
+            tfName.setText(teacherOriginal.getName());
+            tfLastName.setText(teacherOriginal.getLastName());
+            tfEmail.setText(teacherOriginal.getEmail());
+            tfAlternateEmail.setText(teacherOriginal.getAlternateEmail());
+            if(teacherOriginal.getGender()== Gender.MALE.getGender()){
+                rbMale.fire();
+            }else{
+                rbFemale.fire();
+            }
+            tfPhone.setText(teacherOriginal.getPhone());
+            tfStaffNumber.setText(String.valueOf(teacherOriginal.getStaffNumber()));
+            int activeCoordinator = Teacher.activeTeachers();
+            if(teacherOriginal.getStatus().equalsIgnoreCase("Inactive") && activeCoordinator <= Search.FOUND.getValue()){
+                btnRecoverTeacher.setVisible(true);
+            }
         }
     }
 
@@ -142,57 +154,63 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
         tfEmail.getStyleClass().remove("ok");
         tfAlternateEmail.getStyleClass().remove("ok");
         tfPhone.getStyleClass().remove("ok");
+        rbMale.getStyleClass().remove("ok");
+        rbFemale.getStyleClass().remove("ok");
         tfStaffNumber.getStyleClass().remove("error");
         tfName.getStyleClass().remove("error");
         tfLastName.getStyleClass().remove("error");
         tfEmail.getStyleClass().remove("error");
         tfAlternateEmail.getStyleClass().remove("error");
         tfPhone.getStyleClass().remove("error");
+        rbMale.getStyleClass().remove("error");
+        rbFemale.getStyleClass().remove("error");
     }
 
     private boolean validateFields(){
-        ValidateAddUser validateAddUser = new ValidateAddUser();
+        ValidateUser validateUser = new ValidateUser();
         boolean validation= true;
-        if((validateAddUser.validateEmpty(tfStaffNumber.getText()))){
+        if((validateUser.validateEmpty(tfStaffNumber.getText()))){
             tfStaffNumber.getStyleClass().add("ok");
         }else{
             tfStaffNumber.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfName.getText())) && (validateAddUser.validateNameUser(tfName.getText()))) {
+        if((validateUser.validateEmpty(tfName.getText())) && (validateUser.validateNameUser(tfName.getText()))) {
             tfName.getStyleClass().add("ok");
-            tfName.setText(validateAddUser.deleteSpace(tfName.getText()));
-            tfName.setText(validateAddUser.createCorrectProperName(tfName.getText()));
+            tfName.setText(validateUser.deleteSpace(tfName.getText()));
+            tfName.setText(validateUser.createCorrectProperName(tfName.getText()));
         }else{
             tfName.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfLastName.getText())) && (validateAddUser.validateNameUser(tfLastName.getText()))) {
+        if((validateUser.validateEmpty(tfLastName.getText())) && (validateUser.validateNameUser(tfLastName.getText()))) {
             tfLastName.getStyleClass().add("ok");
-            tfLastName.setText(validateAddUser.deleteSpace(tfLastName.getText()));
-            tfLastName.setText(validateAddUser.createCorrectProperName(tfLastName.getText()));
+            tfLastName.setText(validateUser.deleteSpace(tfLastName.getText()));
+            tfLastName.setText(validateUser.createCorrectProperName(tfLastName.getText()));
         }else{
             tfLastName.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfEmail.getText())) && (validateAddUser.validateEmail(tfEmail.getText()))) {
+        if((validateUser.validateEmpty(tfEmail.getText())) && (validateUser.validateEmail(tfEmail.getText())) &&
+                (!tfEmail.getText().equalsIgnoreCase(tfAlternateEmail.getText()))) {
             tfEmail.getStyleClass().add("ok");
         }else{
             tfEmail.getStyleClass().add("error");
             validation = false;
         }
 
-        if((validateAddUser.validateEmpty(tfAlternateEmail.getText())) && (validateAddUser.validateEmail(tfAlternateEmail.getText()))) {
+        if((validateUser.validateEmpty(tfAlternateEmail.getText())) && (validateUser.validateEmail(tfAlternateEmail.getText())) &&
+                (!tfEmail.getText().equalsIgnoreCase(tfAlternateEmail.getText()))) {
             tfAlternateEmail.getStyleClass().add("ok");
         }else{
             tfAlternateEmail.getStyleClass().add("error");
             validation = false;
         }
 
-        if(validateAddUser.validateEmpty(tfPhone.getText()) && validateAddUser.validatePhoneNumber(tfPhone.getText())) {
+        if(validateUser.validateEmpty(tfPhone.getText()) && validateUser.validatePhoneNumber(tfPhone.getText())) {
             tfPhone.getStyleClass().add("ok");
         }else{
             tfPhone.getStyleClass().add("error");
@@ -201,9 +219,16 @@ public class FXMLUpdateTeacherController extends FXMLGeneralController implement
 
         if((!rbMale.isSelected()) && (!rbFemale.isSelected())){
             validation = false;
+            rbMale.getStyleClass().add("error");
+            rbFemale.getStyleClass().add("error");
         }else{
             if((rbMale.isSelected()) && (rbFemale.isSelected())){
                 validation = false;
+                rbMale.getStyleClass().add("error");
+                rbFemale.getStyleClass().add("error");
+            } else {
+                rbMale.getStyleClass().add("ok");
+                rbFemale.getStyleClass().add("ok");
             }
         }
         return validation;

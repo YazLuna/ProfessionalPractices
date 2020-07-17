@@ -75,10 +75,10 @@ public class FXMLDeleteCoordinatorController extends FXMLGeneralController imple
             boolean delete = Coordinator.deleteCoordinator("Inactive", dischargeDate);
             if(delete){
                 generateInformation("Coordinador eliminado exitosamente");
-                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnDelete);
             }else{
                 generateError("No hay conexión a la base de datos. Intente más tarde");
             }
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnDelete);
         }
     }
 }

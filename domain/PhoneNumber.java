@@ -44,7 +44,7 @@ public class PhoneNumber {
      * @param idLinkedOrganization the id of the linked organization
      * @return if the phone number was added
      */
-    public static boolean addPhoneNumber(PhoneNumber phoneNumber,int idLinkedOrganization){
+    public static boolean addPhoneNumber(PhoneNumber phoneNumber, int idLinkedOrganization){
         boolean isAddPhoneNumber = false;
         PhoneNumberDAOImpl phoneNumberDAO = new PhoneNumberDAOImpl();
         isAddPhoneNumber = phoneNumberDAO.addPhoneNumber(phoneNumber, idLinkedOrganization);

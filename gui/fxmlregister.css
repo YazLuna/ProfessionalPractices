@@ -50,3 +50,13 @@
     -fx-font-family: "Arial";
     -fx-text-alignment: justify;
 }
+
+.radio-button.error{
+    -fx-border-color: #ff0000;
+    -fx-border-width: 2px ;
+}
+
+.radio-button.ok{
+    -fx-border-color: #00CC00;
+    -fx-border-width: 2px ;
+}

@@ -19,6 +19,6 @@ public interface ITeacherDAO {
     boolean recoverTeacher(int staffNumber) ;
     boolean deleteTeacher(String status, String dischargeDate, int staffNumber) ;
     int activeTeachers() ;
-    boolean areTeachers();
+    int areTeachers();
     boolean isCoordinator(Teacher teacher);
 }

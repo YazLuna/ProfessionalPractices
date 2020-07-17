@@ -56,27 +56,32 @@ public class FXMLDeletePractitionerController extends FXMLGeneralController impl
         if(replyConfirmation){
             boolean delete = Practitioner.deletePractitioner(enrollment, "Inactive");
             if(delete){
-                openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
                 generateInformation("Practicante eliminado exitosamente");
             }else{
                 generateError("No hay conexión a la base de datos. Intente más tarde");
             }
+            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
         }
     }
 
     private void colocatePractitioner() {
         Practitioner practitioner = Practitioner.getPractitioner(enrollment);
-        lbName.setText(practitioner.getName());
-        lbLastName.setText(practitioner.getLastName());
-        lbEmail.setText(practitioner.getEmail());
-        lbAlternateEmail.setText(practitioner.getAlternateEmail());
-        if(practitioner.getGender()== Gender.MALE.getGender()){
-            lbGender.setText("Masculino");
-        }else{
-            lbGender.setText("Femenino");
+        if (practitioner.getEnrollment() == null) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
+        } else {
+            lbName.setText(practitioner.getName());
+            lbLastName.setText(practitioner.getLastName());
+            lbEmail.setText(practitioner.getEmail());
+            lbAlternateEmail.setText(practitioner.getAlternateEmail());
+            if(practitioner.getGender()== Gender.MALE.getGender()){
+                lbGender.setText("Masculino");
+            }else{
+                lbGender.setText("Femenino");
+            }
+            lbPhone.setText(practitioner.getPhone());
+            lbEnrollment.setText(practitioner.getEnrollment());
+            lbTerm.setText(practitioner.getTerm());
         }
-        lbPhone.setText(practitioner.getPhone());
-        lbEnrollment.setText(practitioner.getEnrollment());
-        lbTerm.setText(practitioner.getTerm());
     }
 }

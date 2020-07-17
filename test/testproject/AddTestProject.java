@@ -6,8 +6,7 @@ import exception.Exception;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
-import telegram.TelegramBot;
-
+import exception.TelegramBot;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

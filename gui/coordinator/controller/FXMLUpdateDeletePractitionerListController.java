@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -80,18 +81,28 @@ public class FXMLUpdateDeletePractitionerListController extends FXMLGeneralContr
 
     private void colocatePractitionerUpdateList() {
         List<Practitioner> practitionerList = Practitioner.getPractitioners();
-        tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
-        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tvPractitioner.getItems().setAll(practitionerList);
+        if (practitionerList.size() == Search.NOTFOUND.getValue()) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnUpdate);
+        } else {
+            tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            tvPractitioner.getItems().setAll(practitionerList);
+        }
     }
 
     private void colocatePractitionerDeleteList() {
         List<Practitioner> practitionerList = Practitioner.getPractitionersActive();
-        tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
-        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tvPractitioner.getItems().setAll(practitionerList);
+        if (practitionerList.size() == Search.NOTFOUND.getValue()) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnDelete);
+        } else {
+            tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            tvPractitioner.getItems().setAll(practitionerList);
+        }
     }
 
 }
