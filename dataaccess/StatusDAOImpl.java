@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import domain.Search;
+import exception.Exception;
+import exception.TelegramBot;
 
 /**
  * Implementation of the IStatusDAO
@@ -37,8 +37,9 @@ public class StatusDAOImpl implements IStatusDAO  {
             PreparedStatement sentenceAddUserStatus = connection.prepareStatement(queryAddUserStatus);
             sentenceAddUserStatus.setString(1, status);
             sentenceAddUserStatus.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(StatusDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally {
             connexion.closeConnection();
         }
@@ -60,8 +61,9 @@ public class StatusDAOImpl implements IStatusDAO  {
             while (result.next()) {
                 idUserStatus = result.getInt("idStatus");
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(StatusDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
