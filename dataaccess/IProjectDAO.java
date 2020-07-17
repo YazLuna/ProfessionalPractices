@@ -16,7 +16,7 @@ public interface IProjectDAO {
     public int getIdProject (String name);
     public boolean modifyProject(Project project, List<String> datesUpdate);
     public boolean deleteProject (String name);
-    public boolean validateRepeatProject (String nameProject);
+    public int validateRepeatProject (String nameProject);
     public boolean thereAreProjectAvailable();
     public boolean thereAreProject();
 }

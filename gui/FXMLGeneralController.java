@@ -1,6 +1,5 @@
 package gui;
 
-import dataaccess.Number;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -9,11 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -25,9 +22,8 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import domain.Number;
 import org.apache.commons.codec.binary.Hex;
-import gui.administrator.controller.FXMLRegisterCoordinatorController;
 
 public class FXMLGeneralController implements Initializable {
     @FXML private Button btnLogOut;
@@ -125,7 +121,7 @@ public class FXMLGeneralController implements Initializable {
         alert.showAndWait();
     }
 
-    public void generateCancel(String message, Button btnCancel, String fxml) {
+    public void generateConfirmationCancel(String message, Button btnCancel, String fxml) {
         ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
         ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, message, YES, NO);
@@ -266,19 +262,19 @@ public class FXMLGeneralController implements Initializable {
         });
     }
 
-  public String encryptPassword(String password){
-        String passwordEncrypt= null;
-        try{
-            MessageDigest md;
-            md= MessageDigest.getInstance("SHA-512");
-            md.update(password.getBytes());
-            byte[] mb = md.digest();
-            passwordEncrypt= String.valueOf(Hex.encodeHex(mb));
-        }catch (NoSuchAlgorithmException e){
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create an encrypt Password", e);
-        }
-        return passwordEncrypt;
-    }
+  public String encryptPassword(String password) {
+      String passwordEncrypt = null;
+      try {
+          MessageDigest md;
+          md = MessageDigest.getInstance("SHA-512");
+          md.update(password.getBytes());
+          byte[] mb = md.digest();
+          passwordEncrypt = String.valueOf(Hex.encodeHex(mb));
+      } catch (NoSuchAlgorithmException e) {
+          Logger logger = Logger.getLogger(getClass().getName());
+          logger.log(Level.SEVERE, "Failed to create an encrypt Password", e);
+      }
+      return passwordEncrypt;
+  }
 
 }

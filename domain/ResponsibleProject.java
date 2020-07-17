@@ -2,7 +2,6 @@ package domain;
 
 import java.util.List;
 import dataaccess.ResponsibleProjectDAOImpl;
-import dataaccess.ChargeDAOImpl;
 
 /**
  * Class Responsible Project
@@ -86,8 +85,8 @@ public class ResponsibleProject{
      * @return The list of the charge
      */
     public static List<String> getListCharge() {
-        ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-        List<String> listCharge = chargeDAO.getAllCharge();
+        ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
+        List<String> listCharge = responsibleProjectDAO.getAllCharge();
         return  listCharge;
     }
 
@@ -162,8 +161,8 @@ public class ResponsibleProject{
      * @param email define the email of the responsible of the project
      * @return if valid the responsible of the project
      */
-    public static boolean validateRepeatResponsibleProject(String email) {
-        boolean isValidateRepeatResponsibleProject;
+    public static int validateRepeatResponsibleProject(String email) {
+        int isValidateRepeatResponsibleProject;
         ResponsibleProjectDAOImpl responsibleProjectDAO = new ResponsibleProjectDAOImpl();
         isValidateRepeatResponsibleProject = responsibleProjectDAO.validateRepeatResponsibleProject(email);
         return isValidateRepeatResponsibleProject;

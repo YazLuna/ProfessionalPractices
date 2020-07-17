@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import java.net.URL?>
 
 <AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="716.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.coordinator.controller.FXMLDeleteProjectController">
     <stylesheets>
        <URL value="@../../fxmlregister.css" />
     </stylesheets>
-   <children>
       <ScrollPane prefHeight="506.0" prefWidth="716.0">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="701.0" style="-fx-background-color: #ffffff;">
-               <children>
                   <VBox fx:id="vData" alignment="TOP_CENTER" layoutY="-2.0" prefWidth="699.0" spacing="25.0">
-                     <children>
                         <FlowPane alignment="CENTER_LEFT" hgap="135.0" prefWidth="615.0" style="-fx-background-color: #053d01;">
-                           <children>
                               <Button fx:id="btnBehind" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#behindListProject" style="-fx-background-color:TRANSPARENT;" text="Button" textFill="TRANSPARENT">
                                  <graphic>
                                     <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
@@ -48,7 +45,6 @@
                                     <Insets top="20.0" />
                                  </FlowPane.margin>
                               </Label>
-                           </children>
                            <padding>
                               <Insets bottom="30.0" />
                            </padding>
@@ -57,7 +53,6 @@
                            </VBox.margin>
                         </FlowPane>
                         <GridPane vgap="30.0">
-                           <children>
                               <Label prefHeight="17.0" text="Nombre:  " textAlignment="RIGHT" GridPane.halignment="RIGHT">
                                  <font>
                                     <Font name="Arial" size="15.0" />
@@ -133,7 +128,7 @@
                                     <Font name="Arial" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbLapse" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="12">
+                              <Label fx:id="lbTerm" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="12">
                                  <font>
                                     <Font name="Arial" size="15.0" />
                                  </font>
@@ -203,7 +198,7 @@
                                     <Font name="Arial" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbLapse" GridPane.columnIndex="1" GridPane.rowIndex="12">
+                              <Label fx:id="lbTerm" GridPane.columnIndex="1" GridPane.rowIndex="12">
                                  <font>
                                     <Font name="Arial" size="15.0" />
                                  </font>
@@ -213,7 +208,6 @@
                                     <Font name="Arial" size="15.0" />
                                  </font>
                               </Text>
-                           </children>
                            <columnConstraints>
                               <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="280.0" />
                               <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="241.0" />
@@ -245,7 +239,6 @@
                            </VBox.margin>
                         </Label>
                         <GridPane fx:id="gpActivity" alignment="CENTER_LEFT" hgap="10.0" vgap="20.0">
-                           <children>
                               <Label text="Mes:  " GridPane.halignment="RIGHT">
                                  <font>
                                     <Font name="Arial" size="15.0" />
@@ -266,7 +259,6 @@
                                     <Font name="Arial" size="15.0" />
                                  </font>
                               </Text>
-                           </children>
                            <columnConstraints>
                               <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="328.0" minWidth="10.0" prefWidth="148.0" />
                               <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="142.0" minWidth="10.0" prefWidth="142.0" />
@@ -278,7 +270,6 @@
                            </rowConstraints>
                         </GridPane>
                         <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="90.0">
-                           <children>
                               <Button fx:id="btnDeleteProject" mnemonicParsing="false" onAction="#deleteProject" prefHeight="38.0" style="-fx-background-color: #59ad55;" text="Eliminar" textFill="#f5f5f5">
                                  <font>
                                     <Font name="Arial" size="17.0" />
@@ -289,7 +280,6 @@
                                     <Font name="Arial" size="17.0" />
                                  </font>
                               </Button>
-                           </children>
                            <padding>
                               <Insets bottom="70.0" />
                            </padding>
@@ -297,11 +287,8 @@
                               <Insets top="55.0" />
                            </VBox.margin>
                         </FlowPane>
-                     </children>
                   </VBox>
-               </children>
             </AnchorPane>
          </content>
       </ScrollPane>
-   </children>
 </AnchorPane>

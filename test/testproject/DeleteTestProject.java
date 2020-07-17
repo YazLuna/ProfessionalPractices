@@ -19,7 +19,7 @@ public class DeleteTestProject {
     public void testDeleteLinkedOrganization(){
         boolean isDeleteOrganization;
         LinkedOrganization linkedOrganization = new LinkedOrganization();
-        isDeleteOrganization = linkedOrganization.deleteOrganization("Dirección de Desarrollo Informático de Apoyo Académico");
+        isDeleteOrganization = linkedOrganization.deleteLinkedOrganization("Dirección de Desarrollo Informático de Apoyo Académico");
         Assert.assertEquals(true,isDeleteOrganization);
     }
 

@@ -19,13 +19,13 @@ public class UpdateTestProject {
         project.setObjectiveGeneral("Instalación del SGBD Oracle para poder empezar el desarrollo y pruebas");
         project.setObjectiveInmediate("Creación de una tabla y algunos procedimientos con el fin de probar que la instalacion");
         project.setObjectiveMediate("Refinar requerimientos");
-        project.setQuantityPractitioner(3);
-        datesUpdate.add("nameProject");
+        project.setQuiantityPractitioner(3);
+        datesUpdate.add("NameProject");
         datesUpdate.add("Description");
         datesUpdate.add("ObjectiveGeneral");
-        datesUpdate.add("ObjetiveInmediate");
+        datesUpdate.add("ObjectiveInmediate");
         datesUpdate.add("ObjectiveMediate");
-        datesUpdate.add("QuantityPractitioner");
+        datesUpdate.add("QuiantityPractitioner");
         isModifyProject = project.modifyProject(project,datesUpdate);
         Assert.assertEquals(true,isModifyProject);
     }
@@ -47,14 +47,16 @@ public class UpdateTestProject {
         boolean isModifyLinkedOrganization;
         List<String> datesUpdate = new ArrayList<>();
         LinkedOrganization linkedOrganization = new LinkedOrganization();
+        linkedOrganization.setIdLinkedOrganization(12);
         linkedOrganization.setName("BANX");
         linkedOrganization.setEmail("banx@gmail.com");
         datesUpdate.add("Name");
         datesUpdate.add("Email");
-        isModifyLinkedOrganization = linkedOrganization.modifyOrganization(linkedOrganization,datesUpdate);
+        isModifyLinkedOrganization = linkedOrganization.modifyLinkedOrganization(linkedOrganization,datesUpdate);
         Assert.assertEquals(true,isModifyLinkedOrganization);
     }
 
+    @Test
     public void testModifyPhoneNumber(){
         boolean isModifyPhoneNumber;
         List<String> datesUpdate = new ArrayList<>();
@@ -68,14 +70,20 @@ public class UpdateTestProject {
 
     @Test
     public void testModifyResponsibleProject(){
-        boolean result;
+        boolean isModifyResponsibleProject;
+        List<String> datesUpdate = new ArrayList<>();
         ResponsibleProject responsible = new ResponsibleProject();
+        responsible.setIdResponsible(20);
         responsible.setName("Jahir");
         responsible.setLastName("Betanzos");
         responsible.setEmail("jar_12@outlook.com");
         responsible.setCharge("Gerente");
-        ///result = project.modifyProject(project);
-        ///Assert.assertEquals(true,result);
+        datesUpdate.add("Name");
+        datesUpdate.add("LastName");
+        datesUpdate.add("Email");
+        datesUpdate.add("Charge");
+        isModifyResponsibleProject = responsible.modifyResponsibleProject(responsible,datesUpdate);
+        Assert.assertEquals(true,isModifyResponsibleProject);
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
  * @author MARTHA
  * @version 08/05/2020
  */
-public class ValidateDataPerson extends ValidateGeneral {
+public class ValidateDataResponsible extends ValidateGeneral {
 
     /**
      * Method to validate last name

@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.reflect.Method;
+import domain.Number;
 import domain.ResponsibleProject;
 import domain.Search;
+import exception.Exception;
+import telegram.TelegramBot;
 
 
 /**
@@ -44,11 +47,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         idStatus = statusDAO.searchIdStatus(responsible.getStatus());
         boolean result = false;
         int idCharge;
-        ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-        idCharge = chargeDAO.getIdCharge(responsible.getCharge());
+        idCharge = getIdCharge(responsible.getCharge());
         if(idCharge == Search.NOTFOUND.getValue()){
-            chargeDAO.addCharge(responsible.getCharge());
-            idCharge = chargeDAO.getIdCharge(responsible.getCharge());
+            addCharge(responsible.getCharge());
+            idCharge = getIdCharge(responsible.getCharge());
         }
         try{
             connection = connexion.getConnection();
@@ -61,12 +63,37 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             sentenceResponsible.setInt(5,idCharge);
             sentenceResponsible.executeUpdate();
             result = true;
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
-            return result;
         }
+        return result;
+    }
+
+    /**
+     * Method to add a Charge
+     * @param name defines the charge of responsible of the project
+     * @return if the charge was successfully add
+     */
+    @Override
+    public boolean addCharge (String name) {
+        boolean resultAddCharge = false;
+        String queryCharge = "INSERT INTO Charge (nameCharge) VALUES(?)";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentenceCharge = connection.prepareStatement(queryCharge);
+            sentenceCharge.setString(1,name);
+            sentenceCharge.executeUpdate();
+            resultAddCharge = true;
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+        }finally{
+            connexion.closeConnection();
+        }
+        return resultAddCharge;
     }
 
     /**
@@ -79,9 +106,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         ResponsibleProject responsible = new ResponsibleProject();
         try{
             connection = connexion.getConnection();
-            String queryGetResponsible = "SELECT * FROM ResponsibleProject INNER JOIN Charge ON ResponsibleProject.idCharge " +
-                    "= Charge.idCharge INNER JOIN Status ON ResponsibleProject.idStatus " +
-                    "= Status.idStatus WHERE idResponsibleProject=?";
+            String queryGetResponsible = "SELECT * FROM ResponsibleProject INNER JOIN Charge ON ResponsibleProject.idCharge = " +
+                    " Charge.idCharge INNER JOIN Status ON ResponsibleProject.idStatus =" +
+                    " Status.idStatus WHERE idResponsibleProject=?";
             PreparedStatement sentence =connection.prepareStatement(queryGetResponsible);
             sentence.setInt(1,idResponsible);
             results= sentence.executeQuery();
@@ -94,8 +121,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 responsible.setStatus(results.getString("status"));
                 responsible.setCharge(results.getString("nameCharge"));
             }
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -112,9 +140,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         ResponsibleProject responsible= new ResponsibleProject();
         try{
             connection = connexion.getConnection();
-            String queryGetResponsible = "SELECT * FROM ResponsibleProject INNER JOIN Charge ON ResponsibleProject.idCharge " +
-                    "= Charge.idCharge INNER JOIN Status ON ResponsibleProject.idStatus " +
-                    "= Status.idStatus WHERE email=?";
+            String queryGetResponsible = "SELECT * FROM ResponsibleProject INNER JOIN Charge ON ResponsibleProject.idCharge =" +
+                    " Charge.idCharge INNER JOIN Status ON ResponsibleProject.idStatus =" +
+                    " Status.idStatus WHERE email=?";
             PreparedStatement sentence =connection.prepareStatement(queryGetResponsible);
             sentence.setString(1,email);
             results= sentence.executeQuery();
@@ -127,8 +155,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 responsible.setStatus(results.getString("status"));
                 responsible.setCharge(results.getString("Charge.nameCharge"));
             }
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -152,8 +181,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             while(results.next()){
                 idResponsibleProject =results.getInt("idResponsibleProject");
             }
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -178,8 +208,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 responsibleProject.setEmail(results.getString("email"));
                 responsibles.add(responsibleProject);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -195,9 +226,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         List<ResponsibleProject> responsibles = new ArrayList<>();
         try {
             connection = connexion.getConnection();
-            String queryAllResponsibleProject = "SELECT idResponsibleProject,name,lastName,email " +
-                    "FROM ResponsibleProject INNER JOIN Status ON ResponsibleProject.idStatus " +
-                    "= Status.idStatus WHERE status =? ";
+            String queryAllResponsibleProject = "SELECT idResponsibleProject,name,lastName,email FROM" +
+                    " ResponsibleProject INNER JOIN Status ON ResponsibleProject.idStatus =" +
+                    " Status.idStatus WHERE status =? ";
             PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAllResponsibleProject);
             sentenceAllResponsible.setString(1, "available");
             results= sentenceAllResponsible.executeQuery();
@@ -208,8 +239,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                 responsibleProject.setEmail(results.getString("email"));
                 responsibles.add(responsibleProject);
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -226,9 +258,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         int idResponsibleProject;
         try {
             connection = connexion.getConnection();
-            String queryAllResponsibleProject = "SELECT idResponsibleProject,name,lastName,email FROM ResponsibleProject " +
-                    "INNER JOIN Status ON ResponsibleProject.idStatus " +
-                    "= Status.idStatus WHERE status =? ";
+            String queryAllResponsibleProject = "SELECT idResponsibleProject,name,lastName,email FROM ResponsibleProject INNER JOIN" +
+                    " Status ON ResponsibleProject.idStatus =" +
+                    " Status.idStatus WHERE status =? ";
             PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAllResponsibleProject);
             sentenceAllResponsible.setString(1, "available");
             results= sentenceAllResponsible.executeQuery();
@@ -254,12 +286,62 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
                     responsibles.add(responsibleProject);
                 }
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
         return responsibles;
+    }
+
+    /**
+     * Method to get for the id  the charge
+     * @param name The name parameter defines the charge of responsible of the project
+     * @return The idCharge of the charge searched
+     */
+    @Override
+    public int getIdCharge(String name) {
+        int idCharge = Search.NOTFOUND.getValue();;
+        String queryCharge= "SELECT idCharge FROM Charge WHERE nameCharge=?";
+        try{
+            connection = connexion.getConnection();
+            PreparedStatement sentence =connection.prepareStatement(queryCharge);
+            sentence.setString(1,name);
+            results= sentence.executeQuery();
+            while(results.next()) {
+                idCharge = results.getInt("idCharge");
+            }
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+        }finally{
+            connexion.closeConnection();
+        }
+        return idCharge;
+    }
+
+    /**
+     * Method to get the charge list
+     * @return The charge list
+     */
+    @Override
+    public List<String> getAllCharge() {
+        List<String> charges = new ArrayList<>();
+        try {
+            connection = connexion.getConnection();
+            consultation = connection.createStatement();
+            results = consultation.executeQuery("SELECT nameCharge FROM Charge");
+            while(results.next()){
+                charges.add(results.getString("nameCharge"));
+            }
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+        }finally{
+            connexion.closeConnection();
+        }
+        return charges;
     }
 
     /**
@@ -290,21 +372,20 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             }
             change.add("get" + datesUpdate.get(indexDatesUpdate));
         }
-        String sentence = "UPDATE ResponsibleProject SET "+sentenceDatesUpdate+ " WHERE idResponsibleProject " +
-                "= "+ responsibleEdit.getIdResponsible();
+        String sentence = "UPDATE ResponsibleProject SET "+sentenceDatesUpdate+ " WHERE idResponsibleProject = "+
+                responsibleEdit.getIdResponsible();
         try{
             connection = connexion.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sentence);
             Class classResponsible = responsibleEdit.getClass();
-            for(int indexPreparedStatement = Number.ZERO.getNumber() ; indexPreparedStatement
+            for(int indexPreparedStatement = Number.ONE.getNumber() ; indexPreparedStatement
                     <= datesUpdate.size(); indexPreparedStatement++){
                 Method methodResponsible;
                 if(change.get(indexPreparedStatement - 1).equals("getCharge")){
-                    ChargeDAOImpl chargeDAO = new ChargeDAOImpl();
-                    idCharge= chargeDAO.getIdCharge(responsibleEdit.getCharge());
+                    idCharge= getIdCharge(responsibleEdit.getCharge());
                     if(idCharge == Search.NOTFOUND.getValue()){
-                        chargeDAO.addCharge(responsibleEdit.getCharge());
-                        idCharge = chargeDAO.getIdCharge(responsibleEdit.getCharge());
+                        addCharge(responsibleEdit.getCharge());
+                        idCharge = getIdCharge(responsibleEdit.getCharge());
                     }
                     preparedStatement.setInt(indexPreparedStatement, idCharge);
                 } else{
@@ -315,8 +396,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             }
             preparedStatement.executeUpdate();
             result = true;
-        } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ReflectiveOperationException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -341,8 +423,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             sentence.setString(2, email);
             sentence.executeUpdate();
             result= true;
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             if(connexion!=null){
                 connexion.closeConnection();
@@ -357,8 +440,8 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
      * @return if the responsible for the project exists
      */
     @Override
-    public boolean validateRepeatResponsibleProject (String email) {
-        boolean isRepeatResponsibleProject = false;
+    public int validateRepeatResponsibleProject (String email) {
+        int isRepeatResponsibleProject = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String queryResponsible= "SELECT idResponsibleProject FROM ResponsibleProject WHERE email=?";
@@ -366,10 +449,12 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             sentence.setString(1,email);
             results= sentence.executeQuery();
             if(results.next()){
-                isRepeatResponsibleProject = true;
+                    isRepeatResponsibleProject = Search.FOUND.getValue();
             }
-        }catch(SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            isRepeatResponsibleProject = Search.EXCEPTION.getValue();
         }finally{
             connexion.closeConnection();
         }
@@ -386,8 +471,8 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         boolean isAssignedProject= false;
         try {
             connection = connexion.getConnection();
-            String queryAssingResponsible = "SELECT idProject FROM Project,ResponsibleProject WHERE ResponsibleProject.idResponsibleProject " +
-                    "= Project.idResponsibleProject AND ResponsibleProject.idResponsibleProject=?";
+            String queryAssingResponsible = "SELECT idProject FROM Project,ResponsibleProject WHERE ResponsibleProject.idResponsibleProject =" +
+                    " Project.idResponsibleProject AND ResponsibleProject.idResponsibleProject=?";
             PreparedStatement sentenceAssing = connection.prepareStatement(queryAssingResponsible);
             sentenceAssing.setInt(1,idResponsibleProject);
             ResultSet resultAssing;
@@ -395,8 +480,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             if(resultAssing.next()){
                 isAssignedProject= true;
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -413,10 +499,10 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         boolean isAssignedProjectAvailable= false;
         try {
             connection = connexion.getConnection();
-            String queryAssingResponsibleAvailable = "SELECT idProject FROM Project,ResponsibleProject" +
-                    ",Status WHERE ResponsibleProject.idResponsibleProject = Project.idResponsibleProject " +
-                    "AND Project.idStatus = Status.idStatus AND status" +
-                    "=? AND ResponsibleProject.idResponsibleProject=?";
+            String queryAssingResponsibleAvailable = "SELECT idProject FROM Project,ResponsibleProject,Status WHERE" +
+                    " ResponsibleProject.idResponsibleProject = Project.idResponsibleProject AND" +
+                    " Project.idStatus = Status.idStatus AND status =? AND" +
+                    " ResponsibleProject.idResponsibleProject=?";
             PreparedStatement sentenceAssingAvailable = connection.prepareStatement(queryAssingResponsibleAvailable);
             sentenceAssingAvailable.setString(1,"available");
             sentenceAssingAvailable.setInt(2,idResponsibleProject);
@@ -425,8 +511,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             if(!resultAssingAvailable.next()) {
                 isAssignedProjectAvailable=true;
             }
-        }catch (SQLException ex){
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         }finally{
             connexion.closeConnection();
         }
@@ -442,17 +529,18 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         boolean areResponsibleProject = false;
         try {
             connection = connexion.getConnection();
-            String queryAreResponsibleProjectAvailable = "SELECT name FROM ResponsibleProject " +
-                    "INNER JOIN Status ON ResponsibleProject.idStatus " +
-                    "= Status.idStatus where status =?";
+            String queryAreResponsibleProjectAvailable = "SELECT name FROM ResponsibleProject INNER JOIN" +
+                    " Status ON ResponsibleProject.idStatus =" +
+                    " Status.idStatus where status =?";
             PreparedStatement sentence = connection.prepareStatement(queryAreResponsibleProjectAvailable);
             sentence.setString(1, "available");
             results= sentence.executeQuery();
             if(results.next()) {
                 areResponsibleProject = true;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(LinkedOrganizationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -469,9 +557,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
         int idResponsibleProject;
         try {
             connection = connexion.getConnection();
-            String queryAreResponsibleProject = "SELECT idResponsibleProject,name,lastName,email " +
-                    "FROM ResponsibleProject INNER JOIN Status ON ResponsibleProject.idStatus " +
-                    "= Status.idStatus WHERE status =? ";
+            String queryAreResponsibleProject = "SELECT idResponsibleProject,name,lastName,email FROM" +
+                    " ResponsibleProject INNER JOIN Status ON ResponsibleProject.idStatus =" +
+                    " Status.idStatus WHERE status =? ";
             PreparedStatement sentenceAllResponsible = connection.prepareStatement(queryAreResponsibleProject);
             sentenceAllResponsible.setString(1, "available");
             results= sentenceAllResponsible.executeQuery();
@@ -510,8 +598,9 @@ public class ResponsibleProjectDAOImpl implements IResponsibleProjectDAO{
             if(results.next()){
                 areResponsibleProject = true;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ResponsibleProjectDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }

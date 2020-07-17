@@ -1,9 +1,8 @@
 package logic;
 
-import dataaccess.Number;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import domain.Number;
 
 /**
  * Class validate Data of Project
@@ -41,31 +40,31 @@ public class ValidateProject extends ValidateGeneral {
     }
 
     /**
-     * Method to validate text with 100 character of Project
-     * @param textArea The textArea parameter defines the text with 100 character of the project
-     * @return If the textArea is valid
-     */
-    public boolean validateTextArea (String textArea) {
-        boolean isValidTextArea;
-        Pattern pattern = Pattern
-                .compile("[A-Za-z_\\s_0-9]{20,100}");
-        Matcher mather = pattern.matcher(textArea);
-        isValidTextArea = mather.find();
-        return isValidTextArea;
-    }
-
-    /**
-     * Method to validate text with 255 character of Project
-     * @param text The text parameter defines the text with 255 character of the project
+     * Method to validate text with 150 character of Project
+     * @param text The text parameter defines the text with 150 character of the project
      * @return If the text is valid
      */
     public boolean validateText (String text) {
         boolean isValidText;
         Pattern pattern = Pattern
-                .compile("[A-Za-z_\\s_0-9]{20,255}");
+                .compile("[A-Za-z_\\s_0-9]{20,150}");
         Matcher mather = pattern.matcher(text);
         isValidText = mather.find();
         return isValidText;
+    }
+
+    /**
+     * Method to validate text with 300 character of Project
+     * @param textArea The text parameter defines the text with 300 character of the project
+     * @return If the textArea is valid
+     */
+    public boolean validateTextArea (String textArea) {
+        boolean isValidTextArea;
+        Pattern pattern = Pattern
+                .compile("[A-Za-z_\\s_0-9]{15,300}");
+        Matcher mather = pattern.matcher(textArea);
+        isValidTextArea = mather.find();
+        return isValidTextArea;
     }
 
     /**
@@ -75,7 +74,7 @@ public class ValidateProject extends ValidateGeneral {
      */
     public boolean validateDuration (int duration) {
         boolean isValidDuration;
-        if(duration >=Number.FIVE.getNumber()){
+        if(duration >= Number.FIVE.getNumber()){
             isValidDuration = true;
         }else {
             isValidDuration = false;
@@ -90,7 +89,7 @@ public class ValidateProject extends ValidateGeneral {
      */
     public boolean validateQuiantityPractitioner (int quiantityPractitioner) {
         boolean isValidQuiantityPractitioner;
-        if(quiantityPractitioner >= Number.TWO.getNumber()){
+        if(quiantityPractitioner >= Number.TWO.getNumber() && quiantityPractitioner<= Number.TEN.getNumber()) {
             isValidQuiantityPractitioner = true;
         }else {
             isValidQuiantityPractitioner = false;
