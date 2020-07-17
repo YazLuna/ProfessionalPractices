@@ -1,6 +1,6 @@
 package gui;
 
-import dataaccess.Number;
+import domain.Number;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -163,7 +163,7 @@ public class FXMLGeneralController implements Initializable {
 	 * @param btnCancel button origin
 	 * @param fxml origin
 	 */
-	public void generateCancel(String message, Button btnCancel, String fxml) {
+	public void generateConfirmationCancel(String message, Button btnCancel, String fxml) {
 		ButtonType YES = new ButtonType("Sí", ButtonBar.ButtonData.OK_DONE);
 		ButtonType NO = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
 		Alert cancel = new Alert(Alert.AlertType.CONFIRMATION, message, YES, NO);
