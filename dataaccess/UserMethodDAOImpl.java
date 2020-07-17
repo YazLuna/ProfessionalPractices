@@ -4,15 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import domain.Search;
 import domain.User;
+import exception.TelegramBot;
+import exception.Exception;
 
 /**
  * UserMethodDAOImpl
  * @author Yazmin
- * @version 08/07/2020
+ * @version 16/07/2020
  */
 
 public class UserMethodDAOImpl implements IUserMethodDAO{
@@ -40,8 +40,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 				idUser = resultSet.getInt("idUser");
 			}
 		} catch (SQLException ex) {
-			//esaclase.metodo( ex.getCause());
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+			new Exception().log(ex);
+			TelegramBot.sendToTelegram(ex.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -65,8 +65,9 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			while (resultSet.next()) {
 				search = true;
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -89,11 +90,11 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setString(6, user.getPhone());
 			preparedStatement.executeUpdate();
 			int idUserAdd = searchIdUser(user.getEmail(), user.getAlternateEmail(), user.getPhone());
-			addRelations(idUserAdd, user.getStatus(), userType);
 			LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
 			result = loginAccountDAO.createLoginAccount(user.getUserName(),user.getPassword(),idUserAdd);
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -101,9 +102,9 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 	}
 
 	@Override
-	public boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName) {
-		boolean valid = validateUserAdd(email, alternateEmail, phone, userName);
-		if(valid){
+	public int validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName) {
+		int valid = validateUserAdd(email, alternateEmail, phone, userName);
+		if(valid == Search.NOTFOUND.getValue()){
 			valid = staffNumberValidateTwoAcademics(staffNumber);
 		}
 		return valid;
@@ -114,16 +115,16 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		int staffNumber = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
-			String querySearchStaffNumber =
-					"Select staffNumber from Coordinator where staffNumber=?";
+			String querySearchStaffNumber = "Select staffNumber from Coordinator where staffNumber=?";
 			preparedStatement = connection.prepareStatement(querySearchStaffNumber);
 			preparedStatement.setInt(1, staffNumberSearch);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				staffNumber = resultSet.getInt("staffNumber");
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		}finally {
 			connexion.closeConnection();
 		}
@@ -143,18 +144,18 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			while (resultSet.next()) {
 				staffNumber = resultSet.getInt("staffNumber");
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		}finally {
 			connexion.closeConnection();
 		}
 		return staffNumber;
 	}
 
-
 	@Override
-	public boolean staffNumberTeacherValidate(int staffNumberSearch)  {
-		boolean valid = true;
+	public int staffNumberTeacherValidate(int staffNumberSearch)  {
+		int valid = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
 			String querySearchStaffNumber =
@@ -163,10 +164,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setInt(1, staffNumberSearch);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				valid = false;
+				valid = Search.FOUND.getValue();
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			valid = Search.EXCEPTION.getValue();
 		}finally {
 			connexion.closeConnection();
 		}
@@ -174,8 +177,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 	}
 
 	@Override
-	public boolean staffNumberCoordinatorValidate(int staffNumberSearch)  {
-		boolean valid = true;
+	public int staffNumberCoordinatorValidate(int staffNumberSearch)  {
+		int valid = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
 			String querySearchStaffNumber =
@@ -184,10 +187,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setInt(1, staffNumberSearch);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				valid = false;
+				valid = Search.FOUND.getValue();
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			valid = Search.EXCEPTION.getValue();
 		}finally {
 			connexion.closeConnection();
 		}
@@ -195,77 +200,57 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 	}
 
 	@Override
-	public boolean validateUser(String email, String alternateEmail, String phone) {
-		boolean result = false;
-		boolean emailSearch = emailValid(email);
-		if(emailSearch){
-			boolean alternateEmailSearch = alternateEmailValid(alternateEmail);
-			if(alternateEmailSearch){
-				boolean phoneValid = phoneValid(phone);
-				if(phoneValid){
-					result = true;
-				}
+	public int validateUser(String email, String alternateEmail, String phone) {
+		int valid = searchEmail(email);
+		if(valid == Search.NOTFOUND.getValue()){
+			valid = searchAlternateEmail(alternateEmail);
+			if(valid == Search.NOTFOUND.getValue()){
+				valid = searchPhone(phone);
 			}
-		}
-		return result;
-	}
-
-	@Override
-	public boolean validateUserAdd(String email, String alternateEmail, String phone, String userName) {
-		boolean valid = validateUser (email, alternateEmail, phone);
-		if(valid){
-			LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
-			valid = loginAccountDAO.validateUserName(userName);
 		}
 		return valid;
 	}
 
 	@Override
-	public boolean staffNumberValidateTwoAcademics(int staffNumberSearch) {
-		boolean valid = false;
+	public int validateUserAdd(String email, String alternateEmail, String phone, String userName) {
+		int valid = validateUser (email, alternateEmail, phone);
+		if(valid == Search.NOTFOUND.getValue()){
+			LoginAccountDAOImpl loginAccountDAO = new LoginAccountDAOImpl();
+			valid = loginAccountDAO.searchUserName(userName);
+		}
+		return valid;
+	}
+
+	@Override
+	public int staffNumberValidateTwoAcademics(int staffNumberSearch) {
 		int staffNumber = searchStaffNumberTeacher(staffNumberSearch);
 		if(staffNumber == Search.NOTFOUND.getValue() ){
 			staffNumber = searchStaffNumberCoordinator(staffNumberSearch);
 		}
-		if (staffNumber == Search.NOTFOUND.getValue()){
-			valid = true;
+		return staffNumber;
+	}
+
+	@Override
+	public int validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone) {
+		int valid = validateUser (email, alternateEmail, phone);
+		System.out.println(valid);
+		if(valid == Search.NOTFOUND.getValue()){
+			valid = staffNumberTwoAcademicsValidate(staffNumber);
+			System.out.println(valid);
 		}
 		return valid;
 	}
 
 	@Override
-	public boolean validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone) {
-		boolean result = false;
-		boolean emailValid = emailValid(email);
-		if(emailValid){
-			boolean alternateEmailValid = alternateEmailValid(alternateEmail);
-			if(alternateEmailValid){
-				boolean phoneSearch = phoneValid(phone);
-				if(phoneSearch){
-					boolean staffNumberValid = staffNumberTwoAcademicsValidate(staffNumber);
-					if (staffNumberValid) {
-						result = true;
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public boolean staffNumberTwoAcademicsValidate(int staffNumberSearch) {
-		boolean resultValidate = false;
-		boolean valid = staffNumberCoordinatorValidate(staffNumberSearch);
-		if(valid) {
-			valid = staffNumberTeacherValidate(staffNumberSearch);
-			if(valid){
-				resultValidate = true;
-			}
+	public int staffNumberTwoAcademicsValidate(int staffNumberSearch) {
+		int resultValidate = staffNumberCoordinatorValidate(staffNumberSearch);
+		if(resultValidate == Search.NOTFOUND.getValue()) {
+			resultValidate = staffNumberTeacherValidate(staffNumberSearch);
 		}
 		return resultValidate;
 	}
 
-	private void addRelations(int idUserAdd, String status, String userType) {
+	protected void addRelations(int idUserAdd, String status, String userType) {
 		StatusDAOImpl statusDAO = new StatusDAOImpl();
 		int idUserStatusSearch = statusDAO.searchIdStatus(status);
 		int idUserTypeSearch = searchIdUserType(userType);
@@ -273,8 +258,8 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 		addUserUserType(idUserAdd, idUserTypeSearch);
 	}
 
-	private boolean alternateEmailValid(String alternateEmail)  {
-		boolean search = true;
+	private int searchAlternateEmail(String alternateEmail)  {
+		int search = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
 			String querySearchAlternateEmail = "Select alternateEmail from User where alternateEmail =?";
@@ -282,18 +267,20 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setString(1, alternateEmail);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				search = false;
+				search = Search.FOUND.getValue();
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			search = Search.EXCEPTION.getValue();
 		} finally {
 			connexion.closeConnection();
 		}
 		return search;
 	}
 
-	private boolean phoneValid(String phone) {
-		boolean search = true;
+	private int searchPhone(String phone) {
+		int search = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
 			String querySearchPhone = "Select phone from User where phone =?";
@@ -301,18 +288,20 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setString(1, phone);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				search = false;
+				search = Search.FOUND.getValue();
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			search = Search.EXCEPTION.getValue();
 		} finally {
 			connexion.closeConnection();
 		}
 		return search;
 	}
 
-	private boolean emailValid(String email)  {
-		boolean search = true;
+	private int searchEmail(String email)  {
+		int search = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
 			String querySearchEmail = "Select email from User where email =?";
@@ -320,10 +309,12 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setString(1, email);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				search = false;
+				search = Search.FOUND.getValue();
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			search = Search.EXCEPTION.getValue();
 		} finally {
 			connexion.closeConnection();
 		}
@@ -338,8 +329,9 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setInt(1, idUserAdd);
 			preparedStatement.setInt(2, idUserTypeSearch);
 			preparedStatement.executeUpdate();
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		}finally {
 			connexion.closeConnection();
 		}
@@ -354,8 +346,9 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			preparedStatement.setInt(2, idUserStatus);
 			preparedStatement.setInt(3, idUserType);
 			preparedStatement.executeUpdate();
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		}finally {
 			connexion.closeConnection();
 		}
@@ -373,8 +366,9 @@ public class UserMethodDAOImpl implements IUserMethodDAO{
 			while (resultSet.next()) {
 				idUserType = resultSet.getInt("idUserType");
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(UserMethodDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}

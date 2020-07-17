@@ -93,7 +93,7 @@ public class ProjectDAOImpl implements IProjectDAO {
         if(idProject!=Search.NOTFOUND.getValue()) {
             List<SchedulingActivities> listSchedulingActivities = project.getSchedulingActivitiesProject();
             SchedulingActivitiesDAOImpl addSchedulingActivities = new SchedulingActivitiesDAOImpl();
-            for (int indexScheduling= Search.NOTFOUND.getValue();indexScheduling<listSchedulingActivities.size();indexScheduling++) {
+            for (int indexScheduling = Search.NOTFOUND.getValue(); indexScheduling<listSchedulingActivities.size(); indexScheduling++) {
                 addSchedulingActivities.addSchedulingActivities(idProject, listSchedulingActivities.get(indexScheduling));
                 resultIsAddProject = true;
             }

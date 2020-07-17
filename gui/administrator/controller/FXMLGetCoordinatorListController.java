@@ -1,5 +1,6 @@
 package gui.administrator.controller;
 
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -34,14 +35,19 @@ public class FXMLGetCoordinatorListController extends FXMLGeneralController {
 
     private void colocateListCoordinators() {
         List<Coordinator> coordinatorList = Coordinator.getCoordinatorsInformation();
-        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
-        tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        tvCoordinators.getItems().setAll(coordinatorList);
+        if (coordinatorList.size() == Search.NOTFOUND.getValue()) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
+        } else {
+            tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+            tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+            tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+            tvCoordinators.getItems().setAll(coordinatorList);
+        }
     }
 
     /**

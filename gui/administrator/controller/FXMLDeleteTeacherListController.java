@@ -71,10 +71,10 @@ public class FXMLDeleteTeacherListController extends FXMLGeneralController imple
                 boolean deleteOk = Teacher.deleteTeacher("Inactive", dischargeDate, teacherSelected.getStaffNumber());
                 if(deleteOk){
                     generateInformation("Profesor eliminado exitosamente");
-                    openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnUpdate);
                 }else{
                     generateError("No se pudo conectar con la base de datos. Intente mas tarde");
                 }
+                openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnUpdate);
             }
         }
     }

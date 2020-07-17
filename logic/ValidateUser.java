@@ -6,14 +6,14 @@ import java.util.regex.Pattern;
 /**
  * ValidateAddUser
  * @author Yazmin
- * @version 07/06/2020
+ * @version 16/06/2020
  */
 
-public class ValidateAddUser extends ValidateGeneral {
+public class ValidateUser extends ValidateGeneral {
 
     public boolean validateNameUser (String name) {
         Pattern pattern = Pattern
-                .compile("[A-Za-z]{2,30}");
+                .compile("[A-Za-zñÑáéíóúÁÉÍÓÚ]{2,30}");
         Matcher mather = pattern.matcher(name);
         boolean result = mather.find();
         return result;
@@ -34,7 +34,7 @@ public class ValidateAddUser extends ValidateGeneral {
 
     public boolean validateUserName (String word) {
         Pattern pattern = Pattern
-                .compile("[A-Za-z0-9]{10,50}");
+                .compile("[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]{10,50}");
         Matcher mather = pattern.matcher(word);
         boolean result = mather.find();
         return result;
@@ -42,7 +42,7 @@ public class ValidateAddUser extends ValidateGeneral {
 
     public boolean validatePassword (String word) {
         Pattern pattern = Pattern
-                .compile("[A-Za-z0-9]{10,20}");
+                .compile("[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]{10,20}");
         Matcher mather = pattern.matcher(word);
         boolean result = mather.find();
         return result;
@@ -71,24 +71,5 @@ public class ValidateAddUser extends ValidateGeneral {
             validate = false;
         }
         return validate;
-    }
-
-    public String deleteSpace (String works) {
-        works = works.replaceAll("\\s+", " ");
-        works = works.trim();
-        if (works.charAt(works.length() - 1) == ' ') {
-            works = works.substring(0, works.length() - 1);
-        }
-        return works;
-    }
-
-
-    public String deleteAllSpace (String works) {
-        works = works.replaceAll(" ", "");
-        works = works.replaceAll("\\s+", "");
-        if (works.charAt(works.length() - 1) == ' ') {
-            works = works.substring(0, works.length() - 1);
-        }
-        return works;
     }
 }

@@ -1,7 +1,7 @@
 package test.othertest;
 
 import org.junit.Test;
-import telegram.TelegramBot;
+import exception.TelegramBot;
 
 public class TelegramBotTest {
     @Test

@@ -13,6 +13,7 @@ public class Teacher extends User{
     private int staffNumber;
     private String registrationDate;
     private String dischargeDate;
+    private int idAdministrator;
     
     public Teacher () {
         setUserType("Teacher");
@@ -40,6 +41,14 @@ public class Teacher extends User{
     
     public void setDischargeDate (String dischargeDate) {
         this.dischargeDate = dischargeDate;
+    }
+
+    public int getIdAdministrator () {
+        return  idAdministrator;
+    }
+
+    public void setIdAdministrator (int idAdministrator) {
+        this.idAdministrator = idAdministrator;
     }
 
     /**
@@ -143,11 +152,11 @@ public class Teacher extends User{
 
     /**
      * Method that calls the TeacherDAO to know if exist teachers
-     * @return True if are teacher, false if not
+     * @return Tif there is any teacher
      */
-    public static boolean areTeachers() {
+    public static int areTeachers() {
         TeacherDAOImpl areTeacher = new TeacherDAOImpl();
-        boolean result = areTeacher.areTeachers();
+        int result = areTeacher.areTeachers();
         return result;
     }
 

@@ -1,4 +1,4 @@
-package telegram;
+package exception;
 
 import java.io.IOException;
 import java.net.URL;

@@ -1,5 +1,6 @@
 package gui.administrator.controller;
 
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,10 +33,15 @@ public class FXMLUpdateCoordinatorListController extends FXMLGeneralController i
 
     private void colocateListCoordinators() {
         List<Coordinator> coordinatorList = Coordinator.getCoordinators();
-        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tvCoordinators.getItems().setAll(coordinatorList);
+        if (coordinatorList.size() == Search.NOTFOUND.getValue()) {
+            generateError("no hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml", btnCancel);
+        } else {
+            tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            tvCoordinators.getItems().setAll(coordinatorList);
+        }
     }
 
     /**

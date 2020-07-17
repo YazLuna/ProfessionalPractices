@@ -14,6 +14,7 @@ public class Coordinator extends User{
     private int staffNumber;
     private String registrationDate;
     private String dischargeDate;
+    private int idAdministrator;
     
     public Coordinator () {
         setUserType("Coordinator");
@@ -41,6 +42,14 @@ public class Coordinator extends User{
     
     public void setDischargeDate (String dischargeDate) {
         this.dischargeDate = dischargeDate;
+    }
+
+    public int getIdAdministrator () {
+        return  idAdministrator;
+    }
+
+    public void setIdAdministrator (int idAdministrator) {
+        this.idAdministrator = idAdministrator;
     }
 
     /**
@@ -133,21 +142,21 @@ public class Coordinator extends User{
 
     /**
      * Method that calls the Coordinator DAO to know if there is an active coordinator
-     * @return True if exists, false if not
+     * @return if there is an active coordinator
      */
-    public static boolean activeCoordinator() {
+    public static int activeCoordinator() {
         CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
-        boolean result = activeCoordinator.activeCoordinator();
+        int result = activeCoordinator.activeCoordinator();
         return result;
     }
 
     /**
      * Method that calls the Coordinator DAO to know if there is any coordinator
-     * @return True if exists, false if not
+     * @return if there is any coordinator
      */
-    public static boolean areCoordinator() {
+    public static int areCoordinator() {
         CoordinatorDAOImpl activeCoordinator = new CoordinatorDAOImpl();
-        boolean result = activeCoordinator.areCoordinator();
+        int result = activeCoordinator.areCoordinator();
         return result;
     }
 
@@ -162,6 +171,11 @@ public class Coordinator extends User{
         return result;
     }
 
+    /**
+     * Method to return a project
+     * @param name Project
+     * @return Project
+     */
     public static Project getProject (String name) {
         ProjectDAOImpl getProject = new ProjectDAOImpl();
         return getProject.getProject(name);

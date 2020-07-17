@@ -7,12 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.List;
 import domain.Teacher;
 import domain.Search;
 import exception.Exception;
+import exception.TelegramBot;
 
 /**
  * Teacher DAO Implements
@@ -43,15 +42,18 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 		int idUser = searchIdUser(teacher.getEmail(), teacher.getAlternateEmail(), teacher.getPhone());
 		try {
 			connection = connexion.getConnection();
-			String queryAddTeacher = "INSERT INTO Teacher (staffNumber, registrationDate, idUser) VALUES (?, ?, ?)";
+			String queryAddTeacher = "INSERT INTO Teacher (staffNumber, registrationDate, idUser, idAdministrator) VALUES (?, ?, ?, ?)";
 			preparedStatement = connection.prepareStatement(queryAddTeacher);
 			preparedStatement.setInt(1, teacher.getStaffNumber());
 			preparedStatement.setString(2, teacher.getRegistrationDate());
 			preparedStatement.setInt(3, idUser);
+			preparedStatement.setInt(4, teacher.getIdAdministrator());
 			preparedStatement.executeUpdate();
+			addRelations(idUser, teacher.getStatus(), teacher.getUserType());
 			resultAdd = true;
-		} catch (SQLException ex) {
-			new Exception().log(ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -86,8 +88,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 				teacher.setStaffNumber(resultSet.getInt("staffNumber"));
 				teacher.setStatus(resultSet.getString("status"));
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -113,8 +116,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 				teacher.setStaffNumber(resultSet.getInt("staffNumber"));
 				teachers.add(teacher);
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -147,8 +151,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 				teacher.setEmail(resultSet.getString("email"));
 				teachers.add(teacher);
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -182,8 +187,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 				teacher.setStatus(resultSet.getString("status"));
 				teachers.add(teacher);
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -223,7 +229,7 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 				try {
 					methodTeacher = classTeacher.getMethod(change.get(indexPreparedStatement - 1));
 					String isWord = (String) methodTeacher.invoke(teacherEdit, new Object[] {});
-				} catch (ClassCastException e) {
+				} catch (ClassCastException exception) {
 					isString = false;
 				}
 				if(isString){
@@ -238,8 +244,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 			}
 			preparedStatement.executeUpdate();
 			result = true;
-		} catch (SQLException | ReflectiveOperationException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException | ReflectiveOperationException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -268,8 +275,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 			preparedStatement.setInt(4,idUserType);
 			preparedStatement.executeUpdate();
 			result = true;
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -300,8 +308,9 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 			preparedStatement.setInt(4,idUserType);
 			preparedStatement.executeUpdate();
 			result = true;
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
 		} finally {
 			connexion.closeConnection();
 		}
@@ -330,8 +339,10 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 			while (resultSet.next()) {
 				isActive++;
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			isActive = Search.EXCEPTION.getValue();
 		} finally {
 			connexion.closeConnection();
 		}
@@ -340,11 +351,11 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 
 	/**
 	 * Method to know if are teachers
-	 * @return True if are teachers, false if not
+	 * @return if there are teachers
 	 */
 	@Override
-	public boolean areTeachers() {
-		boolean areTeachers = false;
+	public int areTeachers() {
+		int areTeachers = Search.NOTFOUND.getValue();
 		try {
 			connection = connexion.getConnection();
 			String queryAreTeacher = "SELECT staffNumber FROM Teacher, UserType, User_UserType WHERE UserType.type=? AND" +
@@ -353,10 +364,12 @@ public class TeacherDAOImpl extends UserMethodDAOImpl implements ITeacherDAO {
 			preparedStatement.setString(1, "Teacher");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				areTeachers = true;
+				areTeachers = Search.FOUND.getValue();
 			}
-		} catch (SQLException ex) {
-			Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SQLException exception) {
+			new Exception().log(exception);
+			TelegramBot.sendToTelegram(exception.getMessage());
+			areTeachers = Search.EXCEPTION.getValue();
 		} finally {
 			connexion.closeConnection();
 		}

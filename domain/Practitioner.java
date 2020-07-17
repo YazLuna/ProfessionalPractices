@@ -12,6 +12,7 @@ public class  Practitioner extends User{
     private String enrollment;
     private String term;
     private int credits;
+    private int staffNumberCoordinator;
     
     public Practitioner() {
         setUserType("Practitioner");
@@ -39,6 +40,14 @@ public class  Practitioner extends User{
 
     public void setCredits (int credits) {
         this.credits = credits;
+    }
+
+    public int getStaffNumberCoordinator () {
+        return  staffNumberCoordinator;
+    }
+
+    public void setStaffNumberCoordinator (int staffNumberCoordinator) {
+        this.staffNumberCoordinator = staffNumberCoordinator;
     }
 
     /**
@@ -131,43 +140,43 @@ public class  Practitioner extends User{
 
     /**
      * Method that calls the PractitionerDAO to know the number of active Practitioner
-     * @return Number of active Practitioner
+     * @return if there is any active practitioner
      */
-    public static boolean activePractitioner () {
+    public static int activePractitioner () {
         PractitionerDAOImpl areActive = new PractitionerDAOImpl();
-        boolean active = areActive.activePractitioner();
+        int active = areActive.activePractitioner();
         return active;
     }
 
     /**
      * Method that calls the PractitionerDAO to know if exist Practitioner
-     * @return True if are Practitioner, false if not
+     * @return if there is any practitioner
      */
-    public static boolean arePractitioner () {
+    public static int arePractitioner () {
         PractitionerDAOImpl arePractitioner = new PractitionerDAOImpl();
-        boolean practitionerExist = arePractitioner.arePractitioners();
+        int practitionerExist = arePractitioner.arePractitioners();
         return practitionerExist;
     }
 
     /**
      * Method to know if a Practitioner is valid to add
      * @param practitioner Object
-     * @return True if valid and false if not
+     * @return 0 if is valid, 1 if not and -1 for exception
      */
-    public static boolean validPractitionerAdd(Practitioner practitioner){
+    public static int validPractitionerAdd(Practitioner practitioner){
         PractitionerDAOImpl addPractitioner = new PractitionerDAOImpl();
-        boolean result = addPractitioner.validPractitionerAdd(practitioner);
+        int result = addPractitioner.validPractitionerAdd(practitioner);
         return result;
     }
 
     /**
      * Method to know if a Practitioner is valid to update
      * @param practitioner Object
-     * @return True if valid and false if not
+     * @return 0 if is valid, 1 if not and -1 for exception
      */
-    public static boolean validPractitionerUpdate(Practitioner practitioner){
+    public static int validPractitionerUpdate(Practitioner practitioner){
         PractitionerDAOImpl addPractitioner = new PractitionerDAOImpl();
-        boolean result = addPractitioner.validPractitionerUpdate(practitioner);
+        int result = addPractitioner.validPractitionerUpdate(practitioner);
         return result;
     }
 }

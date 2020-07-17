@@ -11,6 +11,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.layout.Pane?>
 
+<?import javafx.scene.control.Tooltip?>
 <AnchorPane id="AnchorPane" prefHeight="485.0" prefWidth="595.0" styleClass="mainFxmlClass"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gui.administrator.controller.FXMLRegisterCoordinatorController">
@@ -23,8 +24,8 @@
             <Font name="Arial Bold" size="24.0"/>
          </font>
       </Label>
-      <Button fx:id="btnLogOut" layoutX="494.0" layoutY="13.0" mnemonicParsing="false" onAction="#logOutAdministrator"
-              style="-fx-background-color: WHITE;" text="Cerrar Sesión">
+      <Button fx:id="btnLogOut" layoutX="494.0" layoutY="13.0" mnemonicParsing="false"
+              onAction="#logOutAdministrator" style="-fx-background-color: WHITE;" text="Cerrar Sesión">
          <font>
             <Font name="Arial Bold" size="12.0"/>
          </font>
@@ -73,7 +74,11 @@
    <TextField fx:id="tfName" layoutX="258.0" layoutY="139.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfLastName" layoutX="258.0" layoutY="169.0" prefHeight="25.0" prefWidth="208.0"/>
    <TextField fx:id="tfEmail" layoutX="258.0" layoutY="248.0" prefHeight="25.0" prefWidth="208.0"/>
-   <TextField fx:id="tfAlternateEmail" layoutX="258.0" layoutY="279.0" prefHeight="25.0" prefWidth="208.0"/>
+   <TextField fx:id="tfAlternateEmail" layoutX="258.0" layoutY="279.0" prefHeight="25.0" prefWidth="208.0">
+      <tooltip>
+         <Tooltip text="Tiene que ser diferente al anterior"/>
+      </tooltip>
+   </TextField>
    <TextField fx:id="tfPhone" layoutX="258.0" layoutY="309.0" prefHeight="25.0" prefWidth="208.0"/>
    <Button fx:id="btnRegister" layoutX="208.0" layoutY="444.0" mnemonicParsing="false" onAction="#registerCoordinator"
            style="-fx-background-color: #59ad55;" text="Aceptar" textFill="WHITE">
@@ -100,7 +105,15 @@
             <Font name="Arial" size="14.0"/>
          </font>
       </Label>
-      <TextField fx:id="tfUserName" layoutX="160.0" layoutY="9.0" prefHeight="25.0" prefWidth="208.0"/>
-      <TextField fx:id="tfPassword" layoutX="161.0" layoutY="42.0" prefHeight="25.0" prefWidth="208.0"/>
+      <TextField fx:id="tfUserName" layoutX="160.0" layoutY="9.0" prefHeight="25.0" prefWidth="208.0">
+         <tooltip>
+            <Tooltip text="Debe tener mínimo 10 caracteres"/>
+         </tooltip>
+      </TextField>
+      <TextField fx:id="tfPassword" layoutX="161.0" layoutY="42.0" prefHeight="25.0" prefWidth="208.0">
+         <tooltip>
+            <Tooltip text="Debe tener mínimo 10 caracteres"/>
+         </tooltip>
+      </TextField>
    </Pane>
 </AnchorPane>

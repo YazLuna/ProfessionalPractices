@@ -18,8 +18,8 @@ public interface IPractitionerDAO {
     boolean updatePractitioner(String enrollmentOrigin, Practitioner practitionerEdit, List<String>datesUpdate);
     boolean recoverPractitioner(String enrollment);
     boolean deletePractitioner (String enrollment, String status);
-    boolean activePractitioner();
-    boolean arePractitioners();
-    boolean validPractitionerAdd(Practitioner practitioner);
-    boolean validPractitionerUpdate(Practitioner practitioner);
+    int activePractitioner();
+    int arePractitioners();
+    int validPractitionerUpdate(Practitioner practitioner);
+    int validPractitionerAdd(Practitioner practitioner);
 }

@@ -15,10 +15,10 @@ public class User{
     protected String email;
     protected String alternateEmail;
     protected String phone;
-    private String status;
-    private String password;
-    private String userType;
-    private String userName;
+    protected String status;
+    protected String password;
+    protected String userType;
+    protected String userName;
 
     public User () {
         this.status= "Active";
@@ -104,9 +104,9 @@ public class User{
         this.userName = userName;
     }
 
-    public static boolean validateUserAdd(String email, String alternateEmail, String phone, String userName){
+    public static int validateUserAdd(String email, String alternateEmail, String phone, String userName){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateUserAdd(email, alternateEmail, phone, userName);
+        int result = userMethodDAO.validateUserAdd(email, alternateEmail, phone, userName);
         return result;
     }
 
@@ -116,21 +116,21 @@ public class User{
         return result;
     }
 
-    public static boolean validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
+    public static int validateAcademicAdd(int staffNumber, String email, String alternateEmail, String phone, String userName){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateAcademicAdd(staffNumber, email, alternateEmail, phone, userName);
+        int result = userMethodDAO.validateAcademicAdd(staffNumber, email, alternateEmail, phone, userName);
         return result;
     }
 
-    public static boolean validateUser(String email, String alternateEmail, String phone){
+    public static int validateUser(String email, String alternateEmail, String phone){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateUser(email, alternateEmail, phone);
+        int result = userMethodDAO.validateUser(email, alternateEmail, phone);
         return result;
     }
 
-    public static boolean validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone){
+    public static int validateAcademicUpdate(int staffNumber, String email, String alternateEmail, String phone){
         UserMethodDAOImpl userMethodDAO = new UserMethodDAOImpl();
-        boolean result = userMethodDAO.validateAcademicUpdate(staffNumber, email, alternateEmail, phone);
+        int result = userMethodDAO.validateAcademicUpdate(staffNumber, email, alternateEmail, phone);
         return result;
     }
 

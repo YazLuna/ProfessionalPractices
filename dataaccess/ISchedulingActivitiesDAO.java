@@ -1,6 +1,5 @@
 package dataaccess;
 
-import domain.Project;
 import domain.SchedulingActivities;
 
 import java.util.List;

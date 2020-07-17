@@ -1,8 +1,11 @@
 package gui.coordinator.controller;
 
-import domain.*;
+import domain.LinkedOrganization;
+import domain.Practitioner;
+import domain.Project;
+import domain.Search;
+import domain.ResponsibleProject;
 import gui.teacher.controller.FXMLMenuTeacherController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,14 +14,12 @@ import java.util.ResourceBundle;
 import gui.FXMLGeneralController;
 
 /**
- * DAO User
+ * Menu Coordinator Controller
  * @author Yazmin
- * @version 12/06/2020
+ * @version 16/06/2020
  */
 
 public class FXMLMenuCoordinatorController extends FXMLGeneralController implements Initializable {
-    @FXML private Button btnRegisterGroup;
-    @FXML private Button btnUpdateGroup;
     @FXML private Button btnAssignProject;
     @FXML private Button btnUpdateLinkedOrganization;
     @FXML private Button btnDeleteLinkedOrganization;
@@ -50,38 +51,54 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
     }
 
     public void registerPractitioner() {
+        FXMLRegisterPractitionerController.staffNumberCoordinator = staffNumber;
         openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterPractitioner.fxml",btnRegisterPractitioner);
     }
 
     public void deletePractitioner() {
-        Practitioner practitioner = new Practitioner();
         FXMLUpdateDeletePractitionerListController.action = "Delete";
-        boolean activePractitioner = practitioner.activePractitioner();
-        if(activePractitioner){
+        int activePractitioner = Practitioner.activePractitioner();
+        if(activePractitioner == Search.FOUND.getValue()){
             openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnDeletePractitioner);
         } else {
-            generateError("No hay algún practicante activo");
+            if (activePractitioner == Search.NOTFOUND.getValue()) {
+                generateError("No hay algún practicante activo");
+            } else {
+                if (activePractitioner == Search.EXCEPTION.getValue()) {
+                    generateError("No hay conexión con la base de datos. Intente más tarde");
+                }
+            }
         }
    }
 
     public void updatePractitioner() {
-        Practitioner practitioner = new Practitioner();
         FXMLUpdateDeletePractitionerListController.action = "Update";
-        boolean arePractitioner = practitioner.arePractitioner();
-        if(arePractitioner){
+        int arePractitioner = Practitioner.arePractitioner();
+        if(arePractitioner == Search.FOUND.getValue()){
             openWindowGeneral("/gui/coordinator/fxml/FXMLUpdateDeletePractitionerList.fxml",btnUpdatePractitioner);
         } else {
-            generateError("No hay algún practicante registrado");
+            if (arePractitioner == Search.NOTFOUND.getValue()) {
+                generateError("No hay algún practicante registrado");
+            } else {
+                if (arePractitioner == Search.EXCEPTION.getValue()) {
+                    generateError("No hay conexión con la base de datos. Intente más tarde");
+                }
+            }
         }
     }
 
     public void listPractitioner() {
-        Practitioner practitioner = new Practitioner();
-        boolean arePractitioner = practitioner.arePractitioner();
-        if(arePractitioner){
+        int arePractitioner = Practitioner.arePractitioner();
+        if(arePractitioner == Search.FOUND.getValue()){
             openWindowGeneral("/gui/coordinator/fxml/FXMLListPractitioner.fxml",btnListPractitioner);
         } else {
-            generateError("No hay algún practicante registrado");
+            if (arePractitioner == Search.NOTFOUND.getValue()) {
+                generateError("No hay algún practicante registrado");
+            } else {
+                if (arePractitioner == Search.EXCEPTION.getValue()) {
+                    generateError("No hay conexión con la base de datos. Intente más tarde");
+                }
+            }
         }
     }
 
@@ -153,14 +170,6 @@ public class FXMLMenuCoordinatorController extends FXMLGeneralController impleme
             listLinkedOrganization.controllerSection("update");
             openWindowGeneral("/gui/coordinator/fxml/FXMLListLinkedOrganization.fxml", btnUpdateLinkedOrganization);
         }
-    }
-
-    public void updateGroup() {
-        //openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterGroup.fxml",btnUpdateGroup);
-    }
-
-    public void registerGroup() {
-        //openWindowGeneral("/gui/coordinator/fxml/FXMLRegisterGroup.fxml",btnRegisterGroup);
     }
 
     public void updateResponsible() {

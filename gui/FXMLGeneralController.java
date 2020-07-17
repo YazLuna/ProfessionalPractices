@@ -205,8 +205,8 @@ public class FXMLGeneralController implements Initializable {
                 if (newValue.matches("^\\s")) {
                     textField.setText(newValue.replaceAll("[\\s]", ""));
                 } else {
-                    if (!newValue.matches("[A-Za-z_\\s_ñ_á_é_í_ú_ó]")) {
-                        textField.setText(newValue.replaceAll("[^A-Za-z_\\s_ñ_á_é_í_ú_ó]", ""));
+                    if (!newValue.matches("[A-Za-z_\\s_ñ_á_é_í_ú_ó_Ñ_Á,É,Í,Ó,Ú]")) {
+                        textField.setText(newValue.replaceAll("[^A-Za-z_\\s_ñ_á_é_í_ú_ó_Ñ_Á,É,Í,Ó,Ú]", ""));
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package gui.coordinator.controller;
 
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -16,7 +17,7 @@ import gui.FXMLGeneralController;
  * @author Yazmin
  * @version 09/07/2020
  */
-public class FXMLListPractitionerController extends FXMLGeneralController {
+public class FXMLGetPractitionerListController extends FXMLGeneralController {
     public TableView<Practitioner> tvPractitioners;
     public TableColumn<Practitioner, Integer> tcEnrollment;
     public TableColumn<Practitioner, String> tcName;
@@ -48,15 +49,20 @@ public class FXMLListPractitionerController extends FXMLGeneralController {
     }
 
     private void colocateListPractitioners() {
-        List<Practitioner> PractitionerList = Practitioner.getInformationPractitioner();
-        tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
-        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
-        tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        tcTerm.setCellValueFactory(new PropertyValueFactory<>("term"));
-        tvPractitioners.getItems().setAll(PractitionerList);
+        List<Practitioner> practitionerList = Practitioner.getInformationPractitioner();
+        if (practitionerList.size() == Search.NOTFOUND.getValue()) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/coordinator/fxml/FXMLMenuCoordinator.fxml",btnCancel);
+        } else {
+            tcEnrollment.setCellValueFactory(new PropertyValueFactory<>("enrollment"));
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            tcEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+            tcAlternateEmail.setCellValueFactory(new PropertyValueFactory<>("alternateEmail"));
+            tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            tcStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+            tcTerm.setCellValueFactory(new PropertyValueFactory<>("term"));
+            tvPractitioners.getItems().setAll(practitionerList);
+        }
     }
 }

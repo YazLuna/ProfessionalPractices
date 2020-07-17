@@ -18,7 +18,7 @@ public interface ICoordinatorDAO {
     boolean updateCoordinator(int staffNumberOrigin, Coordinator coordinatorEdit, List<String>DatesUpdate);
     boolean recoverCoordinator(int staffNumber) ;
     boolean deleteCoordinator (String status, String dischargeDate) ;
-    boolean activeCoordinator()  ;
-    boolean areCoordinator();
+    int activeCoordinator()  ;
+    int areCoordinator();
     boolean isTeacher(Coordinator coordinator);
 }

@@ -34,7 +34,7 @@ public class PhoneNumberDAOImpl implements IPhoneNumberDAO  {
      * Method to add a phone number
      * @param phoneNumber The phoneNumber parameter defines the Phone Number
      */
-    public boolean addPhoneNumber(PhoneNumber phoneNumber,int idLinkedOrganization){
+    public boolean addPhoneNumber(PhoneNumber phoneNumber, int idLinkedOrganization){
         boolean isAddPhoneNumber =false;
         try{
             connection = connexion.getConnection();

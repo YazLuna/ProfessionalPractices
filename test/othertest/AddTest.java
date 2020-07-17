@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
 
 public class AddTest {
 
-    @Test
+    /*@Test
     public void testAddPractitioner() {
-        boolean result;
+        int result;
         Practitioner practitioner = new Practitioner();
         practitioner.setName("Lucio");
         practitioner.setLastName("Garcia");
@@ -42,7 +42,7 @@ public class AddTest {
 
     @Test
     public void testAddPractitionerNull() {
-        boolean result;
+        int result;
         Practitioner practitioner = new Practitioner();
         User user = (User)practitioner;
         result = Practitioner.addUser(user, practitioner.getUserType());
@@ -52,7 +52,7 @@ public class AddTest {
 
     @Test
     public void testAddTeacher() {
-        boolean result = false;
+        int result = false;
         Teacher teacher = new Teacher();
         teacher.setName("Esteban");
         teacher.setLastName("Hernandez");
@@ -73,7 +73,7 @@ public class AddTest {
 
     @Test
     public void testAddTeacherNull() {
-        boolean result = false;
+        int result = false;
         Teacher teacher = new Teacher();
         User user = (User)teacher;
         result = Teacher.addUser(user,"Teacher");
@@ -83,7 +83,7 @@ public class AddTest {
 
     @Test
     public void testAddCoordinator() {
-        boolean result = false;
+        int result = false;
         Coordinator coordinator = new Coordinator();
         coordinator.setName("Amairani");
         coordinator.setLastName("Hernandez");
@@ -103,7 +103,7 @@ public class AddTest {
 
     @Test
     public void testCoordinatorTeacherNull() {
-        boolean result = false;
+        int result = false;
         Coordinator coordinator = new Coordinator();
         User user = (User)coordinator;
         result = Coordinator.addUser(user,"Coordinator");
@@ -140,7 +140,7 @@ public class AddTest {
         System.out.println(result2);
     }
 
-   /* @Test
+   @Test
     public void password (){
         String password = "yaz";
             String passwordEncrypt= null;
@@ -157,7 +157,7 @@ public class AddTest {
             }
 
 
-    }*/
+    }
 
     @Test
     public void month(){
@@ -181,5 +181,5 @@ public class AddTest {
         Matcher mather = pattern.matcher(enrollment);
         isValidEnrollment = mather.find();
         Assert.assertTrue(isValidEnrollment);
-    }
+    }*/
 }

@@ -7,17 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.List;
 import domain.Practitioner;
 import domain.Search;
 import domain.User;
+import exception.TelegramBot;
+import exception.Exception;
 
 /**
  * Practitioner DAO Implements
  * @author Yazmin
- * @version 09/07/2020
+ * @version 16/07/2020
  */
 public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitionerDAO {
     private final Connexion connexion;
@@ -35,11 +35,11 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
     /**
      * Method for adding a practitioner
      * @param practitioner Object to add
-     * @return true if successful false if not
+     * @return Whether or not you could add a practitioner
      */
     @Override
     public boolean addPractitioner (Practitioner practitioner) {
-        boolean resultAdd = false;
+        boolean result = false;
         TermDAOImpl TermDAO = new TermDAOImpl();
         int idTerm = TermDAO.getIdTerm(practitioner.getTerm());
         if(idTerm == Search.NOTFOUND.getValue()){
@@ -52,21 +52,25 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             int idUser = searchIdUser(practitioner.getEmail(),practitioner.getAlternateEmail(),practitioner.getPhone());
             try{
                 connection = connexion.getConnection();
-                String queryAddPractitioner = "INSERT INTO Practitioner (enrollment, idUser, idTerm, credits) VALUES (?,?,?,?)";
+                String queryAddPractitioner = "INSERT INTO Practitioner (enrollment, idUser, idTerm, credits, staffNumberCoordinator) VALUES" +
+                        " (?, ?, ?, ?, ?)";
                 preparedStatement = connection.prepareStatement(queryAddPractitioner);
                 preparedStatement.setString(1, practitioner.getEnrollment());
                 preparedStatement.setInt(2, idUser);
                 preparedStatement.setInt(3, idTerm);
                 preparedStatement.setInt(4, practitioner.getCredits());
+                preparedStatement.setInt(5, practitioner.getStaffNumberCoordinator());
                 preparedStatement.executeUpdate();
-                resultAdd = true;
-            } catch(SQLException ex){
-                Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+                addRelations(idUser, practitioner.getStatus(), practitioner.getUserType());
+                result = true;
+            } catch(SQLException exception){
+                new Exception().log(exception);
+                TelegramBot.sendToTelegram(exception.getMessage());
             } finally {
                 connexion.closeConnection();
             }
         }
-        return resultAdd;
+        return result;
     }
 
     /**
@@ -80,7 +84,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
         int idUserType = searchIdUserType("Practitioner");
         try {
             connection = connexion.getConnection () ;
-            String queryGetPractitioner = "SELECT name, lastName, enrollment, email, alternateEmail, phone, status, term, gender FROM" +
+            String queryGetPractitioner="SELECT name, lastName, enrollment, email, alternateEmail, phone, status, term, gender, credits FROM"+
                     " Practitioner, User, User_Status,Status, Term WHERE Practitioner.idUser = User.idUser AND User_Status.idUser =" +
                     " User.idUser AND User_Status.idUser = User.idUser AND Status.idStatus = User_Status.idStatus AND" +
                     " idUserType =? AND Term.idTerm = Practitioner.idTerm AND Practitioner.enrollment =?";
@@ -98,9 +102,11 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                 practitioner.setPhone(resultSet.getString("phone"));
                 practitioner.setEnrollment(resultSet.getString("enrollment"));
                 practitioner.setTerm(resultSet.getString("Term"));
+                practitioner.setCredits(resultSet.getInt("credits"));
             }
-        }catch(SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -126,8 +132,9 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                 practitioner.setEnrollment(resultSet.getString("enrollment"));
                 practitioners.add(practitioner);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -160,8 +167,9 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                 practitioner.setEnrollment(resultSet.getString("enrollment"));
                 practitioners.add(practitioner);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -198,8 +206,9 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                 practitioner.setStatus(resultSet.getString("status"));
                 practitioners.add(practitioner);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -228,7 +237,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             change.add("get"+datesUpdate.get( indexDatesUpdate));
         }
         String sentence = "UPDATE Practitioner INNER JOIN User ON Practitioner.idUser = User.idUser SET " +datesUpdatePractitioner+
-                " WHERE enrollment = " +enrollmentOrigin;
+                " WHERE Practitioner.enrollment = " +enrollmentOrigin;
         try{
             connection = connexion.getConnection();
             preparedStatement = connection.prepareStatement(sentence);
@@ -239,7 +248,7 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
                 try {
                     methodPractitioner = classPractitioner.getMethod(change.get(indexPreparedStatement - 1));
                     String isWord = (String) methodPractitioner.invoke(practitionerEdit, new Object[] {});
-                } catch (ClassCastException e) {
+                } catch (ClassCastException castException) {
                     isString = false;
                 }
                 if(isString){
@@ -254,8 +263,9 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             }
             preparedStatement.executeUpdate();
             result = true;
-        } catch (SQLException | ReflectiveOperationException ex) {
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ReflectiveOperationException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -283,8 +293,9 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             preparedStatement.setInt(3,idUserType);
             preparedStatement.executeUpdate();
             result = true;
-        } catch(SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -313,8 +324,9 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             preparedStatement.setInt(3, idUserType);
             preparedStatement.executeUpdate();
             result = true;
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
         } finally {
             connexion.closeConnection();
         }
@@ -323,11 +335,11 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
 
     /**
      * Method to know if there is at least one active practitioner
-     * @return true if there is at least one active practitioner, false if not
+     * @return if there is an active practitioner
      */
     @Override
-    public boolean activePractitioner() {
-        boolean isActive = false;
+    public int activePractitioner() {
+        int isActive = Search.NOTFOUND.getValue();
         StatusDAOImpl statusDAO = new StatusDAOImpl();
         int idUserStatus = statusDAO.searchIdStatus("Active");
         try {
@@ -341,10 +353,12 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             preparedStatement.setInt(2, idUserStatus);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                isActive = true;
+                isActive = Search.FOUND.getValue();
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            isActive = Search.EXCEPTION.getValue();
         } finally {
             connexion.closeConnection();
         }
@@ -353,11 +367,11 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
 
     /**
      * Method to know if are practitioners
-     * @return True if are practitioners, false if not
+     * @return if there is any practitioner
      */
     @Override
-    public boolean arePractitioners() {
-        boolean arePractitioner = false;
+    public int arePractitioners() {
+        int arePractitioner = Search.NOTFOUND.getValue();
         try {
             connection = connexion.getConnection();
             String queryArePractitioner = "SELECT enrollment FROM Practitioner, UserType, User_UserType WHERE UserType.type=? AND" +
@@ -366,10 +380,12 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             preparedStatement.setString(1, "Practitioner");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                arePractitioner = true;
+                arePractitioner = Search.FOUND.getValue();
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException exception) {
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            arePractitioner = Search.EXCEPTION.getValue();
         } finally {
             connexion.closeConnection();
         }
@@ -377,38 +393,36 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
     }
 
     /**
-     * Method to know if the data of a practitioner to be added is valid
-     * @param practitioner object to add
-     * @return true if is valid, false if not
+     * Method to know if the data of a practitioner to be update is valid
+     * @param practitioner object to update
+     * @return if you are a valid practitioner or not
      */
     @Override
-    public boolean validPractitionerAdd(Practitioner practitioner) {
-        boolean validUserPractitioner = validateUserAdd(practitioner.getEmail(), practitioner.getAlternateEmail()
-                , practitioner.getPhone(), practitioner.getUserName());
-        if (validUserPractitioner) {
-            System.out.println("Usuario valido"+validUserPractitioner);
+    public int validPractitionerUpdate(Practitioner practitioner) {
+        int validUserPractitioner = validateUser(practitioner.getEmail(), practitioner.getAlternateEmail(), practitioner.getPhone());
+        if (validUserPractitioner == Search.NOTFOUND.getValue()) {
             validUserPractitioner = validEnrollment(practitioner.getEnrollment());
-            System.out.println("matricula valido"+validUserPractitioner);
         }
         return validUserPractitioner;
     }
 
     /**
-     * Method to know if the data of a practitioner to be update is valid
-     * @param practitioner object to update
-     * @return true if is valid, false if not
+     * Method to know if the data of a practitioner to be add is valid
+     * @param practitioner object to add
+     * @return if you are a valid practitioner or not
      */
     @Override
-    public boolean validPractitionerUpdate(Practitioner practitioner) {
-        boolean validUserPractitioner = validateUser(practitioner.getEmail(), practitioner.getAlternateEmail(), practitioner.getPhone());
-        if (validUserPractitioner) {
+    public int validPractitionerAdd(Practitioner practitioner) {
+        int validUserPractitioner = validateUserAdd(practitioner.getEmail(), practitioner.getAlternateEmail()
+                , practitioner.getPhone(), practitioner.getUserName());
+        if (validUserPractitioner == Search.NOTFOUND.getValue()) {
             validUserPractitioner = validEnrollment(practitioner.getEnrollment());
         }
         return validUserPractitioner;
     }
 
-    private boolean validEnrollment(String enrollmentSearch) {
-        boolean validEnrollment = true;
+    private int validEnrollment(String enrollmentSearch) {
+        int validEnrollment = Search.NOTFOUND.getValue();
         try{
             connection = connexion.getConnection();
             String queryEnrollment= "SELECT enrollment FROM Practitioner WHERE enrollment=?";
@@ -416,10 +430,12 @@ public class PractitionerDAOImpl extends UserMethodDAOImpl implements IPractitio
             preparedStatement.setString(1,enrollmentSearch);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                validEnrollment = false;
+                validEnrollment = Search.FOUND.getValue();
             }
-        }catch(SQLException ex){
-            Logger.getLogger(PractitionerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException exception){
+            new Exception().log(exception);
+            TelegramBot.sendToTelegram(exception.getMessage());
+            validEnrollment = Search.EXCEPTION.getValue();
         }
         return validEnrollment;
     }

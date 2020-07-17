@@ -1,5 +1,6 @@
 package gui.administrator.controller;
 
+import domain.Search;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,10 +33,16 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
 
     private void colocateListTeachers() {
         List<Teacher> teacherList = Teacher.getTeachers();
-        tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
-        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tvTeachers.getItems().setAll(teacherList);
+        if (teacherList.size() == Search.NOTFOUND.getValue()) {
+            generateError("No hay conexión con la base de datos. Intente más tarde");
+            openWindowGeneral("/gui/administrator/fxml/FXMLMenuAdministrator.fxml",btnCancel);
+        } else {
+            tcStaffNumber.setCellValueFactory(new PropertyValueFactory<>("staffNumber"));
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            tvTeachers.getItems().setAll(teacherList);
+        }
+
     }
 
     /**
@@ -60,7 +67,7 @@ public class FXMLUpdateTeacherListController extends FXMLGeneralController imple
         if(TeacherSelected == null){
             generateAlert("Por favor seleccione algún profesor");
         }else{
-            FXMLUpdateTeacherController.staffNumber =TeacherSelected.getStaffNumber();
+            FXMLUpdateTeacherController.staffNumber = TeacherSelected.getStaffNumber();
             openWindowGeneral("/gui/administrator/fxml/FXMLUpdateTeacher.fxml", btnUpdate);
         }
     }
